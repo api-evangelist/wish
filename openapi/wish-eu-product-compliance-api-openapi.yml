@@ -1,0 +1,822 @@
+openapi: 3.0.0
+info:
+  contact:
+    email: partner-api@wish.com
+  x-wish-dev-contact:
+    assignee: kwei
+    email: marketplace-external-api@contextlogic.com
+  description: "\nWish Marketplace V3 API\n\n# General Information\n\n The Wish Marketplace API will be using oAuth to authenticate in order to offer better security for its users\n\n *   Learn about oAuth [here](oauth).\n *   If you are a merchant and want to create an application for yourself, learn about how to create a private app [here](../../private-app)\n *   If you are a ERP and create applications that'll be used by multiple merchants, learn about how to create a public app [here]( ../../public-app). You will need to apply to be a verified public application\n\n ## How to Test\n\n To avoid testing the API on production data, use our sandbox. The sandbox is completely contained and will not affect Wish users or your merchant account. \n \n To reach the sandbox, visit: https://sandbox.merchant.wish.com.\n\n To use the sandbox in testing, use https://sandbox.merchant.wish.com/api/v3/ as your base URL.\n\n How to Generate test data after you have created a sandbox account:\n 1. Navigate to the [unfulfilled orders page](https://sandbox.merchant.wish.com/transactions/action)\n 2. Hover over the dropdown next to the 'fulfill with csv' button and select Generate Orders\n\n ## Date/Time Format\n\n  All dates and times in our API are returned in the same format. It is in the form `YYYY-MM-DDTHH:mm:ss.sss±XX:ZZ` or `YYYY-MM-DDTHH:mm:ss.sssZ`, where 'Z' represents UTC timezone.\n  When sending timestamps in URL parameters or the request body, millisecond is optional and will defaults to 0 if not provided.\n\n  * `YYYY` is the year\n  * `MM` is the month\n  * `DD` is the day\n  * `HH` is the hour (in 24-hour clock format)\n  * `mm` is the minutes\n  * `ss.sss` is the seconds and milliseconds\n  * `±XX:ZZ` is the UTC offset of the form +XX:ZZ or -XX:ZZ where XX is a 2-digit string giving the number of UTC offset hours, and ZZ is a 2-digit string giving the number of UTC offset minutes.\n\n ## Response Schema\n\n  Every response returned from the Wish API will have the same schema. This schema is intended to give you a predictable manner to check the status of your request and know where to get the data. Each response will have the following top level attributes: message, code and data.\n\n  **Attributes**\n\n  <table>\n  <tbody>\n  <tr>\n  <th>Message</th>\n  <td>A message describing the error that happened, example: \"We could not find a product for id: '5d30f60e0a6fc464f4f376b0'\"</td>\n  </tr>\n  <tr>\n  <th>Code</th>\n  <td>A unique number which represents the error that has occurred, example: 1008 or 0 if success.</td>\n  </tr>\n  <tr>\n  <th>Data</th>\n  <td>For errors this will be empty.</td>\n  </tr>\n  </tbody>\n  </table>\n\n ## General Querying Techniques\n\n ### Partial Resources\n All GET endpoints (except OAuth) support a fields parameter which allows for requesting a partial response. Any fields specified in the response schema of an endpoint can be selected. The top level attribute `data` can be ignored when using the fields parameter.\n\n **Syntax**\n * Comma-separated list to select multiple fields\n * Use forward slash `/` to select nested field: `field1/nested_field`\n * Use parentheses `( )` to select multiple nested fields: `field1(nested_field1,nested_field2)`\n * Use `*` for wildcard selection: `field1/nested_field/*`\n\n\n **Example:**\n ```\n https://merchant.wish.com/api/v3/demo/get?fields=title,items(id,info/name)\n ```\n Which would result in the following partial response:\n ```\n {\n   \"title\": \"demo\",\n   \"items\": [\n     {\n       \"id\": \"1\",\n       \"info\": {\n         \"name\": \"demo_item_1\"\n       }\n     }, {\n       \"id\": \"2\",\n       \"info\": {\n         \"name\": \"demo_item_2\"\n       }\n     },\n     ...\n   ]\n }\n ```\n\n ## Locale\n   You can optionally specify locale in order to translate content and error messages into your language.\n   To do this use the [Accept-Language](https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Accept-Language) header to specify your preferred locales.\n   If none is provided, your default locale will be used.\n\n   For example, to request content in Chinese use: `Accept-Language: zh`\n\n   In the response, you will receive a [Content-Language](https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Content-Language) header that specifies the locale code of the response content.\n\n\n ## Rate-Limiting\n\n  Rate-limiting will be performed on a per-merchant basis for each app. It is your responsibility to ensure you are not making frequent unnecessary calls to the API.\n\n  If the rate limits cannot satisfy your need, we highly recommend integrating webhooks for your app. With webhooks, instead of pulling resources periodically, your app will receive real-time notifications for particular events that occur to a merchant’s store. [Learn more](https://merchant.wish.com/documentation/webhooks)\n\n  **Normal Usage**\n\n  To help you track the rate-limiter status, the following response header(s) will be provided with each response:\n\n   * `Wish-Rate-Limit-Remaining`: The number of calls remaining in the current rate-limiting window.\n\n\n  **Rate-Limit Exceeded**\n\n  After you exceed the number of allowed calls in the current rate-limiting window, you will receive a `429 Too Many Requests` error response and the following additional header(s):\n\n   * `Wish-Rate-Limit-Reset`: The time the rate-limiter will reset.\n\n\n  Once you receive this response there is nothing you can do except wait for the rate-limiter to reset. In order to avoid being rate-limited, you may want to cache your responses.\n\n ## Sorting\n   ### Overview\n   Sorting is available for most endpoints that return a collection (list) of objects. Each collection has a different set of enabled parameters for sorting, so please check specific collection section for detail.\n\n   ### Usage\n   Append `sort_by={parameter_name}.{asc|desc}` in your API request where `parameter_name` is a valid sortable parameter of that endpoint.\n\n   Example:\n   ```\n   /api/v3/penalties?sort_by=created_at.asc\n   ```\n\n ## Pagination\n  All bulk-fetching API methods that return lists of resource support pagination.\n  These methods commonly take at least 3 parameters: `limit`, `{attribute}_min`, `{attribute}_max`. Attribute can be `id`, `create_at`, etc., depending on each specific method.\n  For instance, you make a request to get a list of penalties `/api/v3/penalties?limit=20&created_at_max=2020-04-08T23:59:59Z&sort_by=created_at_max.desc`,\n  which means to fetch 20 penalities sorted by their creation time, with the most recent one being created before `2020-04-08T23:59:59Z`.\n  Assume that the response contains 20 `penalty` objects with the last object being `penalty_foo`,\n  then your subsequent request can be `/api/v3/penalties?limit=20&created_at_max={penalty_foo.create_at}&sort_by=created_at_max.desc` to fetch the next page of list.\n  Note that when fetching next page using `id_min` or `id_max`, you need to perform `+/- 1`(correspondingly) on the last object's ID in the current page, as `id_min` and `id_max` are inclusive. (All V3 API resources' IDs are either integer or BSON object ID - a hex number).\n\n\n ## Request ID\n  Each API request is associated with a unique identifier. You can find this value in response headers, under `Wish-Request-Id`.\n  **When you need to contact us about a specific request, please provide this ID to ensure the fastest possible reply**\n\n# Authentication\nFor all requests that require OAuth2 authentication, the access token must be provided in the `Authorization` request header in the following format: `Authorization: Bearer <token>`\n\nFor example:\n```\nAuthorization: Bearer 3d6e2d71bc464e42bfbdb081afb73c1e\n```\n<!-- ReDoc-Inject: <security-definitions> -->\n"
+  version: 3.0.65
+  title: Wish Marketplace V3 Brands EU Product Compliance API
+servers:
+- url: https://merchant.wish.com
+  description: V3 API endpoint
+security:
+- OAuth2: []
+tags:
+- description: APIs that support EU Product Compliance -- EU Regulation 2019/1020 on Market Surveillance and Compliance of Products (MSR).</br> For a product to be compliant with the MSR, a product must be linked with a responsible person located in the EU.
+  name: EU Product Compliance
+paths:
+  /api/v3/eu_product_compliance/responsible_person/{id}:
+    put:
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ResponsiblePersonResponse'
+          description: successfully updated a new EU responsible person.
+        '400':
+          content:
+            application/json:
+              examples:
+                ExtAPIResponsiblePersonInvalidFieldException:
+                  value:
+                    message: The input responsible person has invalid fields.
+                    code: '10001'
+                ExtAPIResponsiblePersonNoAccessException:
+                  value:
+                    message: The responsible person is not accessable for the operated merchant.
+                    code: '10004'
+                ExtAPIUpdateInvalidResponsiblePersonException:
+                  value:
+                    message: The responsible person is already rejected or deleted, so not able to update.
+                    code: '10007'
+                ExtAPIResponsiblePersonNotFoundException:
+                  value:
+                    message: The input responsible person is not found by the given id.
+                    code: '10003'
+              schema:
+                $ref: '#/components/schemas/APIError'
+          description: failed to update a new EU responsible person.
+      parameters:
+      - $ref: '#/components/parameters/id'
+      tags:
+      - EU Product Compliance
+      summary: Update an EU Responsible Person
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ResponsiblePerson'
+      security:
+      - OAuth2:
+        - compliance:write
+      operationId: updateEUResponsiblePerson
+      x-code-samples:
+      - lang: python_requests
+        source: "import requests\n\nurl = \"https://merchant.wish.com/api/v3/eu_product_compliance/responsible_person/{id}\"\n\npayload = \"{\\\"address_line1\\\":\\\"string\\\",\\\"address_line2\\\":\\\"string\\\",\\\"city\\\":\\\"string\\\",\\\"country\\\":\\\"string\\\",\\\"email\\\":\\\"string\\\",\\\"name\\\":\\\"string\\\",\\\"phone_number\\\":\\\"string\\\",\\\"state\\\":\\\"string\\\",\\\"zipcode\\\":\\\"string\\\"}\"\nheaders = {\n    'content-type': \"application/json\",\n    'authorization': \"Bearer REPLACE_BEARER_TOKEN\"\n    }\n\nresponse = requests.request(\"PUT\", url, data=payload, headers=headers)\n\nprint(response.text)"
+      - lang: javascript_jquery
+        source: "var settings = {\n  \"async\": true,\n  \"crossDomain\": true,\n  \"url\": \"https://merchant.wish.com/api/v3/eu_product_compliance/responsible_person/{id}\",\n  \"method\": \"PUT\",\n  \"headers\": {\n    \"content-type\": \"application/json\",\n    \"authorization\": \"Bearer REPLACE_BEARER_TOKEN\"\n  },\n  \"processData\": false,\n  \"data\": \"{\\\"address_line1\\\":\\\"string\\\",\\\"address_line2\\\":\\\"string\\\",\\\"city\\\":\\\"string\\\",\\\"country\\\":\\\"string\\\",\\\"email\\\":\\\"string\\\",\\\"name\\\":\\\"string\\\",\\\"phone_number\\\":\\\"string\\\",\\\"state\\\":\\\"string\\\",\\\"zipcode\\\":\\\"string\\\"}\"\n}\n\n$.ajax(settings).done(function (response) {\n  console.log(response);\n});"
+      - lang: java_unirest
+        source: "HttpResponse<String> response = Unirest.put(\"https://merchant.wish.com/api/v3/eu_product_compliance/responsible_person/{id}\")\n  .header(\"content-type\", \"application/json\")\n  .header(\"authorization\", \"Bearer REPLACE_BEARER_TOKEN\")\n  .body(\"{\\\"address_line1\\\":\\\"string\\\",\\\"address_line2\\\":\\\"string\\\",\\\"city\\\":\\\"string\\\",\\\"country\\\":\\\"string\\\",\\\"email\\\":\\\"string\\\",\\\"name\\\":\\\"string\\\",\\\"phone_number\\\":\\\"string\\\",\\\"state\\\":\\\"string\\\",\\\"zipcode\\\":\\\"string\\\"}\")\n  .asString();"
+      - lang: shell_curl
+        source: "curl --request PUT \\\n  --url 'https://merchant.wish.com/api/v3/eu_product_compliance/responsible_person/{id}' \\\n  --header 'authorization: Bearer REPLACE_BEARER_TOKEN' \\\n  --header 'content-type: application/json' \\\n  --data '{\"address_line1\":\"string\",\"address_line2\":\"string\",\"city\":\"string\",\"country\":\"string\",\"email\":\"string\",\"name\":\"string\",\"phone_number\":\"string\",\"state\":\"string\",\"zipcode\":\"string\"}'"
+      - lang: php_curl
+        source: "<?php\n\n$curl = curl_init();\n\ncurl_setopt_array($curl, array(\n  CURLOPT_URL => \"https://merchant.wish.com/api/v3/eu_product_compliance/responsible_person/{id}\",\n  CURLOPT_RETURNTRANSFER => true,\n  CURLOPT_ENCODING => \"\",\n  CURLOPT_MAXREDIRS => 10,\n  CURLOPT_TIMEOUT => 30,\n  CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,\n  CURLOPT_CUSTOMREQUEST => \"PUT\",\n  CURLOPT_POSTFIELDS => \"{\\\"address_line1\\\":\\\"string\\\",\\\"address_line2\\\":\\\"string\\\",\\\"city\\\":\\\"string\\\",\\\"country\\\":\\\"string\\\",\\\"email\\\":\\\"string\\\",\\\"name\\\":\\\"string\\\",\\\"phone_number\\\":\\\"string\\\",\\\"state\\\":\\\"string\\\",\\\"zipcode\\\":\\\"string\\\"}\",\n  CURLOPT_HTTPHEADER => array(\n    \"authorization: Bearer REPLACE_BEARER_TOKEN\",\n    \"content-type: application/json\"\n  ),\n));\n\n$response = curl_exec($curl);\n$err = curl_error($curl);\n\ncurl_close($curl);\n\nif ($err) {\n  echo \"cURL Error #:\" . $err;\n} else {\n  echo $response;\n}"
+      description: Update details of an EU Responsible Person.
+    get:
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ResponsiblePersonResponse'
+          description: successfully queried for an EU responsible person.
+        '400':
+          content:
+            application/json:
+              examples:
+                ExtAPIResponsiblePersonNoAccessException:
+                  value:
+                    message: The responsible person is not accessable for the operated merchant.
+                    code: '10004'
+                ExtAPIResponsiblePersonNotFoundException:
+                  value:
+                    message: The input responsible person is not found by the given id.
+                    code: '10003'
+              schema:
+                $ref: '#/components/schemas/APIError'
+          description: failed to query for an EU responsible person.
+      parameters:
+      - $ref: '#/components/parameters/id'
+      tags:
+      - EU Product Compliance
+      summary: Get an EU Responsible Person
+      security:
+      - OAuth2:
+        - compliance:read
+      operationId: getEUResponsiblePerson
+      x-code-samples:
+      - lang: python_requests
+        source: 'import requests
+
+
+          url = "https://merchant.wish.com/api/v3/eu_product_compliance/responsible_person/{id}"
+
+
+          headers = {''authorization'': ''Bearer REPLACE_BEARER_TOKEN''}
+
+
+          response = requests.request("GET", url, headers=headers)
+
+
+          print(response.text)'
+      - lang: javascript_jquery
+        source: "var settings = {\n  \"async\": true,\n  \"crossDomain\": true,\n  \"url\": \"https://merchant.wish.com/api/v3/eu_product_compliance/responsible_person/{id}\",\n  \"method\": \"GET\",\n  \"headers\": {\n    \"authorization\": \"Bearer REPLACE_BEARER_TOKEN\"\n  }\n}\n\n$.ajax(settings).done(function (response) {\n  console.log(response);\n});"
+      - lang: java_unirest
+        source: "HttpResponse<String> response = Unirest.get(\"https://merchant.wish.com/api/v3/eu_product_compliance/responsible_person/{id}\")\n  .header(\"authorization\", \"Bearer REPLACE_BEARER_TOKEN\")\n  .asString();"
+      - lang: shell_curl
+        source: "curl --request GET \\\n  --url 'https://merchant.wish.com/api/v3/eu_product_compliance/responsible_person/{id}' \\\n  --header 'authorization: Bearer REPLACE_BEARER_TOKEN'"
+      - lang: php_curl
+        source: "<?php\n\n$curl = curl_init();\n\ncurl_setopt_array($curl, array(\n  CURLOPT_URL => \"https://merchant.wish.com/api/v3/eu_product_compliance/responsible_person/{id}\",\n  CURLOPT_RETURNTRANSFER => true,\n  CURLOPT_ENCODING => \"\",\n  CURLOPT_MAXREDIRS => 10,\n  CURLOPT_TIMEOUT => 30,\n  CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,\n  CURLOPT_CUSTOMREQUEST => \"GET\",\n  CURLOPT_HTTPHEADER => array(\n    \"authorization: Bearer REPLACE_BEARER_TOKEN\"\n  ),\n));\n\n$response = curl_exec($curl);\n$err = curl_error($curl);\n\ncurl_close($curl);\n\nif ($err) {\n  echo \"cURL Error #:\" . $err;\n} else {\n  echo $response;\n}"
+      description: Get an EU Responsible Person given its id.
+    delete:
+      responses:
+        '204':
+          description: successfully deleted an EU responsible person.
+        '400':
+          content:
+            application/json:
+              examples:
+                ExtAPIResponsiblePersonInvalidFieldException:
+                  value:
+                    message: The input responsible person has invalid fields.
+                    code: '10001'
+                ExtAPIDeleteLinkedResponsiblePersonException:
+                  value:
+                    message: The responsible person is still linked with some products, so not able to delete before unlinking to all related products.
+                    code: '10006'
+              schema:
+                $ref: '#/components/schemas/APIError'
+          description: failed to delete an EU responsible person.
+      parameters:
+      - $ref: '#/components/parameters/id'
+      tags:
+      - EU Product Compliance
+      summary: Delete an EU Responsible Person
+      security:
+      - OAuth2:
+        - compliance:write
+      operationId: deleteEUResponsiblePerson
+      x-code-samples:
+      - lang: python_requests
+        source: 'import requests
+
+
+          url = "https://merchant.wish.com/api/v3/eu_product_compliance/responsible_person/{id}"
+
+
+          headers = {''authorization'': ''Bearer REPLACE_BEARER_TOKEN''}
+
+
+          response = requests.request("DELETE", url, headers=headers)
+
+
+          print(response.text)'
+      - lang: javascript_jquery
+        source: "var settings = {\n  \"async\": true,\n  \"crossDomain\": true,\n  \"url\": \"https://merchant.wish.com/api/v3/eu_product_compliance/responsible_person/{id}\",\n  \"method\": \"DELETE\",\n  \"headers\": {\n    \"authorization\": \"Bearer REPLACE_BEARER_TOKEN\"\n  }\n}\n\n$.ajax(settings).done(function (response) {\n  console.log(response);\n});"
+      - lang: java_unirest
+        source: "HttpResponse<String> response = Unirest.delete(\"https://merchant.wish.com/api/v3/eu_product_compliance/responsible_person/{id}\")\n  .header(\"authorization\", \"Bearer REPLACE_BEARER_TOKEN\")\n  .asString();"
+      - lang: shell_curl
+        source: "curl --request DELETE \\\n  --url 'https://merchant.wish.com/api/v3/eu_product_compliance/responsible_person/{id}' \\\n  --header 'authorization: Bearer REPLACE_BEARER_TOKEN'"
+      - lang: php_curl
+        source: "<?php\n\n$curl = curl_init();\n\ncurl_setopt_array($curl, array(\n  CURLOPT_URL => \"https://merchant.wish.com/api/v3/eu_product_compliance/responsible_person/{id}\",\n  CURLOPT_RETURNTRANSFER => true,\n  CURLOPT_ENCODING => \"\",\n  CURLOPT_MAXREDIRS => 10,\n  CURLOPT_TIMEOUT => 30,\n  CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,\n  CURLOPT_CUSTOMREQUEST => \"DELETE\",\n  CURLOPT_HTTPHEADER => array(\n    \"authorization: Bearer REPLACE_BEARER_TOKEN\"\n  ),\n));\n\n$response = curl_exec($curl);\n$err = curl_error($curl);\n\ncurl_close($curl);\n\nif ($err) {\n  echo \"cURL Error #:\" . $err;\n} else {\n  echo $response;\n}"
+      description: Delete an EU responsible person. Please first call [Bulk Update EU Product Compliance Status API](/documentation/api/v3/reference#operation/BulkUpdateProducts) to remove all links with products of input responsible person.
+  /api/v3/eu_product_compliance/products/bulk_update:
+    post:
+      responses:
+        '202':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BulkUpdateEUProductComplianceStatusJob'
+          description: successfully started a bulk update job.
+        '400':
+          content:
+            application/json:
+              examples:
+                ExtAPIResponsiblePersonNotFoundException:
+                  value:
+                    message: The input responsible person is not found by the given id.
+                    code: '10003'
+              schema:
+                $ref: '#/components/schemas/APIError'
+          description: failed to start a bulk update job.
+      parameters:
+      - $ref: '#/components/parameters/old_person_id'
+      - $ref: '#/components/parameters/new_person_id'
+      tags:
+      - EU Product Compliance
+      summary: Bulk Update EU Product Compliance Status
+      security:
+      - OAuth2:
+        - compliance:write
+      operationId: BulkUpdateProducts
+      x-code-samples:
+      - lang: python_requests
+        source: 'import requests
+
+
+          url = "https://merchant.wish.com/api/v3/eu_product_compliance/products/bulk_update"
+
+
+          querystring = {"old_person_id":"SOME_STRING_VALUE","new_person_id":"SOME_STRING_VALUE"}
+
+
+          headers = {''authorization'': ''Bearer REPLACE_BEARER_TOKEN''}
+
+
+          response = requests.request("POST", url, headers=headers, params=querystring)
+
+
+          print(response.text)'
+      - lang: javascript_jquery
+        source: "var settings = {\n  \"async\": true,\n  \"crossDomain\": true,\n  \"url\": \"https://merchant.wish.com/api/v3/eu_product_compliance/products/bulk_update?old_person_id=SOME_STRING_VALUE&new_person_id=SOME_STRING_VALUE\",\n  \"method\": \"POST\",\n  \"headers\": {\n    \"authorization\": \"Bearer REPLACE_BEARER_TOKEN\"\n  }\n}\n\n$.ajax(settings).done(function (response) {\n  console.log(response);\n});"
+      - lang: java_unirest
+        source: "HttpResponse<String> response = Unirest.post(\"https://merchant.wish.com/api/v3/eu_product_compliance/products/bulk_update?old_person_id=SOME_STRING_VALUE&new_person_id=SOME_STRING_VALUE\")\n  .header(\"authorization\", \"Bearer REPLACE_BEARER_TOKEN\")\n  .asString();"
+      - lang: shell_curl
+        source: "curl --request POST \\\n  --url 'https://merchant.wish.com/api/v3/eu_product_compliance/products/bulk_update?old_person_id=SOME_STRING_VALUE&new_person_id=SOME_STRING_VALUE' \\\n  --header 'authorization: Bearer REPLACE_BEARER_TOKEN'"
+      - lang: php_curl
+        source: "<?php\n\n$curl = curl_init();\n\ncurl_setopt_array($curl, array(\n  CURLOPT_URL => \"https://merchant.wish.com/api/v3/eu_product_compliance/products/bulk_update?old_person_id=SOME_STRING_VALUE&new_person_id=SOME_STRING_VALUE\",\n  CURLOPT_RETURNTRANSFER => true,\n  CURLOPT_ENCODING => \"\",\n  CURLOPT_MAXREDIRS => 10,\n  CURLOPT_TIMEOUT => 30,\n  CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,\n  CURLOPT_CUSTOMREQUEST => \"POST\",\n  CURLOPT_HTTPHEADER => array(\n    \"authorization: Bearer REPLACE_BEARER_TOKEN\"\n  ),\n));\n\n$response = curl_exec($curl);\n$err = curl_error($curl);\n\ncurl_close($curl);\n\nif ($err) {\n  echo \"cURL Error #:\" . $err;\n} else {\n  echo $response;\n}"
+      description: Bulk update links of an EU responsible person with products given a responsible person id.</br> Find all products associated with the old responsible person id.</br> If new responsible person id is also given, reset above products with new responsible person.</br> If no new responsible person id given, unlink above products as no responsible person status.</br> This API processes the request asynchronously and triggers a running job.</br> Please use [Get Bulk Update Job Status API](/documentation/api/v3/reference#operation/GetBulkUpdateStatus) to check the status of a running job
+  /api/v3/eu_product_compliance/products/bulk_update/{id}:
+    get:
+      responses:
+        '202':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BulkUpdateEUProductComplianceStatusJob'
+          description: successfully queried for a bulk update job
+        '400':
+          content:
+            application/json:
+              examples:
+                ExtAPIBulkRelinkJobNotFoundException:
+                  value:
+                    message: There is no such bulk update job for the merchant.
+                    code: '10008'
+              schema:
+                $ref: '#/components/schemas/APIError'
+          description: failed to query for a bulk update job
+      parameters:
+      - required: true
+        in: path
+        description: id of the bulk update job to query
+        name: id
+        schema:
+          type: string
+          format: object-id
+      tags:
+      - EU Product Compliance
+      summary: Get Bulk Update Job Status
+      security:
+      - OAuth2:
+        - compliance:read
+      operationId: GetBulkUpdateStatus
+      x-code-samples:
+      - lang: python_requests
+        source: 'import requests
+
+
+          url = "https://merchant.wish.com/api/v3/eu_product_compliance/products/bulk_update/{id}"
+
+
+          headers = {''authorization'': ''Bearer REPLACE_BEARER_TOKEN''}
+
+
+          response = requests.request("GET", url, headers=headers)
+
+
+          print(response.text)'
+      - lang: javascript_jquery
+        source: "var settings = {\n  \"async\": true,\n  \"crossDomain\": true,\n  \"url\": \"https://merchant.wish.com/api/v3/eu_product_compliance/products/bulk_update/{id}\",\n  \"method\": \"GET\",\n  \"headers\": {\n    \"authorization\": \"Bearer REPLACE_BEARER_TOKEN\"\n  }\n}\n\n$.ajax(settings).done(function (response) {\n  console.log(response);\n});"
+      - lang: java_unirest
+        source: "HttpResponse<String> response = Unirest.get(\"https://merchant.wish.com/api/v3/eu_product_compliance/products/bulk_update/{id}\")\n  .header(\"authorization\", \"Bearer REPLACE_BEARER_TOKEN\")\n  .asString();"
+      - lang: shell_curl
+        source: "curl --request GET \\\n  --url 'https://merchant.wish.com/api/v3/eu_product_compliance/products/bulk_update/{id}' \\\n  --header 'authorization: Bearer REPLACE_BEARER_TOKEN'"
+      - lang: php_curl
+        source: "<?php\n\n$curl = curl_init();\n\ncurl_setopt_array($curl, array(\n  CURLOPT_URL => \"https://merchant.wish.com/api/v3/eu_product_compliance/products/bulk_update/{id}\",\n  CURLOPT_RETURNTRANSFER => true,\n  CURLOPT_ENCODING => \"\",\n  CURLOPT_MAXREDIRS => 10,\n  CURLOPT_TIMEOUT => 30,\n  CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,\n  CURLOPT_CUSTOMREQUEST => \"GET\",\n  CURLOPT_HTTPHEADER => array(\n    \"authorization: Bearer REPLACE_BEARER_TOKEN\"\n  ),\n));\n\n$response = curl_exec($curl);\n$err = curl_error($curl);\n\ncurl_close($curl);\n\nif ($err) {\n  echo \"cURL Error #:\" . $err;\n} else {\n  echo $response;\n}"
+      description: Get Status of Bulk Update Job to reset or unlink a responsible person with associated products.</br> The job should be triggered by [Bulk Update EU Product Compliance Status API](/documentation/api/v3/reference#operation/BulkUpdateProducts)
+  /api/v3/eu_product_compliance/products:
+    put:
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/EUProductComplianceStatusResponse'
+          description: successfully updated EU product compliance status for input products
+        '400':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/APIError'
+          description: failed to update for EU product compliance status for input products
+      tags:
+      - EU Product Compliance
+      summary: Update EU Product Compliance Status
+      requestBody:
+        content:
+          application/json:
+            schema:
+              items:
+                $ref: '#/components/schemas/EUProductComplianceStatusRequest'
+              type: array
+              description: List of a product id associated with update request on EU Product Compliance Status
+              maxItems: 500
+      security:
+      - OAuth2:
+        - compliance:write
+      operationId: updateEUProductComplianceStatus
+      x-code-samples:
+      - lang: python_requests
+        source: "import requests\n\nurl = \"https://merchant.wish.com/api/v3/eu_product_compliance/products\"\n\npayload = \"[{\\\"product_id\\\":\\\"string\\\",\\\"responsible_person_id\\\":\\\"string\\\"}]\"\nheaders = {\n    'content-type': \"application/json\",\n    'authorization': \"Bearer REPLACE_BEARER_TOKEN\"\n    }\n\nresponse = requests.request(\"PUT\", url, data=payload, headers=headers)\n\nprint(response.text)"
+      - lang: javascript_jquery
+        source: "var settings = {\n  \"async\": true,\n  \"crossDomain\": true,\n  \"url\": \"https://merchant.wish.com/api/v3/eu_product_compliance/products\",\n  \"method\": \"PUT\",\n  \"headers\": {\n    \"content-type\": \"application/json\",\n    \"authorization\": \"Bearer REPLACE_BEARER_TOKEN\"\n  },\n  \"processData\": false,\n  \"data\": \"[{\\\"product_id\\\":\\\"string\\\",\\\"responsible_person_id\\\":\\\"string\\\"}]\"\n}\n\n$.ajax(settings).done(function (response) {\n  console.log(response);\n});"
+      - lang: java_unirest
+        source: "HttpResponse<String> response = Unirest.put(\"https://merchant.wish.com/api/v3/eu_product_compliance/products\")\n  .header(\"content-type\", \"application/json\")\n  .header(\"authorization\", \"Bearer REPLACE_BEARER_TOKEN\")\n  .body(\"[{\\\"product_id\\\":\\\"string\\\",\\\"responsible_person_id\\\":\\\"string\\\"}]\")\n  .asString();"
+      - lang: shell_curl
+        source: "curl --request PUT \\\n  --url 'https://merchant.wish.com/api/v3/eu_product_compliance/products' \\\n  --header 'authorization: Bearer REPLACE_BEARER_TOKEN' \\\n  --header 'content-type: application/json' \\\n  --data '[{\"product_id\":\"string\",\"responsible_person_id\":\"string\"}]'"
+      - lang: php_curl
+        source: "<?php\n\n$curl = curl_init();\n\ncurl_setopt_array($curl, array(\n  CURLOPT_URL => \"https://merchant.wish.com/api/v3/eu_product_compliance/products\",\n  CURLOPT_RETURNTRANSFER => true,\n  CURLOPT_ENCODING => \"\",\n  CURLOPT_MAXREDIRS => 10,\n  CURLOPT_TIMEOUT => 30,\n  CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,\n  CURLOPT_CUSTOMREQUEST => \"PUT\",\n  CURLOPT_POSTFIELDS => \"[{\\\"product_id\\\":\\\"string\\\",\\\"responsible_person_id\\\":\\\"string\\\"}]\",\n  CURLOPT_HTTPHEADER => array(\n    \"authorization: Bearer REPLACE_BEARER_TOKEN\",\n    \"content-type: application/json\"\n  ),\n));\n\n$response = curl_exec($curl);\n$err = curl_error($curl);\n\ncurl_close($curl);\n\nif ($err) {\n  echo \"cURL Error #:\" . $err;\n} else {\n  echo $response;\n}"
+      description: Update the EU product compliance status for each input product by linking with aassociated input responsible_person_id or unlinking the existing responsible person if associated input responsible_person_id is empty or null.</br> The input array size limitation is 500.
+    get:
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/EUProductComplianceStatusResponse'
+          description: successfully queried for product compliance status
+        '400':
+          content:
+            application/json:
+              examples:
+                ExtAPIResponsiblePersonNotFoundException:
+                  value:
+                    message: The input responsible person is not found by the given id.
+                    code: '10003'
+              schema:
+                $ref: '#/components/schemas/APIError'
+          description: failed to query for product compliance status
+      parameters:
+      - $ref: '#/components/parameters/compliance_statuses'
+      - $ref: '#/components/parameters/product_ids'
+      - required: false
+        in: query
+        description: The beginning product id(inclusive) of the result array. If not provided, will use the smallest product id.</br> Ignored when product_ids is provided.
+        name: product_id_min
+        schema:
+          type: string
+          format: object-id
+      - required: false
+        in: query
+        description: The ending product id(inclusive) of the result array. If not provided, will use the largest product id.</br> Ignored when product_ids is provided.
+        name: product_id_max
+        schema:
+          type: string
+          format: object-id
+      - in: query
+        description: A limit on the number of records that will be returned.</br> Ignored when product_ids is provided.
+        name: limit
+        schema:
+          default: 100
+          minimum: 1
+          type: integer
+          maximum: 500
+      - in: query
+        description: Sort results by the given attribute. Enabled attributes are `product_id`. Default order is `asc`, use `desc` to sort in reverse.</br> Ignored when product_ids is provided.
+        name: sort_by
+        schema:
+          default: product_id.asc
+          pattern: ^product_id(\.(asc|desc))?$
+          type: string
+      tags:
+      - EU Product Compliance
+      summary: Get EU Product Compliance Status
+      security:
+      - OAuth2:
+        - compliance:read
+      operationId: getEUProductComplianceStatus
+      x-code-samples:
+      - lang: python_requests
+        source: 'import requests
+
+
+          url = "https://merchant.wish.com/api/v3/eu_product_compliance/products"
+
+
+          querystring = {"compliance_statuses":"SOME_ARRAY_VALUE","product_ids":"SOME_ARRAY_VALUE","product_id_min":"SOME_STRING_VALUE","product_id_max":"SOME_STRING_VALUE","limit":"SOME_INTEGER_VALUE","sort_by":"SOME_STRING_VALUE"}
+
+
+          headers = {''authorization'': ''Bearer REPLACE_BEARER_TOKEN''}
+
+
+          response = requests.request("GET", url, headers=headers, params=querystring)
+
+
+          print(response.text)'
+      - lang: javascript_jquery
+        source: "var settings = {\n  \"async\": true,\n  \"crossDomain\": true,\n  \"url\": \"https://merchant.wish.com/api/v3/eu_product_compliance/products?compliance_statuses=SOME_ARRAY_VALUE&product_ids=SOME_ARRAY_VALUE&product_id_min=SOME_STRING_VALUE&product_id_max=SOME_STRING_VALUE&limit=SOME_INTEGER_VALUE&sort_by=SOME_STRING_VALUE\",\n  \"method\": \"GET\",\n  \"headers\": {\n    \"authorization\": \"Bearer REPLACE_BEARER_TOKEN\"\n  }\n}\n\n$.ajax(settings).done(function (response) {\n  console.log(response);\n});"
+      - lang: java_unirest
+        source: "HttpResponse<String> response = Unirest.get(\"https://merchant.wish.com/api/v3/eu_product_compliance/products?compliance_statuses=SOME_ARRAY_VALUE&product_ids=SOME_ARRAY_VALUE&product_id_min=SOME_STRING_VALUE&product_id_max=SOME_STRING_VALUE&limit=SOME_INTEGER_VALUE&sort_by=SOME_STRING_VALUE\")\n  .header(\"authorization\", \"Bearer REPLACE_BEARER_TOKEN\")\n  .asString();"
+      - lang: shell_curl
+        source: "curl --request GET \\\n  --url 'https://merchant.wish.com/api/v3/eu_product_compliance/products?compliance_statuses=SOME_ARRAY_VALUE&product_ids=SOME_ARRAY_VALUE&product_id_min=SOME_STRING_VALUE&product_id_max=SOME_STRING_VALUE&limit=SOME_INTEGER_VALUE&sort_by=SOME_STRING_VALUE' \\\n  --header 'authorization: Bearer REPLACE_BEARER_TOKEN'"
+      - lang: php_curl
+        source: "<?php\n\n$curl = curl_init();\n\ncurl_setopt_array($curl, array(\n  CURLOPT_URL => \"https://merchant.wish.com/api/v3/eu_product_compliance/products?compliance_statuses=SOME_ARRAY_VALUE&product_ids=SOME_ARRAY_VALUE&product_id_min=SOME_STRING_VALUE&product_id_max=SOME_STRING_VALUE&limit=SOME_INTEGER_VALUE&sort_by=SOME_STRING_VALUE\",\n  CURLOPT_RETURNTRANSFER => true,\n  CURLOPT_ENCODING => \"\",\n  CURLOPT_MAXREDIRS => 10,\n  CURLOPT_TIMEOUT => 30,\n  CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,\n  CURLOPT_CUSTOMREQUEST => \"GET\",\n  CURLOPT_HTTPHEADER => array(\n    \"authorization: Bearer REPLACE_BEARER_TOKEN\"\n  ),\n));\n\n$response = curl_exec($curl);\n$err = curl_error($curl);\n\ncurl_close($curl);\n\nif ($err) {\n  echo \"cURL Error #:\" . $err;\n} else {\n  echo $response;\n}"
+      description: Get the EU product compliance status and responsible person id (if linked) for each input product.</br> If there is no input product ids, then get the result of all products from a merchant.</br> compliance_statuses is an optional input to filter the response.</br> The responsible person id will be empty for products not linked with any responsible person.
+  /api/v3/eu_product_compliance/responsible_person:
+    put:
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ResponsiblePersonResponse'
+          description: successfully created a new EU responsible person.
+        '400':
+          content:
+            application/json:
+              examples:
+                ExtAPIResponsiblePersonInvalidFieldException:
+                  value:
+                    message: The input responsible person has invalid fields.
+                    code: '10001'
+                ExtAPIResponsiblePersonExceedLimitException:
+                  value:
+                    message: The responsible person number exceeds the limit per compliance on the operated merchant.
+                    code: '10002'
+              schema:
+                $ref: '#/components/schemas/APIError'
+          description: failed to create a new EU responsible person.
+      tags:
+      - EU Product Compliance
+      summary: Create an EU Responsible Person
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateResponsiblePerson'
+      security:
+      - OAuth2:
+        - compliance:write
+      operationId: createEUResponsiblePerson
+      x-code-samples:
+      - lang: python_requests
+        source: "import requests\n\nurl = \"https://merchant.wish.com/api/v3/eu_product_compliance/responsible_person\"\n\npayload = \"{\\\"address_line1\\\":\\\"string\\\",\\\"address_line2\\\":\\\"string\\\",\\\"city\\\":\\\"string\\\",\\\"country\\\":\\\"string\\\",\\\"email\\\":\\\"string\\\",\\\"name\\\":\\\"string\\\",\\\"phone_number\\\":\\\"string\\\",\\\"state\\\":\\\"string\\\",\\\"zipcode\\\":\\\"string\\\"}\"\nheaders = {\n    'content-type': \"application/json\",\n    'authorization': \"Bearer REPLACE_BEARER_TOKEN\"\n    }\n\nresponse = requests.request(\"PUT\", url, data=payload, headers=headers)\n\nprint(response.text)"
+      - lang: javascript_jquery
+        source: "var settings = {\n  \"async\": true,\n  \"crossDomain\": true,\n  \"url\": \"https://merchant.wish.com/api/v3/eu_product_compliance/responsible_person\",\n  \"method\": \"PUT\",\n  \"headers\": {\n    \"content-type\": \"application/json\",\n    \"authorization\": \"Bearer REPLACE_BEARER_TOKEN\"\n  },\n  \"processData\": false,\n  \"data\": \"{\\\"address_line1\\\":\\\"string\\\",\\\"address_line2\\\":\\\"string\\\",\\\"city\\\":\\\"string\\\",\\\"country\\\":\\\"string\\\",\\\"email\\\":\\\"string\\\",\\\"name\\\":\\\"string\\\",\\\"phone_number\\\":\\\"string\\\",\\\"state\\\":\\\"string\\\",\\\"zipcode\\\":\\\"string\\\"}\"\n}\n\n$.ajax(settings).done(function (response) {\n  console.log(response);\n});"
+      - lang: java_unirest
+        source: "HttpResponse<String> response = Unirest.put(\"https://merchant.wish.com/api/v3/eu_product_compliance/responsible_person\")\n  .header(\"content-type\", \"application/json\")\n  .header(\"authorization\", \"Bearer REPLACE_BEARER_TOKEN\")\n  .body(\"{\\\"address_line1\\\":\\\"string\\\",\\\"address_line2\\\":\\\"string\\\",\\\"city\\\":\\\"string\\\",\\\"country\\\":\\\"string\\\",\\\"email\\\":\\\"string\\\",\\\"name\\\":\\\"string\\\",\\\"phone_number\\\":\\\"string\\\",\\\"state\\\":\\\"string\\\",\\\"zipcode\\\":\\\"string\\\"}\")\n  .asString();"
+      - lang: shell_curl
+        source: "curl --request PUT \\\n  --url 'https://merchant.wish.com/api/v3/eu_product_compliance/responsible_person' \\\n  --header 'authorization: Bearer REPLACE_BEARER_TOKEN' \\\n  --header 'content-type: application/json' \\\n  --data '{\"address_line1\":\"string\",\"address_line2\":\"string\",\"city\":\"string\",\"country\":\"string\",\"email\":\"string\",\"name\":\"string\",\"phone_number\":\"string\",\"state\":\"string\",\"zipcode\":\"string\"}'"
+      - lang: php_curl
+        source: "<?php\n\n$curl = curl_init();\n\ncurl_setopt_array($curl, array(\n  CURLOPT_URL => \"https://merchant.wish.com/api/v3/eu_product_compliance/responsible_person\",\n  CURLOPT_RETURNTRANSFER => true,\n  CURLOPT_ENCODING => \"\",\n  CURLOPT_MAXREDIRS => 10,\n  CURLOPT_TIMEOUT => 30,\n  CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,\n  CURLOPT_CUSTOMREQUEST => \"PUT\",\n  CURLOPT_POSTFIELDS => \"{\\\"address_line1\\\":\\\"string\\\",\\\"address_line2\\\":\\\"string\\\",\\\"city\\\":\\\"string\\\",\\\"country\\\":\\\"string\\\",\\\"email\\\":\\\"string\\\",\\\"name\\\":\\\"string\\\",\\\"phone_number\\\":\\\"string\\\",\\\"state\\\":\\\"string\\\",\\\"zipcode\\\":\\\"string\\\"}\",\n  CURLOPT_HTTPHEADER => array(\n    \"authorization: Bearer REPLACE_BEARER_TOKEN\",\n    \"content-type: application/json\"\n  ),\n));\n\n$response = curl_exec($curl);\n$err = curl_error($curl);\n\ncurl_close($curl);\n\nif ($err) {\n  echo \"cURL Error #:\" . $err;\n} else {\n  echo $response;\n}"
+      description: Create an EU Responsible Person.
+    get:
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ListResponsiblePersonsResponse'
+          description: successfully queried for EU responsible persons.
+        '400':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/APIError'
+          description: failed to query for EU responsible persons.
+      parameters:
+      - required: false
+        in: query
+        description: The beginning id(inclusive) of the result array of records. If not provided, will use the smallest responsible person id.
+        name: id_min
+        schema:
+          type: string
+          format: object-id
+      - required: false
+        in: query
+        description: The ending id(inclusive) of the result array of records. If not provided, will use the largest responsible person id.
+        name: id_max
+        schema:
+          type: string
+          format: object-id
+      - in: query
+        description: A limit on the number of records that will be returned.
+        name: limit
+        schema:
+          default: 100
+          minimum: 1
+          type: integer
+          maximum: 500
+      - in: query
+        description: Sort results by the given attribute. Enabled attributes are `id`. Default order is `asc`, use `desc` to sort in reverse.
+        name: sort_by
+        schema:
+          default: id.asc
+          pattern: ^id(\.(asc|desc))?$
+          type: string
+      tags:
+      - EU Product Compliance
+      summary: List EU Responsible Persons
+      security:
+      - OAuth2:
+        - compliance:read
+      operationId: listEUResponsiblePerson
+      x-code-samples:
+      - lang: python_requests
+        source: 'import requests
+
+
+          url = "https://merchant.wish.com/api/v3/eu_product_compliance/responsible_person"
+
+
+          querystring = {"id_min":"SOME_STRING_VALUE","id_max":"SOME_STRING_VALUE","limit":"SOME_INTEGER_VALUE","sort_by":"SOME_STRING_VALUE"}
+
+
+          headers = {''authorization'': ''Bearer REPLACE_BEARER_TOKEN''}
+
+
+          response = requests.request("GET", url, headers=headers, params=querystring)
+
+
+          print(response.text)'
+      - lang: javascript_jquery
+        source: "var settings = {\n  \"async\": true,\n  \"crossDomain\": true,\n  \"url\": \"https://merchant.wish.com/api/v3/eu_product_compliance/responsible_person?id_min=SOME_STRING_VALUE&id_max=SOME_STRING_VALUE&limit=SOME_INTEGER_VALUE&sort_by=SOME_STRING_VALUE\",\n  \"method\": \"GET\",\n  \"headers\": {\n    \"authorization\": \"Bearer REPLACE_BEARER_TOKEN\"\n  }\n}\n\n$.ajax(settings).done(function (response) {\n  console.log(response);\n});"
+      - lang: java_unirest
+        source: "HttpResponse<String> response = Unirest.get(\"https://merchant.wish.com/api/v3/eu_product_compliance/responsible_person?id_min=SOME_STRING_VALUE&id_max=SOME_STRING_VALUE&limit=SOME_INTEGER_VALUE&sort_by=SOME_STRING_VALUE\")\n  .header(\"authorization\", \"Bearer REPLACE_BEARER_TOKEN\")\n  .asString();"
+      - lang: shell_curl
+        source: "curl --request GET \\\n  --url 'https://merchant.wish.com/api/v3/eu_product_compliance/responsible_person?id_min=SOME_STRING_VALUE&id_max=SOME_STRING_VALUE&limit=SOME_INTEGER_VALUE&sort_by=SOME_STRING_VALUE' \\\n  --header 'authorization: Bearer REPLACE_BEARER_TOKEN'"
+      - lang: php_curl
+        source: "<?php\n\n$curl = curl_init();\n\ncurl_setopt_array($curl, array(\n  CURLOPT_URL => \"https://merchant.wish.com/api/v3/eu_product_compliance/responsible_person?id_min=SOME_STRING_VALUE&id_max=SOME_STRING_VALUE&limit=SOME_INTEGER_VALUE&sort_by=SOME_STRING_VALUE\",\n  CURLOPT_RETURNTRANSFER => true,\n  CURLOPT_ENCODING => \"\",\n  CURLOPT_MAXREDIRS => 10,\n  CURLOPT_TIMEOUT => 30,\n  CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,\n  CURLOPT_CUSTOMREQUEST => \"GET\",\n  CURLOPT_HTTPHEADER => array(\n    \"authorization: Bearer REPLACE_BEARER_TOKEN\"\n  ),\n));\n\n$response = curl_exec($curl);\n$err = curl_error($curl);\n\ncurl_close($curl);\n\nif ($err) {\n  echo \"cURL Error #:\" . $err;\n} else {\n  echo $response;\n}"
+      description: List all EU Responsible Persons created by a merchant.
+components:
+  schemas:
+    ListResponsiblePersonsResponse:
+      items:
+        $ref: '#/components/schemas/ResponsiblePersonResponse'
+      type: array
+      description: List of Responsible Persons returned
+    ResponsiblePersonResponse:
+      description: a responsible person response
+      allOf:
+      - $ref: '#/components/schemas/ResponsiblePerson'
+      - type: object
+        properties:
+          id:
+            type: string
+            description: The unique identifier of a responsible person
+            format: object-id
+    EUProductComplianceStatusResponse:
+      items:
+        $ref: '#/components/schemas/EUProductComplianceStatus'
+      type: array
+      description: List of objects including a product id, compliance status and responsible person id.
+    EUProductComplianceStatusRequest:
+      required:
+      - product_id
+      type: object
+      properties:
+        product_id:
+          type: string
+          description: The unique identifier of a product
+          format: object-id
+        responsible_person_id:
+          type: string
+          description: The unique identifier of a responsible person
+          format: object-id
+    CreateResponsiblePerson:
+      type: object
+      description: details of creating a responsible person
+      allOf:
+      - $ref: '#/components/schemas/ResponsiblePerson'
+      - required:
+        - name
+        - address_line1
+        - city
+        - state
+        - zipcode
+        - country
+        - phone_number
+        - email
+        type: object
+    APIError:
+      required:
+      - code
+      - message
+      type: object
+      properties:
+        message:
+          type: string
+        code:
+          type: integer
+          format: int32
+    EUProductComplianceStatus:
+      type: object
+      properties:
+        compliance_status:
+          $ref: '#/components/schemas/ComplianceStatus'
+        product_id:
+          type: string
+          description: The unique identifier of a product
+          format: object-id
+        responsible_person_id:
+          type: string
+          description: The unique identifier of a responsible person
+          format: object-id
+    ResponsiblePerson:
+      type: object
+      description: details of a responsible person
+      properties:
+        address_line2:
+          type: string
+          description: the address line 2 of the responsible person
+        city:
+          minLength: 1
+          type: string
+          description: the city or town of the responsible person
+        address_line1:
+          minLength: 1
+          type: string
+          description: the address line 1 of the responsible person
+        name:
+          minLength: 1
+          type: string
+          description: name of the responsible person
+        country:
+          minLength: 1
+          type: string
+          description: Country code where the responsible person is located
+        zipcode:
+          minLength: 1
+          type: string
+          description: the zip code or postal code of the responsible person
+        state:
+          minLength: 1
+          type: string
+          description: the state or region of the responsible person
+        phone_number:
+          minLength: 1
+          type: string
+          description: the phone number of the responsible person
+        email:
+          minLength: 1
+          type: string
+          description: the email of the responsible person
+    BulkUpdateEUProductComplianceStatusJob:
+      type: object
+      properties:
+        status:
+          enum:
+          - PENDING
+          - RUNNING
+          - COMPLETE
+          - EXCEPTION
+          type: string
+          description: "1. PENDING - The bulk update job has been received and is awaiting processing\n2. RUNNING - The bulk update job is running\n3. COMPLETE -\tThe bulk update job completes successfully\n4. EXCEPTION - The bulk update job aborts with exceptions and please retrigger a new job\n"
+        new_person_id:
+          type: string
+          description: id of the responsible person to update for all associated products of old_person_id.</br> No input (null or empty) means to unlink old_person_id from all its associated products.
+          format: object-id
+        total_count:
+          type: number
+          description: Total number of products to update linked responsible person
+        created_at:
+          type: string
+          description: The timestamp on when this job is created
+          format: date-time
+        updated_at:
+          type: string
+          description: The timestamp on the latest update of this job
+          format: date-time
+        processed_count:
+          type: number
+          description: This number indicates how many products have been processed to update linked responsible person so far
+        id:
+          type: string
+          description: ID of the bulk update job
+          format: object-id
+        old_person_id:
+          type: string
+          description: id of the responsible person to unlink for all associated products.
+          format: object-id
+    ComplianceStatus:
+      enum:
+      - RESPONSIBLE_PERSON_LINKED
+      - NO_RESPONSIBLE_PERSON
+      - NOT_RECOMMENDED_TO_LINK_RESPONSIBLE_PERSON
+      type: string
+      description: ' 3 status: (1) a responsible person linked, (2) no responsible person, (3) not recommended to link a responsible person.'
+  parameters:
+    id:
+      schema:
+        type: string
+        format: object-id
+      required: true
+      description: id of the responsible person
+      name: id
+      in: path
+    product_ids:
+      schema:
+        items:
+          type: string
+          description: The unique identifiers of a product
+          format: object-id
+        type: array
+        maxItems: 500
+      description: The list of the product IDs that will be returned with the compliance status
+      name: product_ids
+      in: query
+    compliance_statuses:
+      schema:
+        minItems: 1
+        items:
+          $ref: '#/components/schemas/ComplianceStatus'
+        type: array
+        maxItems: 3
+      required: false
+      description: '
+
+        Choose the specific compliance status to filter output. Current input values are:
+
+
+        1. RESPONSIBLE_PERSON_LINKED: a responsible person linked.
+
+        2. NO_RESPONSIBLE_PERSON: no responsible person.
+
+        3. NOT_RECOMMENDED_TO_LINK_RESPONSIBLE_PERSON: not recommended to link a responsible person.
+
+        '
+      name: compliance_statuses
+      in: query
+    old_person_id:
+      schema:
+        type: string
+        format: object-id
+      required: true
+      description: id of the responsible person to unlink for all associated products.
+      name: old_person_id
+      in: query
+    new_person_id:
+      schema:
+        type: string
+        format: object-id
+      description: id of the responsible person to update for all associated products of old_person_id.</br> No input (null or empty) means to unlink old_person_id from all its associated products.
+      name: new_person_id
+      in: query
+  securitySchemes:
+    OpenID:
+      type: openIdConnect
+      openIdConnectUrl: https://merchant.wish.com/oidc/.well-known/openid-configuration
+    OAuth2:
+      type: oauth2
+      flows:
+        authorizationCode:
+          scopes:
+            payments:write: Update payments
+            tickets:write: Write customer tickets
+            epc:read: read EPC info
+            returns:write: Write returns
+            returns:read: Read returns
+            fbw:read: Read FBW
+            products:read: Read products
+            payments:read: Read payments
+            fbw:write: Write FBW
+            merchant:write: Write merchant
+            products:write: Write products
+            ratings:read: Read ratings
+            videos:read: Read videos
+            compliance:write: Write Compliance
+            product_boost:read: Read ProductBoost
+            listing_quality:read: Read listing quality
+            webhook:write: Write webhook
+            orders:read: Read orders
+            compliance:read: Read Compliance
+            fbs:read: Read FBS
+            penalties:read: Read penalties
+            penalties:write: Update penalties
+            infractions:read: Read infractions
+            orders:write: Update orders
+            merchant:read: Read merchant
+            notifications:write: Write notifications
+            announcements:read: Read announcements
+            product_boost:write: Write ProductBoost
+            notifications:read: Read notifications
+            webhook:read: Read webhook
+            qoo10:read: Read Qoo10
+            wps_parcel:write: Write WishParcel
+            wps_parcel:read: Read WishParcel
+            tickets:read: Read customer tickets
+            infractions:write: Write infractions
+            videos:write: Write videos
+            epc:write: write EPC info
+          tokenUrl: https://merchant.wish.com/api/v3/oauth/access_token
+          refreshUrl: https://merchant.wish.com/api/v3/oauth/refresh_token
+          authorizationUrl: https://merchant.wish.com/v3/oauth/authorize
+externalDocs:
+  url: https://merchant.wish.com/documentation/api/v3/explorer
+  description: API explorer
+x-wish-hidden: false

@@ -1,0 +1,1893 @@
+openapi: 3.0.0
+info:
+  contact:
+    email: partner-api@wish.com
+  x-wish-dev-contact:
+    assignee: kwei
+    email: marketplace-external-api@contextlogic.com
+  description: "\nWish Marketplace V3 API\n\n# General Information\n\n The Wish Marketplace API will be using oAuth to authenticate in order to offer better security for its users\n\n *   Learn about oAuth [here](oauth).\n *   If you are a merchant and want to create an application for yourself, learn about how to create a private app [here](../../private-app)\n *   If you are a ERP and create applications that'll be used by multiple merchants, learn about how to create a public app [here]( ../../public-app). You will need to apply to be a verified public application\n\n ## How to Test\n\n To avoid testing the API on production data, use our sandbox. The sandbox is completely contained and will not affect Wish users or your merchant account. \n \n To reach the sandbox, visit: https://sandbox.merchant.wish.com.\n\n To use the sandbox in testing, use https://sandbox.merchant.wish.com/api/v3/ as your base URL.\n\n How to Generate test data after you have created a sandbox account:\n 1. Navigate to the [unfulfilled orders page](https://sandbox.merchant.wish.com/transactions/action)\n 2. Hover over the dropdown next to the 'fulfill with csv' button and select Generate Orders\n\n ## Date/Time Format\n\n  All dates and times in our API are returned in the same format. It is in the form `YYYY-MM-DDTHH:mm:ss.sss±XX:ZZ` or `YYYY-MM-DDTHH:mm:ss.sssZ`, where 'Z' represents UTC timezone.\n  When sending timestamps in URL parameters or the request body, millisecond is optional and will defaults to 0 if not provided.\n\n  * `YYYY` is the year\n  * `MM` is the month\n  * `DD` is the day\n  * `HH` is the hour (in 24-hour clock format)\n  * `mm` is the minutes\n  * `ss.sss` is the seconds and milliseconds\n  * `±XX:ZZ` is the UTC offset of the form +XX:ZZ or -XX:ZZ where XX is a 2-digit string giving the number of UTC offset hours, and ZZ is a 2-digit string giving the number of UTC offset minutes.\n\n ## Response Schema\n\n  Every response returned from the Wish API will have the same schema. This schema is intended to give you a predictable manner to check the status of your request and know where to get the data. Each response will have the following top level attributes: message, code and data.\n\n  **Attributes**\n\n  <table>\n  <tbody>\n  <tr>\n  <th>Message</th>\n  <td>A message describing the error that happened, example: \"We could not find a product for id: '5d30f60e0a6fc464f4f376b0'\"</td>\n  </tr>\n  <tr>\n  <th>Code</th>\n  <td>A unique number which represents the error that has occurred, example: 1008 or 0 if success.</td>\n  </tr>\n  <tr>\n  <th>Data</th>\n  <td>For errors this will be empty.</td>\n  </tr>\n  </tbody>\n  </table>\n\n ## General Querying Techniques\n\n ### Partial Resources\n All GET endpoints (except OAuth) support a fields parameter which allows for requesting a partial response. Any fields specified in the response schema of an endpoint can be selected. The top level attribute `data` can be ignored when using the fields parameter.\n\n **Syntax**\n * Comma-separated list to select multiple fields\n * Use forward slash `/` to select nested field: `field1/nested_field`\n * Use parentheses `( )` to select multiple nested fields: `field1(nested_field1,nested_field2)`\n * Use `*` for wildcard selection: `field1/nested_field/*`\n\n\n **Example:**\n ```\n https://merchant.wish.com/api/v3/demo/get?fields=title,items(id,info/name)\n ```\n Which would result in the following partial response:\n ```\n {\n   \"title\": \"demo\",\n   \"items\": [\n     {\n       \"id\": \"1\",\n       \"info\": {\n         \"name\": \"demo_item_1\"\n       }\n     }, {\n       \"id\": \"2\",\n       \"info\": {\n         \"name\": \"demo_item_2\"\n       }\n     },\n     ...\n   ]\n }\n ```\n\n ## Locale\n   You can optionally specify locale in order to translate content and error messages into your language.\n   To do this use the [Accept-Language](https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Accept-Language) header to specify your preferred locales.\n   If none is provided, your default locale will be used.\n\n   For example, to request content in Chinese use: `Accept-Language: zh`\n\n   In the response, you will receive a [Content-Language](https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Content-Language) header that specifies the locale code of the response content.\n\n\n ## Rate-Limiting\n\n  Rate-limiting will be performed on a per-merchant basis for each app. It is your responsibility to ensure you are not making frequent unnecessary calls to the API.\n\n  If the rate limits cannot satisfy your need, we highly recommend integrating webhooks for your app. With webhooks, instead of pulling resources periodically, your app will receive real-time notifications for particular events that occur to a merchant’s store. [Learn more](https://merchant.wish.com/documentation/webhooks)\n\n  **Normal Usage**\n\n  To help you track the rate-limiter status, the following response header(s) will be provided with each response:\n\n   * `Wish-Rate-Limit-Remaining`: The number of calls remaining in the current rate-limiting window.\n\n\n  **Rate-Limit Exceeded**\n\n  After you exceed the number of allowed calls in the current rate-limiting window, you will receive a `429 Too Many Requests` error response and the following additional header(s):\n\n   * `Wish-Rate-Limit-Reset`: The time the rate-limiter will reset.\n\n\n  Once you receive this response there is nothing you can do except wait for the rate-limiter to reset. In order to avoid being rate-limited, you may want to cache your responses.\n\n ## Sorting\n   ### Overview\n   Sorting is available for most endpoints that return a collection (list) of objects. Each collection has a different set of enabled parameters for sorting, so please check specific collection section for detail.\n\n   ### Usage\n   Append `sort_by={parameter_name}.{asc|desc}` in your API request where `parameter_name` is a valid sortable parameter of that endpoint.\n\n   Example:\n   ```\n   /api/v3/penalties?sort_by=created_at.asc\n   ```\n\n ## Pagination\n  All bulk-fetching API methods that return lists of resource support pagination.\n  These methods commonly take at least 3 parameters: `limit`, `{attribute}_min`, `{attribute}_max`. Attribute can be `id`, `create_at`, etc., depending on each specific method.\n  For instance, you make a request to get a list of penalties `/api/v3/penalties?limit=20&created_at_max=2020-04-08T23:59:59Z&sort_by=created_at_max.desc`,\n  which means to fetch 20 penalities sorted by their creation time, with the most recent one being created before `2020-04-08T23:59:59Z`.\n  Assume that the response contains 20 `penalty` objects with the last object being `penalty_foo`,\n  then your subsequent request can be `/api/v3/penalties?limit=20&created_at_max={penalty_foo.create_at}&sort_by=created_at_max.desc` to fetch the next page of list.\n  Note that when fetching next page using `id_min` or `id_max`, you need to perform `+/- 1`(correspondingly) on the last object's ID in the current page, as `id_min` and `id_max` are inclusive. (All V3 API resources' IDs are either integer or BSON object ID - a hex number).\n\n\n ## Request ID\n  Each API request is associated with a unique identifier. You can find this value in response headers, under `Wish-Request-Id`.\n  **When you need to contact us about a specific request, please provide this ID to ensure the fastest possible reply**\n\n# Authentication\nFor all requests that require OAuth2 authentication, the access token must be provided in the `Authorization` request header in the following format: `Authorization: Bearer <token>`\n\nFor example:\n```\nAuthorization: Bearer 3d6e2d71bc464e42bfbdb081afb73c1e\n```\n<!-- ReDoc-Inject: <security-definitions> -->\n"
+  version: 3.0.65
+  title: Wish Marketplace V3 Brands Orders API
+servers:
+- url: https://merchant.wish.com
+  description: V3 API endpoint
+security:
+- OAuth2: []
+tags:
+- name: Orders
+paths:
+  /api/v3/orders/shipping_carriers:
+    get:
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Carriers'
+          description: Successful request - List of valid providers
+      parameters:
+      - $ref: '#/components/parameters/dest_country'
+      - $ref: '#/components/parameters/order_type_for_carrier_list'
+      tags:
+      - Orders
+      summary: Get accepted shipping carriers
+      security:
+      - OAuth2:
+        - orders:read
+      operationId: GetShippingCarriers
+      x-code-samples:
+      - lang: java_unirest
+        source: "HttpResponse<String> response = Unirest.get(\"https://merchant.wish.com/api/v3/orders/shipping_carriers?dest_country_code=SOME_STRING_VALUE&order_type=SOME_STRING_VALUE\")\n  .header(\"authorization\", \"Bearer REPLACE_BEARER_TOKEN\")\n  .asString();"
+      - lang: php_curl
+        source: "<?php\n\n$curl = curl_init();\n\ncurl_setopt_array($curl, array(\n  CURLOPT_URL => \"https://merchant.wish.com/api/v3/orders/shipping_carriers?dest_country_code=SOME_STRING_VALUE&order_type=SOME_STRING_VALUE\",\n  CURLOPT_RETURNTRANSFER => true,\n  CURLOPT_ENCODING => \"\",\n  CURLOPT_MAXREDIRS => 10,\n  CURLOPT_TIMEOUT => 30,\n  CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,\n  CURLOPT_CUSTOMREQUEST => \"GET\",\n  CURLOPT_HTTPHEADER => array(\n    \"authorization: Bearer REPLACE_BEARER_TOKEN\"\n  ),\n));\n\n$response = curl_exec($curl);\n$err = curl_error($curl);\n\ncurl_close($curl);\n\nif ($err) {\n  echo \"cURL Error #:\" . $err;\n} else {\n  echo $response;\n}"
+      - lang: javascript_jquery
+        source: "var settings = {\n  \"async\": true,\n  \"crossDomain\": true,\n  \"url\": \"https://merchant.wish.com/api/v3/orders/shipping_carriers?dest_country_code=SOME_STRING_VALUE&order_type=SOME_STRING_VALUE\",\n  \"method\": \"GET\",\n  \"headers\": {\n    \"authorization\": \"Bearer REPLACE_BEARER_TOKEN\"\n  }\n}\n\n$.ajax(settings).done(function (response) {\n  console.log(response);\n});"
+      - lang: shell_curl
+        source: "curl --request GET \\\n  --url 'https://merchant.wish.com/api/v3/orders/shipping_carriers?dest_country_code=SOME_STRING_VALUE&order_type=SOME_STRING_VALUE' \\\n  --header 'authorization: Bearer REPLACE_BEARER_TOKEN'"
+      - lang: python_requests
+        source: 'import requests
+
+
+          url = "https://merchant.wish.com/api/v3/orders/shipping_carriers"
+
+
+          querystring = {"dest_country_code":"SOME_STRING_VALUE","order_type":"SOME_STRING_VALUE"}
+
+
+          headers = {''authorization'': ''Bearer REPLACE_BEARER_TOKEN''}
+
+
+          response = requests.request("GET", url, headers=headers, params=querystring)
+
+
+          print(response.text)'
+      description: Get a list of accepted shipping carriers based on order_type and dest_country_code. dest_country_code is only needed when order_type is not GENERAL.
+  /api/v3/orders/bulk_get:
+    post:
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/OrderDownloadJob'
+          description: successfully queued a batch download job
+        '400':
+          content:
+            application/json:
+              examples:
+                InvalidParameter:
+                  value:
+                    message: There is no such download job for the merchant.
+                    code: '90001'
+              schema:
+                $ref: '#/components/schemas/APIError'
+          description: failed to queue a download job
+      parameters:
+      - $ref: '#/components/parameters/limit_order_download_job'
+      - $ref: '#/components/parameters/updated_at_max'
+      - $ref: '#/components/parameters/updated_at_min'
+      - $ref: '#/components/parameters/released_at_min'
+      - $ref: '#/components/parameters/released_at_max'
+      - $ref: '#/components/parameters/sort_by'
+      - $ref: '#/components/parameters/order_type'
+      - $ref: '#/components/parameters/states'
+      tags:
+      - Orders
+      summary: Batch download orders
+      security:
+      - OAuth2:
+        - orders:read
+      operationId: downloadOrders
+      x-code-samples:
+      - lang: java_unirest
+        source: "HttpResponse<String> response = Unirest.post(\"https://merchant.wish.com/api/v3/orders/bulk_get?limit=SOME_INTEGER_VALUE&updated_at_max=SOME_STRING_VALUE&updated_at_min=SOME_STRING_VALUE&released_at_min=SOME_STRING_VALUE&released_at_max=SOME_STRING_VALUE&sort_by=SOME_STRING_VALUE&order_type=SOME_STRING_VALUE&states=SOME_ARRAY_VALUE\")\n  .header(\"authorization\", \"Bearer REPLACE_BEARER_TOKEN\")\n  .asString();"
+      - lang: php_curl
+        source: "<?php\n\n$curl = curl_init();\n\ncurl_setopt_array($curl, array(\n  CURLOPT_URL => \"https://merchant.wish.com/api/v3/orders/bulk_get?limit=SOME_INTEGER_VALUE&updated_at_max=SOME_STRING_VALUE&updated_at_min=SOME_STRING_VALUE&released_at_min=SOME_STRING_VALUE&released_at_max=SOME_STRING_VALUE&sort_by=SOME_STRING_VALUE&order_type=SOME_STRING_VALUE&states=SOME_ARRAY_VALUE\",\n  CURLOPT_RETURNTRANSFER => true,\n  CURLOPT_ENCODING => \"\",\n  CURLOPT_MAXREDIRS => 10,\n  CURLOPT_TIMEOUT => 30,\n  CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,\n  CURLOPT_CUSTOMREQUEST => \"POST\",\n  CURLOPT_HTTPHEADER => array(\n    \"authorization: Bearer REPLACE_BEARER_TOKEN\"\n  ),\n));\n\n$response = curl_exec($curl);\n$err = curl_error($curl);\n\ncurl_close($curl);\n\nif ($err) {\n  echo \"cURL Error #:\" . $err;\n} else {\n  echo $response;\n}"
+      - lang: javascript_jquery
+        source: "var settings = {\n  \"async\": true,\n  \"crossDomain\": true,\n  \"url\": \"https://merchant.wish.com/api/v3/orders/bulk_get?limit=SOME_INTEGER_VALUE&updated_at_max=SOME_STRING_VALUE&updated_at_min=SOME_STRING_VALUE&released_at_min=SOME_STRING_VALUE&released_at_max=SOME_STRING_VALUE&sort_by=SOME_STRING_VALUE&order_type=SOME_STRING_VALUE&states=SOME_ARRAY_VALUE\",\n  \"method\": \"POST\",\n  \"headers\": {\n    \"authorization\": \"Bearer REPLACE_BEARER_TOKEN\"\n  }\n}\n\n$.ajax(settings).done(function (response) {\n  console.log(response);\n});"
+      - lang: shell_curl
+        source: "curl --request POST \\\n  --url 'https://merchant.wish.com/api/v3/orders/bulk_get?limit=SOME_INTEGER_VALUE&updated_at_max=SOME_STRING_VALUE&updated_at_min=SOME_STRING_VALUE&released_at_min=SOME_STRING_VALUE&released_at_max=SOME_STRING_VALUE&sort_by=SOME_STRING_VALUE&order_type=SOME_STRING_VALUE&states=SOME_ARRAY_VALUE' \\\n  --header 'authorization: Bearer REPLACE_BEARER_TOKEN'"
+      - lang: python_requests
+        source: 'import requests
+
+
+          url = "https://merchant.wish.com/api/v3/orders/bulk_get"
+
+
+          querystring = {"limit":"SOME_INTEGER_VALUE","updated_at_max":"SOME_STRING_VALUE","updated_at_min":"SOME_STRING_VALUE","released_at_min":"SOME_STRING_VALUE","released_at_max":"SOME_STRING_VALUE","sort_by":"SOME_STRING_VALUE","order_type":"SOME_STRING_VALUE","states":"SOME_ARRAY_VALUE"}
+
+
+          headers = {''authorization'': ''Bearer REPLACE_BEARER_TOKEN''}
+
+
+          response = requests.request("POST", url, headers=headers, params=querystring)
+
+
+          print(response.text)'
+      description: Batch download orders
+  /api/v3/orders/bulk_get/{id}:
+    get:
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/OrderDownloadJob'
+          description: successfully queried for the download job
+        '400':
+          content:
+            application/json:
+              examples:
+                InvalidParameter:
+                  value:
+                    message: There is no such download job for the merchant.
+                    code: '90001'
+              schema:
+                $ref: '#/components/schemas/APIError'
+          description: failed to query for a download job
+      parameters:
+      - required: true
+        in: path
+        description: ID of the batch download job to query
+        name: id
+        schema:
+          type: string
+          format: object-id
+      tags:
+      - Orders
+      summary: Get batch download job status
+      security:
+      - OAuth2:
+        - orders:read
+      operationId: getOrderDownloadJob
+      x-code-samples:
+      - lang: java_unirest
+        source: "HttpResponse<String> response = Unirest.get(\"https://merchant.wish.com/api/v3/orders/bulk_get/{id}\")\n  .header(\"authorization\", \"Bearer REPLACE_BEARER_TOKEN\")\n  .asString();"
+      - lang: php_curl
+        source: "<?php\n\n$curl = curl_init();\n\ncurl_setopt_array($curl, array(\n  CURLOPT_URL => \"https://merchant.wish.com/api/v3/orders/bulk_get/{id}\",\n  CURLOPT_RETURNTRANSFER => true,\n  CURLOPT_ENCODING => \"\",\n  CURLOPT_MAXREDIRS => 10,\n  CURLOPT_TIMEOUT => 30,\n  CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,\n  CURLOPT_CUSTOMREQUEST => \"GET\",\n  CURLOPT_HTTPHEADER => array(\n    \"authorization: Bearer REPLACE_BEARER_TOKEN\"\n  ),\n));\n\n$response = curl_exec($curl);\n$err = curl_error($curl);\n\ncurl_close($curl);\n\nif ($err) {\n  echo \"cURL Error #:\" . $err;\n} else {\n  echo $response;\n}"
+      - lang: javascript_jquery
+        source: "var settings = {\n  \"async\": true,\n  \"crossDomain\": true,\n  \"url\": \"https://merchant.wish.com/api/v3/orders/bulk_get/{id}\",\n  \"method\": \"GET\",\n  \"headers\": {\n    \"authorization\": \"Bearer REPLACE_BEARER_TOKEN\"\n  }\n}\n\n$.ajax(settings).done(function (response) {\n  console.log(response);\n});"
+      - lang: shell_curl
+        source: "curl --request GET \\\n  --url 'https://merchant.wish.com/api/v3/orders/bulk_get/{id}' \\\n  --header 'authorization: Bearer REPLACE_BEARER_TOKEN'"
+      - lang: python_requests
+        source: 'import requests
+
+
+          url = "https://merchant.wish.com/api/v3/orders/bulk_get/{id}"
+
+
+          headers = {''authorization'': ''Bearer REPLACE_BEARER_TOKEN''}
+
+
+          response = requests.request("GET", url, headers=headers)
+
+
+          print(response.text)'
+      description: Get batch download job status
+  /api/v3/orders/{id}/tracking:
+    put:
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Order'
+          description: Successful request
+      parameters:
+      - $ref: '#/components/parameters/order_id'
+      tags:
+      - Orders
+      summary: Ship or update tracking
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateTracking'
+      security:
+      - OAuth2:
+        - orders:write
+      operationId: ShipOrder
+      x-code-samples:
+      - lang: java_unirest
+        source: "HttpResponse<String> response = Unirest.put(\"https://merchant.wish.com/api/v3/orders/{id}/tracking\")\n  .header(\"content-type\", \"application/json\")\n  .header(\"authorization\", \"Bearer REPLACE_BEARER_TOKEN\")\n  .body(\"{\\\"origin_country\\\":\\\"string\\\",\\\"ship_note\\\":\\\"string\\\",\\\"shipping_provider\\\":\\\"string\\\",\\\"tracking_number\\\":\\\"string\\\"}\")\n  .asString();"
+      - lang: php_curl
+        source: "<?php\n\n$curl = curl_init();\n\ncurl_setopt_array($curl, array(\n  CURLOPT_URL => \"https://merchant.wish.com/api/v3/orders/{id}/tracking\",\n  CURLOPT_RETURNTRANSFER => true,\n  CURLOPT_ENCODING => \"\",\n  CURLOPT_MAXREDIRS => 10,\n  CURLOPT_TIMEOUT => 30,\n  CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,\n  CURLOPT_CUSTOMREQUEST => \"PUT\",\n  CURLOPT_POSTFIELDS => \"{\\\"origin_country\\\":\\\"string\\\",\\\"ship_note\\\":\\\"string\\\",\\\"shipping_provider\\\":\\\"string\\\",\\\"tracking_number\\\":\\\"string\\\"}\",\n  CURLOPT_HTTPHEADER => array(\n    \"authorization: Bearer REPLACE_BEARER_TOKEN\",\n    \"content-type: application/json\"\n  ),\n));\n\n$response = curl_exec($curl);\n$err = curl_error($curl);\n\ncurl_close($curl);\n\nif ($err) {\n  echo \"cURL Error #:\" . $err;\n} else {\n  echo $response;\n}"
+      - lang: javascript_jquery
+        source: "var settings = {\n  \"async\": true,\n  \"crossDomain\": true,\n  \"url\": \"https://merchant.wish.com/api/v3/orders/{id}/tracking\",\n  \"method\": \"PUT\",\n  \"headers\": {\n    \"content-type\": \"application/json\",\n    \"authorization\": \"Bearer REPLACE_BEARER_TOKEN\"\n  },\n  \"processData\": false,\n  \"data\": \"{\\\"origin_country\\\":\\\"string\\\",\\\"ship_note\\\":\\\"string\\\",\\\"shipping_provider\\\":\\\"string\\\",\\\"tracking_number\\\":\\\"string\\\"}\"\n}\n\n$.ajax(settings).done(function (response) {\n  console.log(response);\n});"
+      - lang: shell_curl
+        source: "curl --request PUT \\\n  --url 'https://merchant.wish.com/api/v3/orders/{id}/tracking' \\\n  --header 'authorization: Bearer REPLACE_BEARER_TOKEN' \\\n  --header 'content-type: application/json' \\\n  --data '{\"origin_country\":\"string\",\"ship_note\":\"string\",\"shipping_provider\":\"string\",\"tracking_number\":\"string\"}'"
+      - lang: python_requests
+        source: "import requests\n\nurl = \"https://merchant.wish.com/api/v3/orders/{id}/tracking\"\n\npayload = \"{\\\"origin_country\\\":\\\"string\\\",\\\"ship_note\\\":\\\"string\\\",\\\"shipping_provider\\\":\\\"string\\\",\\\"tracking_number\\\":\\\"string\\\"}\"\nheaders = {\n    'content-type': \"application/json\",\n    'authorization': \"Bearer REPLACE_BEARER_TOKEN\"\n    }\n\nresponse = requests.request(\"PUT\", url, data=payload, headers=headers)\n\nprint(response.text)"
+      description: Ship or update tracking for an order. This operation is asynchronous.
+  /api/v3/orders/{id}/refund_reasons:
+    get:
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RefundReasons'
+          description: Successful request - List of valid refund reasons
+      parameters:
+      - $ref: '#/components/parameters/order_id'
+      tags:
+      - Orders
+      summary: Get valid refund reasons
+      security:
+      - OAuth2:
+        - orders:read
+      operationId: GetValidRefundReasons
+      x-code-samples:
+      - lang: java_unirest
+        source: "HttpResponse<String> response = Unirest.get(\"https://merchant.wish.com/api/v3/orders/{id}/refund_reasons\")\n  .header(\"authorization\", \"Bearer REPLACE_BEARER_TOKEN\")\n  .asString();"
+      - lang: php_curl
+        source: "<?php\n\n$curl = curl_init();\n\ncurl_setopt_array($curl, array(\n  CURLOPT_URL => \"https://merchant.wish.com/api/v3/orders/{id}/refund_reasons\",\n  CURLOPT_RETURNTRANSFER => true,\n  CURLOPT_ENCODING => \"\",\n  CURLOPT_MAXREDIRS => 10,\n  CURLOPT_TIMEOUT => 30,\n  CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,\n  CURLOPT_CUSTOMREQUEST => \"GET\",\n  CURLOPT_HTTPHEADER => array(\n    \"authorization: Bearer REPLACE_BEARER_TOKEN\"\n  ),\n));\n\n$response = curl_exec($curl);\n$err = curl_error($curl);\n\ncurl_close($curl);\n\nif ($err) {\n  echo \"cURL Error #:\" . $err;\n} else {\n  echo $response;\n}"
+      - lang: javascript_jquery
+        source: "var settings = {\n  \"async\": true,\n  \"crossDomain\": true,\n  \"url\": \"https://merchant.wish.com/api/v3/orders/{id}/refund_reasons\",\n  \"method\": \"GET\",\n  \"headers\": {\n    \"authorization\": \"Bearer REPLACE_BEARER_TOKEN\"\n  }\n}\n\n$.ajax(settings).done(function (response) {\n  console.log(response);\n});"
+      - lang: shell_curl
+        source: "curl --request GET \\\n  --url 'https://merchant.wish.com/api/v3/orders/{id}/refund_reasons' \\\n  --header 'authorization: Bearer REPLACE_BEARER_TOKEN'"
+      - lang: python_requests
+        source: 'import requests
+
+
+          url = "https://merchant.wish.com/api/v3/orders/{id}/refund_reasons"
+
+
+          headers = {''authorization'': ''Bearer REPLACE_BEARER_TOKEN''}
+
+
+          response = requests.request("GET", url, headers=headers)
+
+
+          print(response.text)'
+      description: 'Valid refund reasons can differ per order - use this endpoint to reference valid refund reasons. Note: refund reasons can change throughout an order''s lifecycle, so reference this just before refunding.'
+  /api/v3/orders/{id}:
+    put:
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Order'
+          description: Successful request
+      parameters:
+      - $ref: '#/components/parameters/order_id'
+      tags:
+      - Orders
+      summary: Update an LTL order
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateOrder'
+      security:
+      - OAuth2:
+        - orders:write
+      operationId: UpdateOrder
+      x-code-samples:
+      - lang: java_unirest
+        source: "HttpResponse<String> response = Unirest.put(\"https://merchant.wish.com/api/v3/orders/{id}\")\n  .header(\"content-type\", \"application/json\")\n  .header(\"authorization\", \"Bearer REPLACE_BEARER_TOKEN\")\n  .body(\"{\\\"delivered_at\\\":\\\"2024-08-13T05:53:03Z\\\",\\\"delivery_receipt_file_url\\\":\\\"string\\\",\\\"tracking_url\\\":\\\"string\\\"}\")\n  .asString();"
+      - lang: php_curl
+        source: "<?php\n\n$curl = curl_init();\n\ncurl_setopt_array($curl, array(\n  CURLOPT_URL => \"https://merchant.wish.com/api/v3/orders/{id}\",\n  CURLOPT_RETURNTRANSFER => true,\n  CURLOPT_ENCODING => \"\",\n  CURLOPT_MAXREDIRS => 10,\n  CURLOPT_TIMEOUT => 30,\n  CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,\n  CURLOPT_CUSTOMREQUEST => \"PUT\",\n  CURLOPT_POSTFIELDS => \"{\\\"delivered_at\\\":\\\"2024-08-13T05:53:03Z\\\",\\\"delivery_receipt_file_url\\\":\\\"string\\\",\\\"tracking_url\\\":\\\"string\\\"}\",\n  CURLOPT_HTTPHEADER => array(\n    \"authorization: Bearer REPLACE_BEARER_TOKEN\",\n    \"content-type: application/json\"\n  ),\n));\n\n$response = curl_exec($curl);\n$err = curl_error($curl);\n\ncurl_close($curl);\n\nif ($err) {\n  echo \"cURL Error #:\" . $err;\n} else {\n  echo $response;\n}"
+      - lang: javascript_jquery
+        source: "var settings = {\n  \"async\": true,\n  \"crossDomain\": true,\n  \"url\": \"https://merchant.wish.com/api/v3/orders/{id}\",\n  \"method\": \"PUT\",\n  \"headers\": {\n    \"content-type\": \"application/json\",\n    \"authorization\": \"Bearer REPLACE_BEARER_TOKEN\"\n  },\n  \"processData\": false,\n  \"data\": \"{\\\"delivered_at\\\":\\\"2024-08-13T05:53:03Z\\\",\\\"delivery_receipt_file_url\\\":\\\"string\\\",\\\"tracking_url\\\":\\\"string\\\"}\"\n}\n\n$.ajax(settings).done(function (response) {\n  console.log(response);\n});"
+      - lang: shell_curl
+        source: "curl --request PUT \\\n  --url 'https://merchant.wish.com/api/v3/orders/{id}' \\\n  --header 'authorization: Bearer REPLACE_BEARER_TOKEN' \\\n  --header 'content-type: application/json' \\\n  --data '{\"delivered_at\":\"2024-08-13T05:53:03Z\",\"delivery_receipt_file_url\":\"string\",\"tracking_url\":\"string\"}'"
+      - lang: python_requests
+        source: "import requests\n\nurl = \"https://merchant.wish.com/api/v3/orders/{id}\"\n\npayload = \"{\\\"delivered_at\\\":\\\"2024-08-13T05:53:03Z\\\",\\\"delivery_receipt_file_url\\\":\\\"string\\\",\\\"tracking_url\\\":\\\"string\\\"}\"\nheaders = {\n    'content-type': \"application/json\",\n    'authorization': \"Bearer REPLACE_BEARER_TOKEN\"\n    }\n\nresponse = requests.request(\"PUT\", url, data=payload, headers=headers)\n\nprint(response.text)"
+      description: Update tracking for a less-than-truckload (LTL) order. This operation is synchronous.
+    get:
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Order'
+          description: Successful request - Order-level schema for the desired order ID
+      parameters:
+      - $ref: '#/components/parameters/order_id'
+      tags:
+      - Orders
+      summary: Get an order
+      security:
+      - OAuth2:
+        - orders:read
+      operationId: GetOrder
+      x-code-samples:
+      - lang: java_unirest
+        source: "HttpResponse<String> response = Unirest.get(\"https://merchant.wish.com/api/v3/orders/{id}\")\n  .header(\"authorization\", \"Bearer REPLACE_BEARER_TOKEN\")\n  .asString();"
+      - lang: php_curl
+        source: "<?php\n\n$curl = curl_init();\n\ncurl_setopt_array($curl, array(\n  CURLOPT_URL => \"https://merchant.wish.com/api/v3/orders/{id}\",\n  CURLOPT_RETURNTRANSFER => true,\n  CURLOPT_ENCODING => \"\",\n  CURLOPT_MAXREDIRS => 10,\n  CURLOPT_TIMEOUT => 30,\n  CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,\n  CURLOPT_CUSTOMREQUEST => \"GET\",\n  CURLOPT_HTTPHEADER => array(\n    \"authorization: Bearer REPLACE_BEARER_TOKEN\"\n  ),\n));\n\n$response = curl_exec($curl);\n$err = curl_error($curl);\n\ncurl_close($curl);\n\nif ($err) {\n  echo \"cURL Error #:\" . $err;\n} else {\n  echo $response;\n}"
+      - lang: javascript_jquery
+        source: "var settings = {\n  \"async\": true,\n  \"crossDomain\": true,\n  \"url\": \"https://merchant.wish.com/api/v3/orders/{id}\",\n  \"method\": \"GET\",\n  \"headers\": {\n    \"authorization\": \"Bearer REPLACE_BEARER_TOKEN\"\n  }\n}\n\n$.ajax(settings).done(function (response) {\n  console.log(response);\n});"
+      - lang: shell_curl
+        source: "curl --request GET \\\n  --url 'https://merchant.wish.com/api/v3/orders/{id}' \\\n  --header 'authorization: Bearer REPLACE_BEARER_TOKEN'"
+      - lang: python_requests
+        source: 'import requests
+
+
+          url = "https://merchant.wish.com/api/v3/orders/{id}"
+
+
+          headers = {''authorization'': ''Bearer REPLACE_BEARER_TOKEN''}
+
+
+          response = requests.request("GET", url, headers=headers)
+
+
+          print(response.text)'
+      description: Retrieves the details of an existing order.
+  /api/v3/orders/{id}/address:
+    put:
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Order'
+          description: Successful request
+      parameters:
+      - $ref: '#/components/parameters/order_id'
+      tags:
+      - Orders
+      summary: Modify shipping address
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ShippingAddress'
+      security:
+      - OAuth2:
+        - orders:write
+      operationId: ModifyAddress
+      x-code-samples:
+      - lang: java_unirest
+        source: "HttpResponse<String> response = Unirest.put(\"https://merchant.wish.com/api/v3/orders/{id}/address\")\n  .header(\"content-type\", \"application/json\")\n  .header(\"authorization\", \"Bearer REPLACE_BEARER_TOKEN\")\n  .body(\"{\\\"city\\\":\\\"string\\\",\\\"country\\\":\\\"string\\\",\\\"country_code\\\":\\\"US\\\",\\\"phone_number\\\":{\\\"country_code\\\":\\\"string\\\",\\\"number\\\":\\\"string\\\"},\\\"region\\\":\\\"string\\\",\\\"state\\\":\\\"string\\\",\\\"street_address1\\\":\\\"string\\\",\\\"street_address2\\\":\\\"string\\\",\\\"street_address3\\\":\\\"string\\\",\\\"zipcode\\\":\\\"string\\\"}\")\n  .asString();"
+      - lang: php_curl
+        source: "<?php\n\n$curl = curl_init();\n\ncurl_setopt_array($curl, array(\n  CURLOPT_URL => \"https://merchant.wish.com/api/v3/orders/{id}/address\",\n  CURLOPT_RETURNTRANSFER => true,\n  CURLOPT_ENCODING => \"\",\n  CURLOPT_MAXREDIRS => 10,\n  CURLOPT_TIMEOUT => 30,\n  CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,\n  CURLOPT_CUSTOMREQUEST => \"PUT\",\n  CURLOPT_POSTFIELDS => \"{\\\"city\\\":\\\"string\\\",\\\"country\\\":\\\"string\\\",\\\"country_code\\\":\\\"US\\\",\\\"phone_number\\\":{\\\"country_code\\\":\\\"string\\\",\\\"number\\\":\\\"string\\\"},\\\"region\\\":\\\"string\\\",\\\"state\\\":\\\"string\\\",\\\"street_address1\\\":\\\"string\\\",\\\"street_address2\\\":\\\"string\\\",\\\"street_address3\\\":\\\"string\\\",\\\"zipcode\\\":\\\"string\\\"}\",\n  CURLOPT_HTTPHEADER => array(\n    \"authorization: Bearer REPLACE_BEARER_TOKEN\",\n    \"content-type: application/json\"\n  ),\n));\n\n$response = curl_exec($curl);\n$err = curl_error($curl);\n\ncurl_close($curl);\n\nif ($err) {\n  echo \"cURL Error #:\" . $err;\n} else {\n  echo $response;\n}"
+      - lang: javascript_jquery
+        source: "var settings = {\n  \"async\": true,\n  \"crossDomain\": true,\n  \"url\": \"https://merchant.wish.com/api/v3/orders/{id}/address\",\n  \"method\": \"PUT\",\n  \"headers\": {\n    \"content-type\": \"application/json\",\n    \"authorization\": \"Bearer REPLACE_BEARER_TOKEN\"\n  },\n  \"processData\": false,\n  \"data\": \"{\\\"city\\\":\\\"string\\\",\\\"country\\\":\\\"string\\\",\\\"country_code\\\":\\\"US\\\",\\\"phone_number\\\":{\\\"country_code\\\":\\\"string\\\",\\\"number\\\":\\\"string\\\"},\\\"region\\\":\\\"string\\\",\\\"state\\\":\\\"string\\\",\\\"street_address1\\\":\\\"string\\\",\\\"street_address2\\\":\\\"string\\\",\\\"street_address3\\\":\\\"string\\\",\\\"zipcode\\\":\\\"string\\\"}\"\n}\n\n$.ajax(settings).done(function (response) {\n  console.log(response);\n});"
+      - lang: shell_curl
+        source: "curl --request PUT \\\n  --url 'https://merchant.wish.com/api/v3/orders/{id}/address' \\\n  --header 'authorization: Bearer REPLACE_BEARER_TOKEN' \\\n  --header 'content-type: application/json' \\\n  --data '{\"city\":\"string\",\"country\":\"string\",\"country_code\":\"US\",\"phone_number\":{\"country_code\":\"string\",\"number\":\"string\"},\"region\":\"string\",\"state\":\"string\",\"street_address1\":\"string\",\"street_address2\":\"string\",\"street_address3\":\"string\",\"zipcode\":\"string\"}'"
+      - lang: python_requests
+        source: "import requests\n\nurl = \"https://merchant.wish.com/api/v3/orders/{id}/address\"\n\npayload = \"{\\\"city\\\":\\\"string\\\",\\\"country\\\":\\\"string\\\",\\\"country_code\\\":\\\"US\\\",\\\"phone_number\\\":{\\\"country_code\\\":\\\"string\\\",\\\"number\\\":\\\"string\\\"},\\\"region\\\":\\\"string\\\",\\\"state\\\":\\\"string\\\",\\\"street_address1\\\":\\\"string\\\",\\\"street_address2\\\":\\\"string\\\",\\\"street_address3\\\":\\\"string\\\",\\\"zipcode\\\":\\\"string\\\"}\"\nheaders = {\n    'content-type': \"application/json\",\n    'authorization': \"Bearer REPLACE_BEARER_TOKEN\"\n    }\n\nresponse = requests.request(\"PUT\", url, data=payload, headers=headers)\n\nprint(response.text)"
+      description: Modify shipping address for an order before it is shipped. This operation is asynchronous.
+  /api/v3/orders/{id}/refund:
+    put:
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Order'
+          description: Successful request
+      parameters:
+      - $ref: '#/components/parameters/order_id'
+      tags:
+      - Orders
+      summary: Refund/Cancel an order
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RefundOrder'
+      security:
+      - OAuth2:
+        - orders:write
+      operationId: RefundOrder
+      x-code-samples:
+      - lang: java_unirest
+        source: "HttpResponse<String> response = Unirest.put(\"https://merchant.wish.com/api/v3/orders/{id}/refund\")\n  .header(\"content-type\", \"application/json\")\n  .header(\"authorization\", \"Bearer REPLACE_BEARER_TOKEN\")\n  .body(\"{\\\"refund_reason\\\":\\\"UNABLE_TO_SHIP\\\",\\\"refund_reason_note\\\":\\\"string\\\"}\")\n  .asString();"
+      - lang: php_curl
+        source: "<?php\n\n$curl = curl_init();\n\ncurl_setopt_array($curl, array(\n  CURLOPT_URL => \"https://merchant.wish.com/api/v3/orders/{id}/refund\",\n  CURLOPT_RETURNTRANSFER => true,\n  CURLOPT_ENCODING => \"\",\n  CURLOPT_MAXREDIRS => 10,\n  CURLOPT_TIMEOUT => 30,\n  CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,\n  CURLOPT_CUSTOMREQUEST => \"PUT\",\n  CURLOPT_POSTFIELDS => \"{\\\"refund_reason\\\":\\\"UNABLE_TO_SHIP\\\",\\\"refund_reason_note\\\":\\\"string\\\"}\",\n  CURLOPT_HTTPHEADER => array(\n    \"authorization: Bearer REPLACE_BEARER_TOKEN\",\n    \"content-type: application/json\"\n  ),\n));\n\n$response = curl_exec($curl);\n$err = curl_error($curl);\n\ncurl_close($curl);\n\nif ($err) {\n  echo \"cURL Error #:\" . $err;\n} else {\n  echo $response;\n}"
+      - lang: javascript_jquery
+        source: "var settings = {\n  \"async\": true,\n  \"crossDomain\": true,\n  \"url\": \"https://merchant.wish.com/api/v3/orders/{id}/refund\",\n  \"method\": \"PUT\",\n  \"headers\": {\n    \"content-type\": \"application/json\",\n    \"authorization\": \"Bearer REPLACE_BEARER_TOKEN\"\n  },\n  \"processData\": false,\n  \"data\": \"{\\\"refund_reason\\\":\\\"UNABLE_TO_SHIP\\\",\\\"refund_reason_note\\\":\\\"string\\\"}\"\n}\n\n$.ajax(settings).done(function (response) {\n  console.log(response);\n});"
+      - lang: shell_curl
+        source: "curl --request PUT \\\n  --url 'https://merchant.wish.com/api/v3/orders/{id}/refund' \\\n  --header 'authorization: Bearer REPLACE_BEARER_TOKEN' \\\n  --header 'content-type: application/json' \\\n  --data '{\"refund_reason\":\"UNABLE_TO_SHIP\",\"refund_reason_note\":\"string\"}'"
+      - lang: python_requests
+        source: "import requests\n\nurl = \"https://merchant.wish.com/api/v3/orders/{id}/refund\"\n\npayload = \"{\\\"refund_reason\\\":\\\"UNABLE_TO_SHIP\\\",\\\"refund_reason_note\\\":\\\"string\\\"}\"\nheaders = {\n    'content-type': \"application/json\",\n    'authorization': \"Bearer REPLACE_BEARER_TOKEN\"\n    }\n\nresponse = requests.request(\"PUT\", url, data=payload, headers=headers)\n\nprint(response.text)"
+      description: Refund/Cancel an order. This operation is asynchronous. Please use /api/v3/orders/{id}/refund_reasons endpoint to reference valid refund reasons for orders before refunding them.
+  /api/v3/orders:
+    get:
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Orders'
+          description: Successful request - Order-level schema for each relevant order
+      parameters:
+      - $ref: '#/components/parameters/limit'
+      - $ref: '#/components/parameters/states'
+      - $ref: '#/components/parameters/updated_at_min'
+      - $ref: '#/components/parameters/updated_at_max'
+      - $ref: '#/components/parameters/released_at_min'
+      - $ref: '#/components/parameters/released_at_max'
+      - $ref: '#/components/parameters/sort_by'
+      - $ref: '#/components/parameters/order_type'
+      tags:
+      - Orders
+      summary: List orders
+      security:
+      - OAuth2:
+        - orders:read
+      x-code-samples:
+      - lang: java_unirest
+        source: "HttpResponse<String> response = Unirest.get(\"https://merchant.wish.com/api/v3/orders?limit=SOME_INTEGER_VALUE&states=SOME_ARRAY_VALUE&updated_at_min=SOME_STRING_VALUE&updated_at_max=SOME_STRING_VALUE&released_at_min=SOME_STRING_VALUE&released_at_max=SOME_STRING_VALUE&sort_by=SOME_STRING_VALUE&order_type=SOME_STRING_VALUE\")\n  .header(\"authorization\", \"Bearer REPLACE_BEARER_TOKEN\")\n  .asString();"
+      - lang: php_curl
+        source: "<?php\n\n$curl = curl_init();\n\ncurl_setopt_array($curl, array(\n  CURLOPT_URL => \"https://merchant.wish.com/api/v3/orders?limit=SOME_INTEGER_VALUE&states=SOME_ARRAY_VALUE&updated_at_min=SOME_STRING_VALUE&updated_at_max=SOME_STRING_VALUE&released_at_min=SOME_STRING_VALUE&released_at_max=SOME_STRING_VALUE&sort_by=SOME_STRING_VALUE&order_type=SOME_STRING_VALUE\",\n  CURLOPT_RETURNTRANSFER => true,\n  CURLOPT_ENCODING => \"\",\n  CURLOPT_MAXREDIRS => 10,\n  CURLOPT_TIMEOUT => 30,\n  CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,\n  CURLOPT_CUSTOMREQUEST => \"GET\",\n  CURLOPT_HTTPHEADER => array(\n    \"authorization: Bearer REPLACE_BEARER_TOKEN\"\n  ),\n));\n\n$response = curl_exec($curl);\n$err = curl_error($curl);\n\ncurl_close($curl);\n\nif ($err) {\n  echo \"cURL Error #:\" . $err;\n} else {\n  echo $response;\n}"
+      - lang: javascript_jquery
+        source: "var settings = {\n  \"async\": true,\n  \"crossDomain\": true,\n  \"url\": \"https://merchant.wish.com/api/v3/orders?limit=SOME_INTEGER_VALUE&states=SOME_ARRAY_VALUE&updated_at_min=SOME_STRING_VALUE&updated_at_max=SOME_STRING_VALUE&released_at_min=SOME_STRING_VALUE&released_at_max=SOME_STRING_VALUE&sort_by=SOME_STRING_VALUE&order_type=SOME_STRING_VALUE\",\n  \"method\": \"GET\",\n  \"headers\": {\n    \"authorization\": \"Bearer REPLACE_BEARER_TOKEN\"\n  }\n}\n\n$.ajax(settings).done(function (response) {\n  console.log(response);\n});"
+      - lang: shell_curl
+        source: "curl --request GET \\\n  --url 'https://merchant.wish.com/api/v3/orders?limit=SOME_INTEGER_VALUE&states=SOME_ARRAY_VALUE&updated_at_min=SOME_STRING_VALUE&updated_at_max=SOME_STRING_VALUE&released_at_min=SOME_STRING_VALUE&released_at_max=SOME_STRING_VALUE&sort_by=SOME_STRING_VALUE&order_type=SOME_STRING_VALUE' \\\n  --header 'authorization: Bearer REPLACE_BEARER_TOKEN'"
+      - lang: python_requests
+        source: 'import requests
+
+
+          url = "https://merchant.wish.com/api/v3/orders"
+
+
+          querystring = {"limit":"SOME_INTEGER_VALUE","states":"SOME_ARRAY_VALUE","updated_at_min":"SOME_STRING_VALUE","updated_at_max":"SOME_STRING_VALUE","released_at_min":"SOME_STRING_VALUE","released_at_max":"SOME_STRING_VALUE","sort_by":"SOME_STRING_VALUE","order_type":"SOME_STRING_VALUE"}
+
+
+          headers = {''authorization'': ''Bearer REPLACE_BEARER_TOKEN''}
+
+
+          response = requests.request("GET", url, headers=headers, params=querystring)
+
+
+          print(response.text)'
+      operationId: GetMultipleOrders
+components:
+  schemas:
+    FulfillmentEventType:
+      enum:
+      - ORDER_RELEASED
+      - MARK_SHIPPED
+      - CONFIRM_FULFILLED
+      - CONFIRMED_DELIVERED
+      - TRACKING_CANCELLED
+      - ORDER_RE_RELEASED
+      type: string
+      description: The type of fulfillment milestone
+    EORI:
+      type: object
+      description: Information for the EORI
+      properties:
+        number:
+          type: string
+          description: The number itself
+        entity:
+          $ref: '#/components/schemas/TaxEntity'
+    Price:
+      required:
+      - amount
+      - currency_code
+      type: object
+      properties:
+        amount:
+          minimum: 0
+          type: number
+          description: Non-negative amount in decimals.
+          format: float
+        currency_code:
+          format: iso-4217
+          type: string
+          description: The 3-letter currency code defined in [ISO 4217](https://www.iso.org/iso-4217-currency-codes.html).
+          example: USD
+    RevShareRegion:
+      enum:
+      - NORTH_AMERICA
+      - EUROPEAN_UNION
+      type: string
+      description: 'The region used to determine rev_share
+
+        '
+    SpecialProgramsInfo:
+      type: object
+      description: Special program info
+      properties:
+        status:
+          enum:
+          - PENDING
+          - SUCCEED
+          - FAILED
+          type: string
+          description: The status of the special program. Depending on the specific special program, the merchant/ERP might need to act differently if necessary. For example, for the auto-fulfillment special program, when the status is FAILED, the merchant/ERP would need to fulfill the order as usual since the uni-inventory auto-fulfillment failed.
+        display_name:
+          type: string
+          description: The display name for the special program
+    APIError:
+      required:
+      - code
+      - message
+      type: object
+      properties:
+        message:
+          type: string
+        code:
+          type: integer
+          format: int32
+    TrackingInfo:
+      type: object
+      description: Tracking information
+      properties:
+        tracking_number:
+          type: string
+          description: This is the number a customer can use to track their package with your carrier
+        origin_country:
+          type: string
+          description: Returns country of origin as entered during fulfillment.
+          format: iso-3166
+        ship_note:
+          type: string
+          description: A note to yourself when you marked the order as shipped (if applicable)
+          maxLength: 500
+        shipping_provider:
+          $ref: '#/components/schemas/ShippingProvider'
+    WarehouseInformation:
+      type: object
+      description: Warehouse information
+      properties:
+        warehouse_type:
+          $ref: '#/components/schemas/MerchantWarehouseType'
+        warehouse_name:
+          type: string
+          description: warehouse name, as given by merchant
+        warehouse_id:
+          type: string
+          description: ID of the warehouse.
+          format: object-id
+        fbw_information:
+          type: object
+          description: Fulfilled by Wish information
+          properties:
+            fbw_warehouse_code:
+              type: string
+              description: fbw warehouse code
+            fbw_fees:
+              items:
+                $ref: '#/components/schemas/FBWFee'
+              type: array
+              description: List of FBW fees
+            lot_information:
+              items:
+                $ref: '#/components/schemas/LotInfo'
+              type: array
+              description: List of FBW lot info
+    UpdateOrder:
+      type: object
+      properties:
+        delivery_receipt_file_url:
+          minLength: 1
+          type: string
+          description: Delivery receipt file URL (Optional if entering carrier tracking link). for less-than-truckload orders only
+          maxLength: 300
+        delivered_at:
+          type: string
+          description: The delivery time as it appears on the delivery receipt or tracking link for less-than-truckload orders which are not confirmed fulfilled by carrier tracking within 2 days after the merchant marks the LTL order as shipped. Merchants will have a max of 90 calendar days since mark “ship” to upload delivery confirmation.
+          format: date-time
+        tracking_url:
+          minLength: 1
+          type: string
+          description: Carrier tracking link (optional if uploading receipt). for less-than-truckload orders only
+          maxLength: 300
+    OrderType:
+      enum:
+      - WISH_EXPRESS
+      - FULFILLED_BY_WISH
+      - FULFILLED_BY_STORE
+      - LESS_THAN_TRUCKLOAD
+      - PREMIUM_SHIPPING_CARRIER_UPGRADE
+      - ADVANCED_LOGISTICS
+      - OPTIONAL_ADVANCED_LOGISTICS
+      - CONFIRMED_DELIVERY_POLICY
+      - VAT
+      - PC-VAT
+      - UNIFICATION_INITIATIVE
+      - MAX_DELIVERY_DAY_REQUIREMENT
+      - CALCULATED_SHIPPING
+      - WISH_PLUS
+      type: string
+      description: Order type
+    VATAdditionalMaterial:
+      enum:
+      - PACKAGE_OVERVIEW_DOCUMENT
+      type: string
+      description: VAT additional material
+    UpdateTracking:
+      required:
+      - shipping_provider
+      - tracking_number
+      - origin_country
+      type: object
+      properties:
+        tracking_number:
+          minLength: 1
+          type: string
+          description: The unique identifier that your carrier provided so that the user can track their package as it is being delivered. Tracking number should only contain alphanumeric characters with no space between them.
+        origin_country:
+          type: string
+          description: Country code of the country the order is being shipped from. The 2-letter country codes are defined in [ISO 3166](https://www.iso.org/iso-3166-country-codes.html).
+          format: iso-3166
+        ship_note:
+          minLength: 1
+          type: string
+          description: A note to yourself when you marked the order as shipped.
+        shipping_provider:
+          type: string
+          description: The carrier that will be shipping your package to its destination
+    PhoneNumber:
+      required:
+      - number
+      type: object
+      properties:
+        number:
+          type: string
+          description: The phone number.
+        country_code:
+          type: string
+          description: Country code of the phone number
+    AddressWithPhone:
+      allOf:
+      - $ref: '#/components/schemas/Address'
+      - type: object
+        properties:
+          phone_number:
+            type: object
+            description: phone number
+            allOf:
+            - $ref: '#/components/schemas/PhoneNumber'
+    VAT:
+      type: object
+      description: VAT info
+      properties:
+        eu_vat_customs_declaration:
+          type: object
+          allOf:
+          - $ref: '#/components/schemas/EUVATCustomsDeclaration'
+        vat_amount:
+          type: object
+          allOf:
+          - $ref: '#/components/schemas/VATAmount'
+        country_code:
+          type: string
+          description: the name of relevant country. The 2-letter country codes are defined in [ISO 3166](https://www.iso.org/iso-3166-country-codes.html).
+          format: iso-3166
+        required_vat_numbers:
+          type: object
+          description: If the order is subject to VAT, this field will return permissible VAT numbers for that country's requirements.
+          properties:
+            voec:
+              $ref: '#/components/schemas/VOEC'
+            eori:
+              $ref: '#/components/schemas/EORI'
+            vat:
+              $ref: '#/components/schemas/RequiredVATNumber'
+        vat_instructions:
+          type: string
+          description: URL link to a Wish FAQ where VAT requirements
+        additional_materials:
+          items:
+            $ref: '#/components/schemas/VATAdditionalMaterial'
+          type: array
+          description: List of additional VAT materials needed for the given order
+    State:
+      enum:
+      - APPROVED
+      - SHIPPED
+      - REFUNDED
+      - REQUIRE_REVIEW
+      - DECLINED
+      type: string
+      description: 'Returns the order''s current state. Possible values are:
+
+
+        1. APPROVED: Order is ready to be shipped.
+
+        2. SHIPPED: Order has been shipped.
+
+        3. REFUNDED: Order has been refunded.
+
+        4. REQUIRE_REVIEW: Order has been placed under review by Wish. No merchant action required.
+
+        5. DECLINED: Customer''s payment had an issue for this order. No merchant action required.
+
+
+        Please note, orders can become APPROVED again after reaching states such as REFUNDED or SHIPPED. For more details on these orders, please refer to fulfillment_milestone_record attribute.
+
+        '
+    ShippingProvider:
+      type: object
+      properties:
+        name:
+          type: string
+          description: Name of the shipping provider
+    OrderTax:
+      type: object
+      description: Order tax requirements
+      properties:
+        transaction_tax:
+          items:
+            $ref: '#/components/schemas/TaxItem'
+          type: array
+          description: Transaction taxes and/or refunds applied to an order, in both merchant & tax authority currency.
+        customer_identity_number_type:
+          $ref: '#/components/schemas/CustomerIdentityNumberType'
+        vat_information:
+          type: object
+          description: VAT info
+          allOf:
+          - $ref: '#/components/schemas/VAT'
+        customer_identity_number:
+          type: string
+          description: Individual taxpayer ID or customs information, as required for orders entering into certain countries.
+    ProductInfo:
+      type: object
+      description: Product info
+      properties:
+        sku:
+          type: string
+          description: The sku of the variation
+        name:
+          type: string
+          description: The name of the product
+        color:
+          type: string
+          description: The color of the product that was ordered (if applicable)
+        manufactured_country:
+          type: string
+          description: Country where the product is manufactured. This field contains the ISO 3166 Alpha-2 country code.
+        variation_image_url:
+          type: string
+          description: The image URL of the variation
+        variation_id:
+          type: string
+          description: Wish's unique identifier for the Product Variation that was ordered
+          format: object-id
+        id:
+          type: string
+          description: Wish's unique identifier for the Product being ordered
+          format: object-id
+        size:
+          type: string
+          description: The size of the product that was ordered (if applicable)
+    FulfillmentRequirements:
+      type: object
+      description: Order's general requirements.
+      properties:
+        expected_ship_time:
+          type: string
+          description: Date and time the order must be fulfilled by. If the order is not fulfilled by this date it will be automatically refunded.
+          format: date-time
+        expected_delivery_time:
+          type: string
+          description: Date and time the order should have delivery confirmed by.
+          format: date-time
+    RefundReason:
+      enum:
+      - UNABLE_TO_SHIP
+      - ITEM_RETURNED_TO_SENDER
+      - ITEM_IS_DAMAGED
+      - SHIPPING_TAKING_TOO_LONG
+      - ITEM_DOES_NOT_FIT
+      - RECEIVED_WRONG_ITEM
+      - ITEM_IS_COUNTERFEIT
+      - ITEM_DOES_NOT_WORK_AS_DESCRIBED
+      - ITEM_DOES_NOT_MATCH_LISTING
+      - ITEM_MARKED_DELIVERED_BUT_DID_NOT_ARRIVE
+      - MERCHANT_SENT_TO_WRONG_ADDRESS
+      - REPLACEMENT_NEVER_RECEIVED
+      - WRONG_COLOR
+      - ITEM_IS_POOR_QUALITY
+      - INCOMPLETE_ORDER
+      - MERCHANT_OUT_OF_STOCK
+      - EMPTY_PACKAGE
+      - PRODUCT_LISTING_MISSING_INFO
+      - ITEM_DID_NOT_MEET_EXPECTATIONS
+      - RECEIVED_NOTE_FROM_MERCHANT
+      - MERCHANT_REPORTED_ORDER
+      - MERCHANT_REPORTED_BUYER_FRAUD
+      type: string
+      description: 'The reason for the refund
+
+        '
+    Address:
+      required:
+      - street_address1
+      - city
+      - state
+      - zipcode
+      - country_code
+      type: object
+      properties:
+        city:
+          type: string
+          description: City name.
+        country:
+          type: string
+          description: The name of the country.
+        street_address3:
+          type: string
+          description: 'Street address 3: Includes fields like company name & other additional information.'
+        zipcode:
+          type: string
+          description: Zip code or postal code.
+        street_address1:
+          type: string
+          description: 'Street address 1: Includes fields like street number/name.'
+        street_address2:
+          type: string
+          description: 'Street address 2: Includes fields like building & apartment number. '
+        state:
+          type: string
+          description: State or province name.
+        country_code:
+          format: iso-3166
+          type: string
+          description: The 2-letter country code defined in [ISO 3166](https://www.iso.org/iso-3166-country-codes.html).
+          example: US
+    EUVATCustomsDeclarationProduct:
+      type: object
+      description: Product information for EU VAT customs, including name, image_url, weight, and etc
+      properties:
+        name:
+          type: string
+          description: Indicates the product's name of the order
+        weight:
+          $ref: '#/components/schemas/Weight'
+        image_url:
+          type: string
+          description: Indicates the the main image URL of the product of the order
+        hs_code:
+          type: string
+          description: Indicates the identifier that classifies goods according to the HS system on the product level. For more details about the HS system, please refer to https://www.trade.gov/harmonized-system-hs-codes
+        condition:
+          enum:
+          - NEW
+          - USED
+          - REFURBISHED
+          type: string
+          description: Indicates the condition of the product, including NEW, USED, and REFURBISHED
+        quantity:
+          type: integer
+          description: Indicates the quantity of items within the order
+    Weight:
+      required:
+      - unit
+      - value
+      type: object
+      properties:
+        value:
+          type: number
+          description: The weight of the package
+        unit:
+          enum:
+          - LB
+          - KG
+          type: string
+          description: The unit of weight
+    OrderDownloadJob:
+      type: object
+      properties:
+        total_count:
+          type: number
+          description: Total number of orders attached to the report
+        processed_count:
+          type: number
+          description: This number indicates how many orders have been processed so far
+      allOf:
+      - $ref: '#/components/schemas/V3GenericReportStatus'
+    RefundOrder:
+      required:
+      - refund_reason
+      type: object
+      properties:
+        refund_reason_note:
+          minLength: 1
+          type: string
+          description: A note to the user explaining reason for the refund.
+        refund_reason:
+          $ref: '#/components/schemas/RefundReason'
+    Order:
+      type: object
+      properties:
+        tracking_information:
+          items:
+            $ref: '#/components/schemas/TrackingInfo'
+          type: array
+          description: Returns an object's tracking info by timestamp in descending order. Currently, only two sets of tracking info are supported.
+        warehouse_information:
+          type: object
+          description: Returns relevant information regarding an item's originating warehouse
+          allOf:
+          - $ref: '#/components/schemas/WarehouseInformation'
+        order_payment:
+          type: object
+          description: Returns information regarding an order's payments
+          allOf:
+          - $ref: '#/components/schemas/OrderPayment'
+        fulfillment_records:
+          items:
+            $ref: '#/components/schemas/FulfillmentEvent'
+          type: array
+          description: 'Returns times related to the following order fulfillment milestones:
+
+
+            1. ORDER_RELEASED: Order released to merchant.
+
+            2. MARK_SHIPPED: Tracking number assigned to order.
+
+            3. CONFIRM_FULFILLED: Date & time the order was accepted by carrier.
+
+            4. ORDER_DELIVERED: Date & time the order was confirmed delivered by carrier.
+
+            5. TRACKING_CANCELLED: Date & time a shipped order has been cancelled.
+
+            6. ORDER_RE_RELEASED: Date & time an order has been re-released to the merchant.
+
+            '
+        released_at:
+          type: string
+          description: Returns the time when order was released.
+          format: date-time
+        product_information:
+          type: object
+          description: Returns relevant information for an order's product.
+          allOf:
+          - $ref: '#/components/schemas/ProductInfo'
+        penalties:
+          items:
+            type: string
+            description: ID of the penalty
+            format: object-id
+          type: array
+          description: Returns penalty IDs associated with this order.
+        processing_status:
+          $ref: '#/components/schemas/ProcessingStatus'
+        updated_at:
+          type: string
+          description: Returns the time when order was last updated.
+          format: date-time
+        full_address:
+          type: object
+          description: Returns the order's destination address(es).
+          properties:
+            shipping_detail:
+              type: object
+              description: Returns information for the order's destination address (can be a Wish warehouse or an individual customer)
+              allOf:
+              - $ref: '#/components/schemas/OrderShippingDetail'
+        processing_source:
+          $ref: '#/components/schemas/ProcessingSource'
+        fulfillment_requirements:
+          type: object
+          description: Returns information relevant to an order's fulfillment requirements.
+          allOf:
+          - $ref: '#/components/schemas/FulfillmentRequirements'
+        state:
+          $ref: '#/components/schemas/State'
+        transaction_id:
+          type: string
+          description: Returns the transaction's unique identifier; multiple orders can be bundled into a transaction
+          format: object-id
+        tax_information:
+          type: object
+          description: This attribute returns information relevant to an order's tax requirements
+          allOf:
+          - $ref: '#/components/schemas/OrderTax'
+        refunds:
+          items:
+            $ref: '#/components/schemas/RefundsInfo'
+          type: array
+          description: Returns relevant information regarding all of an order's refunds
+        total_frs_quantity:
+          type: integer
+          description: The total quantity of FRS items within the transaction of this order.
+        special_programs:
+          items:
+            $ref: '#/components/schemas/SpecialProgramsInfo'
+          type: array
+          description: Returns all special programs associated with this order.
+        id:
+          type: string
+          description: Returns the order's unique identifier
+          format: object-id
+        fulfillment_order_types:
+          items:
+            $ref: '#/components/schemas/OrderType'
+          type: array
+          description: 'Returns the various programs this order can be a part of:
+
+
+            1. WISH_EXPRESS: Wish Express
+
+            2. FULFILLED_BY_WISH: Fulfilled by Wish
+
+            3. FULFILLED_BY_STORE: Fulfilled by Store
+
+            4. LESS_THAN_TRUCKLOAD: Less-than-Truckload
+
+            5. PREMIUM_SHIPPING_CARRIER_UPGRADE: Premium Shipping Carrier Upgrade
+
+            6. ADVANCED_LOGISTICS: Advanced Logistics
+
+            7. OPTIONAL_ADVANCED_LOGISTICS: Optional Advanced Logistics
+
+            8. CONFIRMED_DELIVERY_POLICY: Confirmed Delivery Policy
+
+            9. VAT: Value-added Tax
+
+            10. PC_VAT: Pay Customer VAT
+
+            11. UNIFICATION_INITIATIVE: Unification Initiative
+
+            12. MAX_DELIVERY_DAY_REQUIREMENT: Merchant-set Time To Door
+
+            13. CALCULATED_SHIPPING: Calculated Shipping
+
+            14. WISH_PLUS: Wish Plus Order
+
+
+            If an order is a part of multiple programs  (ex: FULFILLED_BY_WISH & Wish Express), the output will be a combination of the relevant enums (ex: WISH_EXPRESS,FULFILLED_BY_WISH)
+
+            '
+    VOEC:
+      type: object
+      description: Information for the VOEC
+      properties:
+        number:
+          type: string
+          description: The number itself
+        entity:
+          $ref: '#/components/schemas/TaxEntity'
+    VATAmount:
+      type: object
+      description: Currently only for UK-bound orders; This field breaks down VAT quantities for this order.
+      properties:
+        shipping_level_vat:
+          description: VAT applied for all shipping within this order (if applicable)
+          allOf:
+          - $ref: '#/components/schemas/Price'
+        final_vat:
+          description: VAT applied to the total order. This quantity is equal to the sum of VAT applied to both shipping & products.
+          allOf:
+          - $ref: '#/components/schemas/Price'
+        product_level_vat:
+          description: VAT applied to all products within this order (if applicable)
+          allOf:
+          - $ref: '#/components/schemas/Price'
+    RefundSource:
+      enum:
+      - MERCHANT
+      - CUSTOMER
+      - WISH
+      - PAYMENT_PROVIDER
+      type: string
+      description: The source of the refund.
+    RequiredVATNumber:
+      type: object
+      description: Information for the required VAT number
+      properties:
+        number:
+          type: string
+          description: The VAT number
+        name:
+          type: string
+          description: The VAT name
+        entity:
+          $ref: '#/components/schemas/TaxEntity'
+    Orders:
+      items:
+        $ref: '#/components/schemas/Order'
+      type: array
+    GeneralPaymentDetails:
+      type: object
+      description: Relevant information regarding an order's payments
+      properties:
+        original_discounted_price:
+          type: object
+          description: The price of the product after any redistribution and merchant promotions(allow a negative price)
+          allOf:
+          - $ref: '#/components/schemas/Money'
+        shipping_merchant_payment:
+          type: object
+          description: The amount of money that Wish pays you for shipping the product (per unit)
+          allOf:
+          - $ref: '#/components/schemas/Money'
+        discounted_price:
+          type: object
+          description: The price of the product after any redistribution and merchant promotions(greater or equal to 0)
+          allOf:
+          - $ref: '#/components/schemas/Price'
+        original_product_price:
+          type: object
+          description: The original price of the product
+          allOf:
+          - $ref: '#/components/schemas/Price'
+        payment_total:
+          type: object
+          description: The total amount you will receive from Wish for this order
+          allOf:
+          - $ref: '#/components/schemas/Money'
+        product_price:
+          type: object
+          description: The price of the product after any redistribution
+          allOf:
+          - $ref: '#/components/schemas/Price'
+        product_merchant_payment:
+          type: object
+          description: The amount of money that Wish pays you for the product (per unit)
+          allOf:
+          - $ref: '#/components/schemas/Price'
+        product_shipping_price:
+          type: object
+          description: The amount of money merchant sets for shipping for the product(per unit)
+          allOf:
+          - $ref: '#/components/schemas/Money'
+        product_quantity:
+          type: integer
+          description: The number of units that the customer has purchased
+        customer_paid_prices_detail:
+          type: object
+          description: Currently displayed for certain UK-bound orders, or certain orders originating from BR/MX - shows customer paid price of an order after various adjustments.
+          allOf:
+          - $ref: '#/components/schemas/CustomerPaidPricesDetail'
+    ShippingAddress:
+      required:
+      - street_address1
+      - city
+      - state
+      - zipcode
+      - country_code
+      type: object
+      properties:
+        phone_number:
+          type: object
+          description: phone number
+          allOf:
+          - $ref: '#/components/schemas/PhoneNumber'
+        city:
+          minLength: 1
+          type: string
+          description: City name.
+        country:
+          type: string
+          description: The name of the country.
+        region:
+          type: string
+          description: Region name. This is only for Chile.
+        street_address3:
+          type: string
+          description: 'Street address 3: Includes fields like company name & other additional information.'
+        street_address2:
+          type: string
+          description: 'Street address 2: Includes fields like building & apartment number. '
+        street_address1:
+          minLength: 1
+          type: string
+          description: 'Street address 1: Includes fields like street number/name.'
+        zipcode:
+          minLength: 1
+          type: string
+          description: Zip code or postal code.
+        state:
+          minLength: 1
+          type: string
+          description: State or province name.
+        country_code:
+          minLength: 1
+          format: iso-3166
+          type: string
+          description: The 2-letter country code defined in [ISO 3166](https://www.iso.org/iso-3166-country-codes.html).
+          example: US
+    TaxEntity:
+      enum:
+      - WISH
+      - MERCHANT
+      type: string
+      description: Tax entity type
+    Money:
+      required:
+      - amount
+      - currency_code
+      type: object
+      properties:
+        amount:
+          format: float
+          type: number
+          description: Amount in decimals.
+          example: 10.4
+        currency_code:
+          format: iso-4217
+          type: string
+          description: The 3-letter currency code defined in [ISO 4217](https://www.iso.org/iso-4217-currency-codes.html).
+          example: USD
+    ProcessingSource:
+      enum:
+      - UPDATE_TRACKING
+      - REFUND
+      - MODIFY_SHIPPING
+      type: string
+      description: 'Reflects asynchronous actions currently being applied to order from Ship or update tracking,
+
+        Refund/Cancel an order, and Modify shipping address endpoints. Pair with processing_state to understand
+
+        the progress of the action. The attribute will be empty until V3 PUT endpoints are released later this year.
+
+        '
+    Carriers:
+      items:
+        $ref: '#/components/schemas/ShippingProvider'
+      type: array
+      description: List of valid shipping carriers
+    ShippingReimbursementStatus:
+      enum:
+      - PENDING
+      - FINAL
+      type: string
+      description: Shipping reimbursement status
+    ShippingReimbursement:
+      type: object
+      description: Shipping reimbursement
+      properties:
+        status:
+          $ref: '#/components/schemas/ShippingReimbursementStatus'
+        amount:
+          type: object
+          description: Shipping reimbursement amount.
+          allOf:
+          - $ref: '#/components/schemas/Money'
+    OrderPayment:
+      type: object
+      description: Returns relevant information regarding an order's payments
+      properties:
+        carrier_subsidies:
+          items:
+            $ref: '#/components/schemas/CarrierSubsidy'
+          type: array
+          description: An order's carrier subsidies (if any)
+        shipping_reimbursements:
+          items:
+            $ref: '#/components/schemas/ShippingReimbursement'
+          type: array
+          description: An order's shipping reimbursements to the merchant (if any)
+        rev_share:
+          type: object
+          description: Revenue share details of an order
+          allOf:
+          - $ref: '#/components/schemas/RevShareDetails'
+        general_payment_details:
+          type: object
+          description: Different totals for an order's merchant payments
+          allOf:
+          - $ref: '#/components/schemas/GeneralPaymentDetails'
+    MerchantWarehouseType:
+      readOnly: true
+      enum:
+      - PRIMARY
+      - SECONDARY
+      type: string
+      description: Merchant warehouse type
+    FBWFee:
+      type: object
+      description: FBW fee
+      properties:
+        amount:
+          type: object
+          description: FBW fee amount
+          allOf:
+          - $ref: '#/components/schemas/Price'
+        fee_name:
+          type: string
+          description: FBW fee name
+        fee_type:
+          $ref: '#/components/schemas/FBWFeeType'
+    EUVATCustomsDeclaration:
+      type: object
+      description: If the order is subject to EU VAT and is valued at lower than 150 EUR, this field will return all required information for customs declaration.
+      properties:
+        product:
+          type: object
+          description: Include product information of the order that is required for EU VAT customs
+          allOf:
+          - $ref: '#/components/schemas/EUVATCustomsDeclarationProduct'
+        merchant_identity:
+          enum:
+          - INDIVIDUAL
+          - COMPANY
+          type: string
+          description: Indicates if the merchant is a private individual, business entity, or green channel
+        vat_paid_in_authority_currency:
+          type: object
+          description: Indicates the VAT paid in the authority currency of EU (EUR)
+          allOf:
+          - $ref: '#/components/schemas/Price'
+        vat_paid_in_customer_currency:
+          type: object
+          description: Indicates the VAT paid in customer's currency
+          allOf:
+          - $ref: '#/components/schemas/Price'
+        shipping_cost_in_customer_currency:
+          type: object
+          description: Indicates the shipping cost, without tax, for the order in customer's currency
+          allOf:
+          - $ref: '#/components/schemas/Money'
+        customer_identity:
+          enum:
+          - INDIVIDUAL
+          - COMPANY
+          type: string
+          description: Indicates if the customer is a private individual or business entity
+        vat_payer:
+          description: Contains information of VAT payer, including name, address, and IOSS number or tax number, For more details about IOSS number, please refer to https://ec.europa.eu/taxation_customs/business/vat/ioss_en
+          allOf:
+          - $ref: '#/components/schemas/VATPayer'
+        merchant_address:
+          description: Indicates the address of the merchant
+          allOf:
+          - $ref: '#/components/schemas/Address'
+        invoice_amount_in_customer_currency:
+          type: object
+          description: Indicates the amount that customer paid, including discounts but without tax, for the order in customer's currency
+          allOf:
+          - $ref: '#/components/schemas/Money'
+        shipping_cost_in_authority_currency:
+          type: object
+          description: Indicates the shipping cost, without tax, for the order in the authority currency of EU (EUR)
+          allOf:
+          - $ref: '#/components/schemas/Money'
+        invoice_amount_in_authority_currency:
+          type: object
+          description: Indicates the amount that customer paid, including discounts but without tax, for the order in the authority currency of EU (EUR)
+          allOf:
+          - $ref: '#/components/schemas/Money'
+        customer_address:
+          description: Indicates the address of the customer
+          allOf:
+          - $ref: '#/components/schemas/Address'
+        merchant_name:
+          type: string
+          description: Indicates the name of merchant
+        platform_status:
+          $ref: '#/components/schemas/PlatformEntity'
+        customer_name:
+          type: string
+          description: Indicates if the name of customer
+    V3GenericReportStatus:
+      type: object
+      description: A generic report status object used when an endpoint wants to return the status of their downloadable file
+      properties:
+        status:
+          enum:
+          - PENDING
+          - CREATING
+          - READY
+          - EXCEPTION
+          type: string
+          description: "1. PENDING - The report generation request has been received and is awaiting processing\n2. CREATING - The report is being created\n3. READY -\tThe report is ready for download from `file_urls`\n4. EXCEPTION - The report generation failed, contact our api support\n"
+        expiry_time:
+          type: string
+          description: The timestamp on when this report expires and `file_urls` become invalid
+          format: date-time
+        total_count:
+          type: number
+          description: Total number of files attached to the report
+        created_at:
+          type: string
+          description: The timestamp on when this report is created
+          format: date-time
+        completed_at:
+          type: string
+          description: The timestamp on when this report is completed
+          format: date-time
+        file_urls:
+          items:
+            type: string
+          type: array
+          description: When the status is READY, the report will be availble at these urls. Otherwise it will be `null`
+          nullable: true
+        processed_count:
+          type: number
+          description: This number indicates how many files have been processed so far
+        id:
+          type: string
+          description: ID of the report
+          format: object-id
+    TaxItem:
+      type: object
+      properties:
+        tax_amount_in_merchant_currency:
+          type: object
+          allOf:
+          - $ref: '#/components/schemas/Price'
+        tax_amount_in_authority_currency:
+          type: object
+          allOf:
+          - $ref: '#/components/schemas/Price'
+        tax_type:
+          enum:
+          - TRANSACTION_TAX
+          - REFUNDED_TRANSACTION_TAX
+          type: string
+        remit_type:
+          $ref: '#/components/schemas/RemitType'
+    OrderTypeFilter:
+      enum:
+      - WISH_EXPRESS
+      - FULFILLED_BY_WISH
+      - FULFILLED_BY_STORE
+      - LESS_THAN_TRUCKLOAD
+      - ADVANCED_LOGISTICS
+      - WISH_PLUS
+      type: string
+      description: Order type to filter by
+    CarrierSubsidy:
+      type: object
+      description: Carrier subsidies
+      properties:
+        subsidy:
+          type: object
+          description: Subsidy amount and currency code.
+          allOf:
+          - $ref: '#/components/schemas/Price'
+        carrier_name:
+          type: string
+          description: Carrier name
+    OrderShippingDetail:
+      description: Order shipping details
+      allOf:
+      - $ref: '#/components/schemas/OrderAddress'
+      - type: object
+        properties:
+          neighborhood:
+            type: string
+            description: Neighborhood name. This is for Brazil & Spain only right now.
+          name:
+            type: string
+            description: name
+    RevShareDetails:
+      type: object
+      description: Relevant information regarding an order's revenue share
+      properties:
+        merchant_commission_fees:
+          type: object
+          description: Merchant commission fees for this order are the amount Wish earns from the sale of your product.
+          allOf:
+          - $ref: '#/components/schemas/Money'
+        destination_region:
+          description: The geographic region to which the order will be shipped.
+          allOf:
+          - $ref: '#/components/schemas/RevShareRegion'
+        rev_share:
+          type: number
+          description: The revenue share of this order, expressed as a decimal, e.g., 0.15 means 15%. Revenue share is the amount that Wish retains from the listed product price and listed shipping price on each order.
+        product_category:
+          enum:
+          - SEX_TOY
+          - HOUSEHOLD
+          - APPAREL_ACCESSORY
+          - CLOTHING
+          - JEWELRY_AND_ACCESSORY
+          - SHOES
+          - WATCH
+          - ELECTRONICS
+          type: string
+          description: 'Displays the product category that was used to determine the rev_share of this order. The category
+
+            here comes from the product category under which the product listing is classified.
+
+            '
+        entity_region:
+          description: The region where the merchant is based, determined by country of domicile or business address country. An example would be EU.
+          allOf:
+          - $ref: '#/components/schemas/RevShareRegion'
+        source_region:
+          description: The geographic region from which the order will be shipped.
+          allOf:
+          - $ref: '#/components/schemas/RevShareRegion'
+        shipping_type:
+          enum:
+          - WISH_EXPRESS
+          type: string
+          description: 'Displays the shipping type that was used to determine the rev_share of this order
+
+            '
+    CustomerIdentityNumberType:
+      enum:
+      - CPF
+      - PCCC
+      - RUT
+      - PASSPORT
+      type: string
+      description: 'Orders entering into certain countries require an individual taxpayer ID or customs information. This field indicates the type of ID provided. Possible values are:
+
+
+        1. CPF: Cadastro de Pessoas Físicas - Brazil''s customer identity number
+
+        2. PCCC: Personal Customs Clearance Code - South Korea''s customer identity number
+
+        3. RUT: Rol Único Nacional - Chile''s customer identity number
+
+        4. PASSPORT: For customers that do not have the specific customer identity number, they may provide their passport number instead
+
+        '
+    RemitType:
+      enum:
+      - WISH_REMIT
+      - MERCHANT_REMIT
+      - TBD_REMIT
+      type: string
+      description: 'Displays who should remit taxes for this order.
+
+
+        1. WISH_REMIT: Wish will remit.
+
+        2. MERCHANT_REMIT: Merchant will remit.
+
+        3. TBD_REMIT: UK-specific; this will resolve into WISH_REMIT or MERCHANT_REMIT once the order is shipped."
+
+        '
+    PlatformEntity:
+      enum:
+      - RESELLER
+      - OWNER
+      type: string
+      description: Indicates if the platform (Wish) is the reseller or the owner of the product
+    RefundsInfo:
+      type: object
+      description: Refund info
+      properties:
+        refund_reason_note:
+          type: string
+          description: The reason note to the user explaining reason for the refund
+        refund_source:
+          $ref: '#/components/schemas/RefundSource'
+        refund_amount:
+          type: object
+          description: Refund amount
+          allOf:
+          - $ref: '#/components/schemas/Money'
+        merchant_responsible_amount:
+          type: object
+          description: The refund amount for which the merchant is responsible
+          allOf:
+          - $ref: '#/components/schemas/Money'
+        refund_time:
+          type: string
+          description: The time when the order was refunded.
+          format: date-time
+        refund_reason:
+          type: string
+          description: The reason the order was refunded
+    CustomerPaidPricesDetail:
+      type: object
+      description: Customer paid price of an order after various adjustments
+      properties:
+        total:
+          type: object
+          description: Total
+          allOf:
+          - $ref: '#/components/schemas/Price'
+        product_price:
+          type: object
+          description: Product price
+          allOf:
+          - $ref: '#/components/schemas/Price'
+        product_price_total:
+          type: object
+          description: Product price total
+          allOf:
+          - $ref: '#/components/schemas/Price'
+        shipping_price:
+          type: object
+          description: Shipping price
+          allOf:
+          - $ref: '#/components/schemas/Price'
+        shipping_price_total:
+          type: object
+          description: Shipping price total
+          allOf:
+          - $ref: '#/components/schemas/Price'
+    FBWFeeType:
+      enum:
+      - PER_MONTH
+      - PER_SHIPPING_PLAN
+      - PER_SKU
+      - PER_ORDER
+      - PER_RETURN_SHIPMENT
+      - SHIPPING_PLAN_HANDLING_FEE
+      - SHIPPING_PLAN_SORTING_FEE
+      - ORDER_SHIPPING_FEE
+      - ORDER_HANDLING_FEE
+      - ORDER_REPACKAGING_FEE
+      - STORAGE_FEE
+      - RETURN_EXIT_INVENTORY_SHIPPING_FEE
+      - RETURN_EXIT_INVENTORY_HANDLING_FEE
+      - RETURNED_ORDER_STORAGE_FEE
+      - RETURNED_ORDER_HANDLING
+      - RETURNED_ORDER_DISPOSAL_FEE
+      - FBS_SERVICE_FEE
+      type: string
+      description: FBW Fee type
+    VATPayer:
+      type: object
+      description: Information about the payer of VAT
+      properties:
+        ioss_number:
+          type: string
+          description: Indicates the IOSS number of VAT payer. For more details, please refer to https://ec.europa.eu/taxation_customs/business/vat/ioss_en
+        tax_number:
+          type: string
+          description: Indicates the tax number of VAT payer. Only displaying merchant tax number for EU PC VAT orders
+        name:
+          type: string
+          description: Indicates the name of VAT payer
+        address:
+          description: Indicates the address of VAT payer
+          allOf:
+          - $ref: '#/components/schemas/Address'
+    ProcessingStatus:
+      enum:
+      - IN_PROGRESS
+      - FAILED
+      - SUCCEEDED
+      type: string
+      description: Reflects the progress of the action shown in processing_source. The attribute will be empty until V3 PUT endpoints are released later this year.
+    FulfillmentEvent:
+      type: object
+      description: Fulfillment event
+      properties:
+        event_type:
+          $ref: '#/components/schemas/FulfillmentEventType'
+        event_time:
+          type: string
+          description: Date and time of the fulfillment milestone
+          format: date-time
+    OrderAddress:
+      allOf:
+      - $ref: '#/components/schemas/AddressWithPhone'
+      - type: object
+        properties:
+          region:
+            type: string
+            description: Region name. This is only for Chile.
+    RefundReasons:
+      items:
+        $ref: '#/components/schemas/RefundReason'
+      type: array
+      description: List of valid refund reasons
+    LotInfo:
+      type: object
+      description: FBW lot info
+      properties:
+        lot_id:
+          type: string
+          description: lot id
+        quantity:
+          type: integer
+          description: lot quantity
+  parameters:
+    order_id:
+      schema:
+        type: string
+        format: object-id
+      required: true
+      description: Wish's unique identifier for the order
+      name: id
+      in: path
+    order_type_for_carrier_list:
+      schema:
+        enum:
+        - GENERAL
+        - CONFIRMED_DELIVERY
+        type: string
+      required: true
+      description: 'Choose the specific order type to get a list of approved carriers for. Current values include:
+
+        1. GENERAL: All accepted shipping carriers on Wish
+
+        2. CONFIRMED_DELIVERY: All accepted shipping carriers for Confirmed Delivery Policy. CONFIRMED_DELIVERY is a subset of the carrier list for GENERAL.
+
+        '
+      name: order_type
+      in: query
+    updated_at_max:
+      description: Specify the end of the time window to view orders by last order update. Orders updated after this time will not show.
+      required: false
+      name: updated_at_max
+      in: query
+      example: '2020-01-01T07:00:00.000Z'
+      schema:
+        type: string
+        format: date-time
+    released_at_min:
+      description: Specify the beginning of the time window to view desired orders when filtering by order release time. Orders released before this time will not show.
+      required: false
+      name: released_at_min
+      in: query
+      example: '2020-01-01T07:00:00.000Z'
+      schema:
+        type: string
+        format: date-time
+    order_type:
+      schema:
+        $ref: '#/components/schemas/OrderTypeFilter'
+      required: false
+      description: 'Choose the specific programs to filter output orders by. Current input values are:
+
+        1. WISH_EXPRESS
+
+        2. FULFILLED_BY_WISH
+
+        3. FULFILLED_BY_STORE
+
+        4. LESS_THAN_TRUCKLOAD
+
+        5. ADVANCED_LOGISTICS
+
+        6. WISH_PLUS
+
+
+        Note: This parameter does not support combinations (ex: FULFILLED_BY_WISH & WISH_EXPRESS). If looking for overlaps, query these separately & then manually find the overlap, using Order ID.
+
+        '
+      name: order_type
+      in: query
+    limit:
+      schema:
+        default: 50
+        minimum: 1
+        type: integer
+        maximum: 500
+      required: false
+      description: Specify a limit on the number of orders that can be returned.
+      name: limit
+      in: query
+    released_at_max:
+      description: Specify the end of the time window to view desired orders when filtering by order release time. Orders released after this time will not show.
+      required: false
+      name: released_at_max
+      in: query
+      example: '2020-01-01T07:00:00.000Z'
+      schema:
+        type: string
+        format: date-time
+    updated_at_min:
+      description: Specify the beginning of the window to view orders by last order update. Orders updated before this time will not show.
+      required: false
+      name: updated_at_min
+      in: query
+      example: '2020-01-01T07:00:00.000Z'
+      schema:
+        type: string
+        format: date-time
+    sort_by:
+      schema:
+        default: updated_at.desc
+        pattern: ^(updated_at|released_at)(\.(asc|desc))?$
+        type: string
+      required: false
+      description: 'Choose which timestamp to filter orders by. Current values are:
+
+        * updated_at: Last time the order was updated.
+
+        * released_at: The time the order was released.
+
+        '
+      name: sort_by
+      in: query
+    limit_order_download_job:
+      schema:
+        minimum: 1
+        type: integer
+      required: false
+      description: The limit on the number of orders that will be returned.
+      name: limit
+      in: query
+    dest_country:
+      schema:
+        type: string
+        format: iso-3166
+      description: Country code of the country the order is being shipped to. For GENERAL order_type, leave this parameter blank. The 2-letter country codes are defined in [ISO 3166](https://www.iso.org/iso-3166-country-codes.html).
+      name: dest_country_code
+      in: query
+    states:
+      schema:
+        minItems: 1
+        items:
+          $ref: '#/components/schemas/State'
+        type: array
+        maxItems: 5
+      required: false
+      description: '
+
+        Choose the specific order state to filter output orders by. Current input values are:
+
+
+        1. APPROVED: Order ready to be shipped.
+
+        2. SHIPPED: Order has been shipped.
+
+        3. REFUNDED: Order has been refunded.
+
+        4. REQUIRE_REVIEW: Order has been placed under review
+
+        5. DECLINED: Customer''s payment had an issue for this order
+
+        '
+      name: states
+      in: query
+  securitySchemes:
+    OpenID:
+      type: openIdConnect
+      openIdConnectUrl: https://merchant.wish.com/oidc/.well-known/openid-configuration
+    OAuth2:
+      type: oauth2
+      flows:
+        authorizationCode:
+          scopes:
+            payments:write: Update payments
+            tickets:write: Write customer tickets
+            epc:read: read EPC info
+            returns:write: Write returns
+            returns:read: Read returns
+            fbw:read: Read FBW
+            products:read: Read products
+            payments:read: Read payments
+            fbw:write: Write FBW
+            merchant:write: Write merchant
+            products:write: Write products
+            ratings:read: Read ratings
+            videos:read: Read videos
+            compliance:write: Write Compliance
+            product_boost:read: Read ProductBoost
+            listing_quality:read: Read listing quality
+            webhook:write: Write webhook
+            orders:read: Read orders
+            compliance:read: Read Compliance
+            fbs:read: Read FBS
+            penalties:read: Read penalties
+            penalties:write: Update penalties
+            infractions:read: Read infractions
+            orders:write: Update orders
+            merchant:read: Read merchant
+            notifications:write: Write notifications
+            announcements:read: Read announcements
+            product_boost:write: Write ProductBoost
+            notifications:read: Read notifications
+            webhook:read: Read webhook
+            qoo10:read: Read Qoo10
+            wps_parcel:write: Write WishParcel
+            wps_parcel:read: Read WishParcel
+            tickets:read: Read customer tickets
+            infractions:write: Write infractions
+            videos:write: Write videos
+            epc:write: write EPC info
+          tokenUrl: https://merchant.wish.com/api/v3/oauth/access_token
+          refreshUrl: https://merchant.wish.com/api/v3/oauth/refresh_token
+          authorizationUrl: https://merchant.wish.com/v3/oauth/authorize
+externalDocs:
+  url: https://merchant.wish.com/documentation/api/v3/explorer
+  description: API explorer
+x-wish-hidden: false

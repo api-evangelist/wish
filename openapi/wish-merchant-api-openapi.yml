@@ -1,0 +1,727 @@
+openapi: 3.0.0
+info:
+  contact:
+    email: partner-api@wish.com
+  x-wish-dev-contact:
+    assignee: kwei
+    email: marketplace-external-api@contextlogic.com
+  description: "\nWish Marketplace V3 API\n\n# General Information\n\n The Wish Marketplace API will be using oAuth to authenticate in order to offer better security for its users\n\n *   Learn about oAuth [here](oauth).\n *   If you are a merchant and want to create an application for yourself, learn about how to create a private app [here](../../private-app)\n *   If you are a ERP and create applications that'll be used by multiple merchants, learn about how to create a public app [here]( ../../public-app). You will need to apply to be a verified public application\n\n ## How to Test\n\n To avoid testing the API on production data, use our sandbox. The sandbox is completely contained and will not affect Wish users or your merchant account. \n \n To reach the sandbox, visit: https://sandbox.merchant.wish.com.\n\n To use the sandbox in testing, use https://sandbox.merchant.wish.com/api/v3/ as your base URL.\n\n How to Generate test data after you have created a sandbox account:\n 1. Navigate to the [unfulfilled orders page](https://sandbox.merchant.wish.com/transactions/action)\n 2. Hover over the dropdown next to the 'fulfill with csv' button and select Generate Orders\n\n ## Date/Time Format\n\n  All dates and times in our API are returned in the same format. It is in the form `YYYY-MM-DDTHH:mm:ss.sss±XX:ZZ` or `YYYY-MM-DDTHH:mm:ss.sssZ`, where 'Z' represents UTC timezone.\n  When sending timestamps in URL parameters or the request body, millisecond is optional and will defaults to 0 if not provided.\n\n  * `YYYY` is the year\n  * `MM` is the month\n  * `DD` is the day\n  * `HH` is the hour (in 24-hour clock format)\n  * `mm` is the minutes\n  * `ss.sss` is the seconds and milliseconds\n  * `±XX:ZZ` is the UTC offset of the form +XX:ZZ or -XX:ZZ where XX is a 2-digit string giving the number of UTC offset hours, and ZZ is a 2-digit string giving the number of UTC offset minutes.\n\n ## Response Schema\n\n  Every response returned from the Wish API will have the same schema. This schema is intended to give you a predictable manner to check the status of your request and know where to get the data. Each response will have the following top level attributes: message, code and data.\n\n  **Attributes**\n\n  <table>\n  <tbody>\n  <tr>\n  <th>Message</th>\n  <td>A message describing the error that happened, example: \"We could not find a product for id: '5d30f60e0a6fc464f4f376b0'\"</td>\n  </tr>\n  <tr>\n  <th>Code</th>\n  <td>A unique number which represents the error that has occurred, example: 1008 or 0 if success.</td>\n  </tr>\n  <tr>\n  <th>Data</th>\n  <td>For errors this will be empty.</td>\n  </tr>\n  </tbody>\n  </table>\n\n ## General Querying Techniques\n\n ### Partial Resources\n All GET endpoints (except OAuth) support a fields parameter which allows for requesting a partial response. Any fields specified in the response schema of an endpoint can be selected. The top level attribute `data` can be ignored when using the fields parameter.\n\n **Syntax**\n * Comma-separated list to select multiple fields\n * Use forward slash `/` to select nested field: `field1/nested_field`\n * Use parentheses `( )` to select multiple nested fields: `field1(nested_field1,nested_field2)`\n * Use `*` for wildcard selection: `field1/nested_field/*`\n\n\n **Example:**\n ```\n https://merchant.wish.com/api/v3/demo/get?fields=title,items(id,info/name)\n ```\n Which would result in the following partial response:\n ```\n {\n   \"title\": \"demo\",\n   \"items\": [\n     {\n       \"id\": \"1\",\n       \"info\": {\n         \"name\": \"demo_item_1\"\n       }\n     }, {\n       \"id\": \"2\",\n       \"info\": {\n         \"name\": \"demo_item_2\"\n       }\n     },\n     ...\n   ]\n }\n ```\n\n ## Locale\n   You can optionally specify locale in order to translate content and error messages into your language.\n   To do this use the [Accept-Language](https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Accept-Language) header to specify your preferred locales.\n   If none is provided, your default locale will be used.\n\n   For example, to request content in Chinese use: `Accept-Language: zh`\n\n   In the response, you will receive a [Content-Language](https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Content-Language) header that specifies the locale code of the response content.\n\n\n ## Rate-Limiting\n\n  Rate-limiting will be performed on a per-merchant basis for each app. It is your responsibility to ensure you are not making frequent unnecessary calls to the API.\n\n  If the rate limits cannot satisfy your need, we highly recommend integrating webhooks for your app. With webhooks, instead of pulling resources periodically, your app will receive real-time notifications for particular events that occur to a merchant’s store. [Learn more](https://merchant.wish.com/documentation/webhooks)\n\n  **Normal Usage**\n\n  To help you track the rate-limiter status, the following response header(s) will be provided with each response:\n\n   * `Wish-Rate-Limit-Remaining`: The number of calls remaining in the current rate-limiting window.\n\n\n  **Rate-Limit Exceeded**\n\n  After you exceed the number of allowed calls in the current rate-limiting window, you will receive a `429 Too Many Requests` error response and the following additional header(s):\n\n   * `Wish-Rate-Limit-Reset`: The time the rate-limiter will reset.\n\n\n  Once you receive this response there is nothing you can do except wait for the rate-limiter to reset. In order to avoid being rate-limited, you may want to cache your responses.\n\n ## Sorting\n   ### Overview\n   Sorting is available for most endpoints that return a collection (list) of objects. Each collection has a different set of enabled parameters for sorting, so please check specific collection section for detail.\n\n   ### Usage\n   Append `sort_by={parameter_name}.{asc|desc}` in your API request where `parameter_name` is a valid sortable parameter of that endpoint.\n\n   Example:\n   ```\n   /api/v3/penalties?sort_by=created_at.asc\n   ```\n\n ## Pagination\n  All bulk-fetching API methods that return lists of resource support pagination.\n  These methods commonly take at least 3 parameters: `limit`, `{attribute}_min`, `{attribute}_max`. Attribute can be `id`, `create_at`, etc., depending on each specific method.\n  For instance, you make a request to get a list of penalties `/api/v3/penalties?limit=20&created_at_max=2020-04-08T23:59:59Z&sort_by=created_at_max.desc`,\n  which means to fetch 20 penalities sorted by their creation time, with the most recent one being created before `2020-04-08T23:59:59Z`.\n  Assume that the response contains 20 `penalty` objects with the last object being `penalty_foo`,\n  then your subsequent request can be `/api/v3/penalties?limit=20&created_at_max={penalty_foo.create_at}&sort_by=created_at_max.desc` to fetch the next page of list.\n  Note that when fetching next page using `id_min` or `id_max`, you need to perform `+/- 1`(correspondingly) on the last object's ID in the current page, as `id_min` and `id_max` are inclusive. (All V3 API resources' IDs are either integer or BSON object ID - a hex number).\n\n\n ## Request ID\n  Each API request is associated with a unique identifier. You can find this value in response headers, under `Wish-Request-Id`.\n  **When you need to contact us about a specific request, please provide this ID to ensure the fastest possible reply**\n\n# Authentication\nFor all requests that require OAuth2 authentication, the access token must be provided in the `Authorization` request header in the following format: `Authorization: Bearer <token>`\n\nFor example:\n```\nAuthorization: Bearer 3d6e2d71bc464e42bfbdb081afb73c1e\n```\n<!-- ReDoc-Inject: <security-definitions> -->\n"
+  version: 3.0.65
+  title: Wish Marketplace V3 Brands Merchant API
+servers:
+- url: https://merchant.wish.com
+  description: V3 API endpoint
+security:
+- OAuth2: []
+tags:
+- description: Merchant APIs
+  name: Merchant
+paths:
+  /api/v3/merchant/currency_settings:
+    get:
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MerchantCurrencySettings'
+          description: successfully queried for merchant currency settings
+        '400':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/APIError'
+          description: failed to query for merchant currency settings
+      tags:
+      - Merchant
+      description: Get merchant currency settings
+      summary: Get merchant currency settings
+      security:
+      - OAuth2:
+        - merchant:read
+      x-code-samples:
+      - lang: python_requests
+        source: 'import requests
+
+
+          url = "https://merchant.wish.com/api/v3/merchant/currency_settings"
+
+
+          headers = {''authorization'': ''Bearer REPLACE_BEARER_TOKEN''}
+
+
+          response = requests.request("GET", url, headers=headers)
+
+
+          print(response.text)'
+      - lang: javascript_jquery
+        source: "var settings = {\n  \"async\": true,\n  \"crossDomain\": true,\n  \"url\": \"https://merchant.wish.com/api/v3/merchant/currency_settings\",\n  \"method\": \"GET\",\n  \"headers\": {\n    \"authorization\": \"Bearer REPLACE_BEARER_TOKEN\"\n  }\n}\n\n$.ajax(settings).done(function (response) {\n  console.log(response);\n});"
+      - lang: php_curl
+        source: "<?php\n\n$curl = curl_init();\n\ncurl_setopt_array($curl, array(\n  CURLOPT_URL => \"https://merchant.wish.com/api/v3/merchant/currency_settings\",\n  CURLOPT_RETURNTRANSFER => true,\n  CURLOPT_ENCODING => \"\",\n  CURLOPT_MAXREDIRS => 10,\n  CURLOPT_TIMEOUT => 30,\n  CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,\n  CURLOPT_CUSTOMREQUEST => \"GET\",\n  CURLOPT_HTTPHEADER => array(\n    \"authorization: Bearer REPLACE_BEARER_TOKEN\"\n  ),\n));\n\n$response = curl_exec($curl);\n$err = curl_error($curl);\n\ncurl_close($curl);\n\nif ($err) {\n  echo \"cURL Error #:\" . $err;\n} else {\n  echo $response;\n}"
+      - lang: shell_curl
+        source: "curl --request GET \\\n  --url 'https://merchant.wish.com/api/v3/merchant/currency_settings' \\\n  --header 'authorization: Bearer REPLACE_BEARER_TOKEN'"
+      - lang: java_unirest
+        source: "HttpResponse<String> response = Unirest.get(\"https://merchant.wish.com/api/v3/merchant/currency_settings\")\n  .header(\"authorization\", \"Bearer REPLACE_BEARER_TOKEN\")\n  .asString();"
+      operationId: getCurrencySettings
+  /api/v3/merchant/warehouses/{id}:
+    put:
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/WarehouseResponse'
+          description: successfully updated the information of a warehouse
+        '400':
+          content:
+            application/json:
+              examples:
+                InvalidParameter:
+                  value:
+                    message: There is no such warehouse ID for the merchant.
+                    code: '90001'
+                FieldsMissing:
+                  value:
+                    message: Missing one or more required field(s).
+                    code: '10011'
+                InvalidCountryCodeForWishExpress:
+                  value:
+                    message: One of the destination country code is not supported by Wish Express.
+                    code: '10006'
+                CountryNotEnabledAtMerchantLevel:
+                  value:
+                    message: Merchant does not ship to one of the destination countries.
+                    code: '10004'
+                DuplicatedWarehouseName:
+                  value:
+                    message: Warehouse name already exists.
+                    code: '10001'
+                NotEligibleWishExpressUser:
+                  value:
+                    message: Merchant is not approved for Wish Express yet.
+                    code: '10005'
+                DuplicatedWishExpressCountry:
+                  value:
+                    message: Cannot create two Wish Express warehouses for the same country.
+                    code: '10003'
+                WishExpressBannedCountry:
+                  value:
+                    message: Merchant is banned from Wish Express for the country.
+                    code: '10002'
+              schema:
+                $ref: '#/components/schemas/APIError'
+          description: failed to update the information of a warehouse
+      parameters:
+      - required: true
+        in: path
+        description: ID of the warehouse to update
+        name: id
+        schema:
+          type: string
+          format: object-id
+      tags:
+      - Merchant
+      summary: Update warehouse information
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateWarehouse'
+      security:
+      - OAuth2:
+        - merchant:write
+      operationId: updateWarehouse
+      x-code-samples:
+      - lang: python_requests
+        source: "import requests\n\nurl = \"https://merchant.wish.com/api/v3/merchant/warehouses/{id}\"\n\npayload = \"{\\\"address\\\":{\\\"city\\\":\\\"string\\\",\\\"country_code\\\":\\\"US\\\",\\\"ship_to_name\\\":\\\"string\\\",\\\"state\\\":\\\"string\\\",\\\"street_address1\\\":\\\"string\\\",\\\"street_address2\\\":\\\"string\\\",\\\"zipcode\\\":\\\"string\\\"}}\"\nheaders = {\n    'content-type': \"application/json\",\n    'authorization': \"Bearer REPLACE_BEARER_TOKEN\"\n    }\n\nresponse = requests.request(\"PUT\", url, data=payload, headers=headers)\n\nprint(response.text)"
+      - lang: javascript_jquery
+        source: "var settings = {\n  \"async\": true,\n  \"crossDomain\": true,\n  \"url\": \"https://merchant.wish.com/api/v3/merchant/warehouses/{id}\",\n  \"method\": \"PUT\",\n  \"headers\": {\n    \"content-type\": \"application/json\",\n    \"authorization\": \"Bearer REPLACE_BEARER_TOKEN\"\n  },\n  \"processData\": false,\n  \"data\": \"{\\\"address\\\":{\\\"city\\\":\\\"string\\\",\\\"country_code\\\":\\\"US\\\",\\\"ship_to_name\\\":\\\"string\\\",\\\"state\\\":\\\"string\\\",\\\"street_address1\\\":\\\"string\\\",\\\"street_address2\\\":\\\"string\\\",\\\"zipcode\\\":\\\"string\\\"}}\"\n}\n\n$.ajax(settings).done(function (response) {\n  console.log(response);\n});"
+      - lang: php_curl
+        source: "<?php\n\n$curl = curl_init();\n\ncurl_setopt_array($curl, array(\n  CURLOPT_URL => \"https://merchant.wish.com/api/v3/merchant/warehouses/{id}\",\n  CURLOPT_RETURNTRANSFER => true,\n  CURLOPT_ENCODING => \"\",\n  CURLOPT_MAXREDIRS => 10,\n  CURLOPT_TIMEOUT => 30,\n  CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,\n  CURLOPT_CUSTOMREQUEST => \"PUT\",\n  CURLOPT_POSTFIELDS => \"{\\\"address\\\":{\\\"city\\\":\\\"string\\\",\\\"country_code\\\":\\\"US\\\",\\\"ship_to_name\\\":\\\"string\\\",\\\"state\\\":\\\"string\\\",\\\"street_address1\\\":\\\"string\\\",\\\"street_address2\\\":\\\"string\\\",\\\"zipcode\\\":\\\"string\\\"}}\",\n  CURLOPT_HTTPHEADER => array(\n    \"authorization: Bearer REPLACE_BEARER_TOKEN\",\n    \"content-type: application/json\"\n  ),\n));\n\n$response = curl_exec($curl);\n$err = curl_error($curl);\n\ncurl_close($curl);\n\nif ($err) {\n  echo \"cURL Error #:\" . $err;\n} else {\n  echo $response;\n}"
+      - lang: shell_curl
+        source: "curl --request PUT \\\n  --url 'https://merchant.wish.com/api/v3/merchant/warehouses/{id}' \\\n  --header 'authorization: Bearer REPLACE_BEARER_TOKEN' \\\n  --header 'content-type: application/json' \\\n  --data '{\"address\":{\"city\":\"string\",\"country_code\":\"US\",\"ship_to_name\":\"string\",\"state\":\"string\",\"street_address1\":\"string\",\"street_address2\":\"string\",\"zipcode\":\"string\"}}'"
+      - lang: java_unirest
+        source: "HttpResponse<String> response = Unirest.put(\"https://merchant.wish.com/api/v3/merchant/warehouses/{id}\")\n  .header(\"content-type\", \"application/json\")\n  .header(\"authorization\", \"Bearer REPLACE_BEARER_TOKEN\")\n  .body(\"{\\\"address\\\":{\\\"city\\\":\\\"string\\\",\\\"country_code\\\":\\\"US\\\",\\\"ship_to_name\\\":\\\"string\\\",\\\"state\\\":\\\"string\\\",\\\"street_address1\\\":\\\"string\\\",\\\"street_address2\\\":\\\"string\\\",\\\"zipcode\\\":\\\"string\\\"}}\")\n  .asString();"
+      description: Allows merchants to update the information of a warehouse
+  /api/v3/merchant/settings:
+    get:
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MerchantSettings'
+          description: successfully queried for merchant settings
+        '400':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/APIError'
+          description: failed to query for merchant settings
+      tags:
+      - Merchant
+      description: Get merchant settings
+      summary: Get merchant settings
+      security:
+      - OAuth2:
+        - merchant:read
+      x-code-samples:
+      - lang: python_requests
+        source: 'import requests
+
+
+          url = "https://merchant.wish.com/api/v3/merchant/settings"
+
+
+          headers = {''authorization'': ''Bearer REPLACE_BEARER_TOKEN''}
+
+
+          response = requests.request("GET", url, headers=headers)
+
+
+          print(response.text)'
+      - lang: javascript_jquery
+        source: "var settings = {\n  \"async\": true,\n  \"crossDomain\": true,\n  \"url\": \"https://merchant.wish.com/api/v3/merchant/settings\",\n  \"method\": \"GET\",\n  \"headers\": {\n    \"authorization\": \"Bearer REPLACE_BEARER_TOKEN\"\n  }\n}\n\n$.ajax(settings).done(function (response) {\n  console.log(response);\n});"
+      - lang: php_curl
+        source: "<?php\n\n$curl = curl_init();\n\ncurl_setopt_array($curl, array(\n  CURLOPT_URL => \"https://merchant.wish.com/api/v3/merchant/settings\",\n  CURLOPT_RETURNTRANSFER => true,\n  CURLOPT_ENCODING => \"\",\n  CURLOPT_MAXREDIRS => 10,\n  CURLOPT_TIMEOUT => 30,\n  CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,\n  CURLOPT_CUSTOMREQUEST => \"GET\",\n  CURLOPT_HTTPHEADER => array(\n    \"authorization: Bearer REPLACE_BEARER_TOKEN\"\n  ),\n));\n\n$response = curl_exec($curl);\n$err = curl_error($curl);\n\ncurl_close($curl);\n\nif ($err) {\n  echo \"cURL Error #:\" . $err;\n} else {\n  echo $response;\n}"
+      - lang: shell_curl
+        source: "curl --request GET \\\n  --url 'https://merchant.wish.com/api/v3/merchant/settings' \\\n  --header 'authorization: Bearer REPLACE_BEARER_TOKEN'"
+      - lang: java_unirest
+        source: "HttpResponse<String> response = Unirest.get(\"https://merchant.wish.com/api/v3/merchant/settings\")\n  .header(\"authorization\", \"Bearer REPLACE_BEARER_TOKEN\")\n  .asString();"
+      operationId: getSettings
+  /api/v3/merchant/warehouses:
+    post:
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/WarehouseResponse'
+          description: successfully created a warehouse
+        '400':
+          content:
+            application/json:
+              examples:
+                InvalidCountryCodeForWishExpress:
+                  value:
+                    message: One of the destination country code is not supported by Wish Express.
+                    code: '10006'
+                CountryNotEnabledAtMerchantLevel:
+                  value:
+                    message: Merchant does not ship to one of the destination countries.
+                    code: '10004'
+                DuplicatedWarehouseName:
+                  value:
+                    message: Warehouse name already exists.
+                    code: '10001'
+                NotEligibleWishExpressUser:
+                  value:
+                    message: Merchant is not approved for Wish Express yet.
+                    code: '10005'
+                DuplicatedWishExpressCountry:
+                  value:
+                    message: Cannot create two Wish Express warehouses for the same country.
+                    code: '10003'
+                WishExpressBannedCountry:
+                  value:
+                    message: Merchant is banned from Wish Express for the country.
+                    code: '10002'
+              schema:
+                $ref: '#/components/schemas/APIError'
+          description: failed to create a warehouse
+      tags:
+      - Merchant
+      summary: Create a warehouse
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateWarehouse'
+      security:
+      - OAuth2:
+        - merchant:write
+      operationId: createWarehouse
+      x-code-samples:
+      - lang: python_requests
+        source: "import requests\n\nurl = \"https://merchant.wish.com/api/v3/merchant/warehouses\"\n\npayload = \"{\\\"address\\\":{\\\"city\\\":\\\"string\\\",\\\"country_code\\\":\\\"US\\\",\\\"ship_to_name\\\":\\\"string\\\",\\\"state\\\":\\\"string\\\",\\\"street_address1\\\":\\\"string\\\",\\\"street_address2\\\":\\\"string\\\",\\\"zipcode\\\":\\\"string\\\"},\\\"name\\\":\\\"STANDARD\\\",\\\"destination_countries\\\":[\\\"US\\\"]}\"\nheaders = {\n    'content-type': \"application/json\",\n    'authorization': \"Bearer REPLACE_BEARER_TOKEN\"\n    }\n\nresponse = requests.request(\"POST\", url, data=payload, headers=headers)\n\nprint(response.text)"
+      - lang: javascript_jquery
+        source: "var settings = {\n  \"async\": true,\n  \"crossDomain\": true,\n  \"url\": \"https://merchant.wish.com/api/v3/merchant/warehouses\",\n  \"method\": \"POST\",\n  \"headers\": {\n    \"content-type\": \"application/json\",\n    \"authorization\": \"Bearer REPLACE_BEARER_TOKEN\"\n  },\n  \"processData\": false,\n  \"data\": \"{\\\"address\\\":{\\\"city\\\":\\\"string\\\",\\\"country_code\\\":\\\"US\\\",\\\"ship_to_name\\\":\\\"string\\\",\\\"state\\\":\\\"string\\\",\\\"street_address1\\\":\\\"string\\\",\\\"street_address2\\\":\\\"string\\\",\\\"zipcode\\\":\\\"string\\\"},\\\"name\\\":\\\"STANDARD\\\",\\\"destination_countries\\\":[\\\"US\\\"]}\"\n}\n\n$.ajax(settings).done(function (response) {\n  console.log(response);\n});"
+      - lang: php_curl
+        source: "<?php\n\n$curl = curl_init();\n\ncurl_setopt_array($curl, array(\n  CURLOPT_URL => \"https://merchant.wish.com/api/v3/merchant/warehouses\",\n  CURLOPT_RETURNTRANSFER => true,\n  CURLOPT_ENCODING => \"\",\n  CURLOPT_MAXREDIRS => 10,\n  CURLOPT_TIMEOUT => 30,\n  CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,\n  CURLOPT_CUSTOMREQUEST => \"POST\",\n  CURLOPT_POSTFIELDS => \"{\\\"address\\\":{\\\"city\\\":\\\"string\\\",\\\"country_code\\\":\\\"US\\\",\\\"ship_to_name\\\":\\\"string\\\",\\\"state\\\":\\\"string\\\",\\\"street_address1\\\":\\\"string\\\",\\\"street_address2\\\":\\\"string\\\",\\\"zipcode\\\":\\\"string\\\"},\\\"name\\\":\\\"STANDARD\\\",\\\"destination_countries\\\":[\\\"US\\\"]}\",\n  CURLOPT_HTTPHEADER => array(\n    \"authorization: Bearer REPLACE_BEARER_TOKEN\",\n    \"content-type: application/json\"\n  ),\n));\n\n$response = curl_exec($curl);\n$err = curl_error($curl);\n\ncurl_close($curl);\n\nif ($err) {\n  echo \"cURL Error #:\" . $err;\n} else {\n  echo $response;\n}"
+      - lang: shell_curl
+        source: "curl --request POST \\\n  --url 'https://merchant.wish.com/api/v3/merchant/warehouses' \\\n  --header 'authorization: Bearer REPLACE_BEARER_TOKEN' \\\n  --header 'content-type: application/json' \\\n  --data '{\"address\":{\"city\":\"string\",\"country_code\":\"US\",\"ship_to_name\":\"string\",\"state\":\"string\",\"street_address1\":\"string\",\"street_address2\":\"string\",\"zipcode\":\"string\"},\"name\":\"STANDARD\",\"destination_countries\":[\"US\"]}'"
+      - lang: java_unirest
+        source: "HttpResponse<String> response = Unirest.post(\"https://merchant.wish.com/api/v3/merchant/warehouses\")\n  .header(\"content-type\", \"application/json\")\n  .header(\"authorization\", \"Bearer REPLACE_BEARER_TOKEN\")\n  .body(\"{\\\"address\\\":{\\\"city\\\":\\\"string\\\",\\\"country_code\\\":\\\"US\\\",\\\"ship_to_name\\\":\\\"string\\\",\\\"state\\\":\\\"string\\\",\\\"street_address1\\\":\\\"string\\\",\\\"street_address2\\\":\\\"string\\\",\\\"zipcode\\\":\\\"string\\\"},\\\"name\\\":\\\"STANDARD\\\",\\\"destination_countries\\\":[\\\"US\\\"]}\")\n  .asString();"
+      description: Create a warehouse
+    get:
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Warehouses'
+          description: successfully queried for merchant shipping settings
+        '400':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/APIError'
+          description: failed to query for merchant shipping settings
+      tags:
+      - Merchant
+      description: Get merchant warehouses. Returns a list of warehouses merchant owns.
+      summary: Get merchant warehouses
+      security:
+      - OAuth2:
+        - merchant:read
+      x-code-samples:
+      - lang: python_requests
+        source: 'import requests
+
+
+          url = "https://merchant.wish.com/api/v3/merchant/warehouses"
+
+
+          headers = {''authorization'': ''Bearer REPLACE_BEARER_TOKEN''}
+
+
+          response = requests.request("GET", url, headers=headers)
+
+
+          print(response.text)'
+      - lang: javascript_jquery
+        source: "var settings = {\n  \"async\": true,\n  \"crossDomain\": true,\n  \"url\": \"https://merchant.wish.com/api/v3/merchant/warehouses\",\n  \"method\": \"GET\",\n  \"headers\": {\n    \"authorization\": \"Bearer REPLACE_BEARER_TOKEN\"\n  }\n}\n\n$.ajax(settings).done(function (response) {\n  console.log(response);\n});"
+      - lang: php_curl
+        source: "<?php\n\n$curl = curl_init();\n\ncurl_setopt_array($curl, array(\n  CURLOPT_URL => \"https://merchant.wish.com/api/v3/merchant/warehouses\",\n  CURLOPT_RETURNTRANSFER => true,\n  CURLOPT_ENCODING => \"\",\n  CURLOPT_MAXREDIRS => 10,\n  CURLOPT_TIMEOUT => 30,\n  CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,\n  CURLOPT_CUSTOMREQUEST => \"GET\",\n  CURLOPT_HTTPHEADER => array(\n    \"authorization: Bearer REPLACE_BEARER_TOKEN\"\n  ),\n));\n\n$response = curl_exec($curl);\n$err = curl_error($curl);\n\ncurl_close($curl);\n\nif ($err) {\n  echo \"cURL Error #:\" . $err;\n} else {\n  echo $response;\n}"
+      - lang: shell_curl
+        source: "curl --request GET \\\n  --url 'https://merchant.wish.com/api/v3/merchant/warehouses' \\\n  --header 'authorization: Bearer REPLACE_BEARER_TOKEN'"
+      - lang: java_unirest
+        source: "HttpResponse<String> response = Unirest.get(\"https://merchant.wish.com/api/v3/merchant/warehouses\")\n  .header(\"authorization\", \"Bearer REPLACE_BEARER_TOKEN\")\n  .asString();"
+      operationId: listWarehouses
+  /api/v3/merchant/shipping_settings:
+    put:
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ShippingSettings'
+          description: successfully updated shipping prices of a product
+        '400':
+          content:
+            application/json:
+              examples:
+                CannotDisableShipping:
+                  value:
+                    message: Cannot disable shipping to one of the countries due to policy reasons
+                    code: '10010'
+                DuplicateCountryCode:
+                  value:
+                    message: One of the country codes has been specified more than once.
+                    code: '10008'
+                BannedMerchant:
+                  value:
+                    message: Merchant has been banned on Wish.
+                    code: '10007'
+                InvalidCountryCode:
+                  value:
+                    message: One of the country codes is invalid or not supported by Wish
+                    code: '10009'
+              schema:
+                $ref: '#/components/schemas/APIError'
+          description: failed to update shipping settings
+      tags:
+      - Merchant
+      summary: Update shipping settings
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateShippingSettings'
+      security:
+      - OAuth2:
+        - merchant:write
+      operationId: updateShippingSettings
+      x-code-samples:
+      - lang: python_requests
+        source: "import requests\n\nurl = \"https://merchant.wish.com/api/v3/merchant/shipping_settings\"\n\npayload = \"[{\\\"country_code\\\":\\\"US\\\",\\\"enabled\\\":true}]\"\nheaders = {\n    'content-type': \"application/json\",\n    'authorization': \"Bearer REPLACE_BEARER_TOKEN\"\n    }\n\nresponse = requests.request(\"PUT\", url, data=payload, headers=headers)\n\nprint(response.text)"
+      - lang: javascript_jquery
+        source: "var settings = {\n  \"async\": true,\n  \"crossDomain\": true,\n  \"url\": \"https://merchant.wish.com/api/v3/merchant/shipping_settings\",\n  \"method\": \"PUT\",\n  \"headers\": {\n    \"content-type\": \"application/json\",\n    \"authorization\": \"Bearer REPLACE_BEARER_TOKEN\"\n  },\n  \"processData\": false,\n  \"data\": \"[{\\\"country_code\\\":\\\"US\\\",\\\"enabled\\\":true}]\"\n}\n\n$.ajax(settings).done(function (response) {\n  console.log(response);\n});"
+      - lang: php_curl
+        source: "<?php\n\n$curl = curl_init();\n\ncurl_setopt_array($curl, array(\n  CURLOPT_URL => \"https://merchant.wish.com/api/v3/merchant/shipping_settings\",\n  CURLOPT_RETURNTRANSFER => true,\n  CURLOPT_ENCODING => \"\",\n  CURLOPT_MAXREDIRS => 10,\n  CURLOPT_TIMEOUT => 30,\n  CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,\n  CURLOPT_CUSTOMREQUEST => \"PUT\",\n  CURLOPT_POSTFIELDS => \"[{\\\"country_code\\\":\\\"US\\\",\\\"enabled\\\":true}]\",\n  CURLOPT_HTTPHEADER => array(\n    \"authorization: Bearer REPLACE_BEARER_TOKEN\",\n    \"content-type: application/json\"\n  ),\n));\n\n$response = curl_exec($curl);\n$err = curl_error($curl);\n\ncurl_close($curl);\n\nif ($err) {\n  echo \"cURL Error #:\" . $err;\n} else {\n  echo $response;\n}"
+      - lang: shell_curl
+        source: "curl --request PUT \\\n  --url 'https://merchant.wish.com/api/v3/merchant/shipping_settings' \\\n  --header 'authorization: Bearer REPLACE_BEARER_TOKEN' \\\n  --header 'content-type: application/json' \\\n  --data '[{\"country_code\":\"US\",\"enabled\":true}]'"
+      - lang: java_unirest
+        source: "HttpResponse<String> response = Unirest.put(\"https://merchant.wish.com/api/v3/merchant/shipping_settings\")\n  .header(\"content-type\", \"application/json\")\n  .header(\"authorization\", \"Bearer REPLACE_BEARER_TOKEN\")\n  .body(\"[{\\\"country_code\\\":\\\"US\\\",\\\"enabled\\\":true}]\")\n  .asString();"
+      description: Update merchant level shipping settings. Provide a list of shipping settings updates to be performed. Countries not in the list will not be updated. To disable all shipping countries, pass in null as the request body.
+    get:
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ShippingSettings'
+          description: successfully queried for merchant shipping settings
+        '400':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/APIError'
+          description: failed to query for merchant shipping settings
+      tags:
+      - Merchant
+      description: Get merchant level shipping settings. Returns a list of shipping settings for each country Wish ships to.
+      summary: Get shipping settings
+      security:
+      - OAuth2:
+        - merchant:read
+      x-code-samples:
+      - lang: python_requests
+        source: 'import requests
+
+
+          url = "https://merchant.wish.com/api/v3/merchant/shipping_settings"
+
+
+          headers = {''authorization'': ''Bearer REPLACE_BEARER_TOKEN''}
+
+
+          response = requests.request("GET", url, headers=headers)
+
+
+          print(response.text)'
+      - lang: javascript_jquery
+        source: "var settings = {\n  \"async\": true,\n  \"crossDomain\": true,\n  \"url\": \"https://merchant.wish.com/api/v3/merchant/shipping_settings\",\n  \"method\": \"GET\",\n  \"headers\": {\n    \"authorization\": \"Bearer REPLACE_BEARER_TOKEN\"\n  }\n}\n\n$.ajax(settings).done(function (response) {\n  console.log(response);\n});"
+      - lang: php_curl
+        source: "<?php\n\n$curl = curl_init();\n\ncurl_setopt_array($curl, array(\n  CURLOPT_URL => \"https://merchant.wish.com/api/v3/merchant/shipping_settings\",\n  CURLOPT_RETURNTRANSFER => true,\n  CURLOPT_ENCODING => \"\",\n  CURLOPT_MAXREDIRS => 10,\n  CURLOPT_TIMEOUT => 30,\n  CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,\n  CURLOPT_CUSTOMREQUEST => \"GET\",\n  CURLOPT_HTTPHEADER => array(\n    \"authorization: Bearer REPLACE_BEARER_TOKEN\"\n  ),\n));\n\n$response = curl_exec($curl);\n$err = curl_error($curl);\n\ncurl_close($curl);\n\nif ($err) {\n  echo \"cURL Error #:\" . $err;\n} else {\n  echo $response;\n}"
+      - lang: shell_curl
+        source: "curl --request GET \\\n  --url 'https://merchant.wish.com/api/v3/merchant/shipping_settings' \\\n  --header 'authorization: Bearer REPLACE_BEARER_TOKEN'"
+      - lang: java_unirest
+        source: "HttpResponse<String> response = Unirest.get(\"https://merchant.wish.com/api/v3/merchant/shipping_settings\")\n  .header(\"authorization\", \"Bearer REPLACE_BEARER_TOKEN\")\n  .asString();"
+      operationId: listShippingSettings
+  /api/v3/merchant/account_details:
+    get:
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AccountDetail'
+          description: successfully queried for merchant settings
+        '400':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/APIError'
+          description: failed to query for merchant settings
+      tags:
+      - Merchant
+      description: Get merchant account details
+      summary: Get merchant account details
+      security:
+      - OAuth2:
+        - merchant:read
+      x-code-samples:
+      - lang: python_requests
+        source: 'import requests
+
+
+          url = "https://merchant.wish.com/api/v3/merchant/account_details"
+
+
+          headers = {''authorization'': ''Bearer REPLACE_BEARER_TOKEN''}
+
+
+          response = requests.request("GET", url, headers=headers)
+
+
+          print(response.text)'
+      - lang: javascript_jquery
+        source: "var settings = {\n  \"async\": true,\n  \"crossDomain\": true,\n  \"url\": \"https://merchant.wish.com/api/v3/merchant/account_details\",\n  \"method\": \"GET\",\n  \"headers\": {\n    \"authorization\": \"Bearer REPLACE_BEARER_TOKEN\"\n  }\n}\n\n$.ajax(settings).done(function (response) {\n  console.log(response);\n});"
+      - lang: php_curl
+        source: "<?php\n\n$curl = curl_init();\n\ncurl_setopt_array($curl, array(\n  CURLOPT_URL => \"https://merchant.wish.com/api/v3/merchant/account_details\",\n  CURLOPT_RETURNTRANSFER => true,\n  CURLOPT_ENCODING => \"\",\n  CURLOPT_MAXREDIRS => 10,\n  CURLOPT_TIMEOUT => 30,\n  CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,\n  CURLOPT_CUSTOMREQUEST => \"GET\",\n  CURLOPT_HTTPHEADER => array(\n    \"authorization: Bearer REPLACE_BEARER_TOKEN\"\n  ),\n));\n\n$response = curl_exec($curl);\n$err = curl_error($curl);\n\ncurl_close($curl);\n\nif ($err) {\n  echo \"cURL Error #:\" . $err;\n} else {\n  echo $response;\n}"
+      - lang: shell_curl
+        source: "curl --request GET \\\n  --url 'https://merchant.wish.com/api/v3/merchant/account_details' \\\n  --header 'authorization: Bearer REPLACE_BEARER_TOKEN'"
+      - lang: java_unirest
+        source: "HttpResponse<String> response = Unirest.get(\"https://merchant.wish.com/api/v3/merchant/account_details\")\n  .header(\"authorization\", \"Bearer REPLACE_BEARER_TOKEN\")\n  .asString();"
+      operationId: getMerchantAccountDetail
+components:
+  schemas:
+    FashionExperience:
+      type: object
+      properties:
+        status:
+          enum:
+          - ENABLED
+          - DISABLED
+          type: string
+          description: Wish Fashion experience status
+    UnificationInitiative:
+      type: object
+      properties:
+        status:
+          enum:
+          - ENABLED
+          - DISABLED
+          type: string
+          description: Merchant's unification initiative status. Only applicable to Mainland China-based merchants whose products have destination countries included in Wish’s unification initiative enabled.
+    WarehouseRequest:
+      type: object
+      allOf:
+      - $ref: '#/components/schemas/WarehouseBase'
+      - type: object
+        properties:
+          destination_countries:
+            minItems: 1
+            items:
+              description: The 2-letter country code defined in [ISO 3166](https://www.iso.org/iso-3166-country-codes.html).
+              type: string
+              example: US
+              format: iso-3166
+            type: array
+            description: List of country codes representing the destination countries that this warehouse ships to. All countries listed here must be countries that you enabled shipping to at merchant level. The 2-letter country code list is defined in [ISO 3166](https://www.iso.org/iso-3166-country-codes.html).
+    UpdateWarehouse:
+      type: object
+      properties:
+        address:
+          type: object
+          description: Physical address of the warehouse.
+          allOf:
+          - $ref: '#/components/schemas/WarehouseAddress'
+    AccountDetail:
+      type: object
+      properties:
+        status:
+          enum:
+          - ACTIVE
+          - INACTIVE
+          type: string
+          description: Merchant's account status.
+        revenue_type:
+          enum:
+          - COST_BASED
+          - REV_SHARE
+          type: string
+          description: Indicates the revenue type of a merchant.
+        display_name:
+          type: string
+          description: The name of the merchant account displayed to the public.
+        product_boost_status:
+          enum:
+          - ENROLLED
+          - NOT_ENROLLED
+          type: string
+          description: Indicates the product boost state of a merchant.
+    APIError:
+      required:
+      - code
+      - message
+      type: object
+      properties:
+        message:
+          type: string
+        code:
+          type: integer
+          format: int32
+    WarehouseAddress:
+      required:
+      - ship_to_name
+      - street_address1
+      - city
+      - country_code
+      - zipcode
+      type: object
+      properties:
+        city:
+          type: string
+          description: City name.
+        ship_to_name:
+          type: string
+          description: Name of the person at this address.
+        street_address2:
+          type: string
+          description: Street address 2.
+        street_address1:
+          type: string
+          description: Street address 1.
+        zipcode:
+          type: string
+          description: Zip code or postal code.
+        state:
+          type: string
+          description: State or province name.
+        country_code:
+          format: iso-3166
+          type: string
+          description: The 2-letter country code defined in [ISO 3166](https://www.iso.org/iso-3166-country-codes.html).
+          example: US
+    UpdateShippingSettings:
+      minItems: 1
+      items:
+        $ref: '#/components/schemas/ShippingSetting'
+      type: array
+      nullable: true
+    Warehouses:
+      items:
+        type: object
+        allOf:
+        - $ref: '#/components/schemas/WarehouseResponse'
+      type: array
+    WarehouseResponse:
+      type: object
+      allOf:
+      - $ref: '#/components/schemas/WarehouseBase'
+      - type: object
+        properties:
+          destination_countries:
+            items:
+              description: The 2-letter country code defined in [ISO 3166](https://www.iso.org/iso-3166-country-codes.html).
+              type: string
+              example: US
+              format: iso-3166
+            readOnly: true
+            type: array
+            description: List of country codes representing the destination countries that this warehouse ships to. All countries listed here must be countries that you enabled shipping to at merchant level. The 2-letter country code list is defined in [ISO 3166](https://www.iso.org/iso-3166-country-codes.html).
+    CreateWarehouse:
+      type: object
+      allOf:
+      - $ref: '#/components/schemas/WarehouseRequest'
+      - required:
+        - destination_countries
+        - name
+        - address
+        type: object
+    ShippingSetting:
+      required:
+      - country_code
+      - enabled
+      type: object
+      properties:
+        enabled:
+          type: boolean
+          description: Indicate whether shipping to this country is enabled.
+        country_code:
+          format: iso-3166
+          type: string
+          description: The country code of the destination country. The 2-letter country codes are defined in [ISO 3166](https://www.iso.org/iso-3166-country-codes.html).
+          example: US
+    MerchantCurrencySettings:
+      type: object
+      properties:
+        product_boost_currency:
+          type: string
+          description: The currency code for all your ProductBoost campaigns. The currency codes are defined in [ISO 4217](https://www.iso.org/iso-4217-currency-codes.html).
+          example: USD
+        localized_currency:
+          type: string
+          description: The currency code for all your variations, products, and payments. The currency codes are defined in [ISO 4217](https://www.iso.org/iso-4217-currency-codes.html).
+          example: USD
+    WarehouseBase:
+      type: object
+      properties:
+        shipping_type:
+          readOnly: true
+          enum:
+          - STANDARD
+          - WISH_EXPRESS
+          type: string
+        id:
+          readOnly: true
+          type: string
+          description: Warehouse ID.
+          format: object-id
+        name:
+          minLength: 1
+          maxLength: 80
+          type: string
+          description: The unique name of the warehouse.
+          example: STANDARD
+        address:
+          type: object
+          description: Physical address of the warehouse.
+          allOf:
+          - $ref: '#/components/schemas/WarehouseAddress'
+    MerchantSettings:
+      type: object
+      properties:
+        unification_initiative:
+          type: object
+          description: Merchant's unification initiative status. Only applicable to Mainland China-based merchants whose products have destination countries included in Wish’s unification initiative enabled.
+          allOf:
+          - $ref: '#/components/schemas/UnificationInitiative'
+        fashion_experience:
+          type: object
+          description: Merchant's fashion experience status. Merchants with this flag enabled are participating in the new Wish Fashion Experience. Learn [More](https://merchantfaq.wish.com/hc/en-us/articles/6817880684315).
+          allOf:
+          - $ref: '#/components/schemas/FashionExperience'
+        automated_listing_review_experience:
+          type: object
+          description: Merchant's automated listing review experience status. Merchants with this flag enabled are participating in the Automated Listing Review experience. Learn [More](https://merchantfaq.wish.com/hc/en-us/articles/6987354064155).
+          allOf:
+          - $ref: '#/components/schemas/AutomatedListingReviewExperience'
+    ShippingSettings:
+      items:
+        $ref: '#/components/schemas/ShippingSetting'
+      type: array
+    AutomatedListingReviewExperience:
+      type: object
+      properties:
+        status:
+          enum:
+          - ENABLED
+          - DISABLED
+          type: string
+          description: Auotmated Listing Review experience status
+  securitySchemes:
+    OpenID:
+      type: openIdConnect
+      openIdConnectUrl: https://merchant.wish.com/oidc/.well-known/openid-configuration
+    OAuth2:
+      type: oauth2
+      flows:
+        authorizationCode:
+          scopes:
+            payments:write: Update payments
+            tickets:write: Write customer tickets
+            epc:read: read EPC info
+            returns:write: Write returns
+            returns:read: Read returns
+            fbw:read: Read FBW
+            products:read: Read products
+            payments:read: Read payments
+            fbw:write: Write FBW
+            merchant:write: Write merchant
+            products:write: Write products
+            ratings:read: Read ratings
+            videos:read: Read videos
+            compliance:write: Write Compliance
+            product_boost:read: Read ProductBoost
+            listing_quality:read: Read listing quality
+            webhook:write: Write webhook
+            orders:read: Read orders
+            compliance:read: Read Compliance
+            fbs:read: Read FBS
+            penalties:read: Read penalties
+            penalties:write: Update penalties
+            infractions:read: Read infractions
+            orders:write: Update orders
+            merchant:read: Read merchant
+            notifications:write: Write notifications
+            announcements:read: Read announcements
+            product_boost:write: Write ProductBoost
+            notifications:read: Read notifications
+            webhook:read: Read webhook
+            qoo10:read: Read Qoo10
+            wps_parcel:write: Write WishParcel
+            wps_parcel:read: Read WishParcel
+            tickets:read: Read customer tickets
+            infractions:write: Write infractions
+            videos:write: Write videos
+            epc:write: write EPC info
+          tokenUrl: https://merchant.wish.com/api/v3/oauth/access_token
+          refreshUrl: https://merchant.wish.com/api/v3/oauth/refresh_token
+          authorizationUrl: https://merchant.wish.com/v3/oauth/authorize
+externalDocs:
+  url: https://merchant.wish.com/documentation/api/v3/explorer
+  description: API explorer
+x-wish-hidden: false

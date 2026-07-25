@@ -1,0 +1,348 @@
+openapi: 3.0.0
+info:
+  contact:
+    email: partner-api@wish.com
+  x-wish-dev-contact:
+    assignee: kwei
+    email: marketplace-external-api@contextlogic.com
+  description: "\nWish Marketplace V3 API\n\n# General Information\n\n The Wish Marketplace API will be using oAuth to authenticate in order to offer better security for its users\n\n *   Learn about oAuth [here](oauth).\n *   If you are a merchant and want to create an application for yourself, learn about how to create a private app [here](../../private-app)\n *   If you are a ERP and create applications that'll be used by multiple merchants, learn about how to create a public app [here]( ../../public-app). You will need to apply to be a verified public application\n\n ## How to Test\n\n To avoid testing the API on production data, use our sandbox. The sandbox is completely contained and will not affect Wish users or your merchant account. \n \n To reach the sandbox, visit: https://sandbox.merchant.wish.com.\n\n To use the sandbox in testing, use https://sandbox.merchant.wish.com/api/v3/ as your base URL.\n\n How to Generate test data after you have created a sandbox account:\n 1. Navigate to the [unfulfilled orders page](https://sandbox.merchant.wish.com/transactions/action)\n 2. Hover over the dropdown next to the 'fulfill with csv' button and select Generate Orders\n\n ## Date/Time Format\n\n  All dates and times in our API are returned in the same format. It is in the form `YYYY-MM-DDTHH:mm:ss.sss±XX:ZZ` or `YYYY-MM-DDTHH:mm:ss.sssZ`, where 'Z' represents UTC timezone.\n  When sending timestamps in URL parameters or the request body, millisecond is optional and will defaults to 0 if not provided.\n\n  * `YYYY` is the year\n  * `MM` is the month\n  * `DD` is the day\n  * `HH` is the hour (in 24-hour clock format)\n  * `mm` is the minutes\n  * `ss.sss` is the seconds and milliseconds\n  * `±XX:ZZ` is the UTC offset of the form +XX:ZZ or -XX:ZZ where XX is a 2-digit string giving the number of UTC offset hours, and ZZ is a 2-digit string giving the number of UTC offset minutes.\n\n ## Response Schema\n\n  Every response returned from the Wish API will have the same schema. This schema is intended to give you a predictable manner to check the status of your request and know where to get the data. Each response will have the following top level attributes: message, code and data.\n\n  **Attributes**\n\n  <table>\n  <tbody>\n  <tr>\n  <th>Message</th>\n  <td>A message describing the error that happened, example: \"We could not find a product for id: '5d30f60e0a6fc464f4f376b0'\"</td>\n  </tr>\n  <tr>\n  <th>Code</th>\n  <td>A unique number which represents the error that has occurred, example: 1008 or 0 if success.</td>\n  </tr>\n  <tr>\n  <th>Data</th>\n  <td>For errors this will be empty.</td>\n  </tr>\n  </tbody>\n  </table>\n\n ## General Querying Techniques\n\n ### Partial Resources\n All GET endpoints (except OAuth) support a fields parameter which allows for requesting a partial response. Any fields specified in the response schema of an endpoint can be selected. The top level attribute `data` can be ignored when using the fields parameter.\n\n **Syntax**\n * Comma-separated list to select multiple fields\n * Use forward slash `/` to select nested field: `field1/nested_field`\n * Use parentheses `( )` to select multiple nested fields: `field1(nested_field1,nested_field2)`\n * Use `*` for wildcard selection: `field1/nested_field/*`\n\n\n **Example:**\n ```\n https://merchant.wish.com/api/v3/demo/get?fields=title,items(id,info/name)\n ```\n Which would result in the following partial response:\n ```\n {\n   \"title\": \"demo\",\n   \"items\": [\n     {\n       \"id\": \"1\",\n       \"info\": {\n         \"name\": \"demo_item_1\"\n       }\n     }, {\n       \"id\": \"2\",\n       \"info\": {\n         \"name\": \"demo_item_2\"\n       }\n     },\n     ...\n   ]\n }\n ```\n\n ## Locale\n   You can optionally specify locale in order to translate content and error messages into your language.\n   To do this use the [Accept-Language](https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Accept-Language) header to specify your preferred locales.\n   If none is provided, your default locale will be used.\n\n   For example, to request content in Chinese use: `Accept-Language: zh`\n\n   In the response, you will receive a [Content-Language](https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Content-Language) header that specifies the locale code of the response content.\n\n\n ## Rate-Limiting\n\n  Rate-limiting will be performed on a per-merchant basis for each app. It is your responsibility to ensure you are not making frequent unnecessary calls to the API.\n\n  If the rate limits cannot satisfy your need, we highly recommend integrating webhooks for your app. With webhooks, instead of pulling resources periodically, your app will receive real-time notifications for particular events that occur to a merchant’s store. [Learn more](https://merchant.wish.com/documentation/webhooks)\n\n  **Normal Usage**\n\n  To help you track the rate-limiter status, the following response header(s) will be provided with each response:\n\n   * `Wish-Rate-Limit-Remaining`: The number of calls remaining in the current rate-limiting window.\n\n\n  **Rate-Limit Exceeded**\n\n  After you exceed the number of allowed calls in the current rate-limiting window, you will receive a `429 Too Many Requests` error response and the following additional header(s):\n\n   * `Wish-Rate-Limit-Reset`: The time the rate-limiter will reset.\n\n\n  Once you receive this response there is nothing you can do except wait for the rate-limiter to reset. In order to avoid being rate-limited, you may want to cache your responses.\n\n ## Sorting\n   ### Overview\n   Sorting is available for most endpoints that return a collection (list) of objects. Each collection has a different set of enabled parameters for sorting, so please check specific collection section for detail.\n\n   ### Usage\n   Append `sort_by={parameter_name}.{asc|desc}` in your API request where `parameter_name` is a valid sortable parameter of that endpoint.\n\n   Example:\n   ```\n   /api/v3/penalties?sort_by=created_at.asc\n   ```\n\n ## Pagination\n  All bulk-fetching API methods that return lists of resource support pagination.\n  These methods commonly take at least 3 parameters: `limit`, `{attribute}_min`, `{attribute}_max`. Attribute can be `id`, `create_at`, etc., depending on each specific method.\n  For instance, you make a request to get a list of penalties `/api/v3/penalties?limit=20&created_at_max=2020-04-08T23:59:59Z&sort_by=created_at_max.desc`,\n  which means to fetch 20 penalities sorted by their creation time, with the most recent one being created before `2020-04-08T23:59:59Z`.\n  Assume that the response contains 20 `penalty` objects with the last object being `penalty_foo`,\n  then your subsequent request can be `/api/v3/penalties?limit=20&created_at_max={penalty_foo.create_at}&sort_by=created_at_max.desc` to fetch the next page of list.\n  Note that when fetching next page using `id_min` or `id_max`, you need to perform `+/- 1`(correspondingly) on the last object's ID in the current page, as `id_min` and `id_max` are inclusive. (All V3 API resources' IDs are either integer or BSON object ID - a hex number).\n\n\n ## Request ID\n  Each API request is associated with a unique identifier. You can find this value in response headers, under `Wish-Request-Id`.\n  **When you need to contact us about a specific request, please provide this ID to ensure the fastest possible reply**\n\n# Authentication\nFor all requests that require OAuth2 authentication, the access token must be provided in the `Authorization` request header in the following format: `Authorization: Bearer <token>`\n\nFor example:\n```\nAuthorization: Bearer 3d6e2d71bc464e42bfbdb081afb73c1e\n```\n<!-- ReDoc-Inject: <security-definitions> -->\n"
+  version: 3.0.65
+  title: Wish Marketplace V3 Brands Ratings API
+servers:
+- url: https://merchant.wish.com
+  description: V3 API endpoint
+security:
+- OAuth2: []
+tags:
+- name: Ratings
+paths:
+  /api/v3/ratings/products:
+    get:
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                items:
+                  $ref: '#/components/schemas/ProductRating'
+                type: array
+          description: successful operation
+        '400':
+          content:
+            application/json:
+              examples:
+                ExtAPIInvalidParam:
+                  value:
+                    message: Incorrect sort_by parameter is provided, please review the documentation for correct use!
+                    code: '1003'
+                ExtAPIUnauthorizedAccess:
+                  value:
+                    message: Unauthorized Request
+                    code: '1006'
+              schema:
+                $ref: '#/components/schemas/APIError'
+          description: failed request
+      parameters:
+      - required: false
+        in: query
+        description: Id of a product associated with the ratings. If the id is provided, it will only return the ratings of the specific product. If the id is not given, it will return ratings of all products starting from September 9th, 2019 unless a later created_at_min time is specified
+        name: product_id
+        schema:
+          type: string
+          format: object-id
+      - required: false
+        in: query
+        description: The starting point of the ratings retrieved
+        name: offset
+        schema:
+          default: 0
+          type: integer
+      - required: false
+        in: query
+        description: It is a limit on the number of ratings that can be returned. Limit can range from <b>1</b> to <b>500</b> items.
+        name: limit
+        schema:
+          default: 100
+          minimum: 1
+          type: integer
+          maximum: 500
+      - required: false
+        in: query
+        description: A date/time string which indicates the earliest creation time of product ratings to fetch. If created_at_min is not provided, the default is to set it to the creation time of the earliest created rating.
+        name: created_at_min
+        schema:
+          type: string
+          format: date-time
+      - required: false
+        in: query
+        description: A date/time string which indicates the latest creation time of product ratings to fetch. If created_at_max is not provided, created_at_max will be set to the current time.
+        name: created_at_max
+        schema:
+          type: string
+          format: date-time
+      - description: Filter ratings by value. ratings range from <b>1</b> to <b>5</b>. If ratings is not provided, the default is to select ratings in all values.
+        required: false
+        name: ratings
+        examples:
+          MultipleRatings:
+            value:
+            - 1
+            - 2
+            - 4
+        in: query
+        schema:
+          items:
+            minimum: 0
+            type: integer
+            maximum: 5
+            format: int32
+          type: array
+      - required: false
+        in: query
+        description: Sort results by the given attribute. Enabled attributes are `created_at` and `rating` Default order is `desc`, use `asc` to sort in reverse.
+        name: sort_by
+        schema:
+          default: created_at.desc
+          pattern: ^(created_at|rating)(\.(asc|desc))?$
+          type: string
+      tags:
+      - Ratings
+      summary: Fetch product ratings
+      security:
+      - OAuth2:
+        - ratings:read
+      operationId: FetchProductRatings
+      x-code-samples:
+      - lang: java_unirest
+        source: "HttpResponse<String> response = Unirest.get(\"https://merchant.wish.com/api/v3/ratings/products?product_id=SOME_STRING_VALUE&offset=SOME_INTEGER_VALUE&limit=SOME_INTEGER_VALUE&created_at_min=SOME_STRING_VALUE&created_at_max=SOME_STRING_VALUE&ratings=SOME_ARRAY_VALUE&sort_by=SOME_STRING_VALUE\")\n  .header(\"authorization\", \"Bearer REPLACE_BEARER_TOKEN\")\n  .asString();"
+      - lang: php_curl
+        source: "<?php\n\n$curl = curl_init();\n\ncurl_setopt_array($curl, array(\n  CURLOPT_URL => \"https://merchant.wish.com/api/v3/ratings/products?product_id=SOME_STRING_VALUE&offset=SOME_INTEGER_VALUE&limit=SOME_INTEGER_VALUE&created_at_min=SOME_STRING_VALUE&created_at_max=SOME_STRING_VALUE&ratings=SOME_ARRAY_VALUE&sort_by=SOME_STRING_VALUE\",\n  CURLOPT_RETURNTRANSFER => true,\n  CURLOPT_ENCODING => \"\",\n  CURLOPT_MAXREDIRS => 10,\n  CURLOPT_TIMEOUT => 30,\n  CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,\n  CURLOPT_CUSTOMREQUEST => \"GET\",\n  CURLOPT_HTTPHEADER => array(\n    \"authorization: Bearer REPLACE_BEARER_TOKEN\"\n  ),\n));\n\n$response = curl_exec($curl);\n$err = curl_error($curl);\n\ncurl_close($curl);\n\nif ($err) {\n  echo \"cURL Error #:\" . $err;\n} else {\n  echo $response;\n}"
+      - lang: javascript_jquery
+        source: "var settings = {\n  \"async\": true,\n  \"crossDomain\": true,\n  \"url\": \"https://merchant.wish.com/api/v3/ratings/products?product_id=SOME_STRING_VALUE&offset=SOME_INTEGER_VALUE&limit=SOME_INTEGER_VALUE&created_at_min=SOME_STRING_VALUE&created_at_max=SOME_STRING_VALUE&ratings=SOME_ARRAY_VALUE&sort_by=SOME_STRING_VALUE\",\n  \"method\": \"GET\",\n  \"headers\": {\n    \"authorization\": \"Bearer REPLACE_BEARER_TOKEN\"\n  }\n}\n\n$.ajax(settings).done(function (response) {\n  console.log(response);\n});"
+      - lang: shell_curl
+        source: "curl --request GET \\\n  --url 'https://merchant.wish.com/api/v3/ratings/products?product_id=SOME_STRING_VALUE&offset=SOME_INTEGER_VALUE&limit=SOME_INTEGER_VALUE&created_at_min=SOME_STRING_VALUE&created_at_max=SOME_STRING_VALUE&ratings=SOME_ARRAY_VALUE&sort_by=SOME_STRING_VALUE' \\\n  --header 'authorization: Bearer REPLACE_BEARER_TOKEN'"
+      - lang: python_requests
+        source: 'import requests
+
+
+          url = "https://merchant.wish.com/api/v3/ratings/products"
+
+
+          querystring = {"product_id":"SOME_STRING_VALUE","offset":"SOME_INTEGER_VALUE","limit":"SOME_INTEGER_VALUE","created_at_min":"SOME_STRING_VALUE","created_at_max":"SOME_STRING_VALUE","ratings":"SOME_ARRAY_VALUE","sort_by":"SOME_STRING_VALUE"}
+
+
+          headers = {''authorization'': ''Bearer REPLACE_BEARER_TOKEN''}
+
+
+          response = requests.request("GET", url, headers=headers, params=querystring)
+
+
+          print(response.text)'
+      description: The goal of the rating API is to allow merchants to locate and track their product ratings more easily. If the total rating of a specific product changed, merchants should easily be able to determine which orders caused the changes.
+  /api/v3/ratings/products/{id}:
+    get:
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProductOverallRating'
+          description: successful operation
+        '400':
+          content:
+            application/json:
+              examples:
+                ExtAPIUnauthorizedAccess:
+                  value:
+                    message: Unauthorized Request
+                    code: '1006'
+              schema:
+                $ref: '#/components/schemas/APIError'
+          description: failed request
+      parameters:
+      - required: true
+        in: path
+        description: ID of the product to query
+        name: id
+        schema:
+          type: string
+          format: object-id
+      tags:
+      - Ratings
+      summary: Fetch the overall rating of the product
+      security:
+      - OAuth2:
+        - ratings:read
+      operationId: FetchOverallProductRatings
+      x-code-samples:
+      - lang: java_unirest
+        source: "HttpResponse<String> response = Unirest.get(\"https://merchant.wish.com/api/v3/ratings/products/{id}\")\n  .header(\"authorization\", \"Bearer REPLACE_BEARER_TOKEN\")\n  .asString();"
+      - lang: php_curl
+        source: "<?php\n\n$curl = curl_init();\n\ncurl_setopt_array($curl, array(\n  CURLOPT_URL => \"https://merchant.wish.com/api/v3/ratings/products/{id}\",\n  CURLOPT_RETURNTRANSFER => true,\n  CURLOPT_ENCODING => \"\",\n  CURLOPT_MAXREDIRS => 10,\n  CURLOPT_TIMEOUT => 30,\n  CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,\n  CURLOPT_CUSTOMREQUEST => \"GET\",\n  CURLOPT_HTTPHEADER => array(\n    \"authorization: Bearer REPLACE_BEARER_TOKEN\"\n  ),\n));\n\n$response = curl_exec($curl);\n$err = curl_error($curl);\n\ncurl_close($curl);\n\nif ($err) {\n  echo \"cURL Error #:\" . $err;\n} else {\n  echo $response;\n}"
+      - lang: javascript_jquery
+        source: "var settings = {\n  \"async\": true,\n  \"crossDomain\": true,\n  \"url\": \"https://merchant.wish.com/api/v3/ratings/products/{id}\",\n  \"method\": \"GET\",\n  \"headers\": {\n    \"authorization\": \"Bearer REPLACE_BEARER_TOKEN\"\n  }\n}\n\n$.ajax(settings).done(function (response) {\n  console.log(response);\n});"
+      - lang: shell_curl
+        source: "curl --request GET \\\n  --url 'https://merchant.wish.com/api/v3/ratings/products/{id}' \\\n  --header 'authorization: Bearer REPLACE_BEARER_TOKEN'"
+      - lang: python_requests
+        source: 'import requests
+
+
+          url = "https://merchant.wish.com/api/v3/ratings/products/{id}"
+
+
+          headers = {''authorization'': ''Bearer REPLACE_BEARER_TOKEN''}
+
+
+          response = requests.request("GET", url, headers=headers)
+
+
+          print(response.text)'
+      description: Enable merchants to retrieve the overall rating metrics for the product
+components:
+  schemas:
+    ProductOverallRating:
+      type: object
+      properties:
+        average_rating:
+          minimum: 0
+          type: number
+          description: This value represents the average rating of the product
+          format: float
+        ratings_count:
+          type: integer
+          description: The cumulative quantity of consumer ratings associated with the queried product
+    APIError:
+      required:
+      - code
+      - message
+      type: object
+      properties:
+        message:
+          type: string
+        code:
+          type: integer
+          format: int32
+    RatingVideo:
+      type: object
+      properties:
+        url:
+          type: string
+          description: The URL of the video of the rating
+        thumbnail_url:
+          type: string
+          description: The thumbnail image URL for the video
+        id:
+          type: string
+          description: The ID of the video
+    RatingImage:
+      type: object
+      properties:
+        url:
+          type: string
+          description: The URL of the image of the rating
+        id:
+          type: string
+          description: The ID of the image
+    Locale:
+      type: string
+      description: A language tag (which is sometimes referred to as a 'locale identifier'). This consists of a 2-3 letter base language tag representing the language, optionally followed by additional subtags separated by '-'. The most common extra information is the country or region variant (like 'en-US' or 'fr-CA'). For more information, see specification [BCP 47](https://datatracker.ietf.org/doc/html/bcp47#section-2).
+      format: BCP 47
+    ProductRating:
+      type: object
+      properties:
+        comment:
+          type: string
+          description: Customer comment along with the rating
+        rating:
+          minimum: 0
+          type: integer
+          description: Value of the rating
+          maximum: 5
+          format: int32
+        product_id:
+          type: string
+          description: Id of the product
+          format: object-id
+        videos:
+          items:
+            $ref: '#/components/schemas/RatingVideo'
+          type: array
+          description: The associated videos of the rating
+        order_id:
+          type: string
+          description: Id of order following which the rating was created
+          format: object-id
+        created_at:
+          type: string
+          description: Creation time of the rating
+          format: date-time
+        variation_id:
+          type: string
+          description: Id of the variation
+          format: object-id
+        user_locale:
+          type: string
+          allOf:
+          - $ref: '#/components/schemas/Locale'
+        images:
+          items:
+            $ref: '#/components/schemas/RatingImage'
+          type: array
+          description: The associated images of the rating
+        id:
+          type: string
+          description: ID of the rating
+          format: object-id
+  securitySchemes:
+    OpenID:
+      type: openIdConnect
+      openIdConnectUrl: https://merchant.wish.com/oidc/.well-known/openid-configuration
+    OAuth2:
+      type: oauth2
+      flows:
+        authorizationCode:
+          scopes:
+            payments:write: Update payments
+            tickets:write: Write customer tickets
+            epc:read: read EPC info
+            returns:write: Write returns
+            returns:read: Read returns
+            fbw:read: Read FBW
+            products:read: Read products
+            payments:read: Read payments
+            fbw:write: Write FBW
+            merchant:write: Write merchant
+            products:write: Write products
+            ratings:read: Read ratings
+            videos:read: Read videos
+            compliance:write: Write Compliance
+            product_boost:read: Read ProductBoost
+            listing_quality:read: Read listing quality
+            webhook:write: Write webhook
+            orders:read: Read orders
+            compliance:read: Read Compliance
+            fbs:read: Read FBS
+            penalties:read: Read penalties
+            penalties:write: Update penalties
+            infractions:read: Read infractions
+            orders:write: Update orders
+            merchant:read: Read merchant
+            notifications:write: Write notifications
+            announcements:read: Read announcements
+            product_boost:write: Write ProductBoost
+            notifications:read: Read notifications
+            webhook:read: Read webhook
+            qoo10:read: Read Qoo10
+            wps_parcel:write: Write WishParcel
+            wps_parcel:read: Read WishParcel
+            tickets:read: Read customer tickets
+            infractions:write: Write infractions
+            videos:write: Write videos
+            epc:write: write EPC info
+          tokenUrl: https://merchant.wish.com/api/v3/oauth/access_token
+          refreshUrl: https://merchant.wish.com/api/v3/oauth/refresh_token
+          authorizationUrl: https://merchant.wish.com/v3/oauth/authorize
+externalDocs:
+  url: https://merchant.wish.com/documentation/api/v3/explorer
+  description: API explorer
+x-wish-hidden: false

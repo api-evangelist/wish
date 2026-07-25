@@ -1,0 +1,1524 @@
+openapi: 3.0.0
+info:
+  contact:
+    email: partner-api@wish.com
+  x-wish-dev-contact:
+    assignee: kwei
+    email: marketplace-external-api@contextlogic.com
+  description: "\nWish Marketplace V3 API\n\n# General Information\n\n The Wish Marketplace API will be using oAuth to authenticate in order to offer better security for its users\n\n *   Learn about oAuth [here](oauth).\n *   If you are a merchant and want to create an application for yourself, learn about how to create a private app [here](../../private-app)\n *   If you are a ERP and create applications that'll be used by multiple merchants, learn about how to create a public app [here]( ../../public-app). You will need to apply to be a verified public application\n\n ## How to Test\n\n To avoid testing the API on production data, use our sandbox. The sandbox is completely contained and will not affect Wish users or your merchant account. \n \n To reach the sandbox, visit: https://sandbox.merchant.wish.com.\n\n To use the sandbox in testing, use https://sandbox.merchant.wish.com/api/v3/ as your base URL.\n\n How to Generate test data after you have created a sandbox account:\n 1. Navigate to the [unfulfilled orders page](https://sandbox.merchant.wish.com/transactions/action)\n 2. Hover over the dropdown next to the 'fulfill with csv' button and select Generate Orders\n\n ## Date/Time Format\n\n  All dates and times in our API are returned in the same format. It is in the form `YYYY-MM-DDTHH:mm:ss.sss±XX:ZZ` or `YYYY-MM-DDTHH:mm:ss.sssZ`, where 'Z' represents UTC timezone.\n  When sending timestamps in URL parameters or the request body, millisecond is optional and will defaults to 0 if not provided.\n\n  * `YYYY` is the year\n  * `MM` is the month\n  * `DD` is the day\n  * `HH` is the hour (in 24-hour clock format)\n  * `mm` is the minutes\n  * `ss.sss` is the seconds and milliseconds\n  * `±XX:ZZ` is the UTC offset of the form +XX:ZZ or -XX:ZZ where XX is a 2-digit string giving the number of UTC offset hours, and ZZ is a 2-digit string giving the number of UTC offset minutes.\n\n ## Response Schema\n\n  Every response returned from the Wish API will have the same schema. This schema is intended to give you a predictable manner to check the status of your request and know where to get the data. Each response will have the following top level attributes: message, code and data.\n\n  **Attributes**\n\n  <table>\n  <tbody>\n  <tr>\n  <th>Message</th>\n  <td>A message describing the error that happened, example: \"We could not find a product for id: '5d30f60e0a6fc464f4f376b0'\"</td>\n  </tr>\n  <tr>\n  <th>Code</th>\n  <td>A unique number which represents the error that has occurred, example: 1008 or 0 if success.</td>\n  </tr>\n  <tr>\n  <th>Data</th>\n  <td>For errors this will be empty.</td>\n  </tr>\n  </tbody>\n  </table>\n\n ## General Querying Techniques\n\n ### Partial Resources\n All GET endpoints (except OAuth) support a fields parameter which allows for requesting a partial response. Any fields specified in the response schema of an endpoint can be selected. The top level attribute `data` can be ignored when using the fields parameter.\n\n **Syntax**\n * Comma-separated list to select multiple fields\n * Use forward slash `/` to select nested field: `field1/nested_field`\n * Use parentheses `( )` to select multiple nested fields: `field1(nested_field1,nested_field2)`\n * Use `*` for wildcard selection: `field1/nested_field/*`\n\n\n **Example:**\n ```\n https://merchant.wish.com/api/v3/demo/get?fields=title,items(id,info/name)\n ```\n Which would result in the following partial response:\n ```\n {\n   \"title\": \"demo\",\n   \"items\": [\n     {\n       \"id\": \"1\",\n       \"info\": {\n         \"name\": \"demo_item_1\"\n       }\n     }, {\n       \"id\": \"2\",\n       \"info\": {\n         \"name\": \"demo_item_2\"\n       }\n     },\n     ...\n   ]\n }\n ```\n\n ## Locale\n   You can optionally specify locale in order to translate content and error messages into your language.\n   To do this use the [Accept-Language](https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Accept-Language) header to specify your preferred locales.\n   If none is provided, your default locale will be used.\n\n   For example, to request content in Chinese use: `Accept-Language: zh`\n\n   In the response, you will receive a [Content-Language](https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Content-Language) header that specifies the locale code of the response content.\n\n\n ## Rate-Limiting\n\n  Rate-limiting will be performed on a per-merchant basis for each app. It is your responsibility to ensure you are not making frequent unnecessary calls to the API.\n\n  If the rate limits cannot satisfy your need, we highly recommend integrating webhooks for your app. With webhooks, instead of pulling resources periodically, your app will receive real-time notifications for particular events that occur to a merchant’s store. [Learn more](https://merchant.wish.com/documentation/webhooks)\n\n  **Normal Usage**\n\n  To help you track the rate-limiter status, the following response header(s) will be provided with each response:\n\n   * `Wish-Rate-Limit-Remaining`: The number of calls remaining in the current rate-limiting window.\n\n\n  **Rate-Limit Exceeded**\n\n  After you exceed the number of allowed calls in the current rate-limiting window, you will receive a `429 Too Many Requests` error response and the following additional header(s):\n\n   * `Wish-Rate-Limit-Reset`: The time the rate-limiter will reset.\n\n\n  Once you receive this response there is nothing you can do except wait for the rate-limiter to reset. In order to avoid being rate-limited, you may want to cache your responses.\n\n ## Sorting\n   ### Overview\n   Sorting is available for most endpoints that return a collection (list) of objects. Each collection has a different set of enabled parameters for sorting, so please check specific collection section for detail.\n\n   ### Usage\n   Append `sort_by={parameter_name}.{asc|desc}` in your API request where `parameter_name` is a valid sortable parameter of that endpoint.\n\n   Example:\n   ```\n   /api/v3/penalties?sort_by=created_at.asc\n   ```\n\n ## Pagination\n  All bulk-fetching API methods that return lists of resource support pagination.\n  These methods commonly take at least 3 parameters: `limit`, `{attribute}_min`, `{attribute}_max`. Attribute can be `id`, `create_at`, etc., depending on each specific method.\n  For instance, you make a request to get a list of penalties `/api/v3/penalties?limit=20&created_at_max=2020-04-08T23:59:59Z&sort_by=created_at_max.desc`,\n  which means to fetch 20 penalities sorted by their creation time, with the most recent one being created before `2020-04-08T23:59:59Z`.\n  Assume that the response contains 20 `penalty` objects with the last object being `penalty_foo`,\n  then your subsequent request can be `/api/v3/penalties?limit=20&created_at_max={penalty_foo.create_at}&sort_by=created_at_max.desc` to fetch the next page of list.\n  Note that when fetching next page using `id_min` or `id_max`, you need to perform `+/- 1`(correspondingly) on the last object's ID in the current page, as `id_min` and `id_max` are inclusive. (All V3 API resources' IDs are either integer or BSON object ID - a hex number).\n\n\n ## Request ID\n  Each API request is associated with a unique identifier. You can find this value in response headers, under `Wish-Request-Id`.\n  **When you need to contact us about a specific request, please provide this ID to ensure the fastest possible reply**\n\n# Authentication\nFor all requests that require OAuth2 authentication, the access token must be provided in the `Authorization` request header in the following format: `Authorization: Bearer <token>`\n\nFor example:\n```\nAuthorization: Bearer 3d6e2d71bc464e42bfbdb081afb73c1e\n```\n<!-- ReDoc-Inject: <security-definitions> -->\n"
+  version: 3.0.65
+  title: Wish Marketplace V3 Brands ProductBoost API
+servers:
+- url: https://merchant.wish.com
+  description: V3 API endpoint
+security:
+- OAuth2: []
+tags:
+- name: ProductBoost
+paths:
+  /api/v3/product_boost/keywords:
+    get:
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Keywords'
+          description: successfully queried for ProductBoost keywords
+        '400':
+          content:
+            application/json:
+              examples:
+                InvalidKeywordParameters:
+                  value:
+                    message: Invalid 'keywords' parameter.
+                    code: '20501'
+              schema:
+                $ref: '#/components/schemas/APIError'
+          description: failed to query for ProductBoost keywords
+      parameters:
+      - required: false
+        in: query
+        description: A list of keywords. Maximum 50 keywords allowed. Only one of 'keywords' and 'query' parameters should be provided. 'keywords' parameter does exact match while 'query' returns all matching keywords.
+        name: keywords
+        schema:
+          minItems: 1
+          items:
+            type: string
+            format: string
+          type: array
+          maxItems: 50
+      - required: false
+        in: query
+        description: The query used to search all related keywords. Only one of 'keywords' and 'query' parameters should be provided. 'keywords' parameter does exact match while 'query' returns all matching keyword.
+        name: query
+        schema:
+          type: string
+      - required: false
+        in: query
+        description: A list of keywords to be excluded from the search results. Maximum 30 allowed. This parameter is only in use if 'query' parameter is provided.
+        name: exclude
+        schema:
+          minItems: 0
+          items:
+            type: string
+          type: array
+          maxItems: 30
+      tags:
+      - ProductBoost
+      summary: Get information for the given keywords or keywords that match the query
+      security:
+      - OAuth2:
+        - product_boost:read
+      operationId: getKeywords
+      x-code-samples:
+      - lang: python_requests
+        source: 'import requests
+
+
+          url = "https://merchant.wish.com/api/v3/product_boost/keywords"
+
+
+          querystring = {"keywords":"SOME_ARRAY_VALUE","query":"SOME_STRING_VALUE","exclude":"SOME_ARRAY_VALUE"}
+
+
+          headers = {''authorization'': ''Bearer REPLACE_BEARER_TOKEN''}
+
+
+          response = requests.request("GET", url, headers=headers, params=querystring)
+
+
+          print(response.text)'
+      - lang: javascript_jquery
+        source: "var settings = {\n  \"async\": true,\n  \"crossDomain\": true,\n  \"url\": \"https://merchant.wish.com/api/v3/product_boost/keywords?keywords=SOME_ARRAY_VALUE&query=SOME_STRING_VALUE&exclude=SOME_ARRAY_VALUE\",\n  \"method\": \"GET\",\n  \"headers\": {\n    \"authorization\": \"Bearer REPLACE_BEARER_TOKEN\"\n  }\n}\n\n$.ajax(settings).done(function (response) {\n  console.log(response);\n});"
+      - lang: php_curl
+        source: "<?php\n\n$curl = curl_init();\n\ncurl_setopt_array($curl, array(\n  CURLOPT_URL => \"https://merchant.wish.com/api/v3/product_boost/keywords?keywords=SOME_ARRAY_VALUE&query=SOME_STRING_VALUE&exclude=SOME_ARRAY_VALUE\",\n  CURLOPT_RETURNTRANSFER => true,\n  CURLOPT_ENCODING => \"\",\n  CURLOPT_MAXREDIRS => 10,\n  CURLOPT_TIMEOUT => 30,\n  CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,\n  CURLOPT_CUSTOMREQUEST => \"GET\",\n  CURLOPT_HTTPHEADER => array(\n    \"authorization: Bearer REPLACE_BEARER_TOKEN\"\n  ),\n));\n\n$response = curl_exec($curl);\n$err = curl_error($curl);\n\ncurl_close($curl);\n\nif ($err) {\n  echo \"cURL Error #:\" . $err;\n} else {\n  echo $response;\n}"
+      - lang: shell_curl
+        source: "curl --request GET \\\n  --url 'https://merchant.wish.com/api/v3/product_boost/keywords?keywords=SOME_ARRAY_VALUE&query=SOME_STRING_VALUE&exclude=SOME_ARRAY_VALUE' \\\n  --header 'authorization: Bearer REPLACE_BEARER_TOKEN'"
+      - lang: java_unirest
+        source: "HttpResponse<String> response = Unirest.get(\"https://merchant.wish.com/api/v3/product_boost/keywords?keywords=SOME_ARRAY_VALUE&query=SOME_STRING_VALUE&exclude=SOME_ARRAY_VALUE\")\n  .header(\"authorization\", \"Bearer REPLACE_BEARER_TOKEN\")\n  .asString();"
+      description: Obtain details on a list of ProductBoost keywords.
+  /api/v3/product_boost/campaigns:
+    post:
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Campaign'
+          description: successfully created a campaign
+        '400':
+          content:
+            application/json:
+              examples:
+                NotEnoughBalance:
+                  value:
+                    message: Maximum allowed spending is too low to run this campaign.
+                    code: '20810'
+                ProductsInOtherCampaigns:
+                  value:
+                    message: All products listed under 'products' attribute appear in one or more overlapping campaigns.
+                    code: '20821'
+                KeywordTooLong:
+                  value:
+                    message: The keyword is too long.
+                    code: '20806'
+                TooManyKeywords:
+                  value:
+                    message: '''keywords'' attribute under ''products'' has too many words listed.'
+                    code: '20805'
+                NotJoinedProductBoost:
+                  value:
+                    message: The merchant has not joined ProductBoost yet.
+                    code: '20002'
+                InvalidBudget:
+                  value:
+                    message: One of 'max_budget' and 'merchant_budget' fields must be provided.
+                    code: '20823'
+                BudgetHigherThanMaximum:
+                  value:
+                    message: Campaign budget exceeds maximum allowed spending.
+                    code: '20812'
+                InvalidScheduledAddBudgetDays:
+                  value:
+                    message: Invalid 'scheduled_add_budget_days' parameter. 'scheduled_add_budget_days' must be a JSON array with values ranging from 0 to 6 inclusively.
+                    code: '20814'
+                InvalidProductParam:
+                  value:
+                    message: Invalid 'products' param.
+                    code: '20804'
+                InvalidCampaignNameParam:
+                  value:
+                    message: Invalid campaign name param.
+                    code: '20807'
+                InvalidScheduledAddBudgetAmount:
+                  value:
+                    message: Invalid 'scheduled_add_budget_amount' parameter. 'scheduled_add_budget_amount' must be a number ranging from 0.01 to 10000 inclusively.
+                    code: '20813'
+                UnknownError:
+                  value:
+                    message: Create campaign failed because of unknown error.
+                    code: '20800'
+                InvalidStartDate:
+                  value:
+                    message: Invalid campaign start date.
+                    code: '20808'
+                InvalidEndDate:
+                  value:
+                    message: Invalid campaign end date.
+                    code: '20809'
+                BudgetLowerThanMinimum:
+                  value:
+                    message: Campaign budget is too low.
+                    code: '20811'
+                CurrencyError:
+                  value:
+                    message: Invalid currency value. Should be consistent with merchant currency.
+                    code: '20822'
+                InvalidProductId:
+                  value:
+                    message: Invalid 'product_id' attribute under 'products'.
+                    code: '20803'
+              schema:
+                $ref: '#/components/schemas/APIError'
+          description: failed to create a campaign
+      tags:
+      - ProductBoost
+      summary: Create a ProductBoost campaign
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateCampaign'
+      security:
+      - OAuth2:
+        - product_boost:write
+      operationId: createCampaign
+      x-code-samples:
+      - lang: python_requests
+        source: "import requests\n\nurl = \"https://merchant.wish.com/api/v3/product_boost/campaigns\"\n\npayload = \"{\\\"auto_renew\\\":true,\\\"campaign_name\\\":\\\"string\\\",\\\"end_at\\\":\\\"2023-04-18T21:58:23Z\\\",\\\"intense_boost\\\":true,\\\"max_budget\\\":{\\\"amount\\\":10.4,\\\"currency_code\\\":\\\"USD\\\"},\\\"merchant_budget\\\":{\\\"amount\\\":10.4,\\\"currency_code\\\":\\\"USD\\\"},\\\"products\\\":[{\\\"keywords\\\":[\\\"string\\\"],\\\"product_id\\\":\\\"string\\\"}],\\\"scheduled_add_budget_amount\\\":{\\\"amount\\\":10.4,\\\"currency_code\\\":\\\"USD\\\"},\\\"scheduled_add_budget_days\\\":[0],\\\"start_at\\\":\\\"2023-04-18T21:58:23Z\\\"}\"\nheaders = {\n    'content-type': \"application/json\",\n    'authorization': \"Bearer REPLACE_BEARER_TOKEN\"\n    }\n\nresponse = requests.request(\"POST\", url, data=payload, headers=headers)\n\nprint(response.text)"
+      - lang: javascript_jquery
+        source: "var settings = {\n  \"async\": true,\n  \"crossDomain\": true,\n  \"url\": \"https://merchant.wish.com/api/v3/product_boost/campaigns\",\n  \"method\": \"POST\",\n  \"headers\": {\n    \"content-type\": \"application/json\",\n    \"authorization\": \"Bearer REPLACE_BEARER_TOKEN\"\n  },\n  \"processData\": false,\n  \"data\": \"{\\\"auto_renew\\\":true,\\\"campaign_name\\\":\\\"string\\\",\\\"end_at\\\":\\\"2023-04-18T21:58:23Z\\\",\\\"intense_boost\\\":true,\\\"max_budget\\\":{\\\"amount\\\":10.4,\\\"currency_code\\\":\\\"USD\\\"},\\\"merchant_budget\\\":{\\\"amount\\\":10.4,\\\"currency_code\\\":\\\"USD\\\"},\\\"products\\\":[{\\\"keywords\\\":[\\\"string\\\"],\\\"product_id\\\":\\\"string\\\"}],\\\"scheduled_add_budget_amount\\\":{\\\"amount\\\":10.4,\\\"currency_code\\\":\\\"USD\\\"},\\\"scheduled_add_budget_days\\\":[0],\\\"start_at\\\":\\\"2023-04-18T21:58:23Z\\\"}\"\n}\n\n$.ajax(settings).done(function (response) {\n  console.log(response);\n});"
+      - lang: php_curl
+        source: "<?php\n\n$curl = curl_init();\n\ncurl_setopt_array($curl, array(\n  CURLOPT_URL => \"https://merchant.wish.com/api/v3/product_boost/campaigns\",\n  CURLOPT_RETURNTRANSFER => true,\n  CURLOPT_ENCODING => \"\",\n  CURLOPT_MAXREDIRS => 10,\n  CURLOPT_TIMEOUT => 30,\n  CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,\n  CURLOPT_CUSTOMREQUEST => \"POST\",\n  CURLOPT_POSTFIELDS => \"{\\\"auto_renew\\\":true,\\\"campaign_name\\\":\\\"string\\\",\\\"end_at\\\":\\\"2023-04-18T21:58:23Z\\\",\\\"intense_boost\\\":true,\\\"max_budget\\\":{\\\"amount\\\":10.4,\\\"currency_code\\\":\\\"USD\\\"},\\\"merchant_budget\\\":{\\\"amount\\\":10.4,\\\"currency_code\\\":\\\"USD\\\"},\\\"products\\\":[{\\\"keywords\\\":[\\\"string\\\"],\\\"product_id\\\":\\\"string\\\"}],\\\"scheduled_add_budget_amount\\\":{\\\"amount\\\":10.4,\\\"currency_code\\\":\\\"USD\\\"},\\\"scheduled_add_budget_days\\\":[0],\\\"start_at\\\":\\\"2023-04-18T21:58:23Z\\\"}\",\n  CURLOPT_HTTPHEADER => array(\n    \"authorization: Bearer REPLACE_BEARER_TOKEN\",\n    \"content-type: application/json\"\n  ),\n));\n\n$response = curl_exec($curl);\n$err = curl_error($curl);\n\ncurl_close($curl);\n\nif ($err) {\n  echo \"cURL Error #:\" . $err;\n} else {\n  echo $response;\n}"
+      - lang: shell_curl
+        source: "curl --request POST \\\n  --url 'https://merchant.wish.com/api/v3/product_boost/campaigns' \\\n  --header 'authorization: Bearer REPLACE_BEARER_TOKEN' \\\n  --header 'content-type: application/json' \\\n  --data '{\"auto_renew\":true,\"campaign_name\":\"string\",\"end_at\":\"2023-04-18T21:58:23Z\",\"intense_boost\":true,\"max_budget\":{\"amount\":10.4,\"currency_code\":\"USD\"},\"merchant_budget\":{\"amount\":10.4,\"currency_code\":\"USD\"},\"products\":[{\"keywords\":[\"string\"],\"product_id\":\"string\"}],\"scheduled_add_budget_amount\":{\"amount\":10.4,\"currency_code\":\"USD\"},\"scheduled_add_budget_days\":[0],\"start_at\":\"2023-04-18T21:58:23Z\"}'"
+      - lang: java_unirest
+        source: "HttpResponse<String> response = Unirest.post(\"https://merchant.wish.com/api/v3/product_boost/campaigns\")\n  .header(\"content-type\", \"application/json\")\n  .header(\"authorization\", \"Bearer REPLACE_BEARER_TOKEN\")\n  .body(\"{\\\"auto_renew\\\":true,\\\"campaign_name\\\":\\\"string\\\",\\\"end_at\\\":\\\"2023-04-18T21:58:23Z\\\",\\\"intense_boost\\\":true,\\\"max_budget\\\":{\\\"amount\\\":10.4,\\\"currency_code\\\":\\\"USD\\\"},\\\"merchant_budget\\\":{\\\"amount\\\":10.4,\\\"currency_code\\\":\\\"USD\\\"},\\\"products\\\":[{\\\"keywords\\\":[\\\"string\\\"],\\\"product_id\\\":\\\"string\\\"}],\\\"scheduled_add_budget_amount\\\":{\\\"amount\\\":10.4,\\\"currency_code\\\":\\\"USD\\\"},\\\"scheduled_add_budget_days\\\":[0],\\\"start_at\\\":\\\"2023-04-18T21:58:23Z\\\"}\")\n  .asString();"
+      description: Create a ProductBoost campaign.
+    get:
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Campaigns'
+          description: successfully queried for ProductBoost campaigns
+        '400':
+          content:
+            application/json:
+              examples:
+                InvalidStartTimeRange:
+                  value:
+                    message: Invalid 'start_at_min' and 'start_at_max' parameters. 'start_at_min' must be less than or equal to 'start_at_max'.
+                    code: '20405'
+                InvalidUpdatedTimeRange:
+                  value:
+                    message: Invalid 'updated_at_min' and 'updated_at_max' parameters. 'updated_at_min' must be less than or equal to 'updated_at_max'.
+                    code: '20404'
+                InvalidEndTimeRange:
+                  value:
+                    message: Invalid 'end_at_min' and 'end_at_max' parameters. 'end_at_min' must be less than or equal to 'end_at_max'.
+                    code: '20406'
+                InvalidStatesParam:
+                  value:
+                    message: Invalid 'states' parameter. It can only contain 'NEW', 'SAVED', 'STARTED', 'ENDED', 'PENDING'.
+                    code: '20402'
+                InvalidProductID:
+                  value:
+                    message: The product ID either does not exist, or does not belong to the merchant.
+                    code: '20401'
+                InvalidCampaignDuration:
+                  value:
+                    message: Invalid 'start_at_min' and 'end_at_max' parameters. 'start_at_min' must be less than 'end_at_max'.
+                    code: '20407'
+                InvalidCreatedTimeRange:
+                  value:
+                    message: Invalid 'created_at_min' and 'created_at_max' parameters. 'created_at_min' must be less than or equal to 'created_at_max'.
+                    code: '20403'
+              schema:
+                $ref: '#/components/schemas/APIError'
+          description: failed to query for ProductBoost campaigns
+      parameters:
+      - required: false
+        in: query
+        description: ID of the product that result campaigns should include.
+        name: product_id
+        schema:
+          type: string
+          format: object-id
+      - required: false
+        in: query
+        description: Name of the Campaigns you want to query.
+        name: campaign_name
+        schema:
+          minLength: 1
+          type: string
+          maxLength: 300
+      - required: false
+        in: query
+        description: A limit on the number of campaigns that will be returned. Used for paging.
+        name: limit
+        schema:
+          default: 50
+          minimum: 1
+          type: integer
+          maximum: 500
+      - required: false
+        in: query
+        description: Restrict campaigns within provided states
+        name: states
+        schema:
+          items:
+            $ref: '#/components/schemas/CampaignState'
+          type: array
+      - required: false
+        in: query
+        description: Only return campaigns that will or will not auto-renew upon completion.
+        name: auto_renew
+        schema:
+          type: boolean
+      - required: false
+        in: query
+        description: Only return campaigns that are or are not automated campaigns, or duplicated from automated campaigns.
+        name: is_automated
+        schema:
+          type: boolean
+      - description: Only return campaigns that are created at or after this time.
+        required: false
+        name: created_at_min
+        in: query
+        example: '2020-01-01T07:00:00Z'
+        schema:
+          type: string
+          format: date-time
+      - description: Only return campaigns that are created at or before this time.
+        required: false
+        name: created_at_max
+        in: query
+        example: '2020-01-01T07:00:00Z'
+        schema:
+          type: string
+          format: date-time
+      - in: query
+        example: 5e0c27500000000000000000
+        description: Only return campaigns with campaign id values greater than or equal to this id. Intended for paging.
+        name: campaign_id_min
+        schema:
+          type: string
+          format: object-id
+      - in: query
+        example: 5e0c27500000000000000000
+        description: Only return campaigns with campaign id values less than or equal to this id. Intended for paging.
+        name: campaign_id_max
+        schema:
+          type: string
+          format: object-id
+      - description: Only return campaigns whose attributes are updated at or after this time.
+        required: false
+        name: updated_at_min
+        in: query
+        example: '2020-01-01T07:00:00Z'
+        schema:
+          type: string
+          format: date-time
+      - description: Only return campaigns whose attributes are updated at or before this time.
+        required: false
+        name: updated_at_max
+        in: query
+        example: '2020-01-01T07:00:00Z'
+        schema:
+          type: string
+          format: date-time
+      - description: Only return campaigns that start at or after this time.
+        required: false
+        name: start_at_min
+        in: query
+        example: '2020-01-01T07:00:00Z'
+        schema:
+          type: string
+          format: date-time
+      - description: Only return campaigns that start at or before this time.
+        required: false
+        name: start_at_max
+        in: query
+        example: '2020-01-01T07:00:00Z'
+        schema:
+          type: string
+          format: date-time
+      - description: Only return campaigns that end on or after this time.
+        required: false
+        name: end_at_min
+        in: query
+        example: '2020-01-01T07:00:00Z'
+        schema:
+          type: string
+          format: date-time
+      - description: Only return campaigns that end on or before this time.
+        required: false
+        name: end_at_max
+        in: query
+        example: '2020-01-01T07:00:00Z'
+        schema:
+          type: string
+          format: date-time
+      - required: false
+        in: query
+        description: ' Only 3 fields are enabled for sorting:`start_at`, `end_at` or `campaign_id` Default order is `desc`, use `asc` to sort in reverse. Only sorting by ''campaign_id'' is allowed when paging using ''campaign_id_min'' or ''campaign_id_max''. '
+        name: sort_by
+        schema:
+          default: end_at.desc
+          pattern: ^(start_at|end_at|campaign_id)(\.(asc|desc))?$
+          type: string
+      tags:
+      - ProductBoost
+      summary: List ProductBoost campaigns
+      security:
+      - OAuth2:
+        - product_boost:read
+      operationId: listCampaigns
+      x-code-samples:
+      - lang: python_requests
+        source: 'import requests
+
+
+          url = "https://merchant.wish.com/api/v3/product_boost/campaigns"
+
+
+          querystring = {"product_id":"SOME_STRING_VALUE","campaign_name":"SOME_STRING_VALUE","limit":"SOME_INTEGER_VALUE","states":"SOME_ARRAY_VALUE","auto_renew":"SOME_BOOLEAN_VALUE","is_automated":"SOME_BOOLEAN_VALUE","created_at_min":"SOME_STRING_VALUE","created_at_max":"SOME_STRING_VALUE","campaign_id_min":"SOME_STRING_VALUE","campaign_id_max":"SOME_STRING_VALUE","updated_at_min":"SOME_STRING_VALUE","updated_at_max":"SOME_STRING_VALUE","start_at_min":"SOME_STRING_VALUE","start_at_max":"SOME_STRING_VALUE","end_at_min":"SOME_STRING_VALUE","end_at_max":"SOME_STRING_VALUE","sort_by":"SOME_STRING_VALUE"}
+
+
+          headers = {''authorization'': ''Bearer REPLACE_BEARER_TOKEN''}
+
+
+          response = requests.request("GET", url, headers=headers, params=querystring)
+
+
+          print(response.text)'
+      - lang: javascript_jquery
+        source: "var settings = {\n  \"async\": true,\n  \"crossDomain\": true,\n  \"url\": \"https://merchant.wish.com/api/v3/product_boost/campaigns?product_id=SOME_STRING_VALUE&campaign_name=SOME_STRING_VALUE&limit=SOME_INTEGER_VALUE&states=SOME_ARRAY_VALUE&auto_renew=SOME_BOOLEAN_VALUE&is_automated=SOME_BOOLEAN_VALUE&created_at_min=SOME_STRING_VALUE&created_at_max=SOME_STRING_VALUE&campaign_id_min=SOME_STRING_VALUE&campaign_id_max=SOME_STRING_VALUE&updated_at_min=SOME_STRING_VALUE&updated_at_max=SOME_STRING_VALUE&start_at_min=SOME_STRING_VALUE&start_at_max=SOME_STRING_VALUE&end_at_min=SOME_STRING_VALUE&end_at_max=SOME_STRING_VALUE&sort_by=SOME_STRING_VALUE\",\n  \"method\": \"GET\",\n  \"headers\": {\n    \"authorization\": \"Bearer REPLACE_BEARER_TOKEN\"\n  }\n}\n\n$.ajax(settings).done(function (response) {\n  console.log(response);\n});"
+      - lang: php_curl
+        source: "<?php\n\n$curl = curl_init();\n\ncurl_setopt_array($curl, array(\n  CURLOPT_URL => \"https://merchant.wish.com/api/v3/product_boost/campaigns?product_id=SOME_STRING_VALUE&campaign_name=SOME_STRING_VALUE&limit=SOME_INTEGER_VALUE&states=SOME_ARRAY_VALUE&auto_renew=SOME_BOOLEAN_VALUE&is_automated=SOME_BOOLEAN_VALUE&created_at_min=SOME_STRING_VALUE&created_at_max=SOME_STRING_VALUE&campaign_id_min=SOME_STRING_VALUE&campaign_id_max=SOME_STRING_VALUE&updated_at_min=SOME_STRING_VALUE&updated_at_max=SOME_STRING_VALUE&start_at_min=SOME_STRING_VALUE&start_at_max=SOME_STRING_VALUE&end_at_min=SOME_STRING_VALUE&end_at_max=SOME_STRING_VALUE&sort_by=SOME_STRING_VALUE\",\n  CURLOPT_RETURNTRANSFER => true,\n  CURLOPT_ENCODING => \"\",\n  CURLOPT_MAXREDIRS => 10,\n  CURLOPT_TIMEOUT => 30,\n  CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,\n  CURLOPT_CUSTOMREQUEST => \"GET\",\n  CURLOPT_HTTPHEADER => array(\n    \"authorization: Bearer REPLACE_BEARER_TOKEN\"\n  ),\n));\n\n$response = curl_exec($curl);\n$err = curl_error($curl);\n\ncurl_close($curl);\n\nif ($err) {\n  echo \"cURL Error #:\" . $err;\n} else {\n  echo $response;\n}"
+      - lang: shell_curl
+        source: "curl --request GET \\\n  --url 'https://merchant.wish.com/api/v3/product_boost/campaigns?product_id=SOME_STRING_VALUE&campaign_name=SOME_STRING_VALUE&limit=SOME_INTEGER_VALUE&states=SOME_ARRAY_VALUE&auto_renew=SOME_BOOLEAN_VALUE&is_automated=SOME_BOOLEAN_VALUE&created_at_min=SOME_STRING_VALUE&created_at_max=SOME_STRING_VALUE&campaign_id_min=SOME_STRING_VALUE&campaign_id_max=SOME_STRING_VALUE&updated_at_min=SOME_STRING_VALUE&updated_at_max=SOME_STRING_VALUE&start_at_min=SOME_STRING_VALUE&start_at_max=SOME_STRING_VALUE&end_at_min=SOME_STRING_VALUE&end_at_max=SOME_STRING_VALUE&sort_by=SOME_STRING_VALUE' \\\n  --header 'authorization: Bearer REPLACE_BEARER_TOKEN'"
+      - lang: java_unirest
+        source: "HttpResponse<String> response = Unirest.get(\"https://merchant.wish.com/api/v3/product_boost/campaigns?product_id=SOME_STRING_VALUE&campaign_name=SOME_STRING_VALUE&limit=SOME_INTEGER_VALUE&states=SOME_ARRAY_VALUE&auto_renew=SOME_BOOLEAN_VALUE&is_automated=SOME_BOOLEAN_VALUE&created_at_min=SOME_STRING_VALUE&created_at_max=SOME_STRING_VALUE&campaign_id_min=SOME_STRING_VALUE&campaign_id_max=SOME_STRING_VALUE&updated_at_min=SOME_STRING_VALUE&updated_at_max=SOME_STRING_VALUE&start_at_min=SOME_STRING_VALUE&start_at_max=SOME_STRING_VALUE&end_at_min=SOME_STRING_VALUE&end_at_max=SOME_STRING_VALUE&sort_by=SOME_STRING_VALUE\")\n  .header(\"authorization\", \"Bearer REPLACE_BEARER_TOKEN\")\n  .asString();"
+      description: List ProductBoost campaigns by criteria.
+  /api/v3/product_boost/campaigns/{id}/product_feedback:
+    get:
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CampaignProductFeedbacks'
+          description: successfully queried for products' feedback in the campaign
+        '400':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/APIError'
+          description: failed to queried for products' feedback in the campaign
+      parameters:
+      - required: true
+        in: path
+        description: ID of the campaign that you want to query for product feedback.
+        name: id
+        schema:
+          type: string
+          format: object-id
+      - required: false
+        in: query
+        description: IDs of products in the campaign that you want to obtain feedback for. If not provided, feedback for all products with lower than expected number of paid impressions in the campaign will be returned.
+        name: product_ids
+        schema:
+          minItems: 1
+          items:
+            type: string
+            format: object-id
+          type: array
+          maxItems: 200
+      tags:
+      - ProductBoost
+      summary: List products' feedback in a ProductBoost campaign
+      security:
+      - OAuth2:
+        - product_boost:read
+      operationId: ListProductFeedback
+      x-code-samples:
+      - lang: python_requests
+        source: 'import requests
+
+
+          url = "https://merchant.wish.com/api/v3/product_boost/campaigns/{id}/product_feedback"
+
+
+          querystring = {"product_ids":"SOME_ARRAY_VALUE"}
+
+
+          headers = {''authorization'': ''Bearer REPLACE_BEARER_TOKEN''}
+
+
+          response = requests.request("GET", url, headers=headers, params=querystring)
+
+
+          print(response.text)'
+      - lang: javascript_jquery
+        source: "var settings = {\n  \"async\": true,\n  \"crossDomain\": true,\n  \"url\": \"https://merchant.wish.com/api/v3/product_boost/campaigns/{id}/product_feedback?product_ids=SOME_ARRAY_VALUE\",\n  \"method\": \"GET\",\n  \"headers\": {\n    \"authorization\": \"Bearer REPLACE_BEARER_TOKEN\"\n  }\n}\n\n$.ajax(settings).done(function (response) {\n  console.log(response);\n});"
+      - lang: php_curl
+        source: "<?php\n\n$curl = curl_init();\n\ncurl_setopt_array($curl, array(\n  CURLOPT_URL => \"https://merchant.wish.com/api/v3/product_boost/campaigns/{id}/product_feedback?product_ids=SOME_ARRAY_VALUE\",\n  CURLOPT_RETURNTRANSFER => true,\n  CURLOPT_ENCODING => \"\",\n  CURLOPT_MAXREDIRS => 10,\n  CURLOPT_TIMEOUT => 30,\n  CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,\n  CURLOPT_CUSTOMREQUEST => \"GET\",\n  CURLOPT_HTTPHEADER => array(\n    \"authorization: Bearer REPLACE_BEARER_TOKEN\"\n  ),\n));\n\n$response = curl_exec($curl);\n$err = curl_error($curl);\n\ncurl_close($curl);\n\nif ($err) {\n  echo \"cURL Error #:\" . $err;\n} else {\n  echo $response;\n}"
+      - lang: shell_curl
+        source: "curl --request GET \\\n  --url 'https://merchant.wish.com/api/v3/product_boost/campaigns/{id}/product_feedback?product_ids=SOME_ARRAY_VALUE' \\\n  --header 'authorization: Bearer REPLACE_BEARER_TOKEN'"
+      - lang: java_unirest
+        source: "HttpResponse<String> response = Unirest.get(\"https://merchant.wish.com/api/v3/product_boost/campaigns/{id}/product_feedback?product_ids=SOME_ARRAY_VALUE\")\n  .header(\"authorization\", \"Bearer REPLACE_BEARER_TOKEN\")\n  .asString();"
+      description: List products' feedback for products who received lower than expected number of paid impressions in a ProductBoost campaign.
+  /api/v3/product_boost/budget:
+    get:
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BudgetBreakdown'
+          description: successfully obtained the budget breakdown
+        '400':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/APIError'
+          description: failed to obtain the budget breakdown
+      parameters:
+      - required: false
+        in: query
+        description: ID of the campaign that you want to acquire budget breakdown for. If not provided, the budget breakdown associated to all campaigns will be returned.
+        name: campaign_id
+        schema:
+          type: string
+          format: object-id
+      tags:
+      - ProductBoost
+      summary: Get the ProductBoost budget breakdown
+      security:
+      - OAuth2:
+        - product_boost:read
+      operationId: getBudget
+      x-code-samples:
+      - lang: python_requests
+        source: 'import requests
+
+
+          url = "https://merchant.wish.com/api/v3/product_boost/budget"
+
+
+          querystring = {"campaign_id":"SOME_STRING_VALUE"}
+
+
+          headers = {''authorization'': ''Bearer REPLACE_BEARER_TOKEN''}
+
+
+          response = requests.request("GET", url, headers=headers, params=querystring)
+
+
+          print(response.text)'
+      - lang: javascript_jquery
+        source: "var settings = {\n  \"async\": true,\n  \"crossDomain\": true,\n  \"url\": \"https://merchant.wish.com/api/v3/product_boost/budget?campaign_id=SOME_STRING_VALUE\",\n  \"method\": \"GET\",\n  \"headers\": {\n    \"authorization\": \"Bearer REPLACE_BEARER_TOKEN\"\n  }\n}\n\n$.ajax(settings).done(function (response) {\n  console.log(response);\n});"
+      - lang: php_curl
+        source: "<?php\n\n$curl = curl_init();\n\ncurl_setopt_array($curl, array(\n  CURLOPT_URL => \"https://merchant.wish.com/api/v3/product_boost/budget?campaign_id=SOME_STRING_VALUE\",\n  CURLOPT_RETURNTRANSFER => true,\n  CURLOPT_ENCODING => \"\",\n  CURLOPT_MAXREDIRS => 10,\n  CURLOPT_TIMEOUT => 30,\n  CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,\n  CURLOPT_CUSTOMREQUEST => \"GET\",\n  CURLOPT_HTTPHEADER => array(\n    \"authorization: Bearer REPLACE_BEARER_TOKEN\"\n  ),\n));\n\n$response = curl_exec($curl);\n$err = curl_error($curl);\n\ncurl_close($curl);\n\nif ($err) {\n  echo \"cURL Error #:\" . $err;\n} else {\n  echo $response;\n}"
+      - lang: shell_curl
+        source: "curl --request GET \\\n  --url 'https://merchant.wish.com/api/v3/product_boost/budget?campaign_id=SOME_STRING_VALUE' \\\n  --header 'authorization: Bearer REPLACE_BEARER_TOKEN'"
+      - lang: java_unirest
+        source: "HttpResponse<String> response = Unirest.get(\"https://merchant.wish.com/api/v3/product_boost/budget?campaign_id=SOME_STRING_VALUE\")\n  .header(\"authorization\", \"Bearer REPLACE_BEARER_TOKEN\")\n  .asString();"
+      description: Get the ProductBoost budget breakdown for either all campaigns or one specific campaign.
+  /api/v3/product_boost/campaigns/{id}:
+    put:
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Campaign'
+          description: successfully updated a campaign
+        '400':
+          content:
+            application/json:
+              examples:
+                InvalidEditOnRunningCampaign:
+                  value:
+                    message: The proposed update on the running campaign is invalid.
+                    code: '20833'
+                CampaignInvalidState:
+                  value:
+                    message: Only campaigns with state 'NEW', 'PENDING', 'SAVED', 'STARTED' can be updated.
+                    code: '20831'
+                CancelManualSavedCampaign:
+                  value:
+                    message: Cannot cancel campaigns that are saved manually.
+                    code: '20841'
+                InvalidCampaignStateChange:
+                  value:
+                    message: The state that campaign is changed to is invalid.
+                    code: '20834'
+                StopCampaignUnknownError:
+                  value:
+                    message: The campaign cannot be stopped due to unknown error.
+                    code: '20844'
+                InvalidDestinationState:
+                  value:
+                    message: The campaign cannot be updated to the provided state.
+                    code: '20843'
+                InvalidCurrencyCodeForParameter:
+                  value:
+                    message: The input currency_code is invalid.
+                    code: '20835'
+                ProductInOverlapCampaigns:
+                  value:
+                    message: Product exists in other campaigns whose runtime overlaps with this campaign.
+                    code: '20832'
+                AddBudgetAmountTooLow:
+                  value:
+                    message: At least $1.00 worth of budget should be increased each time.
+                    code: '20836'
+                CampaignStateChangedOnServer:
+                  value:
+                    message: The campaign's state is changed internally during the update.
+                    code: '20842'
+              schema:
+                $ref: '#/components/schemas/APIError'
+          description: failed to update a campaign
+      parameters:
+      - required: true
+        in: path
+        description: ID of the campaign you want to update
+        name: id
+        schema:
+          type: string
+          format: object-id
+      tags:
+      - ProductBoost
+      summary: Update a ProductBoost campaign
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateCampaign'
+      security:
+      - OAuth2:
+        - product_boost:write
+      operationId: updateCampaign
+      x-code-samples:
+      - lang: python_requests
+        source: "import requests\n\nurl = \"https://merchant.wish.com/api/v3/product_boost/campaigns/{id}\"\n\npayload = \"{\\\"auto_renew\\\":true,\\\"campaign_name\\\":\\\"string\\\",\\\"end_at\\\":\\\"2023-04-18T21:58:23Z\\\",\\\"intense_boost\\\":true,\\\"max_budget\\\":{\\\"amount\\\":10.4,\\\"currency_code\\\":\\\"USD\\\"},\\\"merchant_budget\\\":{\\\"amount\\\":10.4,\\\"currency_code\\\":\\\"USD\\\"},\\\"products\\\":[{\\\"keywords\\\":[\\\"string\\\"],\\\"product_id\\\":\\\"string\\\"}],\\\"scheduled_add_budget_amount\\\":{\\\"amount\\\":10.4,\\\"currency_code\\\":\\\"USD\\\"},\\\"scheduled_add_budget_days\\\":[0],\\\"start_at\\\":\\\"2023-04-18T21:58:23Z\\\",\\\"state\\\":\\\"NEW\\\"}\"\nheaders = {\n    'content-type': \"application/json\",\n    'authorization': \"Bearer REPLACE_BEARER_TOKEN\"\n    }\n\nresponse = requests.request(\"PUT\", url, data=payload, headers=headers)\n\nprint(response.text)"
+      - lang: javascript_jquery
+        source: "var settings = {\n  \"async\": true,\n  \"crossDomain\": true,\n  \"url\": \"https://merchant.wish.com/api/v3/product_boost/campaigns/{id}\",\n  \"method\": \"PUT\",\n  \"headers\": {\n    \"content-type\": \"application/json\",\n    \"authorization\": \"Bearer REPLACE_BEARER_TOKEN\"\n  },\n  \"processData\": false,\n  \"data\": \"{\\\"auto_renew\\\":true,\\\"campaign_name\\\":\\\"string\\\",\\\"end_at\\\":\\\"2023-04-18T21:58:23Z\\\",\\\"intense_boost\\\":true,\\\"max_budget\\\":{\\\"amount\\\":10.4,\\\"currency_code\\\":\\\"USD\\\"},\\\"merchant_budget\\\":{\\\"amount\\\":10.4,\\\"currency_code\\\":\\\"USD\\\"},\\\"products\\\":[{\\\"keywords\\\":[\\\"string\\\"],\\\"product_id\\\":\\\"string\\\"}],\\\"scheduled_add_budget_amount\\\":{\\\"amount\\\":10.4,\\\"currency_code\\\":\\\"USD\\\"},\\\"scheduled_add_budget_days\\\":[0],\\\"start_at\\\":\\\"2023-04-18T21:58:23Z\\\",\\\"state\\\":\\\"NEW\\\"}\"\n}\n\n$.ajax(settings).done(function (response) {\n  console.log(response);\n});"
+      - lang: php_curl
+        source: "<?php\n\n$curl = curl_init();\n\ncurl_setopt_array($curl, array(\n  CURLOPT_URL => \"https://merchant.wish.com/api/v3/product_boost/campaigns/{id}\",\n  CURLOPT_RETURNTRANSFER => true,\n  CURLOPT_ENCODING => \"\",\n  CURLOPT_MAXREDIRS => 10,\n  CURLOPT_TIMEOUT => 30,\n  CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,\n  CURLOPT_CUSTOMREQUEST => \"PUT\",\n  CURLOPT_POSTFIELDS => \"{\\\"auto_renew\\\":true,\\\"campaign_name\\\":\\\"string\\\",\\\"end_at\\\":\\\"2023-04-18T21:58:23Z\\\",\\\"intense_boost\\\":true,\\\"max_budget\\\":{\\\"amount\\\":10.4,\\\"currency_code\\\":\\\"USD\\\"},\\\"merchant_budget\\\":{\\\"amount\\\":10.4,\\\"currency_code\\\":\\\"USD\\\"},\\\"products\\\":[{\\\"keywords\\\":[\\\"string\\\"],\\\"product_id\\\":\\\"string\\\"}],\\\"scheduled_add_budget_amount\\\":{\\\"amount\\\":10.4,\\\"currency_code\\\":\\\"USD\\\"},\\\"scheduled_add_budget_days\\\":[0],\\\"start_at\\\":\\\"2023-04-18T21:58:23Z\\\",\\\"state\\\":\\\"NEW\\\"}\",\n  CURLOPT_HTTPHEADER => array(\n    \"authorization: Bearer REPLACE_BEARER_TOKEN\",\n    \"content-type: application/json\"\n  ),\n));\n\n$response = curl_exec($curl);\n$err = curl_error($curl);\n\ncurl_close($curl);\n\nif ($err) {\n  echo \"cURL Error #:\" . $err;\n} else {\n  echo $response;\n}"
+      - lang: shell_curl
+        source: "curl --request PUT \\\n  --url 'https://merchant.wish.com/api/v3/product_boost/campaigns/{id}' \\\n  --header 'authorization: Bearer REPLACE_BEARER_TOKEN' \\\n  --header 'content-type: application/json' \\\n  --data '{\"auto_renew\":true,\"campaign_name\":\"string\",\"end_at\":\"2023-04-18T21:58:23Z\",\"intense_boost\":true,\"max_budget\":{\"amount\":10.4,\"currency_code\":\"USD\"},\"merchant_budget\":{\"amount\":10.4,\"currency_code\":\"USD\"},\"products\":[{\"keywords\":[\"string\"],\"product_id\":\"string\"}],\"scheduled_add_budget_amount\":{\"amount\":10.4,\"currency_code\":\"USD\"},\"scheduled_add_budget_days\":[0],\"start_at\":\"2023-04-18T21:58:23Z\",\"state\":\"NEW\"}'"
+      - lang: java_unirest
+        source: "HttpResponse<String> response = Unirest.put(\"https://merchant.wish.com/api/v3/product_boost/campaigns/{id}\")\n  .header(\"content-type\", \"application/json\")\n  .header(\"authorization\", \"Bearer REPLACE_BEARER_TOKEN\")\n  .body(\"{\\\"auto_renew\\\":true,\\\"campaign_name\\\":\\\"string\\\",\\\"end_at\\\":\\\"2023-04-18T21:58:23Z\\\",\\\"intense_boost\\\":true,\\\"max_budget\\\":{\\\"amount\\\":10.4,\\\"currency_code\\\":\\\"USD\\\"},\\\"merchant_budget\\\":{\\\"amount\\\":10.4,\\\"currency_code\\\":\\\"USD\\\"},\\\"products\\\":[{\\\"keywords\\\":[\\\"string\\\"],\\\"product_id\\\":\\\"string\\\"}],\\\"scheduled_add_budget_amount\\\":{\\\"amount\\\":10.4,\\\"currency_code\\\":\\\"USD\\\"},\\\"scheduled_add_budget_days\\\":[0],\\\"start_at\\\":\\\"2023-04-18T21:58:23Z\\\",\\\"state\\\":\\\"NEW\\\"}\")\n  .asString();"
+      description: Update a ProductBoost campaign.
+    get:
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Campaign'
+          description: successfully queried for a ProductBoost campaign
+        '400':
+          content:
+            application/json:
+              examples:
+                InvalidCampaignID:
+                  value:
+                    message: The campaign ID either does not exist, or does not belong to the merchant.
+                    code: '20001'
+              schema:
+                $ref: '#/components/schemas/APIError'
+          description: failed to query for a ProductBoost campaign
+      parameters:
+      - required: true
+        in: path
+        description: ID of the campaign you want to query
+        name: id
+        schema:
+          type: string
+          format: object-id
+      tags:
+      - ProductBoost
+      summary: Get a single ProductBoost campaign
+      security:
+      - OAuth2:
+        - product_boost:read
+      operationId: getCampaign
+      x-code-samples:
+      - lang: python_requests
+        source: 'import requests
+
+
+          url = "https://merchant.wish.com/api/v3/product_boost/campaigns/{id}"
+
+
+          headers = {''authorization'': ''Bearer REPLACE_BEARER_TOKEN''}
+
+
+          response = requests.request("GET", url, headers=headers)
+
+
+          print(response.text)'
+      - lang: javascript_jquery
+        source: "var settings = {\n  \"async\": true,\n  \"crossDomain\": true,\n  \"url\": \"https://merchant.wish.com/api/v3/product_boost/campaigns/{id}\",\n  \"method\": \"GET\",\n  \"headers\": {\n    \"authorization\": \"Bearer REPLACE_BEARER_TOKEN\"\n  }\n}\n\n$.ajax(settings).done(function (response) {\n  console.log(response);\n});"
+      - lang: php_curl
+        source: "<?php\n\n$curl = curl_init();\n\ncurl_setopt_array($curl, array(\n  CURLOPT_URL => \"https://merchant.wish.com/api/v3/product_boost/campaigns/{id}\",\n  CURLOPT_RETURNTRANSFER => true,\n  CURLOPT_ENCODING => \"\",\n  CURLOPT_MAXREDIRS => 10,\n  CURLOPT_TIMEOUT => 30,\n  CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,\n  CURLOPT_CUSTOMREQUEST => \"GET\",\n  CURLOPT_HTTPHEADER => array(\n    \"authorization: Bearer REPLACE_BEARER_TOKEN\"\n  ),\n));\n\n$response = curl_exec($curl);\n$err = curl_error($curl);\n\ncurl_close($curl);\n\nif ($err) {\n  echo \"cURL Error #:\" . $err;\n} else {\n  echo $response;\n}"
+      - lang: shell_curl
+        source: "curl --request GET \\\n  --url 'https://merchant.wish.com/api/v3/product_boost/campaigns/{id}' \\\n  --header 'authorization: Bearer REPLACE_BEARER_TOKEN'"
+      - lang: java_unirest
+        source: "HttpResponse<String> response = Unirest.get(\"https://merchant.wish.com/api/v3/product_boost/campaigns/{id}\")\n  .header(\"authorization\", \"Bearer REPLACE_BEARER_TOKEN\")\n  .asString();"
+      description: Get a single ProductBoost campaign by its ID
+  /api/v3/product_boost/campaigns/{id}/metrics:
+    get:
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CampaignMetrics'
+          description: successfully queried for ProductBoost campaign metrics
+        '400':
+          content:
+            application/json:
+              examples:
+                TimeMaxOutOfRange:
+                  value:
+                    message: '''time_max'' can only be at or before a week after the campaign''s end time.'
+                    code: '20603'
+                InvalidProductIDs:
+                  value:
+                    message: Product IDs contains ID of product not listed in the campaign.
+                    code: '20601'
+                TimeMinOutOfRange:
+                  value:
+                    message: '''time_min'' can only be at or after a week before the campaign''s start time.'
+                    code: '20602'
+                TimeMaxBeforeTimeMin:
+                  value:
+                    message: '''time_min'' must be less than or equal to ''time_max''.'
+                    code: '20604'
+              schema:
+                $ref: '#/components/schemas/APIError'
+          description: failed to query for ProductBoost campaign metrics
+      parameters:
+      - required: true
+        in: path
+        description: ID of the campaign you want to query for metrics.
+        name: id
+        schema:
+          type: string
+          format: object-id
+      - required: false
+        in: query
+        description: IDs of the products whose performances should be included in the result. If not provided, performances of all products in the campaign will be returned.
+        name: product_ids
+        schema:
+          minItems: 1
+          items:
+            type: string
+            format: object-id
+          type: array
+          maxItems: 200
+      - description: Only return performances for dates at or after this time. Currently only time with precision up to 'date' level in Pacific Time (PT) will be accepted. Any time that is more precise than 'date' level and/or not in PT will be processed so that it only keeps its 'date', in PT. That is, a passed in date-time will be first converted in PT and then its fields other than 'year', 'month', 'day' are ignored.
+        required: false
+        name: time_min
+        in: query
+        example: '2020-01-01T07:00:00Z'
+        schema:
+          type: string
+          format: date-time
+      - description: Only return performances for dates at or before this time. Currently only time with precision up to 'date' level in Pacific Time (PT) will be accepted. Any time that is more precise than 'date' level and/or not in PT will be processed so that it only keeps its 'date', in PT. That is, a passed in date-time will be first converted in PT and then its fields other than 'year', 'month', 'day' are ignored.
+        required: false
+        name: time_max
+        in: query
+        example: '2020-01-01T07:00:00Z'
+        schema:
+          type: string
+          format: date-time
+      tags:
+      - ProductBoost
+      summary: Obtain campaign metrics
+      security:
+      - OAuth2:
+        - product_boost:read
+      operationId: listCampaignMetrics
+      x-code-samples:
+      - lang: python_requests
+        source: 'import requests
+
+
+          url = "https://merchant.wish.com/api/v3/product_boost/campaigns/{id}/metrics"
+
+
+          querystring = {"product_ids":"SOME_ARRAY_VALUE","time_min":"SOME_STRING_VALUE","time_max":"SOME_STRING_VALUE"}
+
+
+          headers = {''authorization'': ''Bearer REPLACE_BEARER_TOKEN''}
+
+
+          response = requests.request("GET", url, headers=headers, params=querystring)
+
+
+          print(response.text)'
+      - lang: javascript_jquery
+        source: "var settings = {\n  \"async\": true,\n  \"crossDomain\": true,\n  \"url\": \"https://merchant.wish.com/api/v3/product_boost/campaigns/{id}/metrics?product_ids=SOME_ARRAY_VALUE&time_min=SOME_STRING_VALUE&time_max=SOME_STRING_VALUE\",\n  \"method\": \"GET\",\n  \"headers\": {\n    \"authorization\": \"Bearer REPLACE_BEARER_TOKEN\"\n  }\n}\n\n$.ajax(settings).done(function (response) {\n  console.log(response);\n});"
+      - lang: php_curl
+        source: "<?php\n\n$curl = curl_init();\n\ncurl_setopt_array($curl, array(\n  CURLOPT_URL => \"https://merchant.wish.com/api/v3/product_boost/campaigns/{id}/metrics?product_ids=SOME_ARRAY_VALUE&time_min=SOME_STRING_VALUE&time_max=SOME_STRING_VALUE\",\n  CURLOPT_RETURNTRANSFER => true,\n  CURLOPT_ENCODING => \"\",\n  CURLOPT_MAXREDIRS => 10,\n  CURLOPT_TIMEOUT => 30,\n  CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,\n  CURLOPT_CUSTOMREQUEST => \"GET\",\n  CURLOPT_HTTPHEADER => array(\n    \"authorization: Bearer REPLACE_BEARER_TOKEN\"\n  ),\n));\n\n$response = curl_exec($curl);\n$err = curl_error($curl);\n\ncurl_close($curl);\n\nif ($err) {\n  echo \"cURL Error #:\" . $err;\n} else {\n  echo $response;\n}"
+      - lang: shell_curl
+        source: "curl --request GET \\\n  --url 'https://merchant.wish.com/api/v3/product_boost/campaigns/{id}/metrics?product_ids=SOME_ARRAY_VALUE&time_min=SOME_STRING_VALUE&time_max=SOME_STRING_VALUE' \\\n  --header 'authorization: Bearer REPLACE_BEARER_TOKEN'"
+      - lang: java_unirest
+        source: "HttpResponse<String> response = Unirest.get(\"https://merchant.wish.com/api/v3/product_boost/campaigns/{id}/metrics?product_ids=SOME_ARRAY_VALUE&time_min=SOME_STRING_VALUE&time_max=SOME_STRING_VALUE\")\n  .header(\"authorization\", \"Bearer REPLACE_BEARER_TOKEN\")\n  .asString();"
+      description: Obtain a list of daily performances of products in the campaign. By default, the time range is from one week before the campaign starts to one week after the campaign ends.
+  /api/v3/product_boost/balance_updates:
+    get:
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BalanceUpdates'
+          description: successfully queried for balance updates
+        '400':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/APIError'
+          description: failed to query for balance updates
+      parameters:
+      - required: false
+        in: query
+        description: Restrict queried update records to be of the provided type.
+        name: type
+        schema:
+          $ref: '#/components/schemas/BalanceUpdateType'
+      - description: Only return balance update records generated at or after this time.
+        required: false
+        name: created_at_min
+        in: query
+        example: '2020-01-01T07:00:00Z'
+        schema:
+          type: string
+          format: date-time
+      - description: Only return balance update records generated at or before this time.
+        required: false
+        name: created_at_max
+        in: query
+        example: '2020-01-01T07:00:00Z'
+        schema:
+          type: string
+          format: date-time
+      - required: false
+        in: query
+        description: A limit on the number of records that will be returned.
+        name: limit
+        schema:
+          default: 50
+          minimum: 1
+          type: integer
+          maximum: 200
+      tags:
+      - ProductBoost
+      summary: List ProductBoost account balance updates
+      security:
+      - OAuth2:
+        - product_boost:read
+      operationId: listBalanceUpdates
+      x-code-samples:
+      - lang: python_requests
+        source: 'import requests
+
+
+          url = "https://merchant.wish.com/api/v3/product_boost/balance_updates"
+
+
+          querystring = {"type":"SOME_STRING_VALUE","created_at_min":"SOME_STRING_VALUE","created_at_max":"SOME_STRING_VALUE","limit":"SOME_INTEGER_VALUE"}
+
+
+          headers = {''authorization'': ''Bearer REPLACE_BEARER_TOKEN''}
+
+
+          response = requests.request("GET", url, headers=headers, params=querystring)
+
+
+          print(response.text)'
+      - lang: javascript_jquery
+        source: "var settings = {\n  \"async\": true,\n  \"crossDomain\": true,\n  \"url\": \"https://merchant.wish.com/api/v3/product_boost/balance_updates?type=SOME_STRING_VALUE&created_at_min=SOME_STRING_VALUE&created_at_max=SOME_STRING_VALUE&limit=SOME_INTEGER_VALUE\",\n  \"method\": \"GET\",\n  \"headers\": {\n    \"authorization\": \"Bearer REPLACE_BEARER_TOKEN\"\n  }\n}\n\n$.ajax(settings).done(function (response) {\n  console.log(response);\n});"
+      - lang: php_curl
+        source: "<?php\n\n$curl = curl_init();\n\ncurl_setopt_array($curl, array(\n  CURLOPT_URL => \"https://merchant.wish.com/api/v3/product_boost/balance_updates?type=SOME_STRING_VALUE&created_at_min=SOME_STRING_VALUE&created_at_max=SOME_STRING_VALUE&limit=SOME_INTEGER_VALUE\",\n  CURLOPT_RETURNTRANSFER => true,\n  CURLOPT_ENCODING => \"\",\n  CURLOPT_MAXREDIRS => 10,\n  CURLOPT_TIMEOUT => 30,\n  CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,\n  CURLOPT_CUSTOMREQUEST => \"GET\",\n  CURLOPT_HTTPHEADER => array(\n    \"authorization: Bearer REPLACE_BEARER_TOKEN\"\n  ),\n));\n\n$response = curl_exec($curl);\n$err = curl_error($curl);\n\ncurl_close($curl);\n\nif ($err) {\n  echo \"cURL Error #:\" . $err;\n} else {\n  echo $response;\n}"
+      - lang: shell_curl
+        source: "curl --request GET \\\n  --url 'https://merchant.wish.com/api/v3/product_boost/balance_updates?type=SOME_STRING_VALUE&created_at_min=SOME_STRING_VALUE&created_at_max=SOME_STRING_VALUE&limit=SOME_INTEGER_VALUE' \\\n  --header 'authorization: Bearer REPLACE_BEARER_TOKEN'"
+      - lang: java_unirest
+        source: "HttpResponse<String> response = Unirest.get(\"https://merchant.wish.com/api/v3/product_boost/balance_updates?type=SOME_STRING_VALUE&created_at_min=SOME_STRING_VALUE&created_at_max=SOME_STRING_VALUE&limit=SOME_INTEGER_VALUE\")\n  .header(\"authorization\", \"Bearer REPLACE_BEARER_TOKEN\")\n  .asString();"
+      description: Obtain a list of deposit and withdraw activities on ProductBoost account balance.
+components:
+  schemas:
+    BalanceUpdateType:
+      enum:
+      - DEPOSIT
+      - WITHDRAW
+      type: string
+      description: The type of the transaction. 'DEPOSIT' means credits are added to user's balance, and 'WITHDRAW' means Wish deducts from user's balance.
+    APIError:
+      required:
+      - code
+      - message
+      type: object
+      properties:
+        message:
+          type: string
+        code:
+          type: integer
+          format: int32
+    Keywords:
+      items:
+        $ref: '#/components/schemas/Keyword'
+      type: array
+    CampaignType:
+      readOnly: true
+      enum:
+      - SIMPLE_BOOST
+      - CLASSIC_BOOST
+      type: string
+      description: CLASSIC_BOOST campaigns allow users to provide bidding for a list of keywords. SIMPLE_BOOST campaigns do not need keywords and bidding provided
+    ProductDailyPerformance:
+      type: object
+      properties:
+        pb_sales:
+          type: integer
+          description: Number of sales attributed to the product boost campaign of this product on this date.
+          format: int32
+        product_id:
+          type: string
+          description: ID of the product.
+          format: object-id
+        spend:
+          type: object
+          description: Total cost of paid impressions of this product on this date.
+          allOf:
+          - $ref: '#/components/schemas/Money'
+        pb_impressions:
+          nullable: true
+          type: integer
+          description: Total number of pb impressions of this product on this date.
+          format: int32
+        sales:
+          type: integer
+          description: Number of sales of this product on this date.
+          format: int32
+        total_clicks:
+          type: integer
+          description: Total number of clicks of this product on this date.
+          format: int32
+        product_name:
+          type: string
+          description: Name of the product.
+        pb_clicks:
+          type: integer
+          description: Total number of product boost clicks of this product on this date.
+          format: int32
+        impressions:
+          type: integer
+          description: Total impressions -- the sum of paid and non-paid impressions of this product on this date.
+          format: int32
+        acos:
+          type: string
+          description: ACoS = (spend / pb_gmv) * 100 expressed as a percentage.
+        organic_impressions:
+          nullable: true
+          type: integer
+          description: Total number of organic impressions of this product on this date.
+          format: int32
+        gmv:
+          type: object
+          description: Total GMV of this product on this date.
+          allOf:
+          - $ref: '#/components/schemas/Money'
+        pb_gmv:
+          type: object
+          description: Total PB GMV of this product on this date.
+          allOf:
+          - $ref: '#/components/schemas/Money'
+    Campaign:
+      type: object
+      properties:
+        is_automated_campaign:
+          readOnly: true
+          type: boolean
+          description: A value of 'True' indicates this is an automated campaign, or duplicated from an automated campaign.
+        auto_renew:
+          type: boolean
+          description: Indicate if a campaign can auto-renew itself upon completion.
+        total_impressions:
+          readOnly: true
+          type: integer
+          description: Total number of impressions of all listed products in this campaign.
+          format: int32
+        pb_sales:
+          readOnly: true
+          type: integer
+          description: Total number of PB attributed sales of all products in this campaign. (new field, maybe 0 for old campaigns)
+          format: int32
+        sales:
+          readOnly: true
+          type: integer
+          description: Total number of sales of all products in this campaign
+          format: int32
+        campaign_name:
+          minLength: 1
+          type: string
+          description: Name of the campaign
+          maxLength: 300
+        id:
+          readOnly: true
+          type: string
+          description: Campaign ID
+          format: object-id
+        discount_ratio:
+          description: A ratio between 0 and 1 representing the discount. 0 means the campaign has no discount, and 1 means the campaign has 100% discount.
+          format: float
+          maximum: 1.0
+          readOnly: true
+          minimum: 0.0
+          type: number
+        total_campaign_spend:
+          readOnly: true
+          type: object
+          description: Total expense on this campaign.
+          allOf:
+          - $ref: '#/components/schemas/Money'
+        merchant_budget:
+          type: object
+          description: Budget set by merchant for this campaign.
+          allOf:
+          - $ref: '#/components/schemas/Money'
+        bonus_budget_spend:
+          type: object
+          description: Expense used towards Bonus budget, this amount will be reimbursed by Wish. For example, if merchant_budget = $10, max_budget = $11, bonus_budget will be $1. If total_campaign_spend is $10.5, merchant will pay $10.5 * (10/11) = $9.55 and the rest will be reimbursed by Wish. bonus_budget_spend will be $10.5 * (1/11) = $0.95
+          allOf:
+          - $ref: '#/components/schemas/Money'
+        scheduled_add_budget_days:
+          items:
+            minimum: 0
+            type: integer
+            description: Days of the week when budget will be added automatically
+            maximum: 6
+          readOnly: true
+          type: array
+          description: An array of integers ranging from 0 to 6 representing the days of the week budget is automatically added to this campaign where 0 is Monday.
+        paid_impressions:
+          readOnly: true
+          type: integer
+          description: Total number of paid impressions of all listed products in this campaign. Not applicable to SimpleBoost campaigns.
+          format: int32
+        end_at:
+          type: string
+          description: Campaign end time
+          format: date-time
+        state:
+          $ref: '#/components/schemas/CampaignState'
+        type:
+          $ref: '#/components/schemas/CampaignType'
+        gmv:
+          readOnly: true
+          type: object
+          description: Total GMVs of all products in this campaign
+          allOf:
+          - $ref: '#/components/schemas/Money'
+        intense_boost:
+          readOnly: true
+          type: boolean
+          description: Indicate if campaign is IntenseBoost enabled or not.
+        scheduled_add_budget_amount:
+          readOnly: true
+          type: object
+          description: The amount of budget automatically added to the campaign on the scheduled days.
+          allOf:
+          - $ref: '#/components/schemas/Money'
+        start_at:
+          type: string
+          description: Campaign start time
+          format: date-time
+        pb_impressions:
+          readOnly: true
+          type: integer
+          description: Total number of PB impressions of all listed products in this campaign. (new field, maybe 0 for old campaigns)
+          format: int32
+        bonus_budget:
+          type: object
+          description: Bonus budget rewarded by Wish. Merchant won't get charged for spend used towards bonus budget. For example, if merchant_budget = $10, max_budget = $11, bonus_budget will be $1. If total_campaign_spend is $10.5, merchant will pay $10.5 * (10/11) = $9.54 and the rest will be reimbursed by Wish.
+          allOf:
+          - $ref: '#/components/schemas/Money'
+        updated_at:
+          readOnly: true
+          type: string
+          description: The last update time of this campaign
+          format: date-time
+        pb_clicks:
+          readOnly: true
+          type: integer
+          description: Total number of PB clicks of all listed products in this campaign. (new field, maybe 0 for old campaigns)
+          format: int32
+        merchant_id:
+          readOnly: true
+          type: string
+          description: Merchant ID
+          format: object-id
+        min_spend:
+          type: object
+          description: Minimum spending charged for this campaign. The larger of minimum spend and actual spend will be the cost of the campaign.
+          allOf:
+          - $ref: '#/components/schemas/Money'
+        total_impression_fees_charged:
+          readOnly: true
+          type: object
+          description: The impression fees charged for this campaign.
+          allOf:
+          - $ref: '#/components/schemas/Money'
+        impression_fees_breakdowns:
+          items:
+            $ref: '#/components/schemas/ImpressionFeeBreakdown'
+          readOnly: true
+          type: array
+          description: Impression fees breakdowns. Each breakdown section ends on Monday.
+        max_budget:
+          type: object
+          description: Actual budget used for this campaign.
+          allOf:
+          - $ref: '#/components/schemas/Money'
+        products:
+          items:
+            $ref: '#/components/schemas/CampaignProduct'
+          type: array
+        total_enrollment_fees:
+          readOnly: true
+          type: object
+          description: The enrollment fees for this campaign.
+          allOf:
+          - $ref: '#/components/schemas/Money'
+        pb_gmv:
+          type: object
+          description: Total PB attributed GMVs of all products in this campaign. (new field, maybe 0 for old campaigns)
+          allOf:
+          - $ref: '#/components/schemas/Money'
+    BudgetBreakdown:
+      type: object
+      properties:
+        product_boost_bonus:
+          type: object
+          description: A sign-on bonus for new ProductBoost merchants.
+          allOf:
+          - $ref: '#/components/schemas/Money'
+        product_boost_credit:
+          type: object
+          description: Total issued ProductBoost free credits to the merchant.
+          allOf:
+          - $ref: '#/components/schemas/Money'
+        total_available_budget:
+          type: object
+          description: The total available amount that can be spent on campaign's budget. This is calculated by adding up 'merchant_account_balance', 'product_boost_balance', 'product_boost_credit', 'product_boost_bonus', 'product_boost_loan', and then subtracting 'product_boost_unpaid_balance'.
+          allOf:
+          - $ref: '#/components/schemas/Money'
+        merchant_account_balance:
+          type: object
+          description: Current amount on the merchant's account balance at Wish.
+          allOf:
+          - $ref: '#/components/schemas/Money'
+        product_boost_balance:
+          type: object
+          description: Current amount on the merchant's ProductBoost account balance.
+          allOf:
+          - $ref: '#/components/schemas/Money'
+        product_boost_loan:
+          type: object
+          description: ProductBoost might lend merchants a small amount to assist merchants with creating campaigns. This amount is not guaranteed and will be deducted from merchant's account later.
+          allOf:
+          - $ref: '#/components/schemas/Money'
+        product_boost_unpaid_balance:
+          type: object
+          description: Total amount of unpaid ProductBoost campaign charges.
+          allOf:
+          - $ref: '#/components/schemas/Money'
+    BalanceUpdates:
+      items:
+        $ref: '#/components/schemas/BalanceUpdate'
+      type: array
+    BalanceUpdate:
+      required:
+      - created_at
+      - amount
+      - type
+      type: object
+      properties:
+        amount:
+          type: object
+          description: The amount of the transaction.
+          allOf:
+          - $ref: '#/components/schemas/Money'
+        created_at:
+          type: string
+          description: The time when the balance update record is generated.
+          format: date-time
+        type:
+          $ref: '#/components/schemas/BalanceUpdateType'
+        charge_reason:
+          enum:
+          - ENROLLMENT_FEE
+          - IMPRESSION_FEE
+          - OTHER
+          type: string
+          description: (Optional) If 'update_type' is 'withdraw', charging category of the transaction will be provided.
+        campaign_id:
+          type: string
+          description: (Optional) If 'update_type' is 'withdraw', ID of the campaign the transaction is associated to will be provided.
+          format: object-id
+    CampaignState:
+      enum:
+      - NEW
+      - SAVED
+      - STARTED
+      - ENDED
+      - CANCELLED
+      - PENDING
+      type: string
+      description: The state you want to change your campaign to. 'PENDING' campaigns can be changed to the state 'NEW' or 'CANCELLED'. 'NEW' or 'SAVED' campaigns can be changed to the state 'CANCELLED'. 'STARTED' campaigns can be changed to the state 'ENDED'. You cannot change the state for 'CANCELLED' or 'ENDED' campaigns.
+    CampaignMetrics:
+      type: object
+      properties:
+        daily_performances:
+          items:
+            $ref: '#/components/schemas/CampaignDailyPerformance'
+          type: array
+          description: An array containing daily performances of products in the campaign.
+    Keyword:
+      type: object
+      properties:
+        hotness:
+          enum:
+          - VERY_LOW
+          - LOW
+          - MEDIUM
+          - HIGH
+          - VERY_HIGH
+          type: string
+          description: The amount of traffic for the keyword
+        keyword:
+          type: string
+          description: The text value of the keyword
+    CampaignProductFeedback:
+      type: object
+      properties:
+        feedback_message:
+          type: string
+          description: A detailed message along with 'feedback_type' to elaborate the reason why the product receives lower than expected number of paid impressions in the campaign.
+        product_id:
+          type: string
+          description: ID of the product.
+          format: object-id
+        feedback_type:
+          enum:
+          - PRODUCT_REJECTED
+          - PRODUCT_OUT_OF_STOCK
+          - PRODUCT_DISABLED
+          - PRODUCT_LOW_RATING
+          - PRODUCT_LOW_BID
+          - PRODUCT_LOW_CONVERSION
+          type: string
+          description: The reason why the product receives lower than expected number of paid impressions in the campaign.
+        campaign_id:
+          type: string
+          description: ID of the campaign the product belongs to.
+          format: object-id
+    Campaigns:
+      items:
+        $ref: '#/components/schemas/Campaign'
+      type: array
+    UpdateCampaignProduct:
+      required:
+      - product_id
+      type: object
+      properties:
+        keywords:
+          items:
+            type: string
+          type: array
+          description: An array of keywords to help customers find your products. Number of keywords can not exceed 200.
+          maxItems: 30
+        product_id:
+          type: string
+          description: Id of the product. It must not be included in any other ProductBoost campaign in the date range.
+          format: object-id
+    Money:
+      required:
+      - amount
+      - currency_code
+      type: object
+      properties:
+        amount:
+          format: float
+          type: number
+          description: Amount in decimals.
+          example: 10.4
+        currency_code:
+          format: iso-4217
+          type: string
+          description: The 3-letter currency code defined in [ISO 4217](https://www.iso.org/iso-4217-currency-codes.html).
+          example: USD
+    CampaignProduct:
+      type: object
+      properties:
+        merchant_bid_rate:
+          type: object
+          description: The desired bid set by merchants
+          allOf:
+          - $ref: '#/components/schemas/Money'
+        product_id:
+          readOnly: true
+          type: string
+          description: Id of the product
+          format: object-id
+        is_maxboost:
+          type: boolean
+          description: Indicate if this product is being promoted via MaxBoost program
+        paid_impressions:
+          readOnly: true
+          type: integer
+          description: Total paid impressions of this product so far.
+          format: int32
+        keywords:
+          items:
+            type: string
+          type: array
+          description: The list of keywords that are actually used by the advertising platform
+        enrollment_fee:
+          readOnly: true
+          type: object
+          description: An optional fee to enroll a product. This started as an experiment and may be empty for most products.
+          allOf:
+          - $ref: '#/components/schemas/Money'
+        actual_charge_rate:
+          readOnly: true
+          type: object
+          description: The actual charging rate
+          allOf:
+          - $ref: '#/components/schemas/Money'
+    ImpressionFeeBreakdown:
+      type: object
+      properties:
+        amount:
+          type: object
+          description: Fees charged on this day
+          allOf:
+          - $ref: '#/components/schemas/Money'
+        start_at:
+          type: string
+          format: date-time
+        state:
+          $ref: '#/components/schemas/ImpressionFeeState'
+        end_at:
+          type: string
+          format: date-time
+    CampaignDailyPerformance:
+      type: object
+      properties:
+        date:
+          type: string
+          description: The date that the campaign performance is associated to.
+          format: date-time
+        stats:
+          items:
+            $ref: '#/components/schemas/ProductDailyPerformance'
+          type: array
+          description: An array containing product performances on this date.
+    UpdateCampaign:
+      type: object
+      properties:
+        scheduled_add_budget_amount:
+          type: object
+          description: The amount that the campaign's budget is automatically increased by on the scheduled days.
+          allOf:
+          - $ref: '#/components/schemas/Money'
+        start_at:
+          type: string
+          description: The time you intend to change the campaign's start time to. Currently only time with precision up to 'date' level in Pacific Time (PT) will be accepted. Any time that is more precise than 'date' level and/or not in PT will be processed so that it only keeps its 'date', in PT. That is, a passed in date-time will be first converted in PT and then its fields other than 'year', 'month', 'day' are ignored. Start time can only be updated for campaigns of state 'NEW' or 'PENDING'.
+          format: date-time
+        auto_renew:
+          type: boolean
+          description: A boolean value indicating whether you want the campaign to auto-renew upon completion.
+        merchant_budget:
+          type: object
+          description: Budget set by merchant for this campaign. This budget comes from merchants and doesn't include any reward budget or bonus budget.
+          allOf:
+          - $ref: '#/components/schemas/Money'
+        scheduled_add_budget_days:
+          items:
+            minimum: 0
+            type: integer
+            description: Days of the week when budget will be increased automatically
+            maximum: 6
+          type: array
+          description: An array of integers ranging from 0 to 6 representing the days of the week the campaign's budget is automatically increased. 0 represents Monday, 1 represents Tuesday, and so on. To disable a previous add budget schedule, supply [] here.
+          maxItems: 7
+        end_at:
+          type: string
+          description: The time you intend to change the campaign's end time to. Currently only time with precision up to 'date' level in Pacific Time (PT) will be accepted. Any time that is more precise than 'date' level and/or not in PT will be processed so that it only keeps its 'date', in PT. That is, a passed in date-time will be first converted in PT and then its fields other than 'year', 'month', 'day' are ignored. A campaign's end time must be greater than its start time and no more than 4 weeks later than its start time.
+          format: date-time
+        max_budget:
+          deprecated: true
+          type: object
+          description: The maximum amount you are willing to spend on the campaign. This field is being deprecated. Please use 'merchant_budget' field instead.
+          allOf:
+          - $ref: '#/components/schemas/Money'
+        state:
+          $ref: '#/components/schemas/CampaignState'
+        products:
+          items:
+            $ref: '#/components/schemas/UpdateCampaignProduct'
+          type: array
+          maxItems: 200
+        campaign_name:
+          minLength: 1
+          type: string
+          description: The name you intend to change the campaign's name to. Campaign name can only be updated for campaigns of state 'NEW' or 'PENDING'.
+          maxLength: 300
+        intense_boost:
+          type: boolean
+          description: Whether you want to enable Intenseboost for campaign. IntenseBoost allows campaigns to receive premium impressions faster.
+    CampaignProductFeedbacks:
+      items:
+        $ref: '#/components/schemas/CampaignProductFeedback'
+      type: array
+    CreateCampaign:
+      required:
+      - campaign_name
+      - auto_renew
+      - start_at
+      - end_at
+      - products
+      type: object
+      properties:
+        scheduled_add_budget_amount:
+          type: object
+          description: The amount of budget automatically added to the campaign on the scheduled days.
+          allOf:
+          - $ref: '#/components/schemas/Money'
+        start_at:
+          type: string
+          description: The campaign's start time you want to set. Currently only time with precision up to 'date' level in Pacific Time (PT) will be accepted. Any time that is more precise than 'date' level and/or not in PT will be processed so that it only keeps its 'date', in PT. That is, a passed in date-time will be first converted in PT and then its fields other than 'year', 'month', 'day' are ignored.
+          format: date-time
+        auto_renew:
+          type: boolean
+          description: Whether you want the campaign to auto-renew upon completion.
+        merchant_budget:
+          type: object
+          description: Budget set by merchant for this campaign. This budget comes from merchants and doesn't include any reward budget or bonus budget.
+          allOf:
+          - $ref: '#/components/schemas/Money'
+        scheduled_add_budget_days:
+          items:
+            minimum: 0
+            type: integer
+            description: Days of the week when budget will be added automatically
+            maximum: 6
+          type: array
+          description: An array of integers ranging from 0 to 6 representing the days of the week budget is automatically added to this campaign where 0 is Monday.
+          maxItems: 7
+        end_at:
+          type: string
+          description: The campaign's end time you want to set. Currently only time with precision up to 'date' level in Pacific Time (PT) will be accepted. Any time that is more precise than 'date' level and/or not in PT will be processed so that it only keeps its 'date', in PT. That is, a passed in date-time will be first converted in PT and then its fields other than 'year', 'month', 'day' are ignored. End time must be greater than start_at and no more than 4 weeks later than start_time.
+          format: date-time
+        max_budget:
+          deprecated: true
+          type: object
+          description: Total budget will be used for this campaign. This field is being deprecated. Please use 'merchant_budget' field instead.
+          allOf:
+          - $ref: '#/components/schemas/Money'
+        products:
+          minItems: 1
+          items:
+            $ref: '#/components/schemas/UpdateCampaignProduct'
+          type: array
+          maxItems: 200
+        campaign_name:
+          minLength: 1
+          type: string
+          description: The name of the campaign you want to set.
+          maxLength: 300
+        intense_boost:
+          type: boolean
+          description: Whether you want to enable Intenseboost for campaign. IntenseBoost allows campaigns to receive premium impressions faster.
+    ImpressionFeeState:
+      enum:
+      - CHARGED
+      - NOT_CHARGED
+      type: string
+      description: State of impression fees
+  securitySchemes:
+    OpenID:
+      type: openIdConnect
+      openIdConnectUrl: https://merchant.wish.com/oidc/.well-known/openid-configuration
+    OAuth2:
+      type: oauth2
+      flows:
+        authorizationCode:
+          scopes:
+            payments:write: Update payments
+            tickets:write: Write customer tickets
+            epc:read: read EPC info
+            returns:write: Write returns
+            returns:read: Read returns
+            fbw:read: Read FBW
+            products:read: Read products
+            payments:read: Read payments
+            fbw:write: Write FBW
+            merchant:write: Write merchant
+            products:write: Write products
+            ratings:read: Read ratings
+            videos:read: Read videos
+            compliance:write: Write Compliance
+            product_boost:read: Read ProductBoost
+            listing_quality:read: Read listing quality
+            webhook:write: Write webhook
+            orders:read: Read orders
+            compliance:read: Read Compliance
+            fbs:read: Read FBS
+            penalties:read: Read penalties
+            penalties:write: Update penalties
+            infractions:read: Read infractions
+            orders:write: Update orders
+            merchant:read: Read merchant
+            notifications:write: Write notifications
+            announcements:read: Read announcements
+            product_boost:write: Write ProductBoost
+            notifications:read: Read notifications
+            webhook:read: Read webhook
+            qoo10:read: Read Qoo10
+            wps_parcel:write: Write WishParcel
+            wps_parcel:read: Read WishParcel
+            tickets:read: Read customer tickets
+            infractions:write: Write infractions
+            videos:write: Write videos
+            epc:write: write EPC info
+          tokenUrl: https://merchant.wish.com/api/v3/oauth/access_token
+          refreshUrl: https://merchant.wish.com/api/v3/oauth/refresh_token
+          authorizationUrl: https://merchant.wish.com/v3/oauth/authorize
+externalDocs:
+  url: https://merchant.wish.com/documentation/api/v3/explorer
+  description: API explorer
+x-wish-hidden: false

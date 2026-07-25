@@ -1,0 +1,495 @@
+openapi: 3.0.0
+info:
+  contact:
+    email: partner-api@wish.com
+  x-wish-dev-contact:
+    assignee: kwei
+    email: marketplace-external-api@contextlogic.com
+  description: "\nWish Marketplace V3 API\n\n# General Information\n\n The Wish Marketplace API will be using oAuth to authenticate in order to offer better security for its users\n\n *   Learn about oAuth [here](oauth).\n *   If you are a merchant and want to create an application for yourself, learn about how to create a private app [here](../../private-app)\n *   If you are a ERP and create applications that'll be used by multiple merchants, learn about how to create a public app [here]( ../../public-app). You will need to apply to be a verified public application\n\n ## How to Test\n\n To avoid testing the API on production data, use our sandbox. The sandbox is completely contained and will not affect Wish users or your merchant account. \n \n To reach the sandbox, visit: https://sandbox.merchant.wish.com.\n\n To use the sandbox in testing, use https://sandbox.merchant.wish.com/api/v3/ as your base URL.\n\n How to Generate test data after you have created a sandbox account:\n 1. Navigate to the [unfulfilled orders page](https://sandbox.merchant.wish.com/transactions/action)\n 2. Hover over the dropdown next to the 'fulfill with csv' button and select Generate Orders\n\n ## Date/Time Format\n\n  All dates and times in our API are returned in the same format. It is in the form `YYYY-MM-DDTHH:mm:ss.sss±XX:ZZ` or `YYYY-MM-DDTHH:mm:ss.sssZ`, where 'Z' represents UTC timezone.\n  When sending timestamps in URL parameters or the request body, millisecond is optional and will defaults to 0 if not provided.\n\n  * `YYYY` is the year\n  * `MM` is the month\n  * `DD` is the day\n  * `HH` is the hour (in 24-hour clock format)\n  * `mm` is the minutes\n  * `ss.sss` is the seconds and milliseconds\n  * `±XX:ZZ` is the UTC offset of the form +XX:ZZ or -XX:ZZ where XX is a 2-digit string giving the number of UTC offset hours, and ZZ is a 2-digit string giving the number of UTC offset minutes.\n\n ## Response Schema\n\n  Every response returned from the Wish API will have the same schema. This schema is intended to give you a predictable manner to check the status of your request and know where to get the data. Each response will have the following top level attributes: message, code and data.\n\n  **Attributes**\n\n  <table>\n  <tbody>\n  <tr>\n  <th>Message</th>\n  <td>A message describing the error that happened, example: \"We could not find a product for id: '5d30f60e0a6fc464f4f376b0'\"</td>\n  </tr>\n  <tr>\n  <th>Code</th>\n  <td>A unique number which represents the error that has occurred, example: 1008 or 0 if success.</td>\n  </tr>\n  <tr>\n  <th>Data</th>\n  <td>For errors this will be empty.</td>\n  </tr>\n  </tbody>\n  </table>\n\n ## General Querying Techniques\n\n ### Partial Resources\n All GET endpoints (except OAuth) support a fields parameter which allows for requesting a partial response. Any fields specified in the response schema of an endpoint can be selected. The top level attribute `data` can be ignored when using the fields parameter.\n\n **Syntax**\n * Comma-separated list to select multiple fields\n * Use forward slash `/` to select nested field: `field1/nested_field`\n * Use parentheses `( )` to select multiple nested fields: `field1(nested_field1,nested_field2)`\n * Use `*` for wildcard selection: `field1/nested_field/*`\n\n\n **Example:**\n ```\n https://merchant.wish.com/api/v3/demo/get?fields=title,items(id,info/name)\n ```\n Which would result in the following partial response:\n ```\n {\n   \"title\": \"demo\",\n   \"items\": [\n     {\n       \"id\": \"1\",\n       \"info\": {\n         \"name\": \"demo_item_1\"\n       }\n     }, {\n       \"id\": \"2\",\n       \"info\": {\n         \"name\": \"demo_item_2\"\n       }\n     },\n     ...\n   ]\n }\n ```\n\n ## Locale\n   You can optionally specify locale in order to translate content and error messages into your language.\n   To do this use the [Accept-Language](https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Accept-Language) header to specify your preferred locales.\n   If none is provided, your default locale will be used.\n\n   For example, to request content in Chinese use: `Accept-Language: zh`\n\n   In the response, you will receive a [Content-Language](https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Content-Language) header that specifies the locale code of the response content.\n\n\n ## Rate-Limiting\n\n  Rate-limiting will be performed on a per-merchant basis for each app. It is your responsibility to ensure you are not making frequent unnecessary calls to the API.\n\n  If the rate limits cannot satisfy your need, we highly recommend integrating webhooks for your app. With webhooks, instead of pulling resources periodically, your app will receive real-time notifications for particular events that occur to a merchant’s store. [Learn more](https://merchant.wish.com/documentation/webhooks)\n\n  **Normal Usage**\n\n  To help you track the rate-limiter status, the following response header(s) will be provided with each response:\n\n   * `Wish-Rate-Limit-Remaining`: The number of calls remaining in the current rate-limiting window.\n\n\n  **Rate-Limit Exceeded**\n\n  After you exceed the number of allowed calls in the current rate-limiting window, you will receive a `429 Too Many Requests` error response and the following additional header(s):\n\n   * `Wish-Rate-Limit-Reset`: The time the rate-limiter will reset.\n\n\n  Once you receive this response there is nothing you can do except wait for the rate-limiter to reset. In order to avoid being rate-limited, you may want to cache your responses.\n\n ## Sorting\n   ### Overview\n   Sorting is available for most endpoints that return a collection (list) of objects. Each collection has a different set of enabled parameters for sorting, so please check specific collection section for detail.\n\n   ### Usage\n   Append `sort_by={parameter_name}.{asc|desc}` in your API request where `parameter_name` is a valid sortable parameter of that endpoint.\n\n   Example:\n   ```\n   /api/v3/penalties?sort_by=created_at.asc\n   ```\n\n ## Pagination\n  All bulk-fetching API methods that return lists of resource support pagination.\n  These methods commonly take at least 3 parameters: `limit`, `{attribute}_min`, `{attribute}_max`. Attribute can be `id`, `create_at`, etc., depending on each specific method.\n  For instance, you make a request to get a list of penalties `/api/v3/penalties?limit=20&created_at_max=2020-04-08T23:59:59Z&sort_by=created_at_max.desc`,\n  which means to fetch 20 penalities sorted by their creation time, with the most recent one being created before `2020-04-08T23:59:59Z`.\n  Assume that the response contains 20 `penalty` objects with the last object being `penalty_foo`,\n  then your subsequent request can be `/api/v3/penalties?limit=20&created_at_max={penalty_foo.create_at}&sort_by=created_at_max.desc` to fetch the next page of list.\n  Note that when fetching next page using `id_min` or `id_max`, you need to perform `+/- 1`(correspondingly) on the last object's ID in the current page, as `id_min` and `id_max` are inclusive. (All V3 API resources' IDs are either integer or BSON object ID - a hex number).\n\n\n ## Request ID\n  Each API request is associated with a unique identifier. You can find this value in response headers, under `Wish-Request-Id`.\n  **When you need to contact us about a specific request, please provide this ID to ensure the fastest possible reply**\n\n# Authentication\nFor all requests that require OAuth2 authentication, the access token must be provided in the `Authorization` request header in the following format: `Authorization: Bearer <token>`\n\nFor example:\n```\nAuthorization: Bearer 3d6e2d71bc464e42bfbdb081afb73c1e\n```\n<!-- ReDoc-Inject: <security-definitions> -->\n"
+  version: 3.0.65
+  title: Wish Marketplace V3 Brands Variations API
+servers:
+- url: https://merchant.wish.com
+  description: V3 API endpoint
+security:
+- OAuth2: []
+tags:
+- description: Variations APIs
+  name: Variations
+paths:
+  /api/v3/products/{id}/variations:
+    post:
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Variation'
+          description: successfully created a variation
+        '400':
+          content:
+            application/json:
+              examples:
+                InvalidParameter:
+                  value:
+                    message: There is an existing variation with such SKU.
+                    code: '90001'
+              schema:
+                $ref: '#/components/schemas/APIError'
+          description: failed to add a variation
+      parameters:
+      - required: true
+        in: path
+        description: ID of the product to add a variation to
+        name: id
+        schema:
+          type: string
+          format: object-id
+      tags:
+      - Variations
+      summary: Create a variation
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AddVariation'
+      security:
+      - OAuth2:
+        - products:write
+      operationId: createVariation
+      x-code-samples:
+      - lang: python_requests
+        source: "import requests\n\nurl = \"https://merchant.wish.com/api/v3/products/{id}/variations\"\n\npayload = \"{\\\"attributes\\\":[{\\\"name\\\":\\\"string\\\",\\\"value\\\":[\\\"string\\\"]}],\\\"cost\\\":{\\\"amount\\\":0,\\\"currency_code\\\":\\\"USD\\\"},\\\"gtin\\\":\\\"string\\\",\\\"image\\\":\\\"http://example.com\\\",\\\"inventories\\\":[{\\\"inventory\\\":0,\\\"warehouse_id\\\":\\\"string\\\"}],\\\"logistics_details\\\":{\\\"customs_declared_name\\\":\\\"string\\\",\\\"customs_declared_value\\\":{\\\"amount\\\":0,\\\"currency_code\\\":\\\"USD\\\"},\\\"customs_hs_code\\\":\\\"string\\\",\\\"declared_local_name\\\":\\\"string\\\",\\\"declared_name\\\":\\\"string\\\",\\\"height\\\":0,\\\"length\\\":0,\\\"origin_country\\\":\\\"string\\\",\\\"pieces\\\":0,\\\"restricted_flags\\\":[\\\"HAS_POWDER\\\"],\\\"weight\\\":0,\\\"width\\\":0},\\\"merchant_set_cost\\\":0,\\\"options\\\":[{\\\"name\\\":\\\"string\\\",\\\"value\\\":\\\"string\\\"}],\\\"price\\\":{\\\"amount\\\":0,\\\"currency_code\\\":\\\"USD\\\"},\\\"quantity_value\\\":0,\\\"sku\\\":\\\"string\\\"}\"\nheaders = {\n    'content-type': \"application/json\",\n    'authorization': \"Bearer REPLACE_BEARER_TOKEN\"\n    }\n\nresponse = requests.request(\"POST\", url, data=payload, headers=headers)\n\nprint(response.text)"
+      - lang: java_unirest
+        source: "HttpResponse<String> response = Unirest.post(\"https://merchant.wish.com/api/v3/products/{id}/variations\")\n  .header(\"content-type\", \"application/json\")\n  .header(\"authorization\", \"Bearer REPLACE_BEARER_TOKEN\")\n  .body(\"{\\\"attributes\\\":[{\\\"name\\\":\\\"string\\\",\\\"value\\\":[\\\"string\\\"]}],\\\"cost\\\":{\\\"amount\\\":0,\\\"currency_code\\\":\\\"USD\\\"},\\\"gtin\\\":\\\"string\\\",\\\"image\\\":\\\"http://example.com\\\",\\\"inventories\\\":[{\\\"inventory\\\":0,\\\"warehouse_id\\\":\\\"string\\\"}],\\\"logistics_details\\\":{\\\"customs_declared_name\\\":\\\"string\\\",\\\"customs_declared_value\\\":{\\\"amount\\\":0,\\\"currency_code\\\":\\\"USD\\\"},\\\"customs_hs_code\\\":\\\"string\\\",\\\"declared_local_name\\\":\\\"string\\\",\\\"declared_name\\\":\\\"string\\\",\\\"height\\\":0,\\\"length\\\":0,\\\"origin_country\\\":\\\"string\\\",\\\"pieces\\\":0,\\\"restricted_flags\\\":[\\\"HAS_POWDER\\\"],\\\"weight\\\":0,\\\"width\\\":0},\\\"merchant_set_cost\\\":0,\\\"options\\\":[{\\\"name\\\":\\\"string\\\",\\\"value\\\":\\\"string\\\"}],\\\"price\\\":{\\\"amount\\\":0,\\\"currency_code\\\":\\\"USD\\\"},\\\"quantity_value\\\":0,\\\"sku\\\":\\\"string\\\"}\")\n  .asString();"
+      - lang: php_curl
+        source: "<?php\n\n$curl = curl_init();\n\ncurl_setopt_array($curl, array(\n  CURLOPT_URL => \"https://merchant.wish.com/api/v3/products/{id}/variations\",\n  CURLOPT_RETURNTRANSFER => true,\n  CURLOPT_ENCODING => \"\",\n  CURLOPT_MAXREDIRS => 10,\n  CURLOPT_TIMEOUT => 30,\n  CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,\n  CURLOPT_CUSTOMREQUEST => \"POST\",\n  CURLOPT_POSTFIELDS => \"{\\\"attributes\\\":[{\\\"name\\\":\\\"string\\\",\\\"value\\\":[\\\"string\\\"]}],\\\"cost\\\":{\\\"amount\\\":0,\\\"currency_code\\\":\\\"USD\\\"},\\\"gtin\\\":\\\"string\\\",\\\"image\\\":\\\"http://example.com\\\",\\\"inventories\\\":[{\\\"inventory\\\":0,\\\"warehouse_id\\\":\\\"string\\\"}],\\\"logistics_details\\\":{\\\"customs_declared_name\\\":\\\"string\\\",\\\"customs_declared_value\\\":{\\\"amount\\\":0,\\\"currency_code\\\":\\\"USD\\\"},\\\"customs_hs_code\\\":\\\"string\\\",\\\"declared_local_name\\\":\\\"string\\\",\\\"declared_name\\\":\\\"string\\\",\\\"height\\\":0,\\\"length\\\":0,\\\"origin_country\\\":\\\"string\\\",\\\"pieces\\\":0,\\\"restricted_flags\\\":[\\\"HAS_POWDER\\\"],\\\"weight\\\":0,\\\"width\\\":0},\\\"merchant_set_cost\\\":0,\\\"options\\\":[{\\\"name\\\":\\\"string\\\",\\\"value\\\":\\\"string\\\"}],\\\"price\\\":{\\\"amount\\\":0,\\\"currency_code\\\":\\\"USD\\\"},\\\"quantity_value\\\":0,\\\"sku\\\":\\\"string\\\"}\",\n  CURLOPT_HTTPHEADER => array(\n    \"authorization: Bearer REPLACE_BEARER_TOKEN\",\n    \"content-type: application/json\"\n  ),\n));\n\n$response = curl_exec($curl);\n$err = curl_error($curl);\n\ncurl_close($curl);\n\nif ($err) {\n  echo \"cURL Error #:\" . $err;\n} else {\n  echo $response;\n}"
+      - lang: javascript_jquery
+        source: "var settings = {\n  \"async\": true,\n  \"crossDomain\": true,\n  \"url\": \"https://merchant.wish.com/api/v3/products/{id}/variations\",\n  \"method\": \"POST\",\n  \"headers\": {\n    \"content-type\": \"application/json\",\n    \"authorization\": \"Bearer REPLACE_BEARER_TOKEN\"\n  },\n  \"processData\": false,\n  \"data\": \"{\\\"attributes\\\":[{\\\"name\\\":\\\"string\\\",\\\"value\\\":[\\\"string\\\"]}],\\\"cost\\\":{\\\"amount\\\":0,\\\"currency_code\\\":\\\"USD\\\"},\\\"gtin\\\":\\\"string\\\",\\\"image\\\":\\\"http://example.com\\\",\\\"inventories\\\":[{\\\"inventory\\\":0,\\\"warehouse_id\\\":\\\"string\\\"}],\\\"logistics_details\\\":{\\\"customs_declared_name\\\":\\\"string\\\",\\\"customs_declared_value\\\":{\\\"amount\\\":0,\\\"currency_code\\\":\\\"USD\\\"},\\\"customs_hs_code\\\":\\\"string\\\",\\\"declared_local_name\\\":\\\"string\\\",\\\"declared_name\\\":\\\"string\\\",\\\"height\\\":0,\\\"length\\\":0,\\\"origin_country\\\":\\\"string\\\",\\\"pieces\\\":0,\\\"restricted_flags\\\":[\\\"HAS_POWDER\\\"],\\\"weight\\\":0,\\\"width\\\":0},\\\"merchant_set_cost\\\":0,\\\"options\\\":[{\\\"name\\\":\\\"string\\\",\\\"value\\\":\\\"string\\\"}],\\\"price\\\":{\\\"amount\\\":0,\\\"currency_code\\\":\\\"USD\\\"},\\\"quantity_value\\\":0,\\\"sku\\\":\\\"string\\\"}\"\n}\n\n$.ajax(settings).done(function (response) {\n  console.log(response);\n});"
+      - lang: shell_curl
+        source: "curl --request POST \\\n  --url 'https://merchant.wish.com/api/v3/products/{id}/variations' \\\n  --header 'authorization: Bearer REPLACE_BEARER_TOKEN' \\\n  --header 'content-type: application/json' \\\n  --data '{\"attributes\":[{\"name\":\"string\",\"value\":[\"string\"]}],\"cost\":{\"amount\":0,\"currency_code\":\"USD\"},\"gtin\":\"string\",\"image\":\"http://example.com\",\"inventories\":[{\"inventory\":0,\"warehouse_id\":\"string\"}],\"logistics_details\":{\"customs_declared_name\":\"string\",\"customs_declared_value\":{\"amount\":0,\"currency_code\":\"USD\"},\"customs_hs_code\":\"string\",\"declared_local_name\":\"string\",\"declared_name\":\"string\",\"height\":0,\"length\":0,\"origin_country\":\"string\",\"pieces\":0,\"restricted_flags\":[\"HAS_POWDER\"],\"weight\":0,\"width\":0},\"merchant_set_cost\":0,\"options\":[{\"name\":\"string\",\"value\":\"string\"}],\"price\":{\"amount\":0,\"currency_code\":\"USD\"},\"quantity_value\":0,\"sku\":\"string\"}'"
+      description: Create a variation
+  /api/v3/products/variations/colors:
+    get:
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ColorList'
+          description: successfully queried for colors
+      parameters:
+      - required: false
+        in: query
+        description: The beginning id (inclusive) of the color result array. The lexicographically smallest id will be used if not provided.
+        name: id_min
+        schema:
+          type: string
+      - required: false
+        in: query
+        description: The ending id (inclusive) of the color result array. The lexicographically largest id will be used if not provided.
+        name: id_max
+        schema:
+          type: string
+      - required: false
+        in: query
+        description: The attribute to sort colors in the response.
+        name: sort_by
+        schema:
+          default: id.asc
+          pattern: ^id(\.(asc|desc))?$
+          type: string
+      - required: false
+        in: query
+        description: The maximum number of records in the response. All records will be returned by default.
+        name: limit
+        schema:
+          minimum: 1
+          type: integer
+      tags:
+      - Variations
+      summary: Get a list of accepted colors.
+      security:
+      - OAuth2: []
+      operationId: getColors
+      x-code-samples:
+      - lang: python_requests
+        source: 'import requests
+
+
+          url = "https://merchant.wish.com/api/v3/products/variations/colors"
+
+
+          querystring = {"id_min":"SOME_STRING_VALUE","id_max":"SOME_STRING_VALUE","sort_by":"SOME_STRING_VALUE","limit":"SOME_INTEGER_VALUE"}
+
+
+          headers = {''authorization'': ''Bearer REPLACE_BEARER_TOKEN''}
+
+
+          response = requests.request("GET", url, headers=headers, params=querystring)
+
+
+          print(response.text)'
+      - lang: java_unirest
+        source: "HttpResponse<String> response = Unirest.get(\"https://merchant.wish.com/api/v3/products/variations/colors?id_min=SOME_STRING_VALUE&id_max=SOME_STRING_VALUE&sort_by=SOME_STRING_VALUE&limit=SOME_INTEGER_VALUE\")\n  .header(\"authorization\", \"Bearer REPLACE_BEARER_TOKEN\")\n  .asString();"
+      - lang: php_curl
+        source: "<?php\n\n$curl = curl_init();\n\ncurl_setopt_array($curl, array(\n  CURLOPT_URL => \"https://merchant.wish.com/api/v3/products/variations/colors?id_min=SOME_STRING_VALUE&id_max=SOME_STRING_VALUE&sort_by=SOME_STRING_VALUE&limit=SOME_INTEGER_VALUE\",\n  CURLOPT_RETURNTRANSFER => true,\n  CURLOPT_ENCODING => \"\",\n  CURLOPT_MAXREDIRS => 10,\n  CURLOPT_TIMEOUT => 30,\n  CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,\n  CURLOPT_CUSTOMREQUEST => \"GET\",\n  CURLOPT_HTTPHEADER => array(\n    \"authorization: Bearer REPLACE_BEARER_TOKEN\"\n  ),\n));\n\n$response = curl_exec($curl);\n$err = curl_error($curl);\n\ncurl_close($curl);\n\nif ($err) {\n  echo \"cURL Error #:\" . $err;\n} else {\n  echo $response;\n}"
+      - lang: javascript_jquery
+        source: "var settings = {\n  \"async\": true,\n  \"crossDomain\": true,\n  \"url\": \"https://merchant.wish.com/api/v3/products/variations/colors?id_min=SOME_STRING_VALUE&id_max=SOME_STRING_VALUE&sort_by=SOME_STRING_VALUE&limit=SOME_INTEGER_VALUE\",\n  \"method\": \"GET\",\n  \"headers\": {\n    \"authorization\": \"Bearer REPLACE_BEARER_TOKEN\"\n  }\n}\n\n$.ajax(settings).done(function (response) {\n  console.log(response);\n});"
+      - lang: shell_curl
+        source: "curl --request GET \\\n  --url 'https://merchant.wish.com/api/v3/products/variations/colors?id_min=SOME_STRING_VALUE&id_max=SOME_STRING_VALUE&sort_by=SOME_STRING_VALUE&limit=SOME_INTEGER_VALUE' \\\n  --header 'authorization: Bearer REPLACE_BEARER_TOKEN'"
+      description: The list of accepted colors.
+components:
+  schemas:
+    AttributeResponse:
+      required:
+      - name
+      type: object
+      properties:
+        name:
+          type: string
+          description: The name of the attribute.
+        value:
+          items:
+            type: string
+          type: array
+          description: The value of the attribute.
+          nullable: true
+    VariationAttribute:
+      required:
+      - name
+      type: object
+      properties:
+        name:
+          type: string
+          description: The name of the attribute. Input the relevant "name". Please browse our [Taxonomy APIs](/documentation/api/v3/reference#operation/getCategoryAttributes) for possible attribute names.
+        value:
+          items:
+            type: string
+          type: array
+          description: The value of the attribute. Can be set to null to remove the attribute. Input the relevant "accepted_values". Please browse our [Taxonomy APIs](/documentation/api/v3/reference#operation/getCategoryAttributes) for possible attribute values.
+          nullable: true
+    ColorList:
+      items:
+        $ref: '#/components/schemas/ColorInfo'
+      type: array
+      description: The list of accepted colors.
+    Price:
+      required:
+      - amount
+      - currency_code
+      type: object
+      properties:
+        amount:
+          minimum: 0
+          type: number
+          description: Non-negative amount in decimals.
+          format: float
+        currency_code:
+          format: iso-4217
+          type: string
+          description: The 3-letter currency code defined in [ISO 4217](https://www.iso.org/iso-4217-currency-codes.html).
+          example: USD
+    APIError:
+      required:
+      - code
+      - message
+      type: object
+      properties:
+        message:
+          type: string
+        code:
+          type: integer
+          format: int32
+    Option:
+      required:
+      - name
+      - value
+      type: object
+      properties:
+        name:
+          type: string
+          description: The name of the option like SIZE and COLOR.
+        value:
+          minLength: 1
+          type: string
+          description: The value of the option.
+    AddVariation:
+      type: object
+      allOf:
+      - $ref: '#/components/schemas/EditableVariationParams'
+      - required:
+        - sku
+        - inventories
+        - price
+        type: object
+    LogisticsInfo:
+      type: object
+      properties:
+        customs_declared_name:
+          type: string
+          description: Declared name of the product used for customs clearance. This is often displayed on the product packaging.
+        origin_country:
+          type: string
+          description: Country where the product is manufactured, produced, or grown. Country code should follow [ISO 3166 Alpha-2 code](https://www.iso.org/obp/ui/#iso:pub:PUB500001:en). This is a required field when creating a new product listing (Create a Product) or creating a new variation (Create a variation).
+          format: iso-3166
+        weight:
+          type: number
+          description: The weight of the package in which your product will ship to the customer (units in grams).</br> This is a required field for mainland China-based merchants when creating a new product listing (Create a Product) or adding variations to existing product listings (Create a variation).
+          format: float
+        restricted_flags:
+          items:
+            enum:
+            - HAS_POWDER
+            - HAS_LIQUID
+            - HAS_BATTERY
+            - HAS_METAL
+            type: string
+          type: array
+          description: Whether the product contains certain items or materials.</br> __Battery__ - Products that contain batteries, either replaceable or built into the product.</br> __Liquid__ - Products that consist of a substance that has a consistency like water or oil, including semi-liquids such as creams, gels, lubes, etc.</br> __Metal__ - Products made of or containing metal as a material component.</br> __Powder__ - Any product that is composed of fine, dry particles.
+          nullable: true
+        customs_hs_code:
+          type: string
+          description: Harmonization System Code for customs declaration.
+        height:
+          type: number
+          description: The height of the package in which your product will ship to the customer (units in cm).
+          format: float
+        width:
+          type: number
+          description: The width of the package in which your product will ship to the customer (units in cm).
+          format: float
+        length:
+          type: number
+          description: The length of the package in which your product will ship to the customer (units in cm).
+          format: float
+        declared_name:
+          type: string
+          description: The product name for customs declaration.</br> `This field will be deprecated soon and replaced with customs_declared_name.`
+        customs_declared_value:
+          type: object
+          description: The price of the product for customs declaration.
+          allOf:
+          - $ref: '#/components/schemas/Price'
+        pieces:
+          type: integer
+          description: The number of pieces associated with the variation.
+        declared_local_name:
+          type: string
+          description: The product name in local language for customs declaration.
+    ProductVariation:
+      type: object
+      properties:
+        sku:
+          minLength: 1
+          type: string
+          description: The Stock Keeping Unit of the variation.
+        status:
+          enum:
+          - ENABLED
+          - DISABLED
+          - REMOVED_BY_WISH
+          type: string
+          description: The status of the variation. Removed variations cannot be updated.
+        quantity_value:
+          minimum: 0
+          type: number
+          description: The total quantity of the product variant (in the given unit) that is used to calculate price per unit. Note that if a product has multiple product variants, you will need to set quantity values for each product variant. [Learn More](https://merchantfaq.wish.com/hc/en-us/articles/4405383750555).
+          format: float
+        product_id:
+          readOnly: true
+          type: string
+          description: The ID of the product.
+          format: object-id
+        image:
+          type: string
+          description: The URL of the image associated with the variation.
+          format: uri
+        options:
+          items:
+            $ref: '#/components/schemas/Option'
+          type: array
+          description: Parameters used to define the variations. Each combination of option values may be a variation for that product.
+        price:
+          type: object
+          description: The price of the variation.
+          allOf:
+          - $ref: '#/components/schemas/Price'
+        cost:
+          type: object
+          description: The cost of the variation.
+          allOf:
+          - $ref: '#/components/schemas/Price'
+        gtin:
+          type: string
+          description: The Global Trade Item Number of the product.
+        request_id:
+          readOnly: true
+          type: string
+          description: Identifier for the variation create request. Can be used with the [Get Product Create or Update Request endpoint](/documentation/api/v3/reference#operation/getProductUpdateRequest) to track the status of the request during the Automated Listing Review process.
+        attributes:
+          items:
+            $ref: '#/components/schemas/AttributeResponse'
+          type: array
+          description: The custom attributes of the variation.
+          nullable: true
+        inventories:
+          items:
+            $ref: '#/components/schemas/WarehouseInventory'
+          type: array
+          description: The inventory of the variation in each warehouse.
+        id:
+          readOnly: true
+          type: string
+          description: The ID of the variation.
+          format: object-id
+        logistics_details:
+          type: object
+          description: The logistics details of the variation.
+          allOf:
+          - $ref: '#/components/schemas/LogisticsInfo'
+    WarehouseInventory:
+      required:
+      - warehouse_id
+      - inventory
+      type: object
+      properties:
+        inventory:
+          minimum: 0
+          type: integer
+          description: The inventory of a variation in the warehouse.
+          maximum: 500000
+        warehouse_id:
+          type: string
+          description: The ID of the warehouse.
+          format: object-id
+    Variation:
+      type: object
+      allOf:
+      - $ref: '#/components/schemas/ProductVariation'
+      - type: object
+    EditableVariationParams:
+      type: object
+      properties:
+        sku:
+          minLength: 1
+          type: string
+          description: The Stock Keeping Unit of the variation.
+          maxLength: 80
+        quantity_value:
+          nullable: true
+          minimum: 0
+          type: number
+          description: The total quantity of the product variant (in the given unit) that is used to calculate price per unit. Note that if a product has multiple product variants, you will need to set quantity values for each product variant. [Learn More](https://merchantfaq.wish.com/hc/en-us/articles/4405383750555).
+          format: float
+        image:
+          type: string
+          description: The URL of the image associated with the variation. This is a required field when adding a new product listing with variations (Create a Product) or adding variations to existing product listings (Create a variation). The variation images don’t need to be unique (multiple variations can have the same image), but they have to be specified for each variation. These images must be a part of extra_images.
+          format: uri
+        price:
+          type: object
+          description: The price of the variation. Price is required for rev-share merhcants.
+          allOf:
+          - $ref: '#/components/schemas/Price'
+        merchant_set_cost:
+          nullable: true
+          minimum: 0
+          type: number
+          description: Supply cost maintained by merchants on variation level
+          format: float
+        cost:
+          type: object
+          description: The cost of the variation. Cost is required for cost-based merchants.
+          allOf:
+          - $ref: '#/components/schemas/Price'
+        gtin:
+          pattern: ^[0-9]{8,14}$
+          type: string
+          description: Should be 8 to 14 digits GTIN (UPC, EAN, ISBN) that contains no letters or other characters. This number is barcode symbology used for tracking trade items in stores and scanning them at the point of sale.
+          nullable: true
+        attributes:
+          items:
+            $ref: '#/components/schemas/VariationAttribute'
+          type: array
+          description: The custom attributes of the variation. Merchants may use the "name" and "value" fields here to add specific attributes for the product’s category. Our [Taxonomy APIs](/documentation/api/v3/reference#operation/getCategoryAttributes) contains the list of all attributes for each category, mentions which ones are required, and the corresponding accepted values for each attribute.
+          nullable: true
+        inventories:
+          items:
+            $ref: '#/components/schemas/WarehouseInventory'
+          type: array
+          description: The inventory of the variation in each warehouse.
+        options:
+          items:
+            $ref: '#/components/schemas/Option'
+          type: array
+          description: This field is used to define the parameters for the creation of variations. You can create your variations with traditional Color and Size fields or use category-specific attributes. Each combination of option values may be a variation for that product. See which category-specific attributes can be used by using the [Taxonomy APIs](/documentation/api/v3/reference#operation/getCategoryAttributes) and the field attributes.constraint.is_variation_attribute.
+        logistics_details:
+          type: object
+          description: The logistics details of the variation.
+          allOf:
+          - $ref: '#/components/schemas/LogisticsInfo'
+    ColorInfo:
+      required:
+      - name
+      - id
+      type: object
+      properties:
+        id:
+          type: string
+          description: 'The ID of the color. E.g. antiquegold. C olor IDs are subject to change. '
+        name:
+          type: string
+          description: The display name of the color. E.g. Antique Gold.
+  securitySchemes:
+    OpenID:
+      type: openIdConnect
+      openIdConnectUrl: https://merchant.wish.com/oidc/.well-known/openid-configuration
+    OAuth2:
+      type: oauth2
+      flows:
+        authorizationCode:
+          scopes:
+            payments:write: Update payments
+            tickets:write: Write customer tickets
+            epc:read: read EPC info
+            returns:write: Write returns
+            returns:read: Read returns
+            fbw:read: Read FBW
+            products:read: Read products
+            payments:read: Read payments
+            fbw:write: Write FBW
+            merchant:write: Write merchant
+            products:write: Write products
+            ratings:read: Read ratings
+            videos:read: Read videos
+            compliance:write: Write Compliance
+            product_boost:read: Read ProductBoost
+            listing_quality:read: Read listing quality
+            webhook:write: Write webhook
+            orders:read: Read orders
+            compliance:read: Read Compliance
+            fbs:read: Read FBS
+            penalties:read: Read penalties
+            penalties:write: Update penalties
+            infractions:read: Read infractions
+            orders:write: Update orders
+            merchant:read: Read merchant
+            notifications:write: Write notifications
+            announcements:read: Read announcements
+            product_boost:write: Write ProductBoost
+            notifications:read: Read notifications
+            webhook:read: Read webhook
+            qoo10:read: Read Qoo10
+            wps_parcel:write: Write WishParcel
+            wps_parcel:read: Read WishParcel
+            tickets:read: Read customer tickets
+            infractions:write: Write infractions
+            videos:write: Write videos
+            epc:write: write EPC info
+          tokenUrl: https://merchant.wish.com/api/v3/oauth/access_token
+          refreshUrl: https://merchant.wish.com/api/v3/oauth/refresh_token
+          authorizationUrl: https://merchant.wish.com/v3/oauth/authorize
+externalDocs:
+  url: https://merchant.wish.com/documentation/api/v3/explorer
+  description: API explorer
+x-wish-hidden: false

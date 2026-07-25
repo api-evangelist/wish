@@ -1,0 +1,1006 @@
+openapi: 3.0.0
+info:
+  contact:
+    email: partner-api@wish.com
+  x-wish-dev-contact:
+    assignee: kwei
+    email: marketplace-external-api@contextlogic.com
+  description: "\nWish Marketplace V3 API\n\n# General Information\n\n The Wish Marketplace API will be using oAuth to authenticate in order to offer better security for its users\n\n *   Learn about oAuth [here](oauth).\n *   If you are a merchant and want to create an application for yourself, learn about how to create a private app [here](../../private-app)\n *   If you are a ERP and create applications that'll be used by multiple merchants, learn about how to create a public app [here]( ../../public-app). You will need to apply to be a verified public application\n\n ## How to Test\n\n To avoid testing the API on production data, use our sandbox. The sandbox is completely contained and will not affect Wish users or your merchant account. \n \n To reach the sandbox, visit: https://sandbox.merchant.wish.com.\n\n To use the sandbox in testing, use https://sandbox.merchant.wish.com/api/v3/ as your base URL.\n\n How to Generate test data after you have created a sandbox account:\n 1. Navigate to the [unfulfilled orders page](https://sandbox.merchant.wish.com/transactions/action)\n 2. Hover over the dropdown next to the 'fulfill with csv' button and select Generate Orders\n\n ## Date/Time Format\n\n  All dates and times in our API are returned in the same format. It is in the form `YYYY-MM-DDTHH:mm:ss.sss±XX:ZZ` or `YYYY-MM-DDTHH:mm:ss.sssZ`, where 'Z' represents UTC timezone.\n  When sending timestamps in URL parameters or the request body, millisecond is optional and will defaults to 0 if not provided.\n\n  * `YYYY` is the year\n  * `MM` is the month\n  * `DD` is the day\n  * `HH` is the hour (in 24-hour clock format)\n  * `mm` is the minutes\n  * `ss.sss` is the seconds and milliseconds\n  * `±XX:ZZ` is the UTC offset of the form +XX:ZZ or -XX:ZZ where XX is a 2-digit string giving the number of UTC offset hours, and ZZ is a 2-digit string giving the number of UTC offset minutes.\n\n ## Response Schema\n\n  Every response returned from the Wish API will have the same schema. This schema is intended to give you a predictable manner to check the status of your request and know where to get the data. Each response will have the following top level attributes: message, code and data.\n\n  **Attributes**\n\n  <table>\n  <tbody>\n  <tr>\n  <th>Message</th>\n  <td>A message describing the error that happened, example: \"We could not find a product for id: '5d30f60e0a6fc464f4f376b0'\"</td>\n  </tr>\n  <tr>\n  <th>Code</th>\n  <td>A unique number which represents the error that has occurred, example: 1008 or 0 if success.</td>\n  </tr>\n  <tr>\n  <th>Data</th>\n  <td>For errors this will be empty.</td>\n  </tr>\n  </tbody>\n  </table>\n\n ## General Querying Techniques\n\n ### Partial Resources\n All GET endpoints (except OAuth) support a fields parameter which allows for requesting a partial response. Any fields specified in the response schema of an endpoint can be selected. The top level attribute `data` can be ignored when using the fields parameter.\n\n **Syntax**\n * Comma-separated list to select multiple fields\n * Use forward slash `/` to select nested field: `field1/nested_field`\n * Use parentheses `( )` to select multiple nested fields: `field1(nested_field1,nested_field2)`\n * Use `*` for wildcard selection: `field1/nested_field/*`\n\n\n **Example:**\n ```\n https://merchant.wish.com/api/v3/demo/get?fields=title,items(id,info/name)\n ```\n Which would result in the following partial response:\n ```\n {\n   \"title\": \"demo\",\n   \"items\": [\n     {\n       \"id\": \"1\",\n       \"info\": {\n         \"name\": \"demo_item_1\"\n       }\n     }, {\n       \"id\": \"2\",\n       \"info\": {\n         \"name\": \"demo_item_2\"\n       }\n     },\n     ...\n   ]\n }\n ```\n\n ## Locale\n   You can optionally specify locale in order to translate content and error messages into your language.\n   To do this use the [Accept-Language](https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Accept-Language) header to specify your preferred locales.\n   If none is provided, your default locale will be used.\n\n   For example, to request content in Chinese use: `Accept-Language: zh`\n\n   In the response, you will receive a [Content-Language](https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Content-Language) header that specifies the locale code of the response content.\n\n\n ## Rate-Limiting\n\n  Rate-limiting will be performed on a per-merchant basis for each app. It is your responsibility to ensure you are not making frequent unnecessary calls to the API.\n\n  If the rate limits cannot satisfy your need, we highly recommend integrating webhooks for your app. With webhooks, instead of pulling resources periodically, your app will receive real-time notifications for particular events that occur to a merchant’s store. [Learn more](https://merchant.wish.com/documentation/webhooks)\n\n  **Normal Usage**\n\n  To help you track the rate-limiter status, the following response header(s) will be provided with each response:\n\n   * `Wish-Rate-Limit-Remaining`: The number of calls remaining in the current rate-limiting window.\n\n\n  **Rate-Limit Exceeded**\n\n  After you exceed the number of allowed calls in the current rate-limiting window, you will receive a `429 Too Many Requests` error response and the following additional header(s):\n\n   * `Wish-Rate-Limit-Reset`: The time the rate-limiter will reset.\n\n\n  Once you receive this response there is nothing you can do except wait for the rate-limiter to reset. In order to avoid being rate-limited, you may want to cache your responses.\n\n ## Sorting\n   ### Overview\n   Sorting is available for most endpoints that return a collection (list) of objects. Each collection has a different set of enabled parameters for sorting, so please check specific collection section for detail.\n\n   ### Usage\n   Append `sort_by={parameter_name}.{asc|desc}` in your API request where `parameter_name` is a valid sortable parameter of that endpoint.\n\n   Example:\n   ```\n   /api/v3/penalties?sort_by=created_at.asc\n   ```\n\n ## Pagination\n  All bulk-fetching API methods that return lists of resource support pagination.\n  These methods commonly take at least 3 parameters: `limit`, `{attribute}_min`, `{attribute}_max`. Attribute can be `id`, `create_at`, etc., depending on each specific method.\n  For instance, you make a request to get a list of penalties `/api/v3/penalties?limit=20&created_at_max=2020-04-08T23:59:59Z&sort_by=created_at_max.desc`,\n  which means to fetch 20 penalities sorted by their creation time, with the most recent one being created before `2020-04-08T23:59:59Z`.\n  Assume that the response contains 20 `penalty` objects with the last object being `penalty_foo`,\n  then your subsequent request can be `/api/v3/penalties?limit=20&created_at_max={penalty_foo.create_at}&sort_by=created_at_max.desc` to fetch the next page of list.\n  Note that when fetching next page using `id_min` or `id_max`, you need to perform `+/- 1`(correspondingly) on the last object's ID in the current page, as `id_min` and `id_max` are inclusive. (All V3 API resources' IDs are either integer or BSON object ID - a hex number).\n\n\n ## Request ID\n  Each API request is associated with a unique identifier. You can find this value in response headers, under `Wish-Request-Id`.\n  **When you need to contact us about a specific request, please provide this ID to ensure the fastest possible reply**\n\n# Authentication\nFor all requests that require OAuth2 authentication, the access token must be provided in the `Authorization` request header in the following format: `Authorization: Bearer <token>`\n\nFor example:\n```\nAuthorization: Bearer 3d6e2d71bc464e42bfbdb081afb73c1e\n```\n<!-- ReDoc-Inject: <security-definitions> -->\n"
+  version: 3.0.65
+  title: Wish Marketplace V3 Brands Promotions Platform API
+servers:
+- url: https://merchant.wish.com
+  description: V3 API endpoint
+security:
+- OAuth2: []
+tags:
+- name: Promotions Platform
+paths:
+  /api/v3/promotions/eligible_products:
+    get:
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                items:
+                  $ref: '#/components/schemas/PromotionEligibleProduct'
+                type: array
+          description: successfully queried for eligible products
+        '400':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/APIError'
+          description: failed to queried for eligible products
+      parameters:
+      - $ref: '#/components/parameters/promotions_updated_at_min'
+      - $ref: '#/components/parameters/promotions_updated_at_max'
+      - in: query
+        description: Promotion type for eligible products search. This field is required if there is no event ID specified.
+        name: promotion_type
+        schema:
+          $ref: '#/components/schemas/PromotionType'
+      - required: false
+        in: query
+        description: List of product IDs for eligible products search.
+        name: product_ids
+        schema:
+          items:
+            type: string
+            description: Product ID
+            format: object-id
+          type: array
+          maxItems: 25
+      - required: false
+        in: query
+        description: ID of the promotion event
+        name: event_id
+        schema:
+          type: string
+          format: object-id
+      - required: false
+        in: query
+        description: The limit on the number of products that will be returned.
+        name: limit
+        schema:
+          default: 25
+          minimum: 1
+          type: integer
+          maximum: 200
+      - required: false
+        in: query
+        description: The attribute to sort products in the response. The most recently updated products will be returned first if `desc`.
+        name: sort_by
+        schema:
+          default: updated_at.desc
+          pattern: ^(updated_at)(\.(asc|desc))?$
+          type: string
+      tags:
+      - Promotions Platform
+      summary: Get eligible products
+      security:
+      - OAuth2:
+        - promotions:read
+      operationId: getPromotionsEligibleProducts
+      x-code-samples:
+      - lang: java_unirest
+        source: "HttpResponse<String> response = Unirest.get(\"https://merchant.wish.com/api/v3/promotions/eligible_products?updated_at_min=SOME_STRING_VALUE&updated_at_max=SOME_STRING_VALUE&promotion_type=SOME_STRING_VALUE&product_ids=SOME_ARRAY_VALUE&event_id=SOME_STRING_VALUE&limit=SOME_INTEGER_VALUE&sort_by=SOME_STRING_VALUE\")\n  .header(\"authorization\", \"Bearer REPLACE_BEARER_TOKEN\")\n  .asString();"
+      - lang: php_curl
+        source: "<?php\n\n$curl = curl_init();\n\ncurl_setopt_array($curl, array(\n  CURLOPT_URL => \"https://merchant.wish.com/api/v3/promotions/eligible_products?updated_at_min=SOME_STRING_VALUE&updated_at_max=SOME_STRING_VALUE&promotion_type=SOME_STRING_VALUE&product_ids=SOME_ARRAY_VALUE&event_id=SOME_STRING_VALUE&limit=SOME_INTEGER_VALUE&sort_by=SOME_STRING_VALUE\",\n  CURLOPT_RETURNTRANSFER => true,\n  CURLOPT_ENCODING => \"\",\n  CURLOPT_MAXREDIRS => 10,\n  CURLOPT_TIMEOUT => 30,\n  CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,\n  CURLOPT_CUSTOMREQUEST => \"GET\",\n  CURLOPT_HTTPHEADER => array(\n    \"authorization: Bearer REPLACE_BEARER_TOKEN\"\n  ),\n));\n\n$response = curl_exec($curl);\n$err = curl_error($curl);\n\ncurl_close($curl);\n\nif ($err) {\n  echo \"cURL Error #:\" . $err;\n} else {\n  echo $response;\n}"
+      - lang: javascript_jquery
+        source: "var settings = {\n  \"async\": true,\n  \"crossDomain\": true,\n  \"url\": \"https://merchant.wish.com/api/v3/promotions/eligible_products?updated_at_min=SOME_STRING_VALUE&updated_at_max=SOME_STRING_VALUE&promotion_type=SOME_STRING_VALUE&product_ids=SOME_ARRAY_VALUE&event_id=SOME_STRING_VALUE&limit=SOME_INTEGER_VALUE&sort_by=SOME_STRING_VALUE\",\n  \"method\": \"GET\",\n  \"headers\": {\n    \"authorization\": \"Bearer REPLACE_BEARER_TOKEN\"\n  }\n}\n\n$.ajax(settings).done(function (response) {\n  console.log(response);\n});"
+      - lang: shell_curl
+        source: "curl --request GET \\\n  --url 'https://merchant.wish.com/api/v3/promotions/eligible_products?updated_at_min=SOME_STRING_VALUE&updated_at_max=SOME_STRING_VALUE&promotion_type=SOME_STRING_VALUE&product_ids=SOME_ARRAY_VALUE&event_id=SOME_STRING_VALUE&limit=SOME_INTEGER_VALUE&sort_by=SOME_STRING_VALUE' \\\n  --header 'authorization: Bearer REPLACE_BEARER_TOKEN'"
+      - lang: python_requests
+        source: 'import requests
+
+
+          url = "https://merchant.wish.com/api/v3/promotions/eligible_products"
+
+
+          querystring = {"updated_at_min":"SOME_STRING_VALUE","updated_at_max":"SOME_STRING_VALUE","promotion_type":"SOME_STRING_VALUE","product_ids":"SOME_ARRAY_VALUE","event_id":"SOME_STRING_VALUE","limit":"SOME_INTEGER_VALUE","sort_by":"SOME_STRING_VALUE"}
+
+
+          headers = {''authorization'': ''Bearer REPLACE_BEARER_TOKEN''}
+
+
+          response = requests.request("GET", url, headers=headers, params=querystring)
+
+
+          print(response.text)'
+      description: Get eligible products
+  /api/v3/promotions/campaigns/{id}/cancel:
+    put:
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PromotionsCampaign'
+          description: successfully cancelled a campaign
+        '400':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/APIError'
+          description: failed to cancel a campaign
+      parameters:
+      - required: true
+        in: path
+        description: ID of the campaign you want to Cancel
+        name: id
+        schema:
+          type: string
+          format: object-id
+      tags:
+      - Promotions Platform
+      summary: Cancel a promotion campaign
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CancelPromotionsCampaign'
+      security:
+      - OAuth2:
+        - promotions:write
+      operationId: cancelPromotionsCampaign
+      x-code-samples:
+      - lang: java_unirest
+        source: "HttpResponse<String> response = Unirest.put(\"https://merchant.wish.com/api/v3/promotions/campaigns/{id}/cancel\")\n  .header(\"content-type\", \"application/json\")\n  .header(\"authorization\", \"Bearer REPLACE_BEARER_TOKEN\")\n  .body(\"{\\\"comment\\\":\\\"string\\\",\\\"reason\\\":\\\"WRONG_PRODUCTS\\\"}\")\n  .asString();"
+      - lang: php_curl
+        source: "<?php\n\n$curl = curl_init();\n\ncurl_setopt_array($curl, array(\n  CURLOPT_URL => \"https://merchant.wish.com/api/v3/promotions/campaigns/{id}/cancel\",\n  CURLOPT_RETURNTRANSFER => true,\n  CURLOPT_ENCODING => \"\",\n  CURLOPT_MAXREDIRS => 10,\n  CURLOPT_TIMEOUT => 30,\n  CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,\n  CURLOPT_CUSTOMREQUEST => \"PUT\",\n  CURLOPT_POSTFIELDS => \"{\\\"comment\\\":\\\"string\\\",\\\"reason\\\":\\\"WRONG_PRODUCTS\\\"}\",\n  CURLOPT_HTTPHEADER => array(\n    \"authorization: Bearer REPLACE_BEARER_TOKEN\",\n    \"content-type: application/json\"\n  ),\n));\n\n$response = curl_exec($curl);\n$err = curl_error($curl);\n\ncurl_close($curl);\n\nif ($err) {\n  echo \"cURL Error #:\" . $err;\n} else {\n  echo $response;\n}"
+      - lang: javascript_jquery
+        source: "var settings = {\n  \"async\": true,\n  \"crossDomain\": true,\n  \"url\": \"https://merchant.wish.com/api/v3/promotions/campaigns/{id}/cancel\",\n  \"method\": \"PUT\",\n  \"headers\": {\n    \"content-type\": \"application/json\",\n    \"authorization\": \"Bearer REPLACE_BEARER_TOKEN\"\n  },\n  \"processData\": false,\n  \"data\": \"{\\\"comment\\\":\\\"string\\\",\\\"reason\\\":\\\"WRONG_PRODUCTS\\\"}\"\n}\n\n$.ajax(settings).done(function (response) {\n  console.log(response);\n});"
+      - lang: shell_curl
+        source: "curl --request PUT \\\n  --url 'https://merchant.wish.com/api/v3/promotions/campaigns/{id}/cancel' \\\n  --header 'authorization: Bearer REPLACE_BEARER_TOKEN' \\\n  --header 'content-type: application/json' \\\n  --data '{\"comment\":\"string\",\"reason\":\"WRONG_PRODUCTS\"}'"
+      - lang: python_requests
+        source: "import requests\n\nurl = \"https://merchant.wish.com/api/v3/promotions/campaigns/{id}/cancel\"\n\npayload = \"{\\\"comment\\\":\\\"string\\\",\\\"reason\\\":\\\"WRONG_PRODUCTS\\\"}\"\nheaders = {\n    'content-type': \"application/json\",\n    'authorization': \"Bearer REPLACE_BEARER_TOKEN\"\n    }\n\nresponse = requests.request(\"PUT\", url, data=payload, headers=headers)\n\nprint(response.text)"
+      description: Cancel a promotion campaign.
+  /api/v3/promotions/campaigns:
+    post:
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PromotionsCampaign'
+          description: successfully created a campaign
+        '400':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/APIError'
+          description: failed to create a campaign
+      tags:
+      - Promotions Platform
+      summary: Create a promotion campaign
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreatePromotionsCampaign'
+      security:
+      - OAuth2:
+        - promotions:write
+      operationId: createPromotionsCampaign
+      x-code-samples:
+      - lang: java_unirest
+        source: "HttpResponse<String> response = Unirest.post(\"https://merchant.wish.com/api/v3/promotions/campaigns\")\n  .header(\"content-type\", \"application/json\")\n  .header(\"authorization\", \"Bearer REPLACE_BEARER_TOKEN\")\n  .body(\"{\\\"countries\\\":[\\\"US\\\"],\\\"end_at\\\":\\\"2022-04-20T07:00:00Z\\\",\\\"event_id\\\":\\\"string\\\",\\\"name\\\":\\\"string\\\",\\\"promotion_type\\\":\\\"DISCOUNT\\\",\\\"start_at\\\":\\\"2022-04-13T07:00:00Z\\\",\\\"variations_discount_data\\\":{\\\"default_discount_percentage\\\":5,\\\"default_max_quantity\\\":0,\\\"discount_data\\\":[{\\\"discount_percentage\\\":5,\\\"max_quantity\\\":0,\\\"product_id\\\":\\\"string\\\",\\\"variation_id\\\":\\\"string\\\"}]}}\")\n  .asString();"
+      - lang: php_curl
+        source: "<?php\n\n$curl = curl_init();\n\ncurl_setopt_array($curl, array(\n  CURLOPT_URL => \"https://merchant.wish.com/api/v3/promotions/campaigns\",\n  CURLOPT_RETURNTRANSFER => true,\n  CURLOPT_ENCODING => \"\",\n  CURLOPT_MAXREDIRS => 10,\n  CURLOPT_TIMEOUT => 30,\n  CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,\n  CURLOPT_CUSTOMREQUEST => \"POST\",\n  CURLOPT_POSTFIELDS => \"{\\\"countries\\\":[\\\"US\\\"],\\\"end_at\\\":\\\"2022-04-20T07:00:00Z\\\",\\\"event_id\\\":\\\"string\\\",\\\"name\\\":\\\"string\\\",\\\"promotion_type\\\":\\\"DISCOUNT\\\",\\\"start_at\\\":\\\"2022-04-13T07:00:00Z\\\",\\\"variations_discount_data\\\":{\\\"default_discount_percentage\\\":5,\\\"default_max_quantity\\\":0,\\\"discount_data\\\":[{\\\"discount_percentage\\\":5,\\\"max_quantity\\\":0,\\\"product_id\\\":\\\"string\\\",\\\"variation_id\\\":\\\"string\\\"}]}}\",\n  CURLOPT_HTTPHEADER => array(\n    \"authorization: Bearer REPLACE_BEARER_TOKEN\",\n    \"content-type: application/json\"\n  ),\n));\n\n$response = curl_exec($curl);\n$err = curl_error($curl);\n\ncurl_close($curl);\n\nif ($err) {\n  echo \"cURL Error #:\" . $err;\n} else {\n  echo $response;\n}"
+      - lang: javascript_jquery
+        source: "var settings = {\n  \"async\": true,\n  \"crossDomain\": true,\n  \"url\": \"https://merchant.wish.com/api/v3/promotions/campaigns\",\n  \"method\": \"POST\",\n  \"headers\": {\n    \"content-type\": \"application/json\",\n    \"authorization\": \"Bearer REPLACE_BEARER_TOKEN\"\n  },\n  \"processData\": false,\n  \"data\": \"{\\\"countries\\\":[\\\"US\\\"],\\\"end_at\\\":\\\"2022-04-20T07:00:00Z\\\",\\\"event_id\\\":\\\"string\\\",\\\"name\\\":\\\"string\\\",\\\"promotion_type\\\":\\\"DISCOUNT\\\",\\\"start_at\\\":\\\"2022-04-13T07:00:00Z\\\",\\\"variations_discount_data\\\":{\\\"default_discount_percentage\\\":5,\\\"default_max_quantity\\\":0,\\\"discount_data\\\":[{\\\"discount_percentage\\\":5,\\\"max_quantity\\\":0,\\\"product_id\\\":\\\"string\\\",\\\"variation_id\\\":\\\"string\\\"}]}}\"\n}\n\n$.ajax(settings).done(function (response) {\n  console.log(response);\n});"
+      - lang: shell_curl
+        source: "curl --request POST \\\n  --url 'https://merchant.wish.com/api/v3/promotions/campaigns' \\\n  --header 'authorization: Bearer REPLACE_BEARER_TOKEN' \\\n  --header 'content-type: application/json' \\\n  --data '{\"countries\":[\"US\"],\"end_at\":\"2022-04-20T07:00:00Z\",\"event_id\":\"string\",\"name\":\"string\",\"promotion_type\":\"DISCOUNT\",\"start_at\":\"2022-04-13T07:00:00Z\",\"variations_discount_data\":{\"default_discount_percentage\":5,\"default_max_quantity\":0,\"discount_data\":[{\"discount_percentage\":5,\"max_quantity\":0,\"product_id\":\"string\",\"variation_id\":\"string\"}]}}'"
+      - lang: python_requests
+        source: "import requests\n\nurl = \"https://merchant.wish.com/api/v3/promotions/campaigns\"\n\npayload = \"{\\\"countries\\\":[\\\"US\\\"],\\\"end_at\\\":\\\"2022-04-20T07:00:00Z\\\",\\\"event_id\\\":\\\"string\\\",\\\"name\\\":\\\"string\\\",\\\"promotion_type\\\":\\\"DISCOUNT\\\",\\\"start_at\\\":\\\"2022-04-13T07:00:00Z\\\",\\\"variations_discount_data\\\":{\\\"default_discount_percentage\\\":5,\\\"default_max_quantity\\\":0,\\\"discount_data\\\":[{\\\"discount_percentage\\\":5,\\\"max_quantity\\\":0,\\\"product_id\\\":\\\"string\\\",\\\"variation_id\\\":\\\"string\\\"}]}}\"\nheaders = {\n    'content-type': \"application/json\",\n    'authorization': \"Bearer REPLACE_BEARER_TOKEN\"\n    }\n\nresponse = requests.request(\"POST\", url, data=payload, headers=headers)\n\nprint(response.text)"
+      description: Create a promotion campaign.
+    get:
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                items:
+                  $ref: '#/components/schemas/PromotionsCampaign'
+                type: array
+          description: successfully queried for campaigns
+        '400':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/APIError'
+          description: failed to query for campaigns
+      parameters:
+      - in: query
+        example: '2022-04-13T07:00:00Z'
+        description: Only return campaigns that start at or after this time.
+        name: start_at_min
+        schema:
+          type: string
+          format: date-time
+      - in: query
+        example: '2022-04-14T07:00:00Z'
+        description: Only return campaigns that start at or before this time.
+        name: start_at_max
+        schema:
+          type: string
+          format: date-time
+      - in: query
+        example: '2022-04-20T07:00:00Z'
+        description: Only return campaigns that end on or after this time.
+        name: end_at_min
+        schema:
+          type: string
+          format: date-time
+      - in: query
+        example: '2022-04-21T07:00:00Z'
+        description: Only return campaigns that end on or before this time.
+        name: end_at_max
+        schema:
+          type: string
+          format: date-time
+      - in: query
+        example: '2022-04-12T07:00:00.000Z'
+        description: Specify the beginning of the time window to view desired campaigns when filtering by campaign creation time. Campaigns created before this time will not show.
+        name: created_at_min
+        schema:
+          type: string
+          format: date-time
+      - in: query
+        example: '2022-04-13T07:00:00.000Z'
+        description: Specify the end of the time window to view desired campaigns when filtering by campaign creation time. Campaigns created after this time will not show.
+        name: created_at_max
+        schema:
+          type: string
+          format: date-time
+      - in: query
+        description: Restrict campaigns within provided states. Usually used with start_at_min/max and end_at_min/max filters.
+        name: states
+        schema:
+          items:
+            $ref: '#/components/schemas/PromotionsCampaignState'
+          type: array
+      - in: query
+        description: Restrict campaigns within provided promotion types
+        name: promotion_types
+        schema:
+          items:
+            $ref: '#/components/schemas/PromotionType'
+          type: array
+      - in: query
+        description: ID of the product that result campaigns should include.
+        name: product_id
+        schema:
+          type: string
+          format: object-id
+      - in: query
+        description: Name of the campaigns that result campaigns should include.
+        name: name
+        schema:
+          minLength: 1
+          type: string
+          maxLength: 300
+      - in: query
+        description: A limit on the number of campaigns that will be returned.
+        name: limit
+        schema:
+          default: 25
+          minimum: 1
+          type: integer
+          maximum: 200
+      - in: query
+        description: Only 3 fields are enabled for sorting:`start_at`, `end_at` or `created_at`. Default order is `desc`, use `asc` to sort in reverse.
+        name: sort_by
+        schema:
+          default: end_at.desc
+          pattern: ^(start_at|end_at|created_at)(\.(asc|desc))?$
+          type: string
+      tags:
+      - Promotions Platform
+      summary: List promotion campaigns
+      security:
+      - OAuth2:
+        - promotions:read
+      operationId: listPromotionsCampaigns
+      x-code-samples:
+      - lang: java_unirest
+        source: "HttpResponse<String> response = Unirest.get(\"https://merchant.wish.com/api/v3/promotions/campaigns?start_at_min=SOME_STRING_VALUE&start_at_max=SOME_STRING_VALUE&end_at_min=SOME_STRING_VALUE&end_at_max=SOME_STRING_VALUE&created_at_min=SOME_STRING_VALUE&created_at_max=SOME_STRING_VALUE&states=SOME_ARRAY_VALUE&promotion_types=SOME_ARRAY_VALUE&product_id=SOME_STRING_VALUE&name=SOME_STRING_VALUE&limit=SOME_INTEGER_VALUE&sort_by=SOME_STRING_VALUE\")\n  .header(\"authorization\", \"Bearer REPLACE_BEARER_TOKEN\")\n  .asString();"
+      - lang: php_curl
+        source: "<?php\n\n$curl = curl_init();\n\ncurl_setopt_array($curl, array(\n  CURLOPT_URL => \"https://merchant.wish.com/api/v3/promotions/campaigns?start_at_min=SOME_STRING_VALUE&start_at_max=SOME_STRING_VALUE&end_at_min=SOME_STRING_VALUE&end_at_max=SOME_STRING_VALUE&created_at_min=SOME_STRING_VALUE&created_at_max=SOME_STRING_VALUE&states=SOME_ARRAY_VALUE&promotion_types=SOME_ARRAY_VALUE&product_id=SOME_STRING_VALUE&name=SOME_STRING_VALUE&limit=SOME_INTEGER_VALUE&sort_by=SOME_STRING_VALUE\",\n  CURLOPT_RETURNTRANSFER => true,\n  CURLOPT_ENCODING => \"\",\n  CURLOPT_MAXREDIRS => 10,\n  CURLOPT_TIMEOUT => 30,\n  CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,\n  CURLOPT_CUSTOMREQUEST => \"GET\",\n  CURLOPT_HTTPHEADER => array(\n    \"authorization: Bearer REPLACE_BEARER_TOKEN\"\n  ),\n));\n\n$response = curl_exec($curl);\n$err = curl_error($curl);\n\ncurl_close($curl);\n\nif ($err) {\n  echo \"cURL Error #:\" . $err;\n} else {\n  echo $response;\n}"
+      - lang: javascript_jquery
+        source: "var settings = {\n  \"async\": true,\n  \"crossDomain\": true,\n  \"url\": \"https://merchant.wish.com/api/v3/promotions/campaigns?start_at_min=SOME_STRING_VALUE&start_at_max=SOME_STRING_VALUE&end_at_min=SOME_STRING_VALUE&end_at_max=SOME_STRING_VALUE&created_at_min=SOME_STRING_VALUE&created_at_max=SOME_STRING_VALUE&states=SOME_ARRAY_VALUE&promotion_types=SOME_ARRAY_VALUE&product_id=SOME_STRING_VALUE&name=SOME_STRING_VALUE&limit=SOME_INTEGER_VALUE&sort_by=SOME_STRING_VALUE\",\n  \"method\": \"GET\",\n  \"headers\": {\n    \"authorization\": \"Bearer REPLACE_BEARER_TOKEN\"\n  }\n}\n\n$.ajax(settings).done(function (response) {\n  console.log(response);\n});"
+      - lang: shell_curl
+        source: "curl --request GET \\\n  --url 'https://merchant.wish.com/api/v3/promotions/campaigns?start_at_min=SOME_STRING_VALUE&start_at_max=SOME_STRING_VALUE&end_at_min=SOME_STRING_VALUE&end_at_max=SOME_STRING_VALUE&created_at_min=SOME_STRING_VALUE&created_at_max=SOME_STRING_VALUE&states=SOME_ARRAY_VALUE&promotion_types=SOME_ARRAY_VALUE&product_id=SOME_STRING_VALUE&name=SOME_STRING_VALUE&limit=SOME_INTEGER_VALUE&sort_by=SOME_STRING_VALUE' \\\n  --header 'authorization: Bearer REPLACE_BEARER_TOKEN'"
+      - lang: python_requests
+        source: 'import requests
+
+
+          url = "https://merchant.wish.com/api/v3/promotions/campaigns"
+
+
+          querystring = {"start_at_min":"SOME_STRING_VALUE","start_at_max":"SOME_STRING_VALUE","end_at_min":"SOME_STRING_VALUE","end_at_max":"SOME_STRING_VALUE","created_at_min":"SOME_STRING_VALUE","created_at_max":"SOME_STRING_VALUE","states":"SOME_ARRAY_VALUE","promotion_types":"SOME_ARRAY_VALUE","product_id":"SOME_STRING_VALUE","name":"SOME_STRING_VALUE","limit":"SOME_INTEGER_VALUE","sort_by":"SOME_STRING_VALUE"}
+
+
+          headers = {''authorization'': ''Bearer REPLACE_BEARER_TOKEN''}
+
+
+          response = requests.request("GET", url, headers=headers, params=querystring)
+
+
+          print(response.text)'
+      description: List promotion campaigns
+  /api/v3/promotions/campaigns/{id}:
+    put:
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PromotionsCampaign'
+          description: successfully updated a campaign
+        '400':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/APIError'
+          description: failed to update a campaign
+      parameters:
+      - required: true
+        in: path
+        description: ID of the campaign you want to update
+        name: id
+        schema:
+          type: string
+          format: object-id
+      tags:
+      - Promotions Platform
+      summary: Update a promotion campaign
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdatePromotionsCampaign'
+      security:
+      - OAuth2:
+        - promotions:write
+      operationId: updatePromotionsCampaign
+      x-code-samples:
+      - lang: java_unirest
+        source: "HttpResponse<String> response = Unirest.put(\"https://merchant.wish.com/api/v3/promotions/campaigns/{id}\")\n  .header(\"content-type\", \"application/json\")\n  .header(\"authorization\", \"Bearer REPLACE_BEARER_TOKEN\")\n  .body(\"{\\\"variations_discount_data\\\":{\\\"default_discount_percentage\\\":5,\\\"default_max_quantity\\\":0,\\\"discount_data\\\":[{\\\"discount_percentage\\\":5,\\\"max_quantity\\\":0,\\\"product_id\\\":\\\"string\\\",\\\"variation_id\\\":\\\"string\\\"}]}}\")\n  .asString();"
+      - lang: php_curl
+        source: "<?php\n\n$curl = curl_init();\n\ncurl_setopt_array($curl, array(\n  CURLOPT_URL => \"https://merchant.wish.com/api/v3/promotions/campaigns/{id}\",\n  CURLOPT_RETURNTRANSFER => true,\n  CURLOPT_ENCODING => \"\",\n  CURLOPT_MAXREDIRS => 10,\n  CURLOPT_TIMEOUT => 30,\n  CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,\n  CURLOPT_CUSTOMREQUEST => \"PUT\",\n  CURLOPT_POSTFIELDS => \"{\\\"variations_discount_data\\\":{\\\"default_discount_percentage\\\":5,\\\"default_max_quantity\\\":0,\\\"discount_data\\\":[{\\\"discount_percentage\\\":5,\\\"max_quantity\\\":0,\\\"product_id\\\":\\\"string\\\",\\\"variation_id\\\":\\\"string\\\"}]}}\",\n  CURLOPT_HTTPHEADER => array(\n    \"authorization: Bearer REPLACE_BEARER_TOKEN\",\n    \"content-type: application/json\"\n  ),\n));\n\n$response = curl_exec($curl);\n$err = curl_error($curl);\n\ncurl_close($curl);\n\nif ($err) {\n  echo \"cURL Error #:\" . $err;\n} else {\n  echo $response;\n}"
+      - lang: javascript_jquery
+        source: "var settings = {\n  \"async\": true,\n  \"crossDomain\": true,\n  \"url\": \"https://merchant.wish.com/api/v3/promotions/campaigns/{id}\",\n  \"method\": \"PUT\",\n  \"headers\": {\n    \"content-type\": \"application/json\",\n    \"authorization\": \"Bearer REPLACE_BEARER_TOKEN\"\n  },\n  \"processData\": false,\n  \"data\": \"{\\\"variations_discount_data\\\":{\\\"default_discount_percentage\\\":5,\\\"default_max_quantity\\\":0,\\\"discount_data\\\":[{\\\"discount_percentage\\\":5,\\\"max_quantity\\\":0,\\\"product_id\\\":\\\"string\\\",\\\"variation_id\\\":\\\"string\\\"}]}}\"\n}\n\n$.ajax(settings).done(function (response) {\n  console.log(response);\n});"
+      - lang: shell_curl
+        source: "curl --request PUT \\\n  --url 'https://merchant.wish.com/api/v3/promotions/campaigns/{id}' \\\n  --header 'authorization: Bearer REPLACE_BEARER_TOKEN' \\\n  --header 'content-type: application/json' \\\n  --data '{\"variations_discount_data\":{\"default_discount_percentage\":5,\"default_max_quantity\":0,\"discount_data\":[{\"discount_percentage\":5,\"max_quantity\":0,\"product_id\":\"string\",\"variation_id\":\"string\"}]}}'"
+      - lang: python_requests
+        source: "import requests\n\nurl = \"https://merchant.wish.com/api/v3/promotions/campaigns/{id}\"\n\npayload = \"{\\\"variations_discount_data\\\":{\\\"default_discount_percentage\\\":5,\\\"default_max_quantity\\\":0,\\\"discount_data\\\":[{\\\"discount_percentage\\\":5,\\\"max_quantity\\\":0,\\\"product_id\\\":\\\"string\\\",\\\"variation_id\\\":\\\"string\\\"}]}}\"\nheaders = {\n    'content-type': \"application/json\",\n    'authorization': \"Bearer REPLACE_BEARER_TOKEN\"\n    }\n\nresponse = requests.request(\"PUT\", url, data=payload, headers=headers)\n\nprint(response.text)"
+      description: Update a promotion campaign.
+    get:
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PromotionsCampaign'
+          description: successfully queried for a campaign
+        '400':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/APIError'
+          description: failed to query for a campaign
+      parameters:
+      - required: true
+        in: path
+        description: ID of the campaign you want to query
+        name: id
+        schema:
+          type: string
+          format: object-id
+      tags:
+      - Promotions Platform
+      summary: Get a single promotion campaign
+      security:
+      - OAuth2:
+        - promotions:read
+      operationId: getPromotionsCampaign
+      x-code-samples:
+      - lang: java_unirest
+        source: "HttpResponse<String> response = Unirest.get(\"https://merchant.wish.com/api/v3/promotions/campaigns/{id}\")\n  .header(\"authorization\", \"Bearer REPLACE_BEARER_TOKEN\")\n  .asString();"
+      - lang: php_curl
+        source: "<?php\n\n$curl = curl_init();\n\ncurl_setopt_array($curl, array(\n  CURLOPT_URL => \"https://merchant.wish.com/api/v3/promotions/campaigns/{id}\",\n  CURLOPT_RETURNTRANSFER => true,\n  CURLOPT_ENCODING => \"\",\n  CURLOPT_MAXREDIRS => 10,\n  CURLOPT_TIMEOUT => 30,\n  CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,\n  CURLOPT_CUSTOMREQUEST => \"GET\",\n  CURLOPT_HTTPHEADER => array(\n    \"authorization: Bearer REPLACE_BEARER_TOKEN\"\n  ),\n));\n\n$response = curl_exec($curl);\n$err = curl_error($curl);\n\ncurl_close($curl);\n\nif ($err) {\n  echo \"cURL Error #:\" . $err;\n} else {\n  echo $response;\n}"
+      - lang: javascript_jquery
+        source: "var settings = {\n  \"async\": true,\n  \"crossDomain\": true,\n  \"url\": \"https://merchant.wish.com/api/v3/promotions/campaigns/{id}\",\n  \"method\": \"GET\",\n  \"headers\": {\n    \"authorization\": \"Bearer REPLACE_BEARER_TOKEN\"\n  }\n}\n\n$.ajax(settings).done(function (response) {\n  console.log(response);\n});"
+      - lang: shell_curl
+        source: "curl --request GET \\\n  --url 'https://merchant.wish.com/api/v3/promotions/campaigns/{id}' \\\n  --header 'authorization: Bearer REPLACE_BEARER_TOKEN'"
+      - lang: python_requests
+        source: 'import requests
+
+
+          url = "https://merchant.wish.com/api/v3/promotions/campaigns/{id}"
+
+
+          headers = {''authorization'': ''Bearer REPLACE_BEARER_TOKEN''}
+
+
+          response = requests.request("GET", url, headers=headers)
+
+
+          print(response.text)'
+      description: Get a single promotion campaign by its ID
+  /api/v3/promotions/events:
+    get:
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                items:
+                  $ref: '#/components/schemas/PromotionEvent'
+                type: array
+          description: successfully queried for promotion events
+        '400':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/APIError'
+          description: failed to query for promotion events
+      parameters:
+      - in: query
+        description: IDs of promotion events, if this field is non-empty, all other fields will be ignored.
+        name: ids
+        schema:
+          items:
+            type: string
+            format: object-id
+          type: array
+          maxItems: 25
+      - in: query
+        description: Restrict promotion events within provided promotion types
+        name: promotion_types
+        schema:
+          items:
+            $ref: '#/components/schemas/PromotionType'
+          type: array
+      - in: query
+        example: '2023-11-20T07:00:00Z'
+        description: Only return promotion events with the submission deadline on or after this time. If the field is not specified, the current date-time will be used by default.
+        name: submission_deadline_min
+        schema:
+          type: string
+          format: date-time
+      - in: query
+        example: '2023-11-20T07:00:00Z'
+        description: Only return promotion events with the submission deadline on or before this time
+        name: submission_deadline_max
+        schema:
+          type: string
+          format: date-time
+      - in: query
+        description: The limit on the number of promotion events that will be returned
+        name: limit
+        schema:
+          default: 25
+          minimum: 1
+          type: integer
+          maximum: 200
+      - in: query
+        description: The attribute to sort promotion events in the response. Default order is descending (desc), use asc to sort in reverse.
+        name: sort_by
+        schema:
+          default: submission_deadline.asc
+          pattern: ^submission_deadline(\.(asc|desc))?$
+          type: string
+      tags:
+      - Promotions Platform
+      summary: List promotion events
+      security:
+      - OAuth2:
+        - promotions:read
+      operationId: listPromotionEvents
+      x-code-samples:
+      - lang: java_unirest
+        source: "HttpResponse<String> response = Unirest.get(\"https://merchant.wish.com/api/v3/promotions/events?ids=SOME_ARRAY_VALUE&promotion_types=SOME_ARRAY_VALUE&submission_deadline_min=SOME_STRING_VALUE&submission_deadline_max=SOME_STRING_VALUE&limit=SOME_INTEGER_VALUE&sort_by=SOME_STRING_VALUE\")\n  .header(\"authorization\", \"Bearer REPLACE_BEARER_TOKEN\")\n  .asString();"
+      - lang: php_curl
+        source: "<?php\n\n$curl = curl_init();\n\ncurl_setopt_array($curl, array(\n  CURLOPT_URL => \"https://merchant.wish.com/api/v3/promotions/events?ids=SOME_ARRAY_VALUE&promotion_types=SOME_ARRAY_VALUE&submission_deadline_min=SOME_STRING_VALUE&submission_deadline_max=SOME_STRING_VALUE&limit=SOME_INTEGER_VALUE&sort_by=SOME_STRING_VALUE\",\n  CURLOPT_RETURNTRANSFER => true,\n  CURLOPT_ENCODING => \"\",\n  CURLOPT_MAXREDIRS => 10,\n  CURLOPT_TIMEOUT => 30,\n  CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,\n  CURLOPT_CUSTOMREQUEST => \"GET\",\n  CURLOPT_HTTPHEADER => array(\n    \"authorization: Bearer REPLACE_BEARER_TOKEN\"\n  ),\n));\n\n$response = curl_exec($curl);\n$err = curl_error($curl);\n\ncurl_close($curl);\n\nif ($err) {\n  echo \"cURL Error #:\" . $err;\n} else {\n  echo $response;\n}"
+      - lang: javascript_jquery
+        source: "var settings = {\n  \"async\": true,\n  \"crossDomain\": true,\n  \"url\": \"https://merchant.wish.com/api/v3/promotions/events?ids=SOME_ARRAY_VALUE&promotion_types=SOME_ARRAY_VALUE&submission_deadline_min=SOME_STRING_VALUE&submission_deadline_max=SOME_STRING_VALUE&limit=SOME_INTEGER_VALUE&sort_by=SOME_STRING_VALUE\",\n  \"method\": \"GET\",\n  \"headers\": {\n    \"authorization\": \"Bearer REPLACE_BEARER_TOKEN\"\n  }\n}\n\n$.ajax(settings).done(function (response) {\n  console.log(response);\n});"
+      - lang: shell_curl
+        source: "curl --request GET \\\n  --url 'https://merchant.wish.com/api/v3/promotions/events?ids=SOME_ARRAY_VALUE&promotion_types=SOME_ARRAY_VALUE&submission_deadline_min=SOME_STRING_VALUE&submission_deadline_max=SOME_STRING_VALUE&limit=SOME_INTEGER_VALUE&sort_by=SOME_STRING_VALUE' \\\n  --header 'authorization: Bearer REPLACE_BEARER_TOKEN'"
+      - lang: python_requests
+        source: 'import requests
+
+
+          url = "https://merchant.wish.com/api/v3/promotions/events"
+
+
+          querystring = {"ids":"SOME_ARRAY_VALUE","promotion_types":"SOME_ARRAY_VALUE","submission_deadline_min":"SOME_STRING_VALUE","submission_deadline_max":"SOME_STRING_VALUE","limit":"SOME_INTEGER_VALUE","sort_by":"SOME_STRING_VALUE"}
+
+
+          headers = {''authorization'': ''Bearer REPLACE_BEARER_TOKEN''}
+
+
+          response = requests.request("GET", url, headers=headers, params=querystring)
+
+
+          print(response.text)'
+      description: Get a list of promotion events
+  /api/v3/promotions/eligible_products/count:
+    get:
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                required:
+                - count
+                type: object
+                properties:
+                  count:
+                    type: integer
+                    description: Number of eligible products
+                    format: int32
+          description: successfully returned eligible products count
+        '400':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/APIError'
+          description: failed to get eligible products count
+      parameters:
+      - $ref: '#/components/parameters/promotions_updated_at_min'
+      - $ref: '#/components/parameters/promotions_updated_at_max'
+      - in: query
+        description: Promotion type for eligible products search. This field is required if there is no event ID specified.
+        name: promotion_type
+        schema:
+          $ref: '#/components/schemas/PromotionType'
+      - required: false
+        in: query
+        description: ID of the promotion event
+        name: event_id
+        schema:
+          type: string
+          format: object-id
+      tags:
+      - Promotions Platform
+      summary: Get eligible products count
+      security:
+      - OAuth2:
+        - promotions:read
+      operationId: getPromotionsEligibleProductsCount
+      x-code-samples:
+      - lang: java_unirest
+        source: "HttpResponse<String> response = Unirest.get(\"https://merchant.wish.com/api/v3/promotions/eligible_products/count?updated_at_min=SOME_STRING_VALUE&updated_at_max=SOME_STRING_VALUE&promotion_type=SOME_STRING_VALUE&event_id=SOME_STRING_VALUE\")\n  .header(\"authorization\", \"Bearer REPLACE_BEARER_TOKEN\")\n  .asString();"
+      - lang: php_curl
+        source: "<?php\n\n$curl = curl_init();\n\ncurl_setopt_array($curl, array(\n  CURLOPT_URL => \"https://merchant.wish.com/api/v3/promotions/eligible_products/count?updated_at_min=SOME_STRING_VALUE&updated_at_max=SOME_STRING_VALUE&promotion_type=SOME_STRING_VALUE&event_id=SOME_STRING_VALUE\",\n  CURLOPT_RETURNTRANSFER => true,\n  CURLOPT_ENCODING => \"\",\n  CURLOPT_MAXREDIRS => 10,\n  CURLOPT_TIMEOUT => 30,\n  CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,\n  CURLOPT_CUSTOMREQUEST => \"GET\",\n  CURLOPT_HTTPHEADER => array(\n    \"authorization: Bearer REPLACE_BEARER_TOKEN\"\n  ),\n));\n\n$response = curl_exec($curl);\n$err = curl_error($curl);\n\ncurl_close($curl);\n\nif ($err) {\n  echo \"cURL Error #:\" . $err;\n} else {\n  echo $response;\n}"
+      - lang: javascript_jquery
+        source: "var settings = {\n  \"async\": true,\n  \"crossDomain\": true,\n  \"url\": \"https://merchant.wish.com/api/v3/promotions/eligible_products/count?updated_at_min=SOME_STRING_VALUE&updated_at_max=SOME_STRING_VALUE&promotion_type=SOME_STRING_VALUE&event_id=SOME_STRING_VALUE\",\n  \"method\": \"GET\",\n  \"headers\": {\n    \"authorization\": \"Bearer REPLACE_BEARER_TOKEN\"\n  }\n}\n\n$.ajax(settings).done(function (response) {\n  console.log(response);\n});"
+      - lang: shell_curl
+        source: "curl --request GET \\\n  --url 'https://merchant.wish.com/api/v3/promotions/eligible_products/count?updated_at_min=SOME_STRING_VALUE&updated_at_max=SOME_STRING_VALUE&promotion_type=SOME_STRING_VALUE&event_id=SOME_STRING_VALUE' \\\n  --header 'authorization: Bearer REPLACE_BEARER_TOKEN'"
+      - lang: python_requests
+        source: 'import requests
+
+
+          url = "https://merchant.wish.com/api/v3/promotions/eligible_products/count"
+
+
+          querystring = {"updated_at_min":"SOME_STRING_VALUE","updated_at_max":"SOME_STRING_VALUE","promotion_type":"SOME_STRING_VALUE","event_id":"SOME_STRING_VALUE"}
+
+
+          headers = {''authorization'': ''Bearer REPLACE_BEARER_TOKEN''}
+
+
+          response = requests.request("GET", url, headers=headers, params=querystring)
+
+
+          print(response.text)'
+      description: Get eligible products count
+components:
+  schemas:
+    APIError:
+      required:
+      - code
+      - message
+      type: object
+      properties:
+        message:
+          type: string
+        code:
+          type: integer
+          format: int32
+    PromotionEligibleProduct:
+      type: object
+      description: Eligible product for Promotions Platform
+      properties:
+        variations:
+          items:
+            $ref: '#/components/schemas/PromotionsEligibleVariation'
+          type: array
+          description: The eligible variations of the product.
+        id:
+          type: string
+          description: Id of the product.
+          format: object-id
+    CancelReason:
+      enum:
+      - WISH_CANCELLED_FAILED_DEPENDENCY_CHECK
+      - WISH_CANCELLED_UNQUALIFIED_MERCHANT
+      - USER_CANCELLED_WRONG_PRODUCTS
+      - USER_CANCELLED_WRONG_CAMPAIGN_INFO
+      - USER_CANCELLED_OTHER
+      type: string
+      description: Reason of cancelling campaign.
+    PromotionType:
+      enum:
+      - DISCOUNT
+      - FLASH_SALE
+      type: string
+      description: Promotion type of the campaign.</br> 'DISCOUNT' campaigns support basic discount on variations.</br> 'FLASH_SALE' campaigns support significant discount on products for a short period of time with limited inventories.
+    UnqualifiedReason:
+      enum:
+      - LOW_RATING
+      - SALE_HISTORY
+      - PRODUCT_CATEGORY
+      - NOT_IN_STOCK
+      - DISCOUNT_PRICE_HISTORY
+      - PRODUCT_SHIPPING_PRICE
+      - CAMPAIGN_LIMIT
+      - MINIMUM_VARIATION_PERCENTAGE
+      - FLASH_SALE_MINIMUM_VARIATION_INVENTORY
+      - VARIATIONS_PRICING_GAMING
+      - PRODUCT_LISTED_DAYS
+      - MERCHANT_ELIGIBILITY
+      - NOT_OWNED_BY_MERCHANT
+      - UNITY_PRODUCT
+      - INVALID_ID
+      - FRS_LOW_DISCOUNT
+      - FRS_HIGH_DISCOUNT
+      - FRS_DISCOUNT_PRICE
+      - FRS_NEGATIVE_PRICE
+      - COMPETING_PROMOTION
+      - PROMOTION_HISTORY
+      - NEGATIVE_PRODUCT_PRICE
+      - LOW_RATING_COUNT
+      - PRODUCT_NOT_ACTIVE
+      type: string
+      description: 'Reason of unqualified product variations.</br> ''NOT_IN_STOCK'': product out of stock.</br> ''LOW_RATING'': product rating is too low (Minimum of 3 for Discount promotions, or 4 for Flash Sale promotions).</br> ''SALE_HISTORY'': no product sales in the last 90 calendar days.</br> ''DISCOUNT_PRICE_HISTORY'': discounted product price must be lower than or equal to the lowest price in the product''s history for the past 30 calendar days.</br> ''PRODUCT_SHIPPING_PRICE'': product shipping price cannot be increased before promotion starts.</br> ''PRODUCT_CATEGORY'': some product categories are not eligible for the promotion type.</br> ''CAMPAIGN_LIMIT'': replaced by COMPETING_PROMOTION and PROMOTION_HISTORY, products cannot be on conflicting campaigns at the same time. Products can only enroll in campaign of the same type 30 calendar days after the previous one ends.</br> ''MINIMUM_VARIATION_PERCENTAGE'': all of a product''s variations should be included for this promotion type.</br> ''FLASH_SALE_MINIMUM_VARIATION_INVENTORY'': A certain percent of variation inventory should be included in the promotion.</br> ''VARIATIONS_PRICING_GAMING'': variations'' discounts have a steep difference, with most discounts at the lower end of the range.</br> ''PRODUCT_LISTED_DAYS'': product must be listed on the platform more than 30 calendar days, and variation must be listed on the platform more than 15 calendar days.</br> ''MERCHANT_ELIGIBILITY'': merchant is not eligible to participate in the promotions platform.</br> ''NOT_OWNED_BY_MERCHANT'': each variation must be owned by the merchant.</br> ''UNITY_PRODUCT'': products in the shipping unification initiative are not currently eligible for promotions.</br> ''INVALID_ID'': invalid or nonexistent product or variation ID.</br> ''FRS_LOW_DISCOUNT'': after flat rate shipping is applied, the customer''s discount is lower than 5%; to fix, the merchant must increase the discount.</br> ''FRS_HIGH_DISCOUNT'': after flat rate shipping is applied, the customer''s discount is higher than 90%; to fix, the merchant must decrease the discount.</br> ''FRS_DISCOUNT_PRICE'': the flat rate shipping rate is greater than the customer''s total price for this item after discount; to fix, the merchant must decrease the discount.</br> ''FRS_NEGATIVE_PRICE'': after flat rate shipping is applied, the promotion discount results in a negative return on the product price; to fix, the merchant must decrease the discount percentage.</br> ''COMPETING_PROMOTION'': products cannot be in two or more promotions running at the same time.</br> ''PROMOTION_HISTORY'': products cannot enroll in a promotion of the same type (e.g., Discount, Flash Sale) within 5 calendar days after a previous promotion ends.</br> ''NEGATIVE_PRODUCT_PRICE'': The promotion discount results in a negative product price; to fix, the merchant must decrease the discount percentage.</br> ''LOW_RATING_COUNT'': product rating count is too low (Minimum of 1).</br> ''PRODUCT_NOT_ACTIVE'': product is either removed or pending/rejected on review.'
+    VariationsDiscountData:
+      required:
+      - discount_data
+      type: object
+      description: Campaign discount data. Only used when promotion_type is 'DISCOUNT' or 'FLASH_SALE'.
+      properties:
+        discount_data:
+          items:
+            $ref: '#/components/schemas/VariationDiscountData'
+          type: array
+          description: List of variation level discount data.
+          maxItems: 4000
+        default_max_quantity:
+          type: integer
+          description: The default inventory of variations with this discount. This is only used when variation level max_quantity is not set.
+        default_discount_percentage:
+          minimum: 5.0
+          type: number
+          description: The campaign's default discount percentage. This is only used when variation level discount_percentage is not set.
+          maximum: 80.0
+          format: float
+    UnqualifiedVariation:
+      type: object
+      description: Unqualified product variation.
+      properties:
+        reason:
+          $ref: '#/components/schemas/UnqualifiedReason'
+        product_id:
+          type: string
+          description: Id of the product.
+          format: object-id
+        variation_id:
+          type: string
+          description: Id of the variation.
+          format: object-id
+    PromotionsCampaign:
+      type: object
+      properties:
+        unqualified_product_variations:
+          items:
+            $ref: '#/components/schemas/UnqualifiedVariation'
+          type: array
+          description: List of unquanlified product variations with reason.
+        cancel_reason:
+          $ref: '#/components/schemas/CancelReason'
+        name:
+          minLength: 1
+          type: string
+          description: Name of the campaign
+          maxLength: 300
+        cancel_comment:
+          $ref: '#/components/schemas/PromotionsCampaignCancelComment'
+        countries:
+          $ref: '#/components/schemas/PromotionsEligibleCountries'
+        event_id:
+          type: string
+          description: ID of the promotion event
+          format: object-id
+        created_at:
+          format: date-time
+          type: string
+          description: Campaign creation time
+          example: '2022-04-12T07:00:00Z'
+        variations_discount_data:
+          items:
+            $ref: '#/components/schemas/VariationDiscountData'
+          type: array
+          description: List of variation discount data, is only non-empty when promotion_type is 'DISCOUNT' or 'FLASH_SALE'
+        end_at:
+          format: date-time
+          type: string
+          description: Campaign end time
+          example: '2022-04-20T07:00:00Z'
+        state:
+          $ref: '#/components/schemas/PromotionsCampaignState'
+        cancel_at:
+          format: date-time
+          type: string
+          description: Campaign cancel time
+          example: '2022-04-12T17:00:00Z'
+        promotion_type:
+          $ref: '#/components/schemas/PromotionType'
+        start_at:
+          format: date-time
+          type: string
+          description: Campaign start time
+          example: '2022-04-13T07:00:00Z'
+        id:
+          readOnly: true
+          type: string
+          description: Campaign ID
+          format: object-id
+    PromotionsEligibleVariation:
+      type: object
+      description: Eligible variation for Promotions Platform.
+      properties:
+        id:
+          readOnly: true
+          type: string
+          description: The ID of the variation.
+          format: object-id
+    UpdatePromotionsCampaign:
+      type: object
+      properties:
+        variations_discount_data:
+          $ref: '#/components/schemas/VariationsDiscountData'
+    CreatePromotionsCampaign:
+      required:
+      - name
+      type: object
+      properties:
+        start_at:
+          format: date-time
+          type: string
+          description: The campaign's start time you want to set. If an event ID is specified, this field will be ignored; otherwise, this field is required for non-Wish event promotion enrollment. For 'DISCOUNT' type campaigns, only time with precision up to 'hour' level will be accepted, and any time that is more precise than 'hour' level will be processed so that it only keeps its 'hour'.</br> For 'FLASH_SALE' type campaigns, only time with precision up to 'date' level in Pacific Time (PT) will be accepted, and any time that is more precise than 'date' level and/or not in PT will be processed so that it only keeps its 'date' in PT. Also, for 'FLASH_SALE' type campaigns, please specify a week (7-day window) as its campaign duration, and Wish will schedule a promotion period for each product within that window.
+          example: '2022-04-13T07:00:00Z'
+        name:
+          minLength: 1
+          type: string
+          description: The name of the campaign you want to set.
+          maxLength: 300
+        countries:
+          items:
+            format: iso-3166
+            type: string
+            description: The 2-letter country code defined in [ISO 3166](https://www.iso.org/iso-3166-country-codes.html).
+            example: US
+          type: array
+          description: List of countries that are eligible for the campaign. If an event ID is specified, the countries must be a subset of the allowed countries in the event. The default value (not provided or empty list) are all countries that the products can be shipped to.
+          maxItems: 200
+        event_id:
+          type: string
+          description: ID of the promotion event. If an event ID is specified, the fields of `start_at`, `end_at`, and `promotion_type` will be ignored.
+          format: object-id
+        end_at:
+          format: date-time
+          type: string
+          description: The campaign's end time you want to set. If an event ID is specified, this field will be ignored; otherwise, this field is required for non-Wish event promotion enrollment. For 'DISCOUNT' type campaigns, only time with precision up to 'hour' level will be accepted, and any time that is more precise than 'hour' level will be processed so that it only keeps its 'hour'.</br> For 'FLASH_SALE' type campaigns, only time with precision up to 'date' level in Pacific Time (PT) will be accepted, and any time that is more precise than 'date' level and/or not in PT will be processed so that it only keeps its 'date' in PT. Also, for 'FLASH_SALE' type campaigns, please specify a week (7-day window) as its campaign duration, and Wish will schedule a promotion period for each product within that window.
+          example: '2022-04-20T07:00:00Z'
+        variations_discount_data:
+          $ref: '#/components/schemas/VariationsDiscountData'
+        promotion_type:
+          enum:
+          - DISCOUNT
+          - FLASH_SALE
+          type: string
+          description: Promotion type of the campaign. If an event ID is specified, this field will be ignored; otherwise, this field is required for non-Wish event promotion enrollment.</br> 'DISCOUNT' campaigns support basic discount on variations.</br> 'FLASH_SALE' campaigns support significant discount on products for a short period of time with limited inventories.
+    PromotionsCampaignState:
+      enum:
+      - PENDING
+      - APPROVED
+      - CANCELLED
+      type: string
+      description: Campaign State.</br> 'PENDING' campaigns are created but pending for approval.</br> 'APPROVED' campaigns are approved.</br> 'CANCELLED' campaigns are cancelled.</br>
+    PromotionEvent:
+      type: object
+      properties:
+        product_category_restrictions:
+          items:
+            type: integer
+          type: array
+          description: List of product L1 category IDs that are supported in the promotion event. All L1 category IDs can be found in the [Wish's category tree](/md/products/categories)
+        start_at:
+          format: date-time
+          type: string
+          description: Start time of the promotion event
+          example: '2023-11-20T07:00:00Z'
+        description:
+          type: string
+          description: Description of the promotion event
+        countries:
+          items:
+            format: iso-3166
+            type: string
+            description: The 2-letter country code defined in [ISO 3166](https://www.iso.org/iso-3166-country-codes.html).
+            example: US
+          type: array
+          description: List of country codes that are supported in the promotion event
+        submission_deadline:
+          format: date-time
+          type: string
+          description: Submission deadline of the promotion event
+          example: '2023-11-20T07:00:00Z'
+        min_discount_percentage:
+          type: number
+          description: Minimum discount percentage that is required for the promotion event
+          format: float
+        end_at:
+          format: date-time
+          type: string
+          description: End time of the promotion event
+          example: '2023-11-20T07:00:00Z'
+        promotion_type:
+          $ref: '#/components/schemas/PromotionType'
+        id:
+          type: string
+          description: ID of the promotion event
+          format: object-id
+        name:
+          type: string
+          description: Name of the promotion event
+    PromotionsEligibleCountries:
+      items:
+        format: iso-3166
+        type: string
+        description: The 2-letter country code defined in [ISO 3166](https://www.iso.org/iso-3166-country-codes.html).
+        example: US
+      type: array
+      description: List of countries that are eligible for the campaign. The default value (not provided or empty list) are all countries that the products can be shipped to.
+      maxItems: 200
+    MerchantCancelReason:
+      enum:
+      - WRONG_PRODUCTS
+      - WRONG_CAMPAIGN_INFO
+      - OTHER
+      type: string
+      description: Reason of merchant cancelling campaign.
+    CancelPromotionsCampaign:
+      required:
+      - reason
+      type: object
+      properties:
+        comment:
+          $ref: '#/components/schemas/PromotionsCampaignCancelComment'
+        reason:
+          $ref: '#/components/schemas/MerchantCancelReason'
+    PromotionsCampaignCancelComment:
+      minLength: 1
+      type: string
+      description: A detailed reason for the campaign cancellation. Used by Wish to collect feedbacks.
+      maxLength: 500
+    VariationDiscountData:
+      required:
+      - product_id
+      - variation_id
+      type: object
+      properties:
+        scheduled_start_time:
+          readOnly: true
+          format: date-time
+          type: string
+          description: The variation's promotion start time. Used for 'FLASH_SALE' type campaigns only.</br> For 'FLASH_SALE' type campaigns, Wish scheduled a promotion period for each variation within the campaign active period.
+          example: '2022-04-15T07:00:00Z'
+        product_id:
+          type: string
+          description: Id of the product.
+          format: object-id
+        discount_percentage:
+          minimum: 5
+          type: number
+          description: Variation level discount percentage.
+          maximum: 80
+          format: float
+        max_quantity:
+          type: integer
+          description: The inventory of variations with this discount. If not set, a default max_quantity will be used. If neither max_quantity nor default_max_quantity is set, the variation's inventory will be used.
+        scheduled_end_time:
+          readOnly: true
+          format: date-time
+          type: string
+          description: The variation's promotion end time. Used for 'FLASH_SALE' type campaigns only.</br> For 'FLASH_SALE' type campaigns, Wish scheduled a promotion period for each variation within the campaign active period.
+          example: '2022-04-15T19:00:00Z'
+        variation_id:
+          type: string
+          description: Id of the variation.
+          format: object-id
+  parameters:
+    promotions_updated_at_max:
+      schema:
+        type: string
+        format: date-time
+      required: false
+      description: Only return products that were updated before the given time. Currently only time with precision up to 'millisecond' will be accepted. Any time that is more precise than 'millisecond' level will be processed so that it only keeps its 'millisecond'.
+      name: updated_at_max
+      in: query
+    promotions_updated_at_min:
+      schema:
+        type: string
+        format: date-time
+      required: false
+      description: Only return products that were updated since the given time. Currently only time with precision up to 'millisecond' will be accepted. Any time that is more precise than 'millisecond' level will be processed so that it only keeps its 'millisecond'.
+      name: updated_at_min
+      in: query
+  securitySchemes:
+    OpenID:
+      type: openIdConnect
+      openIdConnectUrl: https://merchant.wish.com/oidc/.well-known/openid-configuration
+    OAuth2:
+      type: oauth2
+      flows:
+        authorizationCode:
+          scopes:
+            payments:write: Update payments
+            tickets:write: Write customer tickets
+            epc:read: read EPC info
+            returns:write: Write returns
+            returns:read: Read returns
+            fbw:read: Read FBW
+            products:read: Read products
+            payments:read: Read payments
+            fbw:write: Write FBW
+            merchant:write: Write merchant
+            products:write: Write products
+            ratings:read: Read ratings
+            videos:read: Read videos
+            compliance:write: Write Compliance
+            product_boost:read: Read ProductBoost
+            listing_quality:read: Read listing quality
+            webhook:write: Write webhook
+            orders:read: Read orders
+            compliance:read: Read Compliance
+            fbs:read: Read FBS
+            penalties:read: Read penalties
+            penalties:write: Update penalties
+            infractions:read: Read infractions
+            orders:write: Update orders
+            merchant:read: Read merchant
+            notifications:write: Write notifications
+            announcements:read: Read announcements
+            product_boost:write: Write ProductBoost
+            notifications:read: Read notifications
+            webhook:read: Read webhook
+            qoo10:read: Read Qoo10
+            wps_parcel:write: Write WishParcel
+            wps_parcel:read: Read WishParcel
+            tickets:read: Read customer tickets
+            infractions:write: Write infractions
+            videos:write: Write videos
+            epc:write: write EPC info
+          tokenUrl: https://merchant.wish.com/api/v3/oauth/access_token
+          refreshUrl: https://merchant.wish.com/api/v3/oauth/refresh_token
+          authorizationUrl: https://merchant.wish.com/v3/oauth/authorize
+externalDocs:
+  url: https://merchant.wish.com/documentation/api/v3/explorer
+  description: API explorer
+x-wish-hidden: false
