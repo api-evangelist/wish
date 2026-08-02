@@ -1,0 +1,27 @@
+generated: '2026-07-21'
+method: searched
+source: openapi/wish-marketplace-v3-openapi.json
+docs: https://merchant.wish.com/documentation/api/v3/oauth
+notes: 'Access tokens are sent as: Authorization: Bearer <token>. OAuth guide at docs URL;
+  OIDC discovery live at https://merchant.wish.com/oidc/.well-known/openid-configuration.'
+summary:
+  types:
+  - oauth2
+  - openIdConnect
+  oauth2_flows:
+  - authorizationCode
+schemes:
+- name: OpenID
+  type: openIdConnect
+  openIdConnectUrl: https://merchant.wish.com/oidc/.well-known/openid-configuration
+  sources:
+  - openapi/wish-marketplace-v3-openapi.json
+- name: OAuth2
+  type: oauth2
+  flows:
+  - flow: authorizationCode
+    authorizationUrl: https://merchant.wish.com/v3/oauth/authorize
+    tokenUrl: https://merchant.wish.com/api/v3/oauth/access_token
+    scopes: 37
+  sources:
+  - openapi/wish-marketplace-v3-openapi.json

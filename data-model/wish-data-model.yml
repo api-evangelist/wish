@@ -1,0 +1,726 @@
+generated: '2026-07-21'
+method: derived
+source: openapi/wish-marketplace-v3-openapi.json ($ref links + *_id fields across 245 schemas)
+entities:
+- APIError
+- AccessToken
+- AccountDetail
+- AddProductVariation
+- AddVariation
+- Address
+- AddressWithPhone
+- AdvancedLogisticsShipping
+- AllVideosMetrics
+- Attribute
+- AttributeResponse
+- AutoFulfillProcessingStatus
+- AutomatedListingReviewExperience
+- BalanceUpdate
+- BalanceUpdateType
+- BalanceUpdates
+- BrandInfo
+- BrandList
+- BudgetBreakdown
+- BulkJob
+- BulkUpdateEUProductComplianceStatusJob
+- BulkUpdateProduct
+- CalculatedShipping
+- Campaign
+- CampaignDailyPerformance
+- CampaignMetrics
+- CampaignProduct
+- CampaignProductFeedback
+- CampaignProductFeedbacks
+- CampaignState
+- CampaignType
+- Campaigns
+- CancelPromotionsCampaign
+- CancelReason
+- CarrierSubsidy
+- Carriers
+- CategoryAttribute
+- CategoryAttributeConstraint
+- CategoryAttributes
+- CategoryNode
+- ColorInfo
+- ColorList
+- ComplianceStatus
+- Consignment
+- ConsignmentInventory
+- CountryShippingDetail
+- CountryShippingSpeed
+- CreateCampaign
+- CreateFranceProductUniqueIdentificationNumber
+- CreateGermanyProductEprRegistrationNumber
+- CreateImage
+- CreateProduct
+- CreatePromotionsCampaign
+- CreateResponsiblePerson
+- CreateWarehouse
+- CurrencyInfo
+- CurrencyList
+- CustomerIdentityNumberType
+- CustomerPaidPricesDetail
+- DefaultShipping
+- Dimensions
+- EORI
+- EPRComplianceStatus
+- EUProductComplianceStatus
+- EUProductComplianceStatusRequest
+- EUProductComplianceStatusResponse
+- EUVATCustomsDeclaration
+- EUVATCustomsDeclarationProduct
+- EarlyPayment
+- EditableProductParams
+- EditableVariationParams
+- EnableDisableCalculatedShipping
+- FBWFee
+- FBWFeeType
+- FashionExperience
+- FranceProductComplianceStatus
+- FranceProductComplianceStatusRequest
+- FranceProductComplianceStatusResponse
+- FranceProductUniqueIdentificationNumber
+- FranceProductUniqueIdentificationNumberResponse
+- FulfillmentEvent
+- FulfillmentEventType
+- FulfillmentRequirements
+- GPSRManufacturer
+- GeneralPaymentDetails
+- GermanyEPRComplianceStatus
+- GermanyProductComplianceStatus
+- GermanyProductComplianceStatusRequest
+- GermanyProductComplianceStatusResponse
+- GermanyProductEprRegistrationNumber
+- GermanyProductEprRegistrationNumberResponse
+- GetAllTopicsResponse
+- HeliosQualityCheck
+- Image
+- ImpressionFeeBreakdown
+- ImpressionFeeState
+- Keyword
+- Keywords
+- ListFranceProductUniqueIdentificationNumbersResponse
+- ListGermanyProductEprRegistrationNumbersResponse
+- ListProductsResponse
+- ListResponsiblePersonsResponse
+- ListShallowProductsResponse
+- ListSubscriptionsResponse
+- ListTicketsResponse
+- Locale
+- LogisticsInfo
+- LotInfo
+- MerchantCancelReason
+- MerchantCurrencySettings
+- MerchantLevel
+- MerchantSettings
+- MerchantWarehouseType
+- Money
+- NullablePrice
+- Option
+- Order
+- OrderAddress
+- OrderDownloadJob
+- OrderPayment
+- OrderShippingDetail
+- OrderTax
+- OrderType
+- OrderTypeFilter
+- Orders
+- PaymentInvoiceOrderDownloadJob
+- Penalties
+- Penalty
+- PenaltyCount
+- PhoneNumber
+- PlatformEntity
+- PolicyRule
+- Price
+- PriceTieredDiscount
+- ProcessingSource
+- ProcessingStatus
+- Product
+- ProductDailyPerformance
+- ProductInfo
+- ProductOverallRating
+- ProductRating
+- ProductUpdateAdvancedLogisticsShipping
+- ProductUpdateRequest
+- ProductVariation
+- ProductVideoCreation
+- PromotionEligibleProduct
+- PromotionEvent
+- PromotionType
+- PromotionsCampaign
+- PromotionsCampaignCancelComment
+- PromotionsCampaignState
+- PromotionsEligibleCountries
+- PromotionsEligibleVariation
+- RatingImage
+- RatingVideo
+- RefundOrder
+- RefundReason
+- RefundReasons
+- RefundSource
+- RefundsInfo
+- RegionShippingDetail
+- RegionShippingPrice
+- RegionShippingSpeed
+- RemitType
+- Reply
+- ReplySupportingFile
+- ReplyTicket
+- RequestResponse
+- RequiredVATNumber
+- ResponsiblePerson
+- ResponsiblePersonResponse
+- Restrictions
+- RetrieveAccessToken
+- RevShareDetails
+- RevShareRegion
+- SMSMDiscountData
+- ShallowProduct
+- ShippingAddress
+- ShippingProvider
+- ShippingReimbursement
+- ShippingReimbursementStatus
+- ShippingSetting
+- ShippingSettings
+- SpecialProgramsInfo
+- State
+- Subscription
+- TaxEntity
+- TaxItem
+- TestTokenResponse
+- Ticket
+- TicketOrder
+- TicketProduct
+- Topic
+- TrackingInfo
+- UnificationInitiative
+- Unit
+- UnitInput
+- UnqualifiedReason
+- UnqualifiedVariation
+- UpdateAdvancedLogisticsShipping
+- UpdateCampaign
+- UpdateCampaignProduct
+- UpdateDefaultShipping
+- UpdateFranceProductUniqueIdentificationNumber
+- UpdateGermanyProductEprRegistrationNumber
+- UpdateOrder
+- UpdateOrderWithAutoFulfill
+- UpdateProduct
+- UpdateProductVariation
+- UpdatePromotionsCampaign
+- UpdateShippingSettings
+- UpdateTicket
+- UpdateTracking
+- UpdateVariation
+- UpdateWarehouse
+- UpsertProductVideo
+- UpsertProductVideoResult
+- V3GenericReportStatus
+- VAT
+- VATAdditionalMaterial
+- VATAmount
+- VATPayer
+- VOEC
+- Variation
+- VariationAttribute
+- VariationDiscountData
+- VariationsDiscountData
+- Video
+- VideoMetrics
+- View
+- WarehouseAddress
+- WarehouseBase
+- WarehouseInformation
+- WarehouseInventory
+- WarehouseRequest
+- WarehouseResponse
+- WarehouseShippingSpeed
+- WarehouseToShipping
+- Warehouses
+- WarningType
+- WatchTime
+- Weight
+- WishpostFeeCreated
+- country_shipping_speed_delivery_type
+- region_shipping_speed_delivery_type
+relationships:
+- from: GermanyProductComplianceStatus
+  to: GermanyEPRComplianceStatus
+  kind: has_one
+  via: compliance_status
+- from: GermanyProductComplianceStatus
+  to: Product
+  kind: belongs_to
+  via: product_id
+- from: CampaignDailyPerformance
+  to: ProductDailyPerformance
+  kind: has_many
+  via: stats
+- from: PromotionEvent
+  to: PromotionType
+  kind: has_one
+  via: promotion_type
+- from: CreateCampaign
+  to: UpdateCampaignProduct
+  kind: has_many
+  via: products
+- from: VariationDiscountData
+  to: Product
+  kind: belongs_to
+  via: product_id
+- from: VariationDiscountData
+  to: Variation
+  kind: belongs_to
+  via: variation_id
+- from: ProductInfo
+  to: Variation
+  kind: belongs_to
+  via: variation_id
+- from: OrderPayment
+  to: CarrierSubsidy
+  kind: has_many
+  via: carrier_subsidies
+- from: OrderPayment
+  to: ShippingReimbursement
+  kind: has_many
+  via: shipping_reimbursements
+- from: UpdateCampaignProduct
+  to: Product
+  kind: belongs_to
+  via: product_id
+- from: TaxItem
+  to: RemitType
+  kind: has_one
+  via: remit_type
+- from: EarlyPayment
+  to: Price
+  kind: has_one
+  via: available_amount
+- from: FBWFee
+  to: FBWFeeType
+  kind: has_one
+  via: fee_type
+- from: VAT
+  to: VATAdditionalMaterial
+  kind: has_many
+  via: additional_materials
+- from: Campaign
+  to: CampaignState
+  kind: has_one
+  via: state
+- from: Campaign
+  to: CampaignType
+  kind: has_one
+  via: type
+- from: Campaign
+  to: ImpressionFeeBreakdown
+  kind: has_many
+  via: impression_fees_breakdowns
+- from: Campaign
+  to: CampaignProduct
+  kind: has_many
+  via: products
+- from: OrderTax
+  to: TaxItem
+  kind: has_many
+  via: transaction_tax
+- from: OrderTax
+  to: CustomerIdentityNumberType
+  kind: has_one
+  via: customer_identity_number_type
+- from: EUVATCustomsDeclaration
+  to: PlatformEntity
+  kind: has_one
+  via: platform_status
+- from: GermanyProductComplianceStatusRequest
+  to: Product
+  kind: belongs_to
+  via: product_id
+- from: WarehouseShippingSpeed
+  to: CountryShippingSpeed
+  kind: has_many
+  via: delivery_speeds
+- from: CategoryNode
+  to: CategoryNode
+  kind: has_many
+  via: subcategories
+- from: UpsertProductVideoResult
+  to: Video
+  kind: belongs_to
+  via: video_id
+- from: CampaignProductFeedback
+  to: Product
+  kind: belongs_to
+  via: product_id
+- from: CampaignProductFeedback
+  to: Campaign
+  kind: belongs_to
+  via: campaign_id
+- from: WarehouseInformation
+  to: MerchantWarehouseType
+  kind: has_one
+  via: warehouse_type
+- from: BalanceUpdate
+  to: BalanceUpdateType
+  kind: has_one
+  via: type
+- from: BalanceUpdate
+  to: Campaign
+  kind: belongs_to
+  via: campaign_id
+- from: CountryShippingSpeed
+  to: RegionShippingSpeed
+  kind: has_many
+  via: regions
+- from: CountryShippingSpeed
+  to: country_shipping_speed_delivery_type
+  kind: has_one
+  via: delivery_type
+- from: ProductVariation
+  to: Product
+  kind: belongs_to
+  via: product_id
+- from: ProductVariation
+  to: Option
+  kind: has_many
+  via: options
+- from: ProductVariation
+  to: AttributeResponse
+  kind: has_many
+  via: attributes
+- from: ProductVariation
+  to: WarehouseInventory
+  kind: has_many
+  via: inventories
+- from: CreatePromotionsCampaign
+  to: VariationsDiscountData
+  kind: has_one
+  via: variations_discount_data
+- from: UpdateCampaign
+  to: CampaignState
+  kind: has_one
+  via: state
+- from: UpdateCampaign
+  to: UpdateCampaignProduct
+  kind: has_many
+  via: products
+- from: EditableProductParams
+  to: UpdateDefaultShipping
+  kind: has_many
+  via: default_shipping_prices
+- from: EditableProductParams
+  to: WarehouseToShipping
+  kind: has_many
+  via: warehouse_to_shippings
+- from: EditableProductParams
+  to: Attribute
+  kind: has_many
+  via: attributes
+- from: WarehouseToShipping
+  to: CountryShippingDetail
+  kind: has_many
+  via: shipping_details
+- from: UnqualifiedVariation
+  to: UnqualifiedReason
+  kind: has_one
+  via: reason
+- from: UnqualifiedVariation
+  to: Product
+  kind: belongs_to
+  via: product_id
+- from: UnqualifiedVariation
+  to: Variation
+  kind: belongs_to
+  via: variation_id
+- from: ProductDailyPerformance
+  to: Product
+  kind: belongs_to
+  via: product_id
+- from: RegionShippingDetail
+  to: RegionShippingPrice
+  kind: has_one
+  via: price
+- from: CategoryAttributes
+  to: CategoryAttribute
+  kind: has_many
+  via: attributes
+- from: UpdatePromotionsCampaign
+  to: VariationsDiscountData
+  kind: has_one
+  via: variations_discount_data
+- from: CampaignProduct
+  to: Product
+  kind: belongs_to
+  via: product_id
+- from: PromotionsCampaign
+  to: UnqualifiedVariation
+  kind: has_many
+  via: unqualified_product_variations
+- from: PromotionsCampaign
+  to: CancelReason
+  kind: has_one
+  via: cancel_reason
+- from: PromotionsCampaign
+  to: PromotionsCampaignCancelComment
+  kind: has_one
+  via: cancel_comment
+- from: PromotionsCampaign
+  to: PromotionsEligibleCountries
+  kind: has_one
+  via: countries
+- from: PromotionsCampaign
+  to: VariationDiscountData
+  kind: has_many
+  via: variations_discount_data
+- from: PromotionsCampaign
+  to: PromotionsCampaignState
+  kind: has_one
+  via: state
+- from: PromotionsCampaign
+  to: PromotionType
+  kind: has_one
+  via: promotion_type
+- from: EUProductComplianceStatusRequest
+  to: Product
+  kind: belongs_to
+  via: product_id
+- from: EUProductComplianceStatusRequest
+  to: ResponsiblePerson
+  kind: belongs_to
+  via: responsible_person_id
+- from: Penalty
+  to: Money
+  kind: has_one
+  via: penalty_amount
+- from: CountryShippingDetail
+  to: RegionShippingDetail
+  kind: has_many
+  via: overrides
+- from: ImpressionFeeBreakdown
+  to: ImpressionFeeState
+  kind: has_one
+  via: state
+- from: FranceProductComplianceStatusRequest
+  to: Product
+  kind: belongs_to
+  via: product_id
+- from: ListProductsResponse
+  to: Product
+  kind: has_many
+  via: products
+- from: VariationsDiscountData
+  to: VariationDiscountData
+  kind: has_many
+  via: discount_data
+- from: RefundsInfo
+  to: RefundSource
+  kind: has_one
+  via: refund_source
+- from: FranceProductComplianceStatus
+  to: EPRComplianceStatus
+  kind: has_one
+  via: compliance_status
+- from: FranceProductComplianceStatus
+  to: Product
+  kind: belongs_to
+  via: product_id
+- from: Restrictions
+  to: ShippingProvider
+  kind: has_many
+  via: valid_providers
+- from: Restrictions
+  to: PolicyRule
+  kind: has_many
+  via: policies
+- from: EditableVariationParams
+  to: VariationAttribute
+  kind: has_many
+  via: attributes
+- from: EditableVariationParams
+  to: WarehouseInventory
+  kind: has_many
+  via: inventories
+- from: EditableVariationParams
+  to: Option
+  kind: has_many
+  via: options
+- from: RefundOrder
+  to: RefundReason
+  kind: has_one
+  via: refund_reason
+- from: VOEC
+  to: TaxEntity
+  kind: has_one
+  via: entity
+- from: ProductUpdateRequest
+  to: Product
+  kind: belongs_to
+  via: product_id
+- from: RequiredVATNumber
+  to: TaxEntity
+  kind: has_one
+  via: entity
+- from: ProductVideoCreation
+  to: Product
+  kind: belongs_to
+  via: product_id
+- from: EUVATCustomsDeclarationProduct
+  to: Weight
+  kind: has_one
+  via: weight
+- from: ProductRating
+  to: Product
+  kind: belongs_to
+  via: product_id
+- from: ProductRating
+  to: RatingVideo
+  kind: has_many
+  via: videos
+- from: ProductRating
+  to: Order
+  kind: belongs_to
+  via: order_id
+- from: ProductRating
+  to: Variation
+  kind: belongs_to
+  via: variation_id
+- from: ProductRating
+  to: RatingImage
+  kind: has_many
+  via: images
+- from: Subscription
+  to: Topic
+  kind: belongs_to
+  via: topic_id
+- from: CampaignMetrics
+  to: CampaignDailyPerformance
+  kind: has_many
+  via: daily_performances
+- from: Reply
+  to: ReplySupportingFile
+  kind: has_many
+  via: supporting_files
+- from: CancelPromotionsCampaign
+  to: PromotionsCampaignCancelComment
+  kind: has_one
+  via: comment
+- from: CancelPromotionsCampaign
+  to: MerchantCancelReason
+  kind: has_one
+  via: reason
+- from: RegionShippingSpeed
+  to: region_shipping_speed_delivery_type
+  kind: has_one
+  via: delivery_type
+- from: Product
+  to: AdvancedLogisticsShipping
+  kind: has_many
+  via: first_mile_shippings
+- from: Product
+  to: DefaultShipping
+  kind: has_many
+  via: default_shipping_prices
+- from: Product
+  to: Image
+  kind: has_many
+  via: extra_images
+- from: Product
+  to: WarehouseToShipping
+  kind: has_many
+  via: warehouse_to_shippings
+- from: Product
+  to: ProductVariation
+  kind: has_many
+  via: variations
+- from: Product
+  to: AttributeResponse
+  kind: has_many
+  via: attributes
+- from: EUProductComplianceStatus
+  to: ComplianceStatus
+  kind: has_one
+  via: compliance_status
+- from: EUProductComplianceStatus
+  to: Product
+  kind: belongs_to
+  via: product_id
+- from: EUProductComplianceStatus
+  to: ResponsiblePerson
+  kind: belongs_to
+  via: responsible_person_id
+- from: ShippingReimbursement
+  to: ShippingReimbursementStatus
+  kind: has_one
+  via: status
+- from: Ticket
+  to: TicketOrder
+  kind: has_many
+  via: orders
+- from: Ticket
+  to: TicketProduct
+  kind: has_many
+  via: products
+- from: Ticket
+  to: Reply
+  kind: has_many
+  via: replies
+- from: SMSMDiscountData
+  to: PriceTieredDiscount
+  kind: has_many
+  via: price_tiered
+- from: FulfillmentEvent
+  to: FulfillmentEventType
+  kind: has_one
+  via: event_type
+- from: UpdateOrderWithAutoFulfill
+  to: AutoFulfillProcessingStatus
+  kind: has_one
+  via: processing_status
+- from: PromotionEligibleProduct
+  to: PromotionsEligibleVariation
+  kind: has_many
+  via: variations
+- from: TrackingInfo
+  to: ShippingProvider
+  kind: has_one
+  via: shipping_provider
+- from: Order
+  to: TrackingInfo
+  kind: has_many
+  via: tracking_information
+- from: Order
+  to: FulfillmentEvent
+  kind: has_many
+  via: fulfillment_records
+- from: Order
+  to: ProcessingStatus
+  kind: has_one
+  via: processing_status
+- from: Order
+  to: ProcessingSource
+  kind: has_one
+  via: processing_source
+- from: Order
+  to: State
+  kind: has_one
+  via: state
+- from: Order
+  to: RefundsInfo
+  kind: has_many
+  via: refunds
+- from: Order
+  to: SpecialProgramsInfo
+  kind: has_many
+  via: special_programs
+- from: Order
+  to: OrderType
+  kind: has_many
+  via: fulfillment_order_types
+- from: EORI
+  to: TaxEntity
+  kind: has_one
+  via: entity

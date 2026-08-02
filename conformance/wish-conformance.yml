@@ -1,0 +1,27 @@
+generated: '2026-07-21'
+method: derived
+source: openapi/wish-marketplace-v3-openapi.json + live probes 2026-07-21
+standards:
+- id: oauth2
+  conforms: true
+  evidence: OpenAPI securityScheme OAuth2 (authorizationCode flow, 37 scopes); tokenUrl https://merchant.wish.com/api/v3/oauth/access_token
+- id: oidc
+  conforms: true
+  evidence: openIdConnect securityScheme; live discovery document at https://merchant.wish.com/oidc/.well-known/openid-configuration
+    (200)
+- id: rfc9457-problem-details
+  conforms: false
+  evidence: errors use a custom {message, code, data} JSON envelope (APIError schema), not application/problem+json
+- id: pagination
+  conforms: true
+  evidence: 'documented keyset pagination: limit + {attribute}_min/{attribute}_max params with sort_by,
+    per spec info.description'
+- id: idempotency
+  conforms: false
+  evidence: no idempotency key header or retry-safety contract documented in spec or docs
+- id: rate-limit-signaling
+  conforms: true
+  evidence: Wish-Rate-Limit-Remaining / Wish-Rate-Limit-Reset headers + 429 documented in spec info.description
+- id: rfc9116-security-txt
+  conforms: false
+  evidence: /.well-known/security.txt returns 404 on wish.com, www.wish.com and merchant.wish.com

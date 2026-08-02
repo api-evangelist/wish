@@ -1,0 +1,22 @@
+overlay: 1.0.0
+info:
+  title: API Evangelist enhancements for the Wish Marketplace V3 API
+  version: 1.0.0
+extends: openapi/wish-marketplace-v3-openapi.json
+actions:
+  - target: $.info
+    description: Tag the spec with API Evangelist provenance and catalog identity
+    update:
+      x-apievangelist:
+        aid: wish
+        harvested: '2026-07-21'
+        source: https://merchant.wish.com/api/openapi_spec/get
+        catalog: https://raw.githubusercontent.com/api-evangelist/wish/refs/heads/main/apis.yml
+  - target: $.info
+    description: Record the sandbox environment alongside production
+    update:
+      x-environments:
+        - name: production
+          url: https://merchant.wish.com/api/v3/
+        - name: sandbox
+          url: https://sandbox.merchant.wish.com/api/v3/

@@ -1,0 +1,56 @@
+generated: '2026-07-21'
+method: searched
+source: https://merchant.wish.com/api/openapi_spec/get
+authentication:
+  style: OAuth 2.0 bearer
+  header: 'Authorization: Bearer <token>'
+  flows:
+  - authorizationCode
+  oidc: https://merchant.wish.com/oidc/.well-known/openid-configuration
+  cross_link: authentication/wish-authentication.yml
+idempotency:
+  supported: false
+  notes: No idempotency key header or retry-safety contract is documented anywhere in the V3 spec or docs.
+pagination:
+  style: keyset
+  params:
+  - limit
+  - '{attribute}_min'
+  - '{attribute}_max'
+  sorting: sort_by={parameter_name}.{asc|desc}
+  notes: 'Keyset pagination: page forward by passing the last object''s attribute value as {attribute}_max/{attribute}_min;
+    id_min/id_max are inclusive so +/- 1 the boundary ID.'
+partial_response:
+  supported: true
+  param: fields
+  syntax:
+  - comma-separated fields
+  - nested via /
+  - grouped via parentheses ( )
+  - wildcard *
+  example: ?fields=title,items(id,info/name)
+  scope: all GET endpoints except OAuth
+localization:
+  request_header: Accept-Language
+  response_header: Content-Language
+request_tracing:
+  header: Wish-Request-Id
+  notes: Unique per request; include when contacting partner support.
+timestamps:
+  format: 'ISO 8601: YYYY-MM-DDTHH:mm:ss.sss±XX:ZZ or ...Z (UTC); milliseconds optional on input'
+versioning:
+  scheme: uri-path
+  current: v3
+  cross_link: lifecycle/wish-lifecycle.yml
+error_envelope:
+  shape: '{message, code, data}'
+  success_code: 0
+  cross_link: errors/wish-problem-types.yml
+rate_limiting:
+  headers:
+  - Wish-Rate-Limit-Remaining
+  - Wish-Rate-Limit-Reset
+  on_exceeded: 429 Too Many Requests
+  basis: per-merchant per-app
+  cross_link: rate-limits/wish-rate-limits.yml
+support_contact: partner-api@wish.com

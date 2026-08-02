@@ -1,0 +1,239 @@
+generated: '2026-07-21'
+method: derived
+source: openapi/wish-marketplace-v3-openapi.json
+schemes:
+- name: OAuth2
+  source: openapi/wish-marketplace-v3-openapi.json
+  flows:
+  - flow: authorizationCode
+    authorizationUrl: https://merchant.wish.com/v3/oauth/authorize
+    tokenUrl: https://merchant.wish.com/api/v3/oauth/access_token
+scopes:
+- scope: announcements:read
+  description: Read announcements
+  flows:
+  - authorizationCode
+  sources:
+  - openapi/wish-marketplace-v3-openapi.json
+- scope: compliance:read
+  description: Read Compliance
+  flows:
+  - authorizationCode
+  sources:
+  - openapi/wish-marketplace-v3-openapi.json
+- scope: compliance:write
+  description: Write Compliance
+  flows:
+  - authorizationCode
+  sources:
+  - openapi/wish-marketplace-v3-openapi.json
+- scope: epc:read
+  description: read EPC info
+  flows:
+  - authorizationCode
+  sources:
+  - openapi/wish-marketplace-v3-openapi.json
+- scope: epc:write
+  description: write EPC info
+  flows:
+  - authorizationCode
+  sources:
+  - openapi/wish-marketplace-v3-openapi.json
+- scope: fbs:read
+  description: Read FBS
+  flows:
+  - authorizationCode
+  sources:
+  - openapi/wish-marketplace-v3-openapi.json
+- scope: fbw:read
+  description: Read FBW
+  flows:
+  - authorizationCode
+  sources:
+  - openapi/wish-marketplace-v3-openapi.json
+- scope: fbw:write
+  description: Write FBW
+  flows:
+  - authorizationCode
+  sources:
+  - openapi/wish-marketplace-v3-openapi.json
+- scope: infractions:read
+  description: Read infractions
+  flows:
+  - authorizationCode
+  sources:
+  - openapi/wish-marketplace-v3-openapi.json
+- scope: infractions:write
+  description: Write infractions
+  flows:
+  - authorizationCode
+  sources:
+  - openapi/wish-marketplace-v3-openapi.json
+- scope: listing_quality:read
+  description: Read listing quality
+  flows:
+  - authorizationCode
+  sources:
+  - openapi/wish-marketplace-v3-openapi.json
+- scope: merchant:read
+  description: Read merchant
+  flows:
+  - authorizationCode
+  sources:
+  - openapi/wish-marketplace-v3-openapi.json
+- scope: merchant:write
+  description: Write merchant
+  flows:
+  - authorizationCode
+  sources:
+  - openapi/wish-marketplace-v3-openapi.json
+- scope: notifications:read
+  description: Read notifications
+  flows:
+  - authorizationCode
+  sources:
+  - openapi/wish-marketplace-v3-openapi.json
+- scope: notifications:write
+  description: Write notifications
+  flows:
+  - authorizationCode
+  sources:
+  - openapi/wish-marketplace-v3-openapi.json
+- scope: orders:read
+  description: Read orders
+  flows:
+  - authorizationCode
+  sources:
+  - openapi/wish-marketplace-v3-openapi.json
+- scope: orders:write
+  description: Update orders
+  flows:
+  - authorizationCode
+  sources:
+  - openapi/wish-marketplace-v3-openapi.json
+- scope: payments:read
+  description: Read payments
+  flows:
+  - authorizationCode
+  sources:
+  - openapi/wish-marketplace-v3-openapi.json
+- scope: payments:write
+  description: Update payments
+  flows:
+  - authorizationCode
+  sources:
+  - openapi/wish-marketplace-v3-openapi.json
+- scope: penalties:read
+  description: Read penalties
+  flows:
+  - authorizationCode
+  sources:
+  - openapi/wish-marketplace-v3-openapi.json
+- scope: penalties:write
+  description: Update penalties
+  flows:
+  - authorizationCode
+  sources:
+  - openapi/wish-marketplace-v3-openapi.json
+- scope: product_boost:read
+  description: Read ProductBoost
+  flows:
+  - authorizationCode
+  sources:
+  - openapi/wish-marketplace-v3-openapi.json
+- scope: product_boost:write
+  description: Write ProductBoost
+  flows:
+  - authorizationCode
+  sources:
+  - openapi/wish-marketplace-v3-openapi.json
+- scope: products:read
+  description: Read products
+  flows:
+  - authorizationCode
+  sources:
+  - openapi/wish-marketplace-v3-openapi.json
+- scope: products:write
+  description: Write products
+  flows:
+  - authorizationCode
+  sources:
+  - openapi/wish-marketplace-v3-openapi.json
+- scope: promotions:read
+  sources:
+  - openapi/wish-marketplace-v3-openapi.json
+- scope: promotions:write
+  sources:
+  - openapi/wish-marketplace-v3-openapi.json
+- scope: qoo10:read
+  description: Read Qoo10
+  flows:
+  - authorizationCode
+  sources:
+  - openapi/wish-marketplace-v3-openapi.json
+- scope: ratings:read
+  description: Read ratings
+  flows:
+  - authorizationCode
+  sources:
+  - openapi/wish-marketplace-v3-openapi.json
+- scope: returns:read
+  description: Read returns
+  flows:
+  - authorizationCode
+  sources:
+  - openapi/wish-marketplace-v3-openapi.json
+- scope: returns:write
+  description: Write returns
+  flows:
+  - authorizationCode
+  sources:
+  - openapi/wish-marketplace-v3-openapi.json
+- scope: tickets:read
+  description: Read customer tickets
+  flows:
+  - authorizationCode
+  sources:
+  - openapi/wish-marketplace-v3-openapi.json
+- scope: tickets:write
+  description: Write customer tickets
+  flows:
+  - authorizationCode
+  sources:
+  - openapi/wish-marketplace-v3-openapi.json
+- scope: videos:read
+  description: Read videos
+  flows:
+  - authorizationCode
+  sources:
+  - openapi/wish-marketplace-v3-openapi.json
+- scope: videos:write
+  description: Write videos
+  flows:
+  - authorizationCode
+  sources:
+  - openapi/wish-marketplace-v3-openapi.json
+- scope: webhook:read
+  description: Read webhook
+  flows:
+  - authorizationCode
+  sources:
+  - openapi/wish-marketplace-v3-openapi.json
+- scope: webhook:write
+  description: Write webhook
+  flows:
+  - authorizationCode
+  sources:
+  - openapi/wish-marketplace-v3-openapi.json
+- scope: wps_parcel:read
+  description: Read WishParcel
+  flows:
+  - authorizationCode
+  sources:
+  - openapi/wish-marketplace-v3-openapi.json
+- scope: wps_parcel:write
+  description: Write WishParcel
+  flows:
+  - authorizationCode
+  sources:
+  - openapi/wish-marketplace-v3-openapi.json

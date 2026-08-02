@@ -1,0 +1,34 @@
+generated: '2026-07-21'
+method: searched
+hosts:
+- host: https://merchant.wish.com
+  documents:
+  - path: /oidc/.well-known/openid-configuration
+    status: 200
+    file: wish-openid-configuration.json
+    notes: OIDC discovery for the Wish Merchant OpenID Connect provider (issuer https://merchant.wish.com/oidc/);
+      referenced by the OpenID securityScheme in the Marketplace V3 OpenAPI.
+  - path: /oidc/.well-known/jwks
+    status: 200
+  - path: /.well-known/security.txt
+    status: 404
+  - path: /.well-known/openid-configuration
+    status: 404
+  - path: /.well-known/oauth-authorization-server
+    status: 404
+  - path: /.well-known/api-catalog
+    status: 404
+  - path: /.well-known/ai-plugin.json
+    status: 404
+- host: https://www.wish.com
+  documents:
+  - path: /.well-known/security.txt
+    status: 404
+  - path: /.well-known/openid-configuration
+    status: 404
+  - path: /.well-known/oauth-authorization-server
+    status: 404
+  - path: /.well-known/api-catalog
+    status: 404
+  - path: /.well-known/ai-plugin.json
+    status: 404

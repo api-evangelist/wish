@@ -1,0 +1,16 @@
+generated: '2026-07-21'
+method: generated
+source: openapi/wish-marketplace-v3-openapi.json + conventions/wish-conventions.yml
+skills:
+  - file: wish-fulfill-orders.md
+    name: Fulfill Wish orders
+    api: openapi/wish-marketplace-v3-openapi.json
+    operations: [GetMultipleOrders, GetOrder, GetShippingCarriers, ShipOrder, GetValidRefundReasons, RefundOrder]
+  - file: wish-manage-products.md
+    name: Manage Wish products and variations
+    api: openapi/wish-marketplace-v3-openapi.json
+    operations: [getCategories, getCategoryAttributes, createProduct, createVariation, updateProduct, getProduct, listProductsSync, listProductUpdateRequests, getProductUpdateRequest]
+  - file: wish-webhook-subscriptions.md
+    name: Subscribe to Wish webhooks
+    api: openapi/wish-marketplace-v3-openapi.json
+    operations: [getTopics, createSubscription, listSubscriptions, getSubscription, updateSubscription, deleteSubscription]

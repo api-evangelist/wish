@@ -1,0 +1,24 @@
+generated: '2026-07-21'
+method: searched
+source: npm, PyPI, Maven Central, NuGet, pkg.go.dev, RubyGems, Packagist, crates.io searched 2026-07-21
+notes: Wish publishes no first-party client SDKs on the public registries. The only first-party package
+  is swagger-snippet-wish, a documentation tooling fork used to generate the code samples embedded in
+  the Wish Marketplace V3 OpenAPI (x-code-samples). Community client libraries exist but are not maintained
+  by Wish/ContextLogic.
+packages:
+- language: javascript
+  registry: npm
+  name: swagger-snippet-wish
+  url: https://www.npmjs.com/package/swagger-snippet-wish
+  install: npm install swagger-snippet-wish
+  official: true
+  category: docs-tooling
+  notes: First-party (github.com/ContextLogic/swagger-snippet-wish) code-snippet generator for the Wish
+    API docs; not a client SDK.
+- language: python
+  registry: pypi
+  name: wish-api
+  url: https://pypi.org/project/wish-api/
+  install: pip install wish-api
+  official: false
+  notes: Community client for the Wish partner API (github.com/ketu/wish_api); not maintained by Wish.

@@ -1,0 +1,15 @@
+generated: '2026-07-21'
+method: searched
+source: https://merchant.wish.com/api/openapi_spec/get
+basis: per-merchant, per-app
+headers:
+- name: Wish-Rate-Limit-Remaining
+  description: Number of calls remaining in the current rate-limiting window
+- name: Wish-Rate-Limit-Reset
+  description: Time the rate-limiter will reset (sent with 429 responses)
+on_exceeded:
+  status: 429
+  behavior: Wait for the window reset; Wish recommends caching responses and integrating webhooks instead
+    of polling.
+notes: Wish does not publish numeric per-window quotas; the contract is the header signaling documented
+  in the V3 spec info.description.

@@ -1,0 +1,58 @@
+generated: '2026-07-21'
+method: searched
+source: https://merchant.wish.com/api/openapi_spec/get
+docs: https://merchant.wish.com/documentation/webhooks
+spec_type: Webhooks
+notes: 'Wish publishes no AsyncAPI document. This captures the real webhook surface: the V3 webhook subscription
+  API and the topic catalog from the Topic schema enum in the Marketplace V3 OpenAPI.'
+management_api:
+- operationId: createSubscription
+  method: post
+  path: /api/v3/webhook/subscriptions
+  scope: webhook:write
+- operationId: listSubscriptions
+  method: get
+  path: /api/v3/webhook/subscriptions
+  scope: webhook:read
+- operationId: getSubscription
+  method: get
+  path: /api/v3/webhook/subscriptions/{id}
+  scope: webhook:read
+- operationId: updateSubscription
+  method: put
+  path: /api/v3/webhook/subscriptions/{id}
+  scope: webhook:write
+- operationId: deleteSubscription
+  method: delete
+  path: /api/v3/webhook/subscriptions/{id}
+  scope: webhook:write
+- operationId: getTopics
+  method: get
+  path: /api/v3/webhook/topics
+  scope: webhook:read
+topics:
+- ORDER_ALL
+- ORDER_RELEASE
+- ORDER_FULFILLMENT_DEADLINE
+- ORDER_ADDRESS_CHANGE
+- ORDER_PENALTY
+- ORDER_TRACKING_UPDATE
+- ORDER_REFUND
+- ORDER_TAX
+- POLICY_PENALTY_ISSUE
+- POLICY_PENALTY_REVERSE
+- POLICY_PENALTY_CANCEL
+- TICKET_AWAITING_MERCHANT
+- PRODUCT_BOOST_CAMPAIGN_STATS_UPDATE
+- PRODUCT_BOOST_CAMPAIGN_CREATION
+- PRODUCT_BOOST_CAMPAIGN_ATTRIBUTE_UPDATE
+- PRODUCT_BOOST_CAMPAIGN_PRODUCT_STATS_UPDATE
+- PRODUCT_BOOST_CAMPAIGN_PRODUCT_LOW_PERFORMANCE
+- PRODUCT_BOOST_TRENDING_CATEGORIES
+- PRODUCT_BOOST_ACCOUNT_BALANCE_UPDATE
+- PRODUCT_UPDATE_MERCHANT
+- PRODUCT_IMAGE_JOB_STATUS_UPDATE
+- PRODUCT_TAGGING_UPDATE
+- PRODUCT_INVENTORY_CHANGE_WISH_USER
+- PRODUCT_INVENTORY_CHANGE_MERCHANT
+- PRODUCT_SOLDOUT

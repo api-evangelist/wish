@@ -1,0 +1,15 @@
+generated: '2026-07-21'
+method: searched
+source: https://merchant.wish.com/api/openapi_spec/get
+docs: https://merchant.wish.com/documentation/api/v3/reference
+environment:
+  host: https://sandbox.merchant.wish.com
+  base_url: https://sandbox.merchant.wish.com/api/v3/
+  isolation: The sandbox is completely contained and will not affect Wish users or your merchant account.
+test_data:
+  generation:
+  - Create a sandbox merchant account at https://sandbox.merchant.wish.com
+  - 'Navigate to the unfulfilled orders page: https://sandbox.merchant.wish.com/transactions/action'
+  - Hover over the dropdown next to the 'fulfill with csv' button and select Generate Orders
+notes: Documented verbatim in the Wish Marketplace V3 OpenAPI info.description (How to Test). Live probe
+  of sandbox.merchant.wish.com returned 503 on 2026-07-21.

@@ -1,0 +1,513 @@
+generated: '2026-07-21'
+method: derived
+status: candidate
+source: openapi/wish-marketplace-v3-openapi.json
+notes: No official Wish MCP server was found (docs, npm, MCP registries searched 2026-07-21). Candidate
+  tool list derived from the Wish Marketplace V3 OpenAPI operations.
+server:
+  name: wish-merchant
+  transport: http
+  url: null
+tools:
+- name: listBrands
+  description: Get a list of brands from a particular ID range
+  source_operation: openapi/wish-marketplace-v3-openapi.json#listBrands
+  scopes: []
+- name: getCurrencies
+  description: Get supported currency list
+  source_operation: openapi/wish-marketplace-v3-openapi.json#getCurrencies
+  scopes: []
+- name: updateEUProductComplianceStatus
+  description: Update EU Product Compliance Status
+  source_operation: openapi/wish-marketplace-v3-openapi.json#updateEUProductComplianceStatus
+  scopes:
+  - compliance:write
+- name: getEUProductComplianceStatus
+  description: Get EU Product Compliance Status
+  source_operation: openapi/wish-marketplace-v3-openapi.json#getEUProductComplianceStatus
+  scopes:
+  - compliance:read
+- name: BulkUpdateProducts
+  description: Bulk Update EU Product Compliance Status
+  source_operation: openapi/wish-marketplace-v3-openapi.json#BulkUpdateProducts
+  scopes:
+  - compliance:write
+- name: GetBulkUpdateStatus
+  description: Get Bulk Update Job Status
+  source_operation: openapi/wish-marketplace-v3-openapi.json#GetBulkUpdateStatus
+  scopes:
+  - compliance:read
+- name: createEUResponsiblePerson
+  description: Create an EU Responsible Person
+  source_operation: openapi/wish-marketplace-v3-openapi.json#createEUResponsiblePerson
+  scopes:
+  - compliance:write
+- name: listEUResponsiblePerson
+  description: List EU Responsible Persons
+  source_operation: openapi/wish-marketplace-v3-openapi.json#listEUResponsiblePerson
+  scopes:
+  - compliance:read
+- name: updateEUResponsiblePerson
+  description: Update an EU Responsible Person
+  source_operation: openapi/wish-marketplace-v3-openapi.json#updateEUResponsiblePerson
+  scopes:
+  - compliance:write
+- name: getEUResponsiblePerson
+  description: Get an EU Responsible Person
+  source_operation: openapi/wish-marketplace-v3-openapi.json#getEUResponsiblePerson
+  scopes:
+  - compliance:read
+- name: deleteEUResponsiblePerson
+  description: Delete an EU Responsible Person
+  source_operation: openapi/wish-marketplace-v3-openapi.json#deleteEUResponsiblePerson
+  scopes:
+  - compliance:write
+- name: updateFranceEPRProductComplianceStatus
+  description: Bulk update France EPR Product Compliance Status
+  source_operation: openapi/wish-marketplace-v3-openapi.json#updateFranceEPRProductComplianceStatus
+  scopes:
+  - compliance:write
+- name: getFranceEPRProductComplianceStatus
+  description: Get France EPR Product Compliance Status
+  source_operation: openapi/wish-marketplace-v3-openapi.json#getFranceEPRProductComplianceStatus
+  scopes:
+  - compliance:read
+- name: createFranceProductUniqueIdentificationNumber
+  description: Create a France Product Unique Identification Number
+  source_operation: openapi/wish-marketplace-v3-openapi.json#createFranceProductUniqueIdentificationNumber
+  scopes:
+  - compliance:write
+- name: listFranceProductUniqueIdentificationNumber
+  description: List France Product Unique Identification Numbers
+  source_operation: openapi/wish-marketplace-v3-openapi.json#listFranceProductUniqueIdentificationNumber
+  scopes:
+  - compliance:read
+- name: updateFranceProductUniqueIdentificationNumber
+  description: Update a France Product Unique Identification Number
+  source_operation: openapi/wish-marketplace-v3-openapi.json#updateFranceProductUniqueIdentificationNumber
+  scopes:
+  - compliance:write
+- name: getFranceProductUniqueIdentificationNumber
+  description: Get a France Product Unique Identification Number
+  source_operation: openapi/wish-marketplace-v3-openapi.json#getFranceProductUniqueIdentificationNumber
+  scopes:
+  - compliance:read
+- name: deleteFranceProductUniqueIdentificationNumber
+  description: Delete a France Product Unique Identification Number
+  source_operation: openapi/wish-marketplace-v3-openapi.json#deleteFranceProductUniqueIdentificationNumber
+  scopes:
+  - compliance:write
+- name: updateGermanyEPRProductComplianceStatus
+  description: Bulk update Germany EPR Product Compliance Status
+  source_operation: openapi/wish-marketplace-v3-openapi.json#updateGermanyEPRProductComplianceStatus
+  scopes:
+  - compliance:write
+- name: getGermanyEPRProductComplianceStatus
+  description: Get Germany EPR Product Compliance Status
+  source_operation: openapi/wish-marketplace-v3-openapi.json#getGermanyEPRProductComplianceStatus
+  scopes:
+  - compliance:read
+- name: createGermanyProductEprRegistrationNumber
+  description: Create a Germany Product EPR Registration Number
+  source_operation: openapi/wish-marketplace-v3-openapi.json#createGermanyProductEprRegistrationNumber
+  scopes:
+  - compliance:write
+- name: listGermanyProductEprRegistrationNumbers
+  description: List Germany EPR Registration Numbers
+  source_operation: openapi/wish-marketplace-v3-openapi.json#listGermanyProductEprRegistrationNumbers
+  scopes:
+  - compliance:read
+- name: updateGermanyProductEprRegistrationNumber
+  description: Update a Germany Product EPR Registration Number
+  source_operation: openapi/wish-marketplace-v3-openapi.json#updateGermanyProductEprRegistrationNumber
+  scopes:
+  - compliance:write
+- name: getGermanyProductEprRegistrationNumber
+  description: Get a Germany Product EPR Registration Number
+  source_operation: openapi/wish-marketplace-v3-openapi.json#getGermanyProductEprRegistrationNumber
+  scopes:
+  - compliance:read
+- name: deleteGermanyProductEprRegistrationNumber
+  description: Delete a Germany Product EPR Registration Number
+  source_operation: openapi/wish-marketplace-v3-openapi.json#deleteGermanyProductEprRegistrationNumber
+  scopes:
+  - compliance:write
+- name: getMerchantAccountDetail
+  description: Get merchant account details
+  source_operation: openapi/wish-marketplace-v3-openapi.json#getMerchantAccountDetail
+  scopes:
+  - merchant:read
+- name: getCurrencySettings
+  description: Get merchant currency settings
+  source_operation: openapi/wish-marketplace-v3-openapi.json#getCurrencySettings
+  scopes:
+  - merchant:read
+- name: getSettings
+  description: Get merchant settings
+  source_operation: openapi/wish-marketplace-v3-openapi.json#getSettings
+  scopes:
+  - merchant:read
+- name: updateShippingSettings
+  description: Update shipping settings
+  source_operation: openapi/wish-marketplace-v3-openapi.json#updateShippingSettings
+  scopes:
+  - merchant:write
+- name: listShippingSettings
+  description: Get shipping settings
+  source_operation: openapi/wish-marketplace-v3-openapi.json#listShippingSettings
+  scopes:
+  - merchant:read
+- name: createWarehouse
+  description: Create a warehouse
+  source_operation: openapi/wish-marketplace-v3-openapi.json#createWarehouse
+  scopes:
+  - merchant:write
+- name: listWarehouses
+  description: Get merchant warehouses
+  source_operation: openapi/wish-marketplace-v3-openapi.json#listWarehouses
+  scopes:
+  - merchant:read
+- name: updateWarehouse
+  description: Update warehouse information
+  source_operation: openapi/wish-marketplace-v3-openapi.json#updateWarehouse
+  scopes:
+  - merchant:write
+- name: oauthAccessTokenPost
+  description: Retrieve an access token
+  source_operation: openapi/wish-marketplace-v3-openapi.json#oauthAccessTokenPost
+  scopes: []
+- name: oauthAccessToken
+  description: Retrieve an access token
+  source_operation: openapi/wish-marketplace-v3-openapi.json#oauthAccessToken
+  scopes: []
+- name: oauthRefreshToken
+  description: Obtain a new token when the current token expires
+  source_operation: openapi/wish-marketplace-v3-openapi.json#oauthRefreshToken
+  scopes: []
+- name: oauthTest
+  description: Test if an access token is valid
+  source_operation: openapi/wish-marketplace-v3-openapi.json#oauthTest
+  scopes: []
+- name: GetMultipleOrders
+  description: List orders
+  source_operation: openapi/wish-marketplace-v3-openapi.json#GetMultipleOrders
+  scopes:
+  - orders:read
+- name: downloadOrders
+  description: Batch download orders
+  source_operation: openapi/wish-marketplace-v3-openapi.json#downloadOrders
+  scopes:
+  - orders:read
+- name: getOrderDownloadJob
+  description: Get batch download job status
+  source_operation: openapi/wish-marketplace-v3-openapi.json#getOrderDownloadJob
+  scopes:
+  - orders:read
+- name: GetShippingCarriers
+  description: Get accepted shipping carriers
+  source_operation: openapi/wish-marketplace-v3-openapi.json#GetShippingCarriers
+  scopes:
+  - orders:read
+- name: UpdateOrder
+  description: Update an LTL order
+  source_operation: openapi/wish-marketplace-v3-openapi.json#UpdateOrder
+  scopes:
+  - orders:write
+- name: GetOrder
+  description: Get an order
+  source_operation: openapi/wish-marketplace-v3-openapi.json#GetOrder
+  scopes:
+  - orders:read
+- name: ModifyAddress
+  description: Modify shipping address
+  source_operation: openapi/wish-marketplace-v3-openapi.json#ModifyAddress
+  scopes:
+  - orders:write
+- name: RefundOrder
+  description: Refund/Cancel an order
+  source_operation: openapi/wish-marketplace-v3-openapi.json#RefundOrder
+  scopes:
+  - orders:write
+- name: GetValidRefundReasons
+  description: Get valid refund reasons
+  source_operation: openapi/wish-marketplace-v3-openapi.json#GetValidRefundReasons
+  scopes:
+  - orders:read
+- name: ShipOrder
+  description: Ship or update tracking
+  source_operation: openapi/wish-marketplace-v3-openapi.json#ShipOrder
+  scopes:
+  - orders:write
+- name: getEarlyPayment
+  description: Get merchant early payment info.
+  source_operation: openapi/wish-marketplace-v3-openapi.json#getEarlyPayment
+  scopes:
+  - payments:read
+- name: downloadPaymentInvoices
+  description: Batch download invoices
+  source_operation: openapi/wish-marketplace-v3-openapi.json#downloadPaymentInvoices
+  scopes:
+  - payments:read
+- name: getPaymentInvoicesDownloadJob
+  description: Get batch invoice download job status
+  source_operation: openapi/wish-marketplace-v3-openapi.json#getPaymentInvoicesDownloadJob
+  scopes:
+  - payments:read
+- name: ListPenalties
+  description: Retrieve a list of penalties
+  source_operation: openapi/wish-marketplace-v3-openapi.json#ListPenalties
+  scopes:
+  - penalties:read
+- name: CountPenalties
+  description: Count number of penalties
+  source_operation: openapi/wish-marketplace-v3-openapi.json#CountPenalties
+  scopes:
+  - penalties:read
+- name: GetPenalty
+  description: Get a penalty by ID
+  source_operation: openapi/wish-marketplace-v3-openapi.json#GetPenalty
+  scopes:
+  - penalties:read
+- name: listBalanceUpdates
+  description: List ProductBoost account balance updates
+  source_operation: openapi/wish-marketplace-v3-openapi.json#listBalanceUpdates
+  scopes:
+  - product_boost:read
+- name: getBudget
+  description: Get the ProductBoost budget breakdown
+  source_operation: openapi/wish-marketplace-v3-openapi.json#getBudget
+  scopes:
+  - product_boost:read
+- name: createCampaign
+  description: Create a ProductBoost campaign
+  source_operation: openapi/wish-marketplace-v3-openapi.json#createCampaign
+  scopes:
+  - product_boost:write
+- name: listCampaigns
+  description: List ProductBoost campaigns
+  source_operation: openapi/wish-marketplace-v3-openapi.json#listCampaigns
+  scopes:
+  - product_boost:read
+- name: updateCampaign
+  description: Update a ProductBoost campaign
+  source_operation: openapi/wish-marketplace-v3-openapi.json#updateCampaign
+  scopes:
+  - product_boost:write
+- name: getCampaign
+  description: Get a single ProductBoost campaign
+  source_operation: openapi/wish-marketplace-v3-openapi.json#getCampaign
+  scopes:
+  - product_boost:read
+- name: listCampaignMetrics
+  description: Obtain campaign metrics
+  source_operation: openapi/wish-marketplace-v3-openapi.json#listCampaignMetrics
+  scopes:
+  - product_boost:read
+- name: ListProductFeedback
+  description: List products' feedback in a ProductBoost campaign
+  source_operation: openapi/wish-marketplace-v3-openapi.json#ListProductFeedback
+  scopes:
+  - product_boost:read
+- name: getKeywords
+  description: Get information for the given keywords or keywords that match the query
+  source_operation: openapi/wish-marketplace-v3-openapi.json#getKeywords
+  scopes:
+  - product_boost:read
+- name: createProduct
+  description: Create a product
+  source_operation: openapi/wish-marketplace-v3-openapi.json#createProduct
+  scopes:
+  - products:write
+- name: listProductsSync
+  description: List products
+  source_operation: openapi/wish-marketplace-v3-openapi.json#listProductsSync
+  scopes:
+  - products:read
+- name: getCategoryAttributes
+  description: Get attributes
+  source_operation: openapi/wish-marketplace-v3-openapi.json#getCategoryAttributes
+  scopes:
+  - products:read
+- name: getProducts
+  description: Get products
+  source_operation: openapi/wish-marketplace-v3-openapi.json#getProducts
+  scopes:
+  - products:read
+- name: getGetProductsStatus
+  description: Get the get products job status
+  source_operation: openapi/wish-marketplace-v3-openapi.json#getGetProductsStatus
+  scopes:
+  - products:read
+- name: updateProducts
+  description: Update products
+  source_operation: openapi/wish-marketplace-v3-openapi.json#updateProducts
+  scopes:
+  - products:write
+- name: getUpdateProductsStatus
+  description: Get the update products job status
+  source_operation: openapi/wish-marketplace-v3-openapi.json#getUpdateProductsStatus
+  scopes:
+  - products:read
+- name: getCategories
+  description: Get root category
+  source_operation: openapi/wish-marketplace-v3-openapi.json#getCategories
+  scopes:
+  - products:read
+- name: getCategoryByID
+  description: Get a category
+  source_operation: openapi/wish-marketplace-v3-openapi.json#getCategoryByID
+  scopes:
+  - products:read
+- name: listProductUpdateRequests
+  description: List product create or update requests
+  source_operation: openapi/wish-marketplace-v3-openapi.json#listProductUpdateRequests
+  scopes:
+  - products:read
+- name: getProductUpdateRequest
+  description: Get a product create or update request
+  source_operation: openapi/wish-marketplace-v3-openapi.json#getProductUpdateRequest
+  scopes:
+  - products:read
+- name: deleteProductUpdateRequest
+  description: Delete a product create or update request
+  source_operation: openapi/wish-marketplace-v3-openapi.json#deleteProductUpdateRequest
+  scopes:
+  - products:write
+- name: getColors
+  description: Get a list of accepted colors.
+  source_operation: openapi/wish-marketplace-v3-openapi.json#getColors
+  scopes: []
+- name: updateProduct
+  description: Update a product
+  source_operation: openapi/wish-marketplace-v3-openapi.json#updateProduct
+  scopes:
+  - products:write
+- name: getProduct
+  description: Get a product
+  source_operation: openapi/wish-marketplace-v3-openapi.json#getProduct
+  scopes:
+  - products:read
+- name: deleteProduct
+  description: Delete a product
+  source_operation: openapi/wish-marketplace-v3-openapi.json#deleteProduct
+  scopes:
+  - products:write
+- name: enableDisableCalculatedShipping
+  description: Enable/disable Calculated Shipping for the product
+  source_operation: openapi/wish-marketplace-v3-openapi.json#enableDisableCalculatedShipping
+  scopes:
+  - products:write
+- name: createVariation
+  description: Create a variation
+  source_operation: openapi/wish-marketplace-v3-openapi.json#createVariation
+  scopes:
+  - products:write
+- name: createPromotionsCampaign
+  description: Create a promotion campaign
+  source_operation: openapi/wish-marketplace-v3-openapi.json#createPromotionsCampaign
+  scopes:
+  - promotions:write
+- name: listPromotionsCampaigns
+  description: List promotion campaigns
+  source_operation: openapi/wish-marketplace-v3-openapi.json#listPromotionsCampaigns
+  scopes:
+  - promotions:read
+- name: updatePromotionsCampaign
+  description: Update a promotion campaign
+  source_operation: openapi/wish-marketplace-v3-openapi.json#updatePromotionsCampaign
+  scopes:
+  - promotions:write
+- name: getPromotionsCampaign
+  description: Get a single promotion campaign
+  source_operation: openapi/wish-marketplace-v3-openapi.json#getPromotionsCampaign
+  scopes:
+  - promotions:read
+- name: cancelPromotionsCampaign
+  description: Cancel a promotion campaign
+  source_operation: openapi/wish-marketplace-v3-openapi.json#cancelPromotionsCampaign
+  scopes:
+  - promotions:write
+- name: getPromotionsEligibleProducts
+  description: Get eligible products
+  source_operation: openapi/wish-marketplace-v3-openapi.json#getPromotionsEligibleProducts
+  scopes:
+  - promotions:read
+- name: getPromotionsEligibleProductsCount
+  description: Get eligible products count
+  source_operation: openapi/wish-marketplace-v3-openapi.json#getPromotionsEligibleProductsCount
+  scopes:
+  - promotions:read
+- name: listPromotionEvents
+  description: List promotion events
+  source_operation: openapi/wish-marketplace-v3-openapi.json#listPromotionEvents
+  scopes:
+  - promotions:read
+- name: FetchProductRatings
+  description: Fetch product ratings
+  source_operation: openapi/wish-marketplace-v3-openapi.json#FetchProductRatings
+  scopes:
+  - ratings:read
+- name: FetchOverallProductRatings
+  description: Fetch the overall rating of the product
+  source_operation: openapi/wish-marketplace-v3-openapi.json#FetchOverallProductRatings
+  scopes:
+  - ratings:read
+- name: listTickets
+  description: List all tickets
+  source_operation: openapi/wish-marketplace-v3-openapi.json#listTickets
+  scopes:
+  - tickets:read
+- name: updateTicket
+  description: Update a ticket
+  source_operation: openapi/wish-marketplace-v3-openapi.json#updateTicket
+  scopes:
+  - tickets:write
+- name: getTicket
+  description: Get a ticket
+  source_operation: openapi/wish-marketplace-v3-openapi.json#getTicket
+  scopes:
+  - tickets:read
+- name: replyTicket
+  description: Reply to a ticket
+  source_operation: openapi/wish-marketplace-v3-openapi.json#replyTicket
+  scopes:
+  - tickets:write
+- name: getUnificationInitiativeCountries
+  description: Get a list of Unification Initiative countries
+  source_operation: openapi/wish-marketplace-v3-openapi.json#getUnificationInitiativeCountries
+  scopes: []
+- name: upsertProductVideo
+  description: Create video for a product asynchronously
+  source_operation: openapi/wish-marketplace-v3-openapi.json#upsertProductVideo
+  scopes:
+  - videos:write
+- name: createSubscription
+  description: Create a Subscription
+  source_operation: openapi/wish-marketplace-v3-openapi.json#createSubscription
+  scopes:
+  - webhook:write
+- name: listSubscriptions
+  description: List Subscriptions
+  source_operation: openapi/wish-marketplace-v3-openapi.json#listSubscriptions
+  scopes:
+  - webhook:read
+- name: updateSubscription
+  description: Update a Subscription
+  source_operation: openapi/wish-marketplace-v3-openapi.json#updateSubscription
+  scopes:
+  - webhook:write
+- name: getSubscription
+  description: Get a Subscription
+  source_operation: openapi/wish-marketplace-v3-openapi.json#getSubscription
+  scopes:
+  - webhook:read
+- name: deleteSubscription
+  description: Delete a Subscription
+  source_operation: openapi/wish-marketplace-v3-openapi.json#deleteSubscription
+  scopes:
+  - webhook:write
+- name: getTopics
+  description: List Topics
+  source_operation: openapi/wish-marketplace-v3-openapi.json#getTopics
+  scopes:
+  - webhook:read

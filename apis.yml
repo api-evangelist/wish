@@ -1,8 +1,19 @@
 aid: wish
 name: Wish
-description: Wish is a company surfaced as a portfolio company of 8vc, crv, felicis, founders-fund and
-  added to the API Evangelist network as a stub for enrichment. This profile is a lead awaiting the enrichment
-  pipeline.
+description: >-
+  Wish, operated by ContextLogic Inc., is a global mobile-first e-commerce
+  marketplace that connects value-conscious consumers with merchants and
+  manufacturers around the world, with a large share of inventory shipped
+  direct from suppliers. The Wish Marketplace V3 API lets sellers and ERP
+  partners programmatically manage their storefront and operations: create and
+  update products and variations, synchronize inventory and pricing, retrieve
+  and fulfill orders, modify tracking and shipping-carrier assignments, run
+  bulk create/download jobs, manage support tickets, penalties and
+  infractions, run ProductBoost and promotion campaigns, meet EU/EPR product
+  compliance obligations, and subscribe to webhooks for real-time order and
+  product events. Authentication is OAuth 2.0 (authorization code flow with 37
+  scopes) plus OpenID Connect, using bearer access tokens over HTTPS, with
+  production and sandbox environments.
 url: https://raw.githubusercontent.com/api-evangelist/wish/refs/heads/main/apis.yml
 x-type: company
 x-source: vc-portfolio
@@ -13,17 +24,717 @@ x-backed-by:
 - founders-fund
 x-tier: stub
 x-tier-reason: portfolio-lead
+accessModel:
+  pricing: unknown
+  onboarding: self-serve
+  trial: false
+  try_now: false
+  public: false
+  label: Self-serve signup
+  confidence: medium
+  source:
+  - authentication
+  generated: '2026-07-22'
+  method: derived
 specificationVersion: '0.20'
 created: '2026-07-17'
-modified: '2026-07-17'
+modified: '2026-07-21'
+image: https://logo.clearbit.com/wish.com
 tags:
 - Company
-apis: []
+- E-Commerce
+- Marketplace
+- Retail
+- Merchants
+- Orders
+- Products
+- Fulfillment
+- Shopping
+- OAuth
+apis:
+- aid: wish:wish-brands-api
+  name: Wish Brands API
+  description: The Brands API from Wish — 1 operation(s) for brands.
+  humanURL: https://merchant.wish.com/documentation/api/v3/reference
+  baseURL: https://merchant.wish.com/api/v3
+  tags:
+  - Brands
+  properties:
+  - type: OpenAPI
+    url: openapi/wish-brands-api-openapi.yml
+  - type: Authentication
+    url: authentication/wish-authentication.yml
+  - type: OAuthScopes
+    url: scopes/wish-scopes.yml
+  - type: Conventions
+    url: conventions/wish-conventions.yml
+  - type: ErrorCatalog
+    url: errors/wish-problem-types.yml
+  - type: DataModel
+    url: data-model/wish-data-model.yml
+  - type: Webhooks
+    url: asyncapi/wish-webhooks.yml
+  - type: Sandbox
+    url: sandbox/wish-sandbox.yml
+  - type: RateLimits
+    url: rate-limits/wish-rate-limits.yml
+  - type: Lifecycle
+    url: lifecycle/wish-lifecycle.yml
+  - type: Conformance
+    url: conformance/wish-conformance.yml
+- aid: wish:wish-bulk-products-api
+  name: Wish Bulk Products API
+  description: Products endpoints which process requests asynchronously and triggers a running job
+  humanURL: https://merchant.wish.com/documentation/api/v3/reference
+  baseURL: https://merchant.wish.com/api/v3
+  tags:
+  - Bulk Products
+  properties:
+  - type: OpenAPI
+    url: openapi/wish-bulk-products-api-openapi.yml
+  - type: Authentication
+    url: authentication/wish-authentication.yml
+  - type: OAuthScopes
+    url: scopes/wish-scopes.yml
+  - type: Conventions
+    url: conventions/wish-conventions.yml
+  - type: ErrorCatalog
+    url: errors/wish-problem-types.yml
+  - type: DataModel
+    url: data-model/wish-data-model.yml
+  - type: Webhooks
+    url: asyncapi/wish-webhooks.yml
+  - type: Sandbox
+    url: sandbox/wish-sandbox.yml
+  - type: RateLimits
+    url: rate-limits/wish-rate-limits.yml
+  - type: Lifecycle
+    url: lifecycle/wish-lifecycle.yml
+  - type: Conformance
+    url: conformance/wish-conformance.yml
+- aid: wish:wish-currencies-api
+  name: Wish Currencies API
+  description: The Currencies API from Wish — 1 operation(s) for currencies.
+  humanURL: https://merchant.wish.com/documentation/api/v3/reference
+  baseURL: https://merchant.wish.com/api/v3
+  tags:
+  - Currencies
+  properties:
+  - type: OpenAPI
+    url: openapi/wish-currencies-api-openapi.yml
+  - type: Authentication
+    url: authentication/wish-authentication.yml
+  - type: OAuthScopes
+    url: scopes/wish-scopes.yml
+  - type: Conventions
+    url: conventions/wish-conventions.yml
+  - type: ErrorCatalog
+    url: errors/wish-problem-types.yml
+  - type: DataModel
+    url: data-model/wish-data-model.yml
+  - type: Webhooks
+    url: asyncapi/wish-webhooks.yml
+  - type: Sandbox
+    url: sandbox/wish-sandbox.yml
+  - type: RateLimits
+    url: rate-limits/wish-rate-limits.yml
+  - type: Lifecycle
+    url: lifecycle/wish-lifecycle.yml
+  - type: Conformance
+    url: conformance/wish-conformance.yml
+- aid: wish:wish-eu-product-compliance-api
+  name: Wish EU Product Compliance API
+  description: >-
+    APIs that support EU Product Compliance -- EU Regulation 2019/1020 on Market Surveillance and Compliance
+    of Products (MSR).</br> For a product to be compliant with the MSR, a product must be linked with
+    a responsible person located in the EU.
+  humanURL: https://merchant.wish.com/documentation/api/v3/reference
+  baseURL: https://merchant.wish.com/api/v3
+  tags:
+  - EU Product Compliance
+  properties:
+  - type: OpenAPI
+    url: openapi/wish-eu-product-compliance-api-openapi.yml
+  - type: Authentication
+    url: authentication/wish-authentication.yml
+  - type: OAuthScopes
+    url: scopes/wish-scopes.yml
+  - type: Conventions
+    url: conventions/wish-conventions.yml
+  - type: ErrorCatalog
+    url: errors/wish-problem-types.yml
+  - type: DataModel
+    url: data-model/wish-data-model.yml
+  - type: Webhooks
+    url: asyncapi/wish-webhooks.yml
+  - type: Sandbox
+    url: sandbox/wish-sandbox.yml
+  - type: RateLimits
+    url: rate-limits/wish-rate-limits.yml
+  - type: Lifecycle
+    url: lifecycle/wish-lifecycle.yml
+  - type: Conformance
+    url: conformance/wish-conformance.yml
+- aid: wish:wish-france-epr-compliance-api
+  name: Wish France EPR Compliance API
+  description: >-
+    APIs that support France Extended Producer Responsibility (EPR) Compliance.</br> For a merchant to
+    be compliant with the EPR regulation, a product category they intend to sell must be linked with one
+    or more EPR registration number(s).
+  humanURL: https://merchant.wish.com/documentation/api/v3/reference
+  baseURL: https://merchant.wish.com/api/v3
+  tags:
+  - France EPR Compliance
+  properties:
+  - type: OpenAPI
+    url: openapi/wish-france-epr-compliance-api-openapi.yml
+  - type: Authentication
+    url: authentication/wish-authentication.yml
+  - type: OAuthScopes
+    url: scopes/wish-scopes.yml
+  - type: Conventions
+    url: conventions/wish-conventions.yml
+  - type: ErrorCatalog
+    url: errors/wish-problem-types.yml
+  - type: DataModel
+    url: data-model/wish-data-model.yml
+  - type: Webhooks
+    url: asyncapi/wish-webhooks.yml
+  - type: Sandbox
+    url: sandbox/wish-sandbox.yml
+  - type: RateLimits
+    url: rate-limits/wish-rate-limits.yml
+  - type: Lifecycle
+    url: lifecycle/wish-lifecycle.yml
+  - type: Conformance
+    url: conformance/wish-conformance.yml
+- aid: wish:wish-germany-epr-compliance-api
+  name: Wish Germany EPR Compliance API
+  description: >-
+    APIs that support Germany Extended Producer Responsibility (EPR) Compliance.</br> For a merchant to
+    be compliant with the EPR regulation, their applicable products must be linked with one or more EPR
+    registration number.
+  humanURL: https://merchant.wish.com/documentation/api/v3/reference
+  baseURL: https://merchant.wish.com/api/v3
+  tags:
+  - Germany EPR Compliance
+  properties:
+  - type: OpenAPI
+    url: openapi/wish-germany-epr-compliance-api-openapi.yml
+  - type: Authentication
+    url: authentication/wish-authentication.yml
+  - type: OAuthScopes
+    url: scopes/wish-scopes.yml
+  - type: Conventions
+    url: conventions/wish-conventions.yml
+  - type: ErrorCatalog
+    url: errors/wish-problem-types.yml
+  - type: DataModel
+    url: data-model/wish-data-model.yml
+  - type: Webhooks
+    url: asyncapi/wish-webhooks.yml
+  - type: Sandbox
+    url: sandbox/wish-sandbox.yml
+  - type: RateLimits
+    url: rate-limits/wish-rate-limits.yml
+  - type: Lifecycle
+    url: lifecycle/wish-lifecycle.yml
+  - type: Conformance
+    url: conformance/wish-conformance.yml
+- aid: wish:wish-merchant-api
+  name: Wish Merchant API
+  description: Merchant APIs
+  humanURL: https://merchant.wish.com/documentation/api/v3/reference
+  baseURL: https://merchant.wish.com/api/v3
+  tags:
+  - Merchant
+  properties:
+  - type: OpenAPI
+    url: openapi/wish-merchant-api-openapi.yml
+  - type: Authentication
+    url: authentication/wish-authentication.yml
+  - type: OAuthScopes
+    url: scopes/wish-scopes.yml
+  - type: Conventions
+    url: conventions/wish-conventions.yml
+  - type: ErrorCatalog
+    url: errors/wish-problem-types.yml
+  - type: DataModel
+    url: data-model/wish-data-model.yml
+  - type: Webhooks
+    url: asyncapi/wish-webhooks.yml
+  - type: Sandbox
+    url: sandbox/wish-sandbox.yml
+  - type: RateLimits
+    url: rate-limits/wish-rate-limits.yml
+  - type: Lifecycle
+    url: lifecycle/wish-lifecycle.yml
+  - type: Conformance
+    url: conformance/wish-conformance.yml
+- aid: wish:wish-oauth-api
+  name: Wish OAuth API
+  description: The OAuth API from Wish — 3 operation(s) for oauth.
+  humanURL: https://merchant.wish.com/documentation/api/v3/reference
+  baseURL: https://merchant.wish.com/api/v3
+  tags:
+  - OAuth
+  properties:
+  - type: OpenAPI
+    url: openapi/wish-oauth-api-openapi.yml
+  - type: Authentication
+    url: authentication/wish-authentication.yml
+  - type: OAuthScopes
+    url: scopes/wish-scopes.yml
+  - type: Conventions
+    url: conventions/wish-conventions.yml
+  - type: ErrorCatalog
+    url: errors/wish-problem-types.yml
+  - type: DataModel
+    url: data-model/wish-data-model.yml
+  - type: Webhooks
+    url: asyncapi/wish-webhooks.yml
+  - type: Sandbox
+    url: sandbox/wish-sandbox.yml
+  - type: RateLimits
+    url: rate-limits/wish-rate-limits.yml
+  - type: Lifecycle
+    url: lifecycle/wish-lifecycle.yml
+  - type: Conformance
+    url: conformance/wish-conformance.yml
+- aid: wish:wish-orders-api
+  name: Wish Orders API
+  description: The Orders API from Wish — 9 operation(s) for orders.
+  humanURL: https://merchant.wish.com/documentation/api/v3/reference
+  baseURL: https://merchant.wish.com/api/v3
+  tags:
+  - Orders
+  properties:
+  - type: OpenAPI
+    url: openapi/wish-orders-api-openapi.yml
+  - type: Authentication
+    url: authentication/wish-authentication.yml
+  - type: OAuthScopes
+    url: scopes/wish-scopes.yml
+  - type: Conventions
+    url: conventions/wish-conventions.yml
+  - type: ErrorCatalog
+    url: errors/wish-problem-types.yml
+  - type: DataModel
+    url: data-model/wish-data-model.yml
+  - type: Webhooks
+    url: asyncapi/wish-webhooks.yml
+  - type: Sandbox
+    url: sandbox/wish-sandbox.yml
+  - type: RateLimits
+    url: rate-limits/wish-rate-limits.yml
+  - type: Lifecycle
+    url: lifecycle/wish-lifecycle.yml
+  - type: Conformance
+    url: conformance/wish-conformance.yml
+- aid: wish:wish-payments-api
+  name: Wish Payments API
+  description: Payments APIs
+  humanURL: https://merchant.wish.com/documentation/api/v3/reference
+  baseURL: https://merchant.wish.com/api/v3
+  tags:
+  - Payments
+  properties:
+  - type: OpenAPI
+    url: openapi/wish-payments-api-openapi.yml
+  - type: Authentication
+    url: authentication/wish-authentication.yml
+  - type: OAuthScopes
+    url: scopes/wish-scopes.yml
+  - type: Conventions
+    url: conventions/wish-conventions.yml
+  - type: ErrorCatalog
+    url: errors/wish-problem-types.yml
+  - type: DataModel
+    url: data-model/wish-data-model.yml
+  - type: Webhooks
+    url: asyncapi/wish-webhooks.yml
+  - type: Sandbox
+    url: sandbox/wish-sandbox.yml
+  - type: RateLimits
+    url: rate-limits/wish-rate-limits.yml
+  - type: Lifecycle
+    url: lifecycle/wish-lifecycle.yml
+  - type: Conformance
+    url: conformance/wish-conformance.yml
+- aid: wish:wish-penalties-api
+  name: Wish Penalties API
+  description: The Penalties API from Wish — 3 operation(s) for penalties.
+  humanURL: https://merchant.wish.com/documentation/api/v3/reference
+  baseURL: https://merchant.wish.com/api/v3
+  tags:
+  - Penalties
+  properties:
+  - type: OpenAPI
+    url: openapi/wish-penalties-api-openapi.yml
+  - type: Authentication
+    url: authentication/wish-authentication.yml
+  - type: OAuthScopes
+    url: scopes/wish-scopes.yml
+  - type: Conventions
+    url: conventions/wish-conventions.yml
+  - type: ErrorCatalog
+    url: errors/wish-problem-types.yml
+  - type: DataModel
+    url: data-model/wish-data-model.yml
+  - type: Webhooks
+    url: asyncapi/wish-webhooks.yml
+  - type: Sandbox
+    url: sandbox/wish-sandbox.yml
+  - type: RateLimits
+    url: rate-limits/wish-rate-limits.yml
+  - type: Lifecycle
+    url: lifecycle/wish-lifecycle.yml
+  - type: Conformance
+    url: conformance/wish-conformance.yml
+- aid: wish:wish-productboost-api
+  name: Wish ProductBoost API
+  description: The ProductBoost API from Wish — 7 operation(s) for productboost.
+  humanURL: https://merchant.wish.com/documentation/api/v3/reference
+  baseURL: https://merchant.wish.com/api/v3
+  tags:
+  - ProductBoost
+  properties:
+  - type: OpenAPI
+    url: openapi/wish-productboost-api-openapi.yml
+  - type: Authentication
+    url: authentication/wish-authentication.yml
+  - type: OAuthScopes
+    url: scopes/wish-scopes.yml
+  - type: Conventions
+    url: conventions/wish-conventions.yml
+  - type: ErrorCatalog
+    url: errors/wish-problem-types.yml
+  - type: DataModel
+    url: data-model/wish-data-model.yml
+  - type: Webhooks
+    url: asyncapi/wish-webhooks.yml
+  - type: Sandbox
+    url: sandbox/wish-sandbox.yml
+  - type: RateLimits
+    url: rate-limits/wish-rate-limits.yml
+  - type: Lifecycle
+    url: lifecycle/wish-lifecycle.yml
+  - type: Conformance
+    url: conformance/wish-conformance.yml
+- aid: wish:wish-products-api
+  name: Wish Products API
+  description: Products APIs
+  humanURL: https://merchant.wish.com/documentation/api/v3/reference
+  baseURL: https://merchant.wish.com/api/v3
+  tags:
+  - Products
+  properties:
+  - type: OpenAPI
+    url: openapi/wish-products-api-openapi.yml
+  - type: Authentication
+    url: authentication/wish-authentication.yml
+  - type: OAuthScopes
+    url: scopes/wish-scopes.yml
+  - type: Conventions
+    url: conventions/wish-conventions.yml
+  - type: ErrorCatalog
+    url: errors/wish-problem-types.yml
+  - type: DataModel
+    url: data-model/wish-data-model.yml
+  - type: Webhooks
+    url: asyncapi/wish-webhooks.yml
+  - type: Sandbox
+    url: sandbox/wish-sandbox.yml
+  - type: RateLimits
+    url: rate-limits/wish-rate-limits.yml
+  - type: Lifecycle
+    url: lifecycle/wish-lifecycle.yml
+  - type: Conformance
+    url: conformance/wish-conformance.yml
+- aid: wish:wish-promotions-platform-api
+  name: Wish Promotions Platform API
+  description: The Promotions Platform API from Wish — 6 operation(s) for promotions platform.
+  humanURL: https://merchant.wish.com/documentation/api/v3/reference
+  baseURL: https://merchant.wish.com/api/v3
+  tags:
+  - Promotions Platform
+  properties:
+  - type: OpenAPI
+    url: openapi/wish-promotions-platform-api-openapi.yml
+  - type: Authentication
+    url: authentication/wish-authentication.yml
+  - type: OAuthScopes
+    url: scopes/wish-scopes.yml
+  - type: Conventions
+    url: conventions/wish-conventions.yml
+  - type: ErrorCatalog
+    url: errors/wish-problem-types.yml
+  - type: DataModel
+    url: data-model/wish-data-model.yml
+  - type: Webhooks
+    url: asyncapi/wish-webhooks.yml
+  - type: Sandbox
+    url: sandbox/wish-sandbox.yml
+  - type: RateLimits
+    url: rate-limits/wish-rate-limits.yml
+  - type: Lifecycle
+    url: lifecycle/wish-lifecycle.yml
+  - type: Conformance
+    url: conformance/wish-conformance.yml
+- aid: wish:wish-ratings-api
+  name: Wish Ratings API
+  description: The Ratings API from Wish — 2 operation(s) for ratings.
+  humanURL: https://merchant.wish.com/documentation/api/v3/reference
+  baseURL: https://merchant.wish.com/api/v3
+  tags:
+  - Ratings
+  properties:
+  - type: OpenAPI
+    url: openapi/wish-ratings-api-openapi.yml
+  - type: Authentication
+    url: authentication/wish-authentication.yml
+  - type: OAuthScopes
+    url: scopes/wish-scopes.yml
+  - type: Conventions
+    url: conventions/wish-conventions.yml
+  - type: ErrorCatalog
+    url: errors/wish-problem-types.yml
+  - type: DataModel
+    url: data-model/wish-data-model.yml
+  - type: Webhooks
+    url: asyncapi/wish-webhooks.yml
+  - type: Sandbox
+    url: sandbox/wish-sandbox.yml
+  - type: RateLimits
+    url: rate-limits/wish-rate-limits.yml
+  - type: Lifecycle
+    url: lifecycle/wish-lifecycle.yml
+  - type: Conformance
+    url: conformance/wish-conformance.yml
+- aid: wish:wish-taxonomy-api
+  name: Wish Taxonomy API
+  description: Taxonomy APIs
+  humanURL: https://merchant.wish.com/documentation/api/v3/reference
+  baseURL: https://merchant.wish.com/api/v3
+  tags:
+  - Taxonomy
+  properties:
+  - type: OpenAPI
+    url: openapi/wish-taxonomy-api-openapi.yml
+  - type: Authentication
+    url: authentication/wish-authentication.yml
+  - type: OAuthScopes
+    url: scopes/wish-scopes.yml
+  - type: Conventions
+    url: conventions/wish-conventions.yml
+  - type: ErrorCatalog
+    url: errors/wish-problem-types.yml
+  - type: DataModel
+    url: data-model/wish-data-model.yml
+  - type: Webhooks
+    url: asyncapi/wish-webhooks.yml
+  - type: Sandbox
+    url: sandbox/wish-sandbox.yml
+  - type: RateLimits
+    url: rate-limits/wish-rate-limits.yml
+  - type: Lifecycle
+    url: lifecycle/wish-lifecycle.yml
+  - type: Conformance
+    url: conformance/wish-conformance.yml
+- aid: wish:wish-tickets-api
+  name: Wish Tickets API
+  description: >-
+    For each consumer question or complaint, a ticket is created to manage the dialogue between you, Wish,
+    and the consumer. With this API, you can fetch tickets awaiting your response, fetch a specific ticket,
+    close a ticket, and reply to tickets.
+  humanURL: https://merchant.wish.com/documentation/api/v3/reference
+  baseURL: https://merchant.wish.com/api/v3
+  tags:
+  - Tickets
+  properties:
+  - type: OpenAPI
+    url: openapi/wish-tickets-api-openapi.yml
+  - type: Authentication
+    url: authentication/wish-authentication.yml
+  - type: OAuthScopes
+    url: scopes/wish-scopes.yml
+  - type: Conventions
+    url: conventions/wish-conventions.yml
+  - type: ErrorCatalog
+    url: errors/wish-problem-types.yml
+  - type: DataModel
+    url: data-model/wish-data-model.yml
+  - type: Webhooks
+    url: asyncapi/wish-webhooks.yml
+  - type: Sandbox
+    url: sandbox/wish-sandbox.yml
+  - type: RateLimits
+    url: rate-limits/wish-rate-limits.yml
+  - type: Lifecycle
+    url: lifecycle/wish-lifecycle.yml
+  - type: Conformance
+    url: conformance/wish-conformance.yml
+- aid: wish:wish-unification-initiative-api
+  name: Wish Unification Initiative API
+  description: Unification Initiative APIs
+  humanURL: https://merchant.wish.com/documentation/api/v3/reference
+  baseURL: https://merchant.wish.com/api/v3
+  tags:
+  - Unification Initiative
+  properties:
+  - type: OpenAPI
+    url: openapi/wish-unification-initiative-api-openapi.yml
+  - type: Authentication
+    url: authentication/wish-authentication.yml
+  - type: OAuthScopes
+    url: scopes/wish-scopes.yml
+  - type: Conventions
+    url: conventions/wish-conventions.yml
+  - type: ErrorCatalog
+    url: errors/wish-problem-types.yml
+  - type: DataModel
+    url: data-model/wish-data-model.yml
+  - type: Webhooks
+    url: asyncapi/wish-webhooks.yml
+  - type: Sandbox
+    url: sandbox/wish-sandbox.yml
+  - type: RateLimits
+    url: rate-limits/wish-rate-limits.yml
+  - type: Lifecycle
+    url: lifecycle/wish-lifecycle.yml
+  - type: Conformance
+    url: conformance/wish-conformance.yml
+- aid: wish:wish-variations-api
+  name: Wish Variations API
+  description: Variations APIs
+  humanURL: https://merchant.wish.com/documentation/api/v3/reference
+  baseURL: https://merchant.wish.com/api/v3
+  tags:
+  - Variations
+  properties:
+  - type: OpenAPI
+    url: openapi/wish-variations-api-openapi.yml
+  - type: Authentication
+    url: authentication/wish-authentication.yml
+  - type: OAuthScopes
+    url: scopes/wish-scopes.yml
+  - type: Conventions
+    url: conventions/wish-conventions.yml
+  - type: ErrorCatalog
+    url: errors/wish-problem-types.yml
+  - type: DataModel
+    url: data-model/wish-data-model.yml
+  - type: Webhooks
+    url: asyncapi/wish-webhooks.yml
+  - type: Sandbox
+    url: sandbox/wish-sandbox.yml
+  - type: RateLimits
+    url: rate-limits/wish-rate-limits.yml
+  - type: Lifecycle
+    url: lifecycle/wish-lifecycle.yml
+  - type: Conformance
+    url: conformance/wish-conformance.yml
+- aid: wish:wish-videos-api
+  name: Wish Videos API
+  description: Merchant Videos APIs
+  humanURL: https://merchant.wish.com/documentation/api/v3/reference
+  baseURL: https://merchant.wish.com/api/v3
+  tags:
+  - Videos
+  properties:
+  - type: OpenAPI
+    url: openapi/wish-videos-api-openapi.yml
+  - type: Authentication
+    url: authentication/wish-authentication.yml
+  - type: OAuthScopes
+    url: scopes/wish-scopes.yml
+  - type: Conventions
+    url: conventions/wish-conventions.yml
+  - type: ErrorCatalog
+    url: errors/wish-problem-types.yml
+  - type: DataModel
+    url: data-model/wish-data-model.yml
+  - type: Webhooks
+    url: asyncapi/wish-webhooks.yml
+  - type: Sandbox
+    url: sandbox/wish-sandbox.yml
+  - type: RateLimits
+    url: rate-limits/wish-rate-limits.yml
+  - type: Lifecycle
+    url: lifecycle/wish-lifecycle.yml
+  - type: Conformance
+    url: conformance/wish-conformance.yml
+- aid: wish:wish-webhook-api
+  name: Wish Webhook API
+  description: >-
+    APIs for managing webhook subscriptions. Merchants can use webhook subscriptions to receive notifications
+    about particular events, instead of having to make API calls periodically to check their status. Note
+    that these APIs are for merchants, not ERPs. For ERPs, please log into merchant dashboard to update
+    your ERP-level webhook subscription. Visit the [webhook documentation](https://merchant.wish.com/documentation/webhooks)
+    to learn more.
+  humanURL: https://merchant.wish.com/documentation/api/v3/reference
+  baseURL: https://merchant.wish.com/api/v3
+  tags:
+  - Webhook
+  properties:
+  - type: OpenAPI
+    url: openapi/wish-webhook-api-openapi.yml
+  - type: Authentication
+    url: authentication/wish-authentication.yml
+  - type: OAuthScopes
+    url: scopes/wish-scopes.yml
+  - type: Conventions
+    url: conventions/wish-conventions.yml
+  - type: ErrorCatalog
+    url: errors/wish-problem-types.yml
+  - type: DataModel
+    url: data-model/wish-data-model.yml
+  - type: Webhooks
+    url: asyncapi/wish-webhooks.yml
+  - type: Sandbox
+    url: sandbox/wish-sandbox.yml
+  - type: RateLimits
+    url: rate-limits/wish-rate-limits.yml
+  - type: Lifecycle
+    url: lifecycle/wish-lifecycle.yml
+  - type: Conformance
+    url: conformance/wish-conformance.yml
 maintainers:
 - FN: Kin Lane
   email: kin@apievangelist.com
 - FN: APIs.json
   email: info@apis.io
 common:
+- type: AgenticAccess
+  url: agentic-access/wish-agentic-access.yml
+- type: DomainSecurity
+  url: security/wish-domain-security.yml
+- type: Packages
+  url: packages/wish-packages.yml
+- type: WellKnown
+  url: well-known/wish-well-known.yml
+- type: LLMsTxt
+  url: llms/wish-llms.txt
 - type: Website
   url: https://wish.com
+- type: DeveloperPortal
+  url: https://merchant.wish.com/
+- type: Documentation
+  url: https://merchant.wish.com/documentation/api/v3/reference
+- type: APIReference
+  url: https://merchant.wish.com/documentation/api/v3/reference
+- type: GettingStarted
+  url: https://merchant.wish.com/documentation/api/v3/oauth
+- type: GitHubOrganization
+  url: https://github.com/ContextLogic
+- type: TermsOfService
+  url: https://www.wish.com/terms
+- type: PrivacyPolicy
+  url: https://www.wish.com/privacy_policy
+- type: SignUp
+  url: https://merchant.wish.com/
+x-enrichment:
+  date: '2026-07-21'
+  status: enriched
+  artifacts_added: 23
+  pass: local-v1

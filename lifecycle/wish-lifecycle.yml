@@ -1,0 +1,24 @@
+generated: '2026-07-21'
+method: searched
+source: openapi/wish-marketplace-v3-openapi.json + live probes 2026-07-21
+versioning:
+  scheme: uri-path
+  current: v3
+  spec_version: 3.0.65
+  notes: Version in the URL path (/api/v3/). The legacy v2 API (merchant.wish.com/api/v2/, documented
+    at china-merchant.wish.com/documentation/api) now returns 404 for /api/v2/ endpoints; v3 is the current
+    surface.
+deprecation:
+  policy_url: null
+  sunset_header: false
+  notes: No published deprecation policy or RFC 8594 Sunset header support found; no operations are marked
+    deprecated in the OpenAPI.
+status_page: null
+sla: null
+environments:
+- name: production
+  base_url: https://merchant.wish.com/api/v3/
+- name: sandbox
+  base_url: https://sandbox.merchant.wish.com/api/v3/
+  status_note: sandbox web UI returned 503 on 2026-07-21 probe
+deprecated_operations: []

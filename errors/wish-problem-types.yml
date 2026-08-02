@@ -1,0 +1,26 @@
+generated: '2026-07-21'
+method: derived
+source: openapi/wish-marketplace-v3-openapi.json 4xx responses + live probe of https://merchant.wish.com/api/v3/
+format: custom-envelope
+envelope:
+  fields:
+    message: human-readable error description
+    code: Wish-specific integer error code (0 = success)
+    data: payload; empty on errors
+problems:
+- status: 400
+  title: Bad request / API error
+  format: custom-envelope
+  schema: 'APIError {message: string, code: int32}'
+  description: Returned by 88 operations; message describes the error, code is a Wish-specific integer
+    (0 = success).
+- status: 401
+  title: Missing or invalid access token
+  example:
+    message: Missing access token in authorization header
+    code: 1012
+    data: {}
+  description: Observed live on unauthenticated requests to /api/v3/* (2026-07-21).
+- status: 429
+  title: Too Many Requests
+  description: Rate limit exceeded; response carries Wish-Rate-Limit-Reset header with the reset time.
