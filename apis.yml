@@ -705,6 +705,12 @@ maintainers:
 - FN: APIs.json
   email: info@apis.io
 common:
+- type: AgentSkill
+  url: skills/wish-fulfill-orders.md
+- type: MCPServer
+  url: mcp/wish-mcp.yml
+- type: Overlay
+  url: overlays/wish-marketplace-v3-overlay.yaml
 - type: AgenticAccess
   url: agentic-access/wish-agentic-access.yml
 - type: DomainSecurity
