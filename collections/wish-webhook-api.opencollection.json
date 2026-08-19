@@ -1,0 +1,206 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "Wish Marketplace V3 Brands Webhook API",
+    "version": "3.0.65"
+  },
+  "request": {
+    "auth": {
+      "type": "oauth2",
+      "flow": "authorization_code",
+      "authorizationUrl": "https://merchant.wish.com/v3/oauth/authorize",
+      "accessTokenUrl": "https://merchant.wish.com/api/v3/oauth/access_token",
+      "credentials": {
+        "clientId": "{{clientId}}",
+        "clientSecret": "{{clientSecret}}"
+      }
+    }
+  },
+  "items": [
+    {
+      "info": {
+        "name": "Webhook",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "List Subscriptions",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://merchant.wish.com/api/v3/webhook/subscriptions",
+            "auth": {
+              "type": "oauth2",
+              "flow": "authorization_code",
+              "authorizationUrl": "https://merchant.wish.com/v3/oauth/authorize",
+              "accessTokenUrl": "https://merchant.wish.com/api/v3/oauth/access_token",
+              "credentials": {
+                "clientId": "{{clientId}}",
+                "clientSecret": "{{clientSecret}}"
+              }
+            }
+          },
+          "docs": "Get all subscriptions"
+        },
+        {
+          "info": {
+            "name": "Create a Subscription",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://merchant.wish.com/api/v3/webhook/subscriptions",
+            "params": [
+              {
+                "name": "topic_id",
+                "value": "",
+                "type": "query",
+                "description": "ID of the topic, obtained from the [getTopics API](/documentation/api/v3/reference#operation/getTopics)"
+              },
+              {
+                "name": "endpoint",
+                "value": "",
+                "type": "query",
+                "description": "Endpoint URL that Wish should send POST request to when the subscribed event happens"
+              }
+            ],
+            "auth": {
+              "type": "oauth2",
+              "flow": "authorization_code",
+              "authorizationUrl": "https://merchant.wish.com/v3/oauth/authorize",
+              "accessTokenUrl": "https://merchant.wish.com/api/v3/oauth/access_token",
+              "credentials": {
+                "clientId": "{{clientId}}",
+                "clientSecret": "{{clientSecret}}"
+              }
+            }
+          },
+          "docs": "Create a subscription"
+        },
+        {
+          "info": {
+            "name": "Get a Subscription",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://merchant.wish.com/api/v3/webhook/subscriptions/:id",
+            "params": [
+              {
+                "name": "id",
+                "value": "",
+                "type": "path",
+                "description": "ID of the subscription"
+              }
+            ],
+            "auth": {
+              "type": "oauth2",
+              "flow": "authorization_code",
+              "authorizationUrl": "https://merchant.wish.com/v3/oauth/authorize",
+              "accessTokenUrl": "https://merchant.wish.com/api/v3/oauth/access_token",
+              "credentials": {
+                "clientId": "{{clientId}}",
+                "clientSecret": "{{clientSecret}}"
+              }
+            }
+          },
+          "docs": "Get a subscription by its ID"
+        },
+        {
+          "info": {
+            "name": "Update a Subscription",
+            "type": "http"
+          },
+          "http": {
+            "method": "PUT",
+            "url": "https://merchant.wish.com/api/v3/webhook/subscriptions/:id",
+            "params": [
+              {
+                "name": "id",
+                "value": "",
+                "type": "path",
+                "description": "ID of the subscription"
+              },
+              {
+                "name": "endpoint",
+                "value": "",
+                "type": "query",
+                "description": "Endpoint URL that Wish should send POST request to when the subscribed event happens"
+              },
+              {
+                "name": "status",
+                "value": "",
+                "type": "query",
+                "description": "Whether the subscription is active"
+              }
+            ],
+            "auth": {
+              "type": "oauth2",
+              "flow": "authorization_code",
+              "authorizationUrl": "https://merchant.wish.com/v3/oauth/authorize",
+              "accessTokenUrl": "https://merchant.wish.com/api/v3/oauth/access_token",
+              "credentials": {
+                "clientId": "{{clientId}}",
+                "clientSecret": "{{clientSecret}}"
+              }
+            }
+          },
+          "docs": "Update a subscription by its ID, only used for reactivate or change the endpoint for the inactive subscription. Do not update the endpoint for active subscription."
+        },
+        {
+          "info": {
+            "name": "Delete a Subscription",
+            "type": "http"
+          },
+          "http": {
+            "method": "DELETE",
+            "url": "https://merchant.wish.com/api/v3/webhook/subscriptions/:id",
+            "params": [
+              {
+                "name": "id",
+                "value": "",
+                "type": "path",
+                "description": "ID of the subscription"
+              }
+            ],
+            "auth": {
+              "type": "oauth2",
+              "flow": "authorization_code",
+              "authorizationUrl": "https://merchant.wish.com/v3/oauth/authorize",
+              "accessTokenUrl": "https://merchant.wish.com/api/v3/oauth/access_token",
+              "credentials": {
+                "clientId": "{{clientId}}",
+                "clientSecret": "{{clientSecret}}"
+              }
+            }
+          },
+          "docs": "Delete a subscription by its ID"
+        },
+        {
+          "info": {
+            "name": "List Topics",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://merchant.wish.com/api/v3/webhook/topics",
+            "auth": {
+              "type": "oauth2",
+              "flow": "authorization_code",
+              "authorizationUrl": "https://merchant.wish.com/v3/oauth/authorize",
+              "accessTokenUrl": "https://merchant.wish.com/api/v3/oauth/access_token",
+              "credentials": {
+                "clientId": "{{clientId}}",
+                "clientSecret": "{{clientSecret}}"
+              }
+            }
+          },
+          "docs": "List all topics"
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

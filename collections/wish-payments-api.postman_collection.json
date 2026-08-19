@@ -1,0 +1,611 @@
+{
+  "item": [
+    {
+      "id": "58f704d1-d913-4a7c-8df9-7077aeda86f8",
+      "name": "Payments",
+      "description": {
+        "content": "Payments APIs",
+        "type": "text/plain"
+      },
+      "item": [
+        {
+          "id": "771b1854-4690-42c6-9c76-0dbf522b4a36",
+          "name": "Batch download invoices",
+          "request": {
+            "name": "Batch download invoices",
+            "description": {
+              "content": "Batch payment invoice download",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "api",
+                "v3",
+                "payments",
+                "invoices",
+                "bulk_get"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [
+                {
+                  "disabled": false,
+                  "key": "limit",
+                  "value": "<integer>",
+                  "description": "The limit on the number of orders that will be returned."
+                },
+                {
+                  "disabled": false,
+                  "key": "payment_released_at_min",
+                  "value": "<dateTime>",
+                  "description": "(Optional)Specify the beginning of the time window to view desired payments. Payments released before this time will not show."
+                },
+                {
+                  "disabled": false,
+                  "key": "payment_released_at_max",
+                  "value": "<dateTime>",
+                  "description": "(Optional)Specify the end of the time window to view desired payments. Payments released after this time will not show."
+                },
+                {
+                  "disabled": false,
+                  "key": "sort_by",
+                  "value": "payment_released_at",
+                  "description": "(Optional)Choose what field to order the payments, the order is descending by default. Current supported fields are:\n* payment_released_at: The time when the payment was released.\n"
+                }
+              ],
+              "variable": []
+            },
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "POST",
+            "auth": {
+              "type": "oauth2",
+              "oauth2": [
+                {
+                  "key": "scope",
+                  "value": "payments:write tickets:write epc:read returns:write returns:read fbw:read products:read payments:read fbw:write merchant:write products:write ratings:read videos:read compliance:write product_boost:read listing_quality:read webhook:write orders:read compliance:read fbs:read penalties:read penalties:write infractions:read orders:write merchant:read notifications:write announcements:read product_boost:write notifications:read webhook:read qoo10:read wps_parcel:write wps_parcel:read tickets:read infractions:write videos:write epc:write"
+                },
+                {
+                  "key": "redirect_uri",
+                  "value": "https://merchant.wish.com/api/v3/oauth/refresh_token"
+                },
+                {
+                  "key": "accessTokenUrl",
+                  "value": "https://merchant.wish.com/api/v3/oauth/access_token"
+                },
+                {
+                  "key": "authUrl",
+                  "value": "https://merchant.wish.com/v3/oauth/authorize"
+                },
+                {
+                  "key": "grant_type",
+                  "value": "authorization_code"
+                }
+              ]
+            }
+          },
+          "response": [
+            {
+              "id": "6cb874c4-1e5f-40b1-b28e-bd7c71bae284",
+              "name": "successfully queued a batch invoice download job",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "api",
+                    "v3",
+                    "payments",
+                    "invoices",
+                    "bulk_get"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "limit",
+                      "value": "<integer>"
+                    },
+                    {
+                      "key": "payment_released_at_min",
+                      "value": "2020-01-01T07:00:00.000Z"
+                    },
+                    {
+                      "key": "payment_released_at_max",
+                      "value": "2020-01-01T07:00:00.000Z"
+                    },
+                    {
+                      "key": "sort_by",
+                      "value": "payment_released_at"
+                    }
+                  ],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: oauth2",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "<token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {}
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"status\": \"READY\",\n  \"job_id\": \"string\",\n  \"total_count\": 1821.2017357345067,\n  \"created_at\": \"2022-05-28T06:45:18.122Z\",\n  \"completed_at\": \"1954-10-16T06:24:49.958Z\",\n  \"file_urls\": [\n    \"string\",\n    \"string\"\n  ],\n  \"processed_count\": 3728.529213180385,\n  \"merchant_id\": \"string\",\n  \"expiry_time\": \"1973-12-09T18:53:50.070Z\",\n  \"id\": \"string\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "0008bd4b-47d7-43e3-82ea-ac872c2037ef",
+              "name": "failed to queue an invoice download job",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "api",
+                    "v3",
+                    "payments",
+                    "invoices",
+                    "bulk_get"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "limit",
+                      "value": "<integer>"
+                    },
+                    {
+                      "key": "payment_released_at_min",
+                      "value": "2020-01-01T07:00:00.000Z"
+                    },
+                    {
+                      "key": "payment_released_at_max",
+                      "value": "2020-01-01T07:00:00.000Z"
+                    },
+                    {
+                      "key": "sort_by",
+                      "value": "payment_released_at"
+                    }
+                  ],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: oauth2",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "<token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {}
+              },
+              "status": "Bad Request",
+              "code": 400,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"message\": \"There is no such invoice download job for the merchant.\",\n  \"code\": \"90001\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "2093e6b5-60de-460f-80bf-0e919a9121d2",
+          "name": "Get batch invoice download job status",
+          "request": {
+            "name": "Get batch invoice download job status",
+            "description": {
+              "content": "Get batch invoice download job status",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "api",
+                "v3",
+                "payments",
+                "invoices",
+                "bulk_get",
+                ":id"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": [
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<object-id>",
+                  "key": "id",
+                  "description": "(Required) ID of the batch invoice download job to query"
+                }
+              ]
+            },
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "GET",
+            "auth": {
+              "type": "oauth2",
+              "oauth2": [
+                {
+                  "key": "scope",
+                  "value": "payments:write tickets:write epc:read returns:write returns:read fbw:read products:read payments:read fbw:write merchant:write products:write ratings:read videos:read compliance:write product_boost:read listing_quality:read webhook:write orders:read compliance:read fbs:read penalties:read penalties:write infractions:read orders:write merchant:read notifications:write announcements:read product_boost:write notifications:read webhook:read qoo10:read wps_parcel:write wps_parcel:read tickets:read infractions:write videos:write epc:write"
+                },
+                {
+                  "key": "redirect_uri",
+                  "value": "https://merchant.wish.com/api/v3/oauth/refresh_token"
+                },
+                {
+                  "key": "accessTokenUrl",
+                  "value": "https://merchant.wish.com/api/v3/oauth/access_token"
+                },
+                {
+                  "key": "authUrl",
+                  "value": "https://merchant.wish.com/v3/oauth/authorize"
+                },
+                {
+                  "key": "grant_type",
+                  "value": "authorization_code"
+                }
+              ]
+            }
+          },
+          "response": [
+            {
+              "id": "83bfc6b9-f780-4103-a86e-ec92740b0cb8",
+              "name": "successfully queried for the invoice download job",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "api",
+                    "v3",
+                    "payments",
+                    "invoices",
+                    "bulk_get",
+                    ":id"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<object-id>",
+                      "key": "id",
+                      "description": "(Required) ID of the batch invoice download job to query"
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: oauth2",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "<token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"status\": \"PENDING\",\n  \"job_id\": \"string\",\n  \"total_count\": 1327.6426019464172,\n  \"created_at\": \"2005-08-13T14:59:22.812Z\",\n  \"completed_at\": \"1966-11-24T13:06:04.590Z\",\n  \"file_urls\": [\n    \"string\",\n    \"string\"\n  ],\n  \"processed_count\": 3399.0755022607523,\n  \"merchant_id\": \"string\",\n  \"expiry_time\": \"1960-07-08T23:22:52.231Z\",\n  \"id\": \"string\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "663eebcb-d9b4-4744-8772-36a6fcfc6613",
+              "name": "failed to query for a invoice download job",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "api",
+                    "v3",
+                    "payments",
+                    "invoices",
+                    "bulk_get",
+                    ":id"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<object-id>",
+                      "key": "id",
+                      "description": "(Required) ID of the batch invoice download job to query"
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: oauth2",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "<token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "Bad Request",
+              "code": 400,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"message\": \"There is no such invoice download job for the merchant.\",\n  \"code\": \"90001\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "77a87146-34ce-46b5-a07a-fc5394b3de4c",
+          "name": "Get merchant early payment info.",
+          "request": {
+            "name": "Get merchant early payment info.",
+            "description": {
+              "content": "Get info about early payment.",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "api",
+                "v3",
+                "payments",
+                "early_payment"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": []
+            },
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "GET",
+            "auth": {
+              "type": "oauth2",
+              "oauth2": [
+                {
+                  "key": "scope",
+                  "value": "payments:write tickets:write epc:read returns:write returns:read fbw:read products:read payments:read fbw:write merchant:write products:write ratings:read videos:read compliance:write product_boost:read listing_quality:read webhook:write orders:read compliance:read fbs:read penalties:read penalties:write infractions:read orders:write merchant:read notifications:write announcements:read product_boost:write notifications:read webhook:read qoo10:read wps_parcel:write wps_parcel:read tickets:read infractions:write videos:write epc:write"
+                },
+                {
+                  "key": "redirect_uri",
+                  "value": "https://merchant.wish.com/api/v3/oauth/refresh_token"
+                },
+                {
+                  "key": "accessTokenUrl",
+                  "value": "https://merchant.wish.com/api/v3/oauth/access_token"
+                },
+                {
+                  "key": "authUrl",
+                  "value": "https://merchant.wish.com/v3/oauth/authorize"
+                },
+                {
+                  "key": "grant_type",
+                  "value": "authorization_code"
+                }
+              ]
+            }
+          },
+          "response": [
+            {
+              "id": "92e4666c-1e7e-4500-936c-90ca555b56c4",
+              "name": "successfully queried for merchant early payment info",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "api",
+                    "v3",
+                    "payments",
+                    "early_payment"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: oauth2",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "<token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"available_amount\": {\n    \"amount\": 4415.2468803249485,\n    \"currency_code\": \"USD\"\n  }\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "6c8a4f85-4025-4c94-99ce-47995aa645dc",
+              "name": "failed to query for merchant early payment info",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "api",
+                    "v3",
+                    "payments",
+                    "early_payment"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: oauth2",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "<token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "Bad Request",
+              "code": 400,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"code\": 2196,\n  \"message\": \"string\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        }
+      ],
+      "event": []
+    }
+  ],
+  "event": [],
+  "variable": [
+    {
+      "type": "string",
+      "value": "https://merchant.wish.com",
+      "key": "baseUrl"
+    }
+  ],
+  "auth": {
+    "type": "oauth2",
+    "oauth2": [
+      {
+        "key": "scope",
+        "value": "payments:write tickets:write epc:read returns:write returns:read fbw:read products:read payments:read fbw:write merchant:write products:write ratings:read videos:read compliance:write product_boost:read listing_quality:read webhook:write orders:read compliance:read fbs:read penalties:read penalties:write infractions:read orders:write merchant:read notifications:write announcements:read product_boost:write notifications:read webhook:read qoo10:read wps_parcel:write wps_parcel:read tickets:read infractions:write videos:write epc:write"
+      },
+      {
+        "key": "redirect_uri",
+        "value": "https://merchant.wish.com/api/v3/oauth/refresh_token"
+      },
+      {
+        "key": "accessTokenUrl",
+        "value": "https://merchant.wish.com/api/v3/oauth/access_token"
+      },
+      {
+        "key": "authUrl",
+        "value": "https://merchant.wish.com/v3/oauth/authorize"
+      },
+      {
+        "key": "grant_type",
+        "value": "authorization_code"
+      }
+    ]
+  },
+  "info": {
+    "_postman_id": "8713329a-de2b-4568-9f10-9c440dbe434f",
+    "name": "Wish Marketplace V3 Brands Payments API",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "description": {
+      "content": "\nWish Marketplace V3 API\n\n# General Information\n\n The Wish Marketplace API will be using oAuth to authenticate in order to offer better security for its users\n\n *   Learn about oAuth [here](oauth).\n *   If you are a merchant and want to create an application for yourself, learn about how to create a private app [here](../../private-app)\n *   If you are a ERP and create applications that'll be used by multiple merchants, learn about how to create a public app [here]( ../../public-app). You will need to apply to be a verified public application\n\n ## How to Test\n\n To avoid testing the API on production data, use our sandbox. The sandbox is completely contained and will not affect Wish users or your merchant account. \n \n To reach the sandbox, visit: https://sandbox.merchant.wish.com.\n\n To use the sandbox in testing, use https://sandbox.merchant.wish.com/api/v3/ as your base URL.\n\n How to Generate test data after you have created a sandbox account:\n 1. Navigate to the [unfulfilled orders page](https://sandbox.merchant.wish.com/transactions/action)\n 2. Hover over the dropdown next to the 'fulfill with csv' button and select Generate Orders\n\n ## Date/Time Format\n\n  All dates and times in our API are returned in the same format. It is in the form `YYYY-MM-DDTHH:mm:ss.sss±XX:ZZ` or `YYYY-MM-DDTHH:mm:ss.sssZ`, where 'Z' represents UTC timezone.\n  When sending timestamps in URL parameters or the request body, millisecond is optional and will defaults to 0 if not provided.\n\n  * `YYYY` is the year\n  * `MM` is the month\n  * `DD` is the day\n  * `HH` is the hour (in 24-hour clock format)\n  * `mm` is the minutes\n  * `ss.sss` is the seconds and milliseconds\n  * `±XX:ZZ` is the UTC offset of the form +XX:ZZ or -XX:ZZ where XX is a 2-digit string giving the number of UTC offset hours, and ZZ is a 2-digit string giving the number of UTC offset minutes.\n\n ## Response Schema\n\n  Every response returned from the Wish API will have the same schema. This schema is intended to give you a predictable manner to check the status of your request and know where to get the data. Each response will have the following top level attributes: message, code and data.\n\n  **Attributes**\n\n  <table>\n  <tbody>\n  <tr>\n  <th>Message</th>\n  <td>A message describing the error that happened, example: \"We could not find a product for id: '5d30f60e0a6fc464f4f376b0'\"</td>\n  </tr>\n  <tr>\n  <th>Code</th>\n  <td>A unique number which represents the error that has occurred, example: 1008 or 0 if success.</td>\n  </tr>\n  <tr>\n  <th>Data</th>\n  <td>For errors this will be empty.</td>\n  </tr>\n  </tbody>\n  </table>\n\n ## General Querying Techniques\n\n ### Partial Resources\n All GET endpoints (except OAuth) support a fields parameter which allows for requesting a partial response. Any fields specified in the response schema of an endpoint can be selected. The top level attribute `data` can be ignored when using the fields parameter.\n\n **Syntax**\n * Comma-separated list to select multiple fields\n * Use forward slash `/` to select nested field: `field1/nested_field`\n * Use parentheses `( )` to select multiple nested fields: `field1(nested_field1,nested_field2)`\n * Use `*` for wildcard selection: `field1/nested_field/*`\n\n\n **Example:**\n ```\n https://merchant.wish.com/api/v3/demo/get?fields=title,items(id,info/name)\n ```\n Which would result in the following partial response:\n ```\n {\n   \"title\": \"demo\",\n   \"items\": [\n     {\n       \"id\": \"1\",\n       \"info\": {\n         \"name\": \"demo_item_1\"\n       }\n     }, {\n       \"id\": \"2\",\n       \"info\": {\n         \"name\": \"demo_item_2\"\n       }\n     },\n     ...\n   ]\n }\n ```\n\n ## Locale\n   You can optionally specify locale in order to translate content and error messages into your language.\n   To do this use the [Accept-Language](https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Accept-Language) header to specify your preferred locales.\n   If none is provided, your default locale will be used.\n\n   For example, to request content in Chinese use: `Accept-Language: zh`\n\n   In the response, you will receive a [Content-Language](https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Content-Language) header that specifies the locale code of the response content.\n\n\n ## Rate-Limiting\n\n  Rate-limiting will be performed on a per-merchant basis for each app. It is your responsibility to ensure you are not making frequent unnecessary calls to the API.\n\n  If the rate limits cannot satisfy your need, we highly recommend integrating webhooks for your app. With webhooks, instead of pulling resources periodically, your app will receive real-time notifications for particular events that occur to a merchant’s store. [Learn more](https://merchant.wish.com/documentation/webhooks)\n\n  **Normal Usage**\n\n  To help you track the rate-limiter status, the following response header(s) will be provided with each response:\n\n   * `Wish-Rate-Limit-Remaining`: The number of calls remaining in the current rate-limiting window.\n\n\n  **Rate-Limit Exceeded**\n\n  After you exceed the number of allowed calls in the current rate-limiting window, you will receive a `429 Too Many Requests` error response and the following additional header(s):\n\n   * `Wish-Rate-Limit-Reset`: The time the rate-limiter will reset.\n\n\n  Once you receive this response there is nothing you can do except wait for the rate-limiter to reset. In order to avoid being rate-limited, you may want to cache your responses.\n\n ## Sorting\n   ### Overview\n   Sorting is available for most endpoints that return a collection (list) of objects. Each collection has a different set of enabled parameters for sorting, so please check specific collection section for detail.\n\n   ### Usage\n   Append `sort_by={parameter_name}.{asc|desc}` in your API request where `parameter_name` is a valid sortable parameter of that endpoint.\n\n   Example:\n   ```\n   /api/v3/penalties?sort_by=created_at.asc\n   ```\n\n ## Pagination\n  All bulk-fetching API methods that return lists of resource support pagination.\n  These methods commonly take at least 3 parameters: `limit`, `{attribute}_min`, `{attribute}_max`. Attribute can be `id`, `create_at`, etc., depending on each specific method.\n  For instance, you make a request to get a list of penalties `/api/v3/penalties?limit=20&created_at_max=2020-04-08T23:59:59Z&sort_by=created_at_max.desc`,\n  which means to fetch 20 penalities sorted by their creation time, with the most recent one being created before `2020-04-08T23:59:59Z`.\n  Assume that the response contains 20 `penalty` objects with the last object being `penalty_foo`,\n  then your subsequent request can be `/api/v3/penalties?limit=20&created_at_max={penalty_foo.create_at}&sort_by=created_at_max.desc` to fetch the next page of list.\n  Note that when fetching next page using `id_min` or `id_max`, you need to perform `+/- 1`(correspondingly) on the last object's ID in the current page, as `id_min` and `id_max` are inclusive. (All V3 API resources' IDs are either integer or BSON object ID - a hex number).\n\n\n ## Request ID\n  Each API request is associated with a unique identifier. You can find this value in response headers, under `Wish-Request-Id`.\n  **When you need to contact us about a specific request, please provide this ID to ensure the fastest possible reply**\n\n# Authentication\nFor all requests that require OAuth2 authentication, the access token must be provided in the `Authorization` request header in the following format: `Authorization: Bearer <token>`\n\nFor example:\n```\nAuthorization: Bearer 3d6e2d71bc464e42bfbdb081afb73c1e\n```\n<!-- ReDoc-Inject: <security-definitions> -->\n\n\nContact Support:\n Email: partner-api@wish.com",
+      "type": "text/plain"
+    }
+  }
+}

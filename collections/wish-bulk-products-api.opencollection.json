@@ -1,0 +1,134 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "Wish Marketplace V3 Brands Bulk Products API",
+    "version": "3.0.65"
+  },
+  "request": {
+    "auth": {
+      "type": "oauth2",
+      "flow": "authorization_code",
+      "authorizationUrl": "https://merchant.wish.com/v3/oauth/authorize",
+      "accessTokenUrl": "https://merchant.wish.com/api/v3/oauth/access_token",
+      "credentials": {
+        "clientId": "{{clientId}}",
+        "clientSecret": "{{clientSecret}}"
+      }
+    }
+  },
+  "items": [
+    {
+      "info": {
+        "name": "Bulk Products",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Get products",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://merchant.wish.com/api/v3/products/bulk_get",
+            "auth": {
+              "type": "oauth2",
+              "flow": "authorization_code",
+              "authorizationUrl": "https://merchant.wish.com/v3/oauth/authorize",
+              "accessTokenUrl": "https://merchant.wish.com/api/v3/oauth/access_token",
+              "credentials": {
+                "clientId": "{{clientId}}",
+                "clientSecret": "{{clientSecret}}"
+              }
+            }
+          },
+          "docs": "Get products asynchronously."
+        },
+        {
+          "info": {
+            "name": "Get the update products job status",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://merchant.wish.com/api/v3/products/bulk_update/:id",
+            "params": [
+              {
+                "name": "id",
+                "value": "",
+                "type": "path",
+                "description": "ID of the update products job to query"
+              }
+            ],
+            "auth": {
+              "type": "oauth2",
+              "flow": "authorization_code",
+              "authorizationUrl": "https://merchant.wish.com/v3/oauth/authorize",
+              "accessTokenUrl": "https://merchant.wish.com/api/v3/oauth/access_token",
+              "credentials": {
+                "clientId": "{{clientId}}",
+                "clientSecret": "{{clientSecret}}"
+              }
+            }
+          },
+          "docs": "Get the update products job status"
+        },
+        {
+          "info": {
+            "name": "Update products",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://merchant.wish.com/api/v3/products/bulk_update",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            },
+            "auth": {
+              "type": "oauth2",
+              "flow": "authorization_code",
+              "authorizationUrl": "https://merchant.wish.com/v3/oauth/authorize",
+              "accessTokenUrl": "https://merchant.wish.com/api/v3/oauth/access_token",
+              "credentials": {
+                "clientId": "{{clientId}}",
+                "clientSecret": "{{clientSecret}}"
+              }
+            }
+          },
+          "docs": "Update products asynchronously"
+        },
+        {
+          "info": {
+            "name": "Get the get products job status",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://merchant.wish.com/api/v3/products/bulk_get/:id",
+            "params": [
+              {
+                "name": "id",
+                "value": "",
+                "type": "path",
+                "description": "ID of the get products job to query"
+              }
+            ],
+            "auth": {
+              "type": "oauth2",
+              "flow": "authorization_code",
+              "authorizationUrl": "https://merchant.wish.com/v3/oauth/authorize",
+              "accessTokenUrl": "https://merchant.wish.com/api/v3/oauth/access_token",
+              "credentials": {
+                "clientId": "{{clientId}}",
+                "clientSecret": "{{clientSecret}}"
+              }
+            }
+          },
+          "docs": "Get the get products job status"
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

@@ -511,3 +511,9 @@ tools:
   source_operation: openapi/wish-marketplace-v3-openapi.json#getTopics
   scopes:
   - webhook:read
+deployment:
+  mode: none
+  verified: derived
+  tools: 102
+  checked: '2026-08-12'
+  source: catalog MCP census

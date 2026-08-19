@@ -1,0 +1,165 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "Wish Marketplace V3 Brands Penalties API",
+    "version": "3.0.65"
+  },
+  "request": {
+    "auth": {
+      "type": "oauth2",
+      "flow": "authorization_code",
+      "authorizationUrl": "https://merchant.wish.com/v3/oauth/authorize",
+      "accessTokenUrl": "https://merchant.wish.com/api/v3/oauth/access_token",
+      "credentials": {
+        "clientId": "{{clientId}}",
+        "clientSecret": "{{clientSecret}}"
+      }
+    }
+  },
+  "items": [
+    {
+      "info": {
+        "name": "Penalties",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Get a penalty by ID",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://merchant.wish.com/api/v3/penalties/:id",
+            "params": [
+              {
+                "name": "id",
+                "value": "",
+                "type": "path",
+                "description": "Id of the penalty to be retrieved."
+              }
+            ],
+            "auth": {
+              "type": "oauth2",
+              "flow": "authorization_code",
+              "authorizationUrl": "https://merchant.wish.com/v3/oauth/authorize",
+              "accessTokenUrl": "https://merchant.wish.com/api/v3/oauth/access_token",
+              "credentials": {
+                "clientId": "{{clientId}}",
+                "clientSecret": "{{clientSecret}}"
+              }
+            }
+          },
+          "docs": "Retrieve a single penalty by its ID"
+        },
+        {
+          "info": {
+            "name": "Count number of penalties",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://merchant.wish.com/api/v3/penalties/count",
+            "params": [
+              {
+                "name": "created_at_min",
+                "value": "",
+                "type": "query",
+                "description": "Show penalties created after the given date time. Default to the date time of the earliest created penalty if not provided"
+              },
+              {
+                "name": "created_at_max",
+                "value": "",
+                "type": "query",
+                "description": "Show penalties created before the given date time. Default to the date time of the latest created penalty if not provided"
+              },
+              {
+                "name": "reversed_at_min",
+                "value": "",
+                "type": "query",
+                "description": "Show penalties reversed after the given date time. Default to the date time of the earliest reversed penalty if not provided"
+              },
+              {
+                "name": "reversed_at_max",
+                "value": "",
+                "type": "query",
+                "description": "Show penalties reversed before the given date time. Default to the date time of the latest reversed penalty if not provided"
+              }
+            ],
+            "auth": {
+              "type": "oauth2",
+              "flow": "authorization_code",
+              "authorizationUrl": "https://merchant.wish.com/v3/oauth/authorize",
+              "accessTokenUrl": "https://merchant.wish.com/api/v3/oauth/access_token",
+              "credentials": {
+                "clientId": "{{clientId}}",
+                "clientSecret": "{{clientSecret}}"
+              }
+            }
+          },
+          "docs": "Count number of penalties"
+        },
+        {
+          "info": {
+            "name": "Retrieve a list of penalties",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://merchant.wish.com/api/v3/penalties",
+            "params": [
+              {
+                "name": "created_at_min",
+                "value": "",
+                "type": "query",
+                "description": "Show penalties created after the given date time. Default to the date time of the earliest created penalty if not provided"
+              },
+              {
+                "name": "created_at_max",
+                "value": "",
+                "type": "query",
+                "description": "Show penalties created before the given date time. Default to the date time of the latest created penalty if not provided"
+              },
+              {
+                "name": "reversed_at_min",
+                "value": "",
+                "type": "query",
+                "description": "Show penalties reversed after the given date time. Default to the date time of the earliest reversed penalty if not provided"
+              },
+              {
+                "name": "reversed_at_max",
+                "value": "",
+                "type": "query",
+                "description": "Show penalties reversed before the given date time. Default to the date time of the latest reversed penalty if not provided"
+              },
+              {
+                "name": "limit",
+                "value": "",
+                "type": "query",
+                "description": "The limit on number of penalties returned."
+              },
+              {
+                "name": "sort_by",
+                "value": "",
+                "type": "query",
+                "description": "Sort results by the given attribute. Enabled attributes are `created_at` and `reversed_at` Default order is `desc`, use `asc` to sort in reverse."
+              }
+            ],
+            "auth": {
+              "type": "oauth2",
+              "flow": "authorization_code",
+              "authorizationUrl": "https://merchant.wish.com/v3/oauth/authorize",
+              "accessTokenUrl": "https://merchant.wish.com/api/v3/oauth/access_token",
+              "credentials": {
+                "clientId": "{{clientId}}",
+                "clientSecret": "{{clientSecret}}"
+              }
+            }
+          },
+          "docs": "Retrieve a list of penalties"
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

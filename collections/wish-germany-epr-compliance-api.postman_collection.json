@@ -1,0 +1,1386 @@
+{
+  "item": [
+    {
+      "id": "9307bdbc-94fb-4f4b-b151-b0bd75d684bc",
+      "name": "Germany EPR Compliance",
+      "description": {
+        "content": "APIs that support Germany Extended Producer Responsibility (EPR) Compliance.</br> For a merchant to be compliant with the EPR regulation, their applicable products must be linked with one or more EPR registration number. ",
+        "type": "text/plain"
+      },
+      "item": [
+        {
+          "id": "8520748c-ec9f-48e1-937f-e7d248ac6c01",
+          "name": "Create a Germany Product EPR Registration Number",
+          "request": {
+            "name": "Create a Germany Product EPR Registration Number",
+            "description": {
+              "content": "Create a Germany Product EPR Registration Number",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "api",
+                "v3",
+                "germany_epr_compliance",
+                "epr_registration_number"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": []
+            },
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "POST",
+            "auth": {
+              "type": "oauth2",
+              "oauth2": [
+                {
+                  "key": "scope",
+                  "value": "payments:write tickets:write epc:read returns:write returns:read fbw:read products:read payments:read fbw:write merchant:write products:write ratings:read videos:read compliance:write product_boost:read listing_quality:read webhook:write orders:read compliance:read fbs:read penalties:read penalties:write infractions:read orders:write merchant:read notifications:write announcements:read product_boost:write notifications:read webhook:read qoo10:read wps_parcel:write wps_parcel:read tickets:read infractions:write videos:write epc:write"
+                },
+                {
+                  "key": "redirect_uri",
+                  "value": "https://merchant.wish.com/api/v3/oauth/refresh_token"
+                },
+                {
+                  "key": "accessTokenUrl",
+                  "value": "https://merchant.wish.com/api/v3/oauth/access_token"
+                },
+                {
+                  "key": "authUrl",
+                  "value": "https://merchant.wish.com/v3/oauth/authorize"
+                },
+                {
+                  "key": "grant_type",
+                  "value": "authorization_code"
+                }
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "<object>",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": [
+            {
+              "id": "2d73d07a-a9dc-40a3-95a0-66e210798efb",
+              "name": "Successfully created a new Germany product EPR registration number.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "api",
+                    "v3",
+                    "germany_epr_compliance",
+                    "epr_registration_number"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: oauth2",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "<token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "<object>",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"category\": \"<string>\",\n  \"epr_number\": \"<string>\",\n  \"organization_or_representative_name\": \"<string>\",\n  \"id\": \"string\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "4ae3aa9f-424e-4256-9d05-04550c3dd8f5",
+              "name": "Failed to create a new Germany product EPR registration number.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "api",
+                    "v3",
+                    "germany_epr_compliance",
+                    "epr_registration_number"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: oauth2",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "<token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "<object>",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Bad Request",
+              "code": 400,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"message\": \"The category exceeds the limit of 1 EPR number per category on the operated merchant.\",\n  \"code\": \"10002\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "9f374d5e-f6cb-4a21-8a13-7a0c882bd23f",
+          "name": "List Germany EPR Registration Numbers",
+          "request": {
+            "name": "List Germany EPR Registration Numbers",
+            "description": {
+              "content": "List all Germany product EPR numbers and their product categories created by a merchant.",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "api",
+                "v3",
+                "germany_epr_compliance",
+                "epr_registration_number"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": []
+            },
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "GET",
+            "auth": {
+              "type": "oauth2",
+              "oauth2": [
+                {
+                  "key": "scope",
+                  "value": "payments:write tickets:write epc:read returns:write returns:read fbw:read products:read payments:read fbw:write merchant:write products:write ratings:read videos:read compliance:write product_boost:read listing_quality:read webhook:write orders:read compliance:read fbs:read penalties:read penalties:write infractions:read orders:write merchant:read notifications:write announcements:read product_boost:write notifications:read webhook:read qoo10:read wps_parcel:write wps_parcel:read tickets:read infractions:write videos:write epc:write"
+                },
+                {
+                  "key": "redirect_uri",
+                  "value": "https://merchant.wish.com/api/v3/oauth/refresh_token"
+                },
+                {
+                  "key": "accessTokenUrl",
+                  "value": "https://merchant.wish.com/api/v3/oauth/access_token"
+                },
+                {
+                  "key": "authUrl",
+                  "value": "https://merchant.wish.com/v3/oauth/authorize"
+                },
+                {
+                  "key": "grant_type",
+                  "value": "authorization_code"
+                }
+              ]
+            }
+          },
+          "response": [
+            {
+              "id": "eac96304-4056-4c50-b026-e04a1a0d38b4",
+              "name": "Successfully queried all Germany EPR registration numbers.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "api",
+                    "v3",
+                    "germany_epr_compliance",
+                    "epr_registration_number"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: oauth2",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "<token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "[\n  {\n    \"category\": \"<string>\",\n    \"epr_number\": \"<string>\",\n    \"organization_or_representative_name\": \"<string>\",\n    \"id\": \"string\"\n  },\n  {\n    \"category\": \"<string>\",\n    \"epr_number\": \"<string>\",\n    \"organization_or_representative_name\": \"<string>\",\n    \"id\": \"string\"\n  }\n]",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "90b1d5f4-9deb-4deb-a271-e1fb32cbe941",
+              "name": "Failed to query for Germany EPR registration numbers.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "api",
+                    "v3",
+                    "germany_epr_compliance",
+                    "epr_registration_number"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: oauth2",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "<token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "Bad Request",
+              "code": 400,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"code\": 4976,\n  \"message\": \"string\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "50590a6b-77c4-4d2e-bd40-dbeaa9a95a28",
+          "name": "Bulk update Germany EPR Product Compliance Status",
+          "request": {
+            "name": "Bulk update Germany EPR Product Compliance Status",
+            "description": {
+              "content": "Update the Germany Extended Producer Responsibility compliance status for each input product by linking with the associated input epr_id or unlinking the existing EPR number if the associated input epr_id is empty or null.</br> The input array size limitation is 500.",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "api",
+                "v3",
+                "germany_epr_compliance",
+                "compliance_status"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": []
+            },
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "PUT",
+            "auth": {
+              "type": "oauth2",
+              "oauth2": [
+                {
+                  "key": "scope",
+                  "value": "payments:write tickets:write epc:read returns:write returns:read fbw:read products:read payments:read fbw:write merchant:write products:write ratings:read videos:read compliance:write product_boost:read listing_quality:read webhook:write orders:read compliance:read fbs:read penalties:read penalties:write infractions:read orders:write merchant:read notifications:write announcements:read product_boost:write notifications:read webhook:read qoo10:read wps_parcel:write wps_parcel:read tickets:read infractions:write videos:write epc:write"
+                },
+                {
+                  "key": "redirect_uri",
+                  "value": "https://merchant.wish.com/api/v3/oauth/refresh_token"
+                },
+                {
+                  "key": "accessTokenUrl",
+                  "value": "https://merchant.wish.com/api/v3/oauth/access_token"
+                },
+                {
+                  "key": "authUrl",
+                  "value": "https://merchant.wish.com/v3/oauth/authorize"
+                },
+                {
+                  "key": "grant_type",
+                  "value": "authorization_code"
+                }
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "[\n  {\n    \"product_id\": \"<object-id>\",\n    \"epr_registration_number_id\": \"<object-id>\"\n  },\n  {\n    \"product_id\": \"<object-id>\",\n    \"epr_registration_number_id\": \"<object-id>\"\n  }\n]",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": [
+            {
+              "id": "27b9459d-b054-41d4-af1f-1ba99495c3d3",
+              "name": "Successfully updated Germany product compliance status for input products.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "api",
+                    "v3",
+                    "germany_epr_compliance",
+                    "compliance_status"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: oauth2",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "<token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "PUT",
+                "body": {
+                  "mode": "raw",
+                  "raw": "[\n  {\n    \"product_id\": \"<object-id>\",\n    \"epr_registration_number_id\": \"<object-id>\"\n  },\n  {\n    \"product_id\": \"<object-id>\",\n    \"epr_registration_number_id\": \"<object-id>\"\n  }\n]",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "[\n  {\n    \"compliance_status\": \"NO_EPR_REGISTRATION_NUMBER\",\n    \"product_id\": \"string\",\n    \"epr_registration_number_ids\": [\n      \"string\",\n      \"string\"\n    ]\n  },\n  {\n    \"compliance_status\": \"NO_EPR_REGISTRATION_NUMBER\",\n    \"product_id\": \"string\",\n    \"epr_registration_number_ids\": [\n      \"string\",\n      \"string\"\n    ]\n  }\n]",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "b1ca2441-3e25-4148-b3be-07a9556bcfcb",
+              "name": "Failed to update Germany product compliance status for input products.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "api",
+                    "v3",
+                    "germany_epr_compliance",
+                    "compliance_status"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: oauth2",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "<token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "PUT",
+                "body": {
+                  "mode": "raw",
+                  "raw": "[\n  {\n    \"product_id\": \"<object-id>\",\n    \"epr_registration_number_id\": \"<object-id>\"\n  },\n  {\n    \"product_id\": \"<object-id>\",\n    \"epr_registration_number_id\": \"<object-id>\"\n  }\n]",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Bad Request",
+              "code": 400,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"code\": 4976,\n  \"message\": \"string\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "688038b5-d0b4-43b6-a6cf-ae0521b9ece6",
+          "name": "Get Germany EPR Product Compliance Status",
+          "request": {
+            "name": "Get Germany EPR Product Compliance Status",
+            "description": {
+              "content": "Get the Germany Extended Producer Responsibility product compliance status and the EPR registration number ids (if linked) for each input product.</br> If there is no input product id, then get the result of all products from a merchant.</br> The EPR registration id will be empty for products that are not linked with any EPR registration number.",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "api",
+                "v3",
+                "germany_epr_compliance",
+                "compliance_status"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [
+                {
+                  "disabled": false,
+                  "key": "product_ids",
+                  "value": "<object-id>",
+                  "description": "The list of the product IDs that will be returned with the compliance status"
+                },
+                {
+                  "disabled": false,
+                  "key": "product_ids",
+                  "value": "<object-id>",
+                  "description": "The list of the product IDs that will be returned with the compliance status"
+                },
+                {
+                  "disabled": false,
+                  "key": "product_id_min",
+                  "value": "<object-id>",
+                  "description": "The beginning product id(inclusive) of the result array. If not provided, will use the smallest product id.</br> Ignored when `product_ids` is provided."
+                },
+                {
+                  "disabled": false,
+                  "key": "product_id_max",
+                  "value": "<object-id>",
+                  "description": "The ending product id(inclusive) of the result array. If not provided, will use the largest product id.</br> Ignored when `product_ids` is provided."
+                },
+                {
+                  "disabled": false,
+                  "key": "limit",
+                  "value": "100",
+                  "description": "A limit on the number of records that will be returned.</br> Ignored when `product_ids` is provided."
+                },
+                {
+                  "disabled": false,
+                  "key": "sort_by",
+                  "value": "product_id.asc",
+                  "description": "Sort results by the given attribute. Enabled attributes are `product_id`. Default order is `asc`, use `desc` to sort in reverse.</br> Ignored when `product_ids` is provided."
+                }
+              ],
+              "variable": []
+            },
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "GET",
+            "auth": {
+              "type": "oauth2",
+              "oauth2": [
+                {
+                  "key": "scope",
+                  "value": "payments:write tickets:write epc:read returns:write returns:read fbw:read products:read payments:read fbw:write merchant:write products:write ratings:read videos:read compliance:write product_boost:read listing_quality:read webhook:write orders:read compliance:read fbs:read penalties:read penalties:write infractions:read orders:write merchant:read notifications:write announcements:read product_boost:write notifications:read webhook:read qoo10:read wps_parcel:write wps_parcel:read tickets:read infractions:write videos:write epc:write"
+                },
+                {
+                  "key": "redirect_uri",
+                  "value": "https://merchant.wish.com/api/v3/oauth/refresh_token"
+                },
+                {
+                  "key": "accessTokenUrl",
+                  "value": "https://merchant.wish.com/api/v3/oauth/access_token"
+                },
+                {
+                  "key": "authUrl",
+                  "value": "https://merchant.wish.com/v3/oauth/authorize"
+                },
+                {
+                  "key": "grant_type",
+                  "value": "authorization_code"
+                }
+              ]
+            }
+          },
+          "response": [
+            {
+              "id": "462cb14f-e85b-431d-af78-21896fab8476",
+              "name": "Successfully queried for product compliance status.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "api",
+                    "v3",
+                    "germany_epr_compliance",
+                    "compliance_status"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "product_ids",
+                      "value": "<object-id>"
+                    },
+                    {
+                      "key": "product_ids",
+                      "value": "<object-id>"
+                    },
+                    {
+                      "key": "product_id_min",
+                      "value": "<object-id>"
+                    },
+                    {
+                      "key": "product_id_max",
+                      "value": "<object-id>"
+                    },
+                    {
+                      "key": "limit",
+                      "value": "100"
+                    },
+                    {
+                      "key": "sort_by",
+                      "value": "product_id.asc"
+                    }
+                  ],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: oauth2",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "<token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "[\n  {\n    \"compliance_status\": \"NOT_RECOMMENDED_TO_LINK_EPR_REGISTRATION\",\n    \"product_id\": \"string\",\n    \"epr_registration_number_ids\": [\n      \"string\",\n      \"string\"\n    ]\n  },\n  {\n    \"compliance_status\": \"NOT_RECOMMENDED_TO_LINK_EPR_REGISTRATION\",\n    \"product_id\": \"string\",\n    \"epr_registration_number_ids\": [\n      \"string\",\n      \"string\"\n    ]\n  }\n]",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "2db14718-b7ab-4ef6-afa5-3413988c8eb6",
+              "name": "Failed to query for product compliance status.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "api",
+                    "v3",
+                    "germany_epr_compliance",
+                    "compliance_status"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "product_ids",
+                      "value": "<object-id>"
+                    },
+                    {
+                      "key": "product_ids",
+                      "value": "<object-id>"
+                    },
+                    {
+                      "key": "product_id_min",
+                      "value": "<object-id>"
+                    },
+                    {
+                      "key": "product_id_max",
+                      "value": "<object-id>"
+                    },
+                    {
+                      "key": "limit",
+                      "value": "100"
+                    },
+                    {
+                      "key": "sort_by",
+                      "value": "product_id.asc"
+                    }
+                  ],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: oauth2",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "<token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "Bad Request",
+              "code": 400,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"message\": \"The input Germany product EPR registration number is not found by the given id.\",\n  \"code\": \"10003\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "c0356569-ae78-4ce8-9981-5f5412f149c9",
+          "name": "Update a Germany Product EPR Registration Number",
+          "request": {
+            "name": "Update a Germany Product EPR Registration Number",
+            "description": {
+              "content": "Update details of a Germany Product EPR Registration Number.",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "api",
+                "v3",
+                "germany_epr_compliance",
+                "epr_registration_number",
+                ":id"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": [
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<object-id>",
+                  "key": "id",
+                  "description": "(Required) The unique identifier of the Germany product EPR registration number"
+                }
+              ]
+            },
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "PUT",
+            "auth": {
+              "type": "oauth2",
+              "oauth2": [
+                {
+                  "key": "scope",
+                  "value": "payments:write tickets:write epc:read returns:write returns:read fbw:read products:read payments:read fbw:write merchant:write products:write ratings:read videos:read compliance:write product_boost:read listing_quality:read webhook:write orders:read compliance:read fbs:read penalties:read penalties:write infractions:read orders:write merchant:read notifications:write announcements:read product_boost:write notifications:read webhook:read qoo10:read wps_parcel:write wps_parcel:read tickets:read infractions:write videos:write epc:write"
+                },
+                {
+                  "key": "redirect_uri",
+                  "value": "https://merchant.wish.com/api/v3/oauth/refresh_token"
+                },
+                {
+                  "key": "accessTokenUrl",
+                  "value": "https://merchant.wish.com/api/v3/oauth/access_token"
+                },
+                {
+                  "key": "authUrl",
+                  "value": "https://merchant.wish.com/v3/oauth/authorize"
+                },
+                {
+                  "key": "grant_type",
+                  "value": "authorization_code"
+                }
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"epr_number\": \"<string>\",\n  \"organization_or_representative_name\": \"<string>\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": [
+            {
+              "id": "d0a55ee2-5581-444c-8f54-f4202ccc948c",
+              "name": "Successfully updated a Germany product EPR registration number.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "api",
+                    "v3",
+                    "germany_epr_compliance",
+                    "epr_registration_number",
+                    ":id"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<object-id>",
+                      "key": "id",
+                      "description": "(Required) The unique identifier of the Germany product EPR registration number"
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: oauth2",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "<token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "PUT",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"epr_number\": \"<string>\",\n  \"organization_or_representative_name\": \"<string>\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"category\": \"<string>\",\n  \"epr_number\": \"<string>\",\n  \"organization_or_representative_name\": \"<string>\",\n  \"id\": \"string\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "a6a3fadf-99e0-4b75-ad80-d8cbeb544333",
+              "name": "Failed to update a Germany product EPR registration number.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "api",
+                    "v3",
+                    "germany_epr_compliance",
+                    "epr_registration_number",
+                    ":id"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<object-id>",
+                      "key": "id",
+                      "description": "(Required) The unique identifier of the Germany product EPR registration number"
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: oauth2",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "<token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "PUT",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"epr_number\": \"<string>\",\n  \"organization_or_representative_name\": \"<string>\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Bad Request",
+              "code": 400,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"message\": \"The Germany product EPR registration number is not accessable for the operated merchant.\",\n  \"code\": \"10004\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "175877fc-c4ec-4aa2-8ee1-e8813afb659f",
+          "name": "Get a Germany Product EPR Registration Number",
+          "request": {
+            "name": "Get a Germany Product EPR Registration Number",
+            "description": {
+              "content": "Get a Germany product EPR number and product category given its id.",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "api",
+                "v3",
+                "germany_epr_compliance",
+                "epr_registration_number",
+                ":id"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": [
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<object-id>",
+                  "key": "id",
+                  "description": "(Required) The unique identifier of the Germany product EPR registration number"
+                }
+              ]
+            },
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "GET",
+            "auth": {
+              "type": "oauth2",
+              "oauth2": [
+                {
+                  "key": "scope",
+                  "value": "payments:write tickets:write epc:read returns:write returns:read fbw:read products:read payments:read fbw:write merchant:write products:write ratings:read videos:read compliance:write product_boost:read listing_quality:read webhook:write orders:read compliance:read fbs:read penalties:read penalties:write infractions:read orders:write merchant:read notifications:write announcements:read product_boost:write notifications:read webhook:read qoo10:read wps_parcel:write wps_parcel:read tickets:read infractions:write videos:write epc:write"
+                },
+                {
+                  "key": "redirect_uri",
+                  "value": "https://merchant.wish.com/api/v3/oauth/refresh_token"
+                },
+                {
+                  "key": "accessTokenUrl",
+                  "value": "https://merchant.wish.com/api/v3/oauth/access_token"
+                },
+                {
+                  "key": "authUrl",
+                  "value": "https://merchant.wish.com/v3/oauth/authorize"
+                },
+                {
+                  "key": "grant_type",
+                  "value": "authorization_code"
+                }
+              ]
+            }
+          },
+          "response": [
+            {
+              "id": "7a25c692-215e-4d65-8ee3-8c67c88e36bc",
+              "name": "Successfully queried for a Germany product EPR registration number.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "api",
+                    "v3",
+                    "germany_epr_compliance",
+                    "epr_registration_number",
+                    ":id"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<object-id>",
+                      "key": "id",
+                      "description": "(Required) The unique identifier of the Germany product EPR registration number"
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: oauth2",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "<token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"category\": \"<string>\",\n  \"epr_number\": \"<string>\",\n  \"organization_or_representative_name\": \"<string>\",\n  \"id\": \"string\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "f40a50d2-40fe-45c7-9cb0-44f426fb5bd8",
+              "name": "Failed to query for a Germany product EPR registration number.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "api",
+                    "v3",
+                    "germany_epr_compliance",
+                    "epr_registration_number",
+                    ":id"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<object-id>",
+                      "key": "id",
+                      "description": "(Required) The unique identifier of the Germany product EPR registration number"
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: oauth2",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "<token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "Bad Request",
+              "code": 400,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"message\": \"The input Germany product EPR registration number is not found by the given id.\",\n  \"code\": \"10003\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "997eb681-e408-4799-a949-0dd777ae566a",
+          "name": "Delete a Germany Product EPR Registration Number",
+          "request": {
+            "name": "Delete a Germany Product EPR Registration Number",
+            "description": {
+              "content": "Delete a Germany Product EPR Registration Number. [This will remove all linked products]",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "api",
+                "v3",
+                "germany_epr_compliance",
+                "epr_registration_number",
+                ":id"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": [
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<object-id>",
+                  "key": "id",
+                  "description": "(Required) The unique identifier of the Germany product EPR registration number"
+                }
+              ]
+            },
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "DELETE",
+            "auth": {
+              "type": "oauth2",
+              "oauth2": [
+                {
+                  "key": "scope",
+                  "value": "payments:write tickets:write epc:read returns:write returns:read fbw:read products:read payments:read fbw:write merchant:write products:write ratings:read videos:read compliance:write product_boost:read listing_quality:read webhook:write orders:read compliance:read fbs:read penalties:read penalties:write infractions:read orders:write merchant:read notifications:write announcements:read product_boost:write notifications:read webhook:read qoo10:read wps_parcel:write wps_parcel:read tickets:read infractions:write videos:write epc:write"
+                },
+                {
+                  "key": "redirect_uri",
+                  "value": "https://merchant.wish.com/api/v3/oauth/refresh_token"
+                },
+                {
+                  "key": "accessTokenUrl",
+                  "value": "https://merchant.wish.com/api/v3/oauth/access_token"
+                },
+                {
+                  "key": "authUrl",
+                  "value": "https://merchant.wish.com/v3/oauth/authorize"
+                },
+                {
+                  "key": "grant_type",
+                  "value": "authorization_code"
+                }
+              ]
+            }
+          },
+          "response": [
+            {
+              "id": "2be787c7-3bc2-48b3-b6d3-aaa3186fe45e",
+              "name": "Successfully deleted a Germany product EPR registration number.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "api",
+                    "v3",
+                    "germany_epr_compliance",
+                    "epr_registration_number",
+                    ":id"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<object-id>",
+                      "key": "id",
+                      "description": "(Required) The unique identifier of the Germany product EPR registration number"
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: oauth2",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "<token>"
+                  }
+                ],
+                "method": "DELETE",
+                "body": {}
+              },
+              "status": "No Content",
+              "code": 204,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "text/plain"
+                }
+              ],
+              "body": "",
+              "cookie": [],
+              "_postman_previewlanguage": "text"
+            },
+            {
+              "id": "01880957-9dc5-4c3d-9892-e203f4787050",
+              "name": "Failed to delete a Germany product EPR registration number.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "api",
+                    "v3",
+                    "germany_epr_compliance",
+                    "epr_registration_number",
+                    ":id"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<object-id>",
+                      "key": "id",
+                      "description": "(Required) The unique identifier of the Germany product EPR registration number"
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: oauth2",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "<token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "DELETE",
+                "body": {}
+              },
+              "status": "Bad Request",
+              "code": 400,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"message\": \"The input Germany product EPR registration number is not found by the given id.\",\n  \"code\": \"10003\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        }
+      ],
+      "event": []
+    }
+  ],
+  "event": [],
+  "variable": [
+    {
+      "type": "string",
+      "value": "https://merchant.wish.com",
+      "key": "baseUrl"
+    }
+  ],
+  "auth": {
+    "type": "oauth2",
+    "oauth2": [
+      {
+        "key": "scope",
+        "value": "payments:write tickets:write epc:read returns:write returns:read fbw:read products:read payments:read fbw:write merchant:write products:write ratings:read videos:read compliance:write product_boost:read listing_quality:read webhook:write orders:read compliance:read fbs:read penalties:read penalties:write infractions:read orders:write merchant:read notifications:write announcements:read product_boost:write notifications:read webhook:read qoo10:read wps_parcel:write wps_parcel:read tickets:read infractions:write videos:write epc:write"
+      },
+      {
+        "key": "redirect_uri",
+        "value": "https://merchant.wish.com/api/v3/oauth/refresh_token"
+      },
+      {
+        "key": "accessTokenUrl",
+        "value": "https://merchant.wish.com/api/v3/oauth/access_token"
+      },
+      {
+        "key": "authUrl",
+        "value": "https://merchant.wish.com/v3/oauth/authorize"
+      },
+      {
+        "key": "grant_type",
+        "value": "authorization_code"
+      }
+    ]
+  },
+  "info": {
+    "_postman_id": "3fc397ab-c090-4ce9-9f95-c24b170bfb8d",
+    "name": "Wish Marketplace V3 Brands Germany EPR Compliance API",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "description": {
+      "content": "\nWish Marketplace V3 API\n\n# General Information\n\n The Wish Marketplace API will be using oAuth to authenticate in order to offer better security for its users\n\n *   Learn about oAuth [here](oauth).\n *   If you are a merchant and want to create an application for yourself, learn about how to create a private app [here](../../private-app)\n *   If you are a ERP and create applications that'll be used by multiple merchants, learn about how to create a public app [here]( ../../public-app). You will need to apply to be a verified public application\n\n ## How to Test\n\n To avoid testing the API on production data, use our sandbox. The sandbox is completely contained and will not affect Wish users or your merchant account. \n \n To reach the sandbox, visit: https://sandbox.merchant.wish.com.\n\n To use the sandbox in testing, use https://sandbox.merchant.wish.com/api/v3/ as your base URL.\n\n How to Generate test data after you have created a sandbox account:\n 1. Navigate to the [unfulfilled orders page](https://sandbox.merchant.wish.com/transactions/action)\n 2. Hover over the dropdown next to the 'fulfill with csv' button and select Generate Orders\n\n ## Date/Time Format\n\n  All dates and times in our API are returned in the same format. It is in the form `YYYY-MM-DDTHH:mm:ss.sss±XX:ZZ` or `YYYY-MM-DDTHH:mm:ss.sssZ`, where 'Z' represents UTC timezone.\n  When sending timestamps in URL parameters or the request body, millisecond is optional and will defaults to 0 if not provided.\n\n  * `YYYY` is the year\n  * `MM` is the month\n  * `DD` is the day\n  * `HH` is the hour (in 24-hour clock format)\n  * `mm` is the minutes\n  * `ss.sss` is the seconds and milliseconds\n  * `±XX:ZZ` is the UTC offset of the form +XX:ZZ or -XX:ZZ where XX is a 2-digit string giving the number of UTC offset hours, and ZZ is a 2-digit string giving the number of UTC offset minutes.\n\n ## Response Schema\n\n  Every response returned from the Wish API will have the same schema. This schema is intended to give you a predictable manner to check the status of your request and know where to get the data. Each response will have the following top level attributes: message, code and data.\n\n  **Attributes**\n\n  <table>\n  <tbody>\n  <tr>\n  <th>Message</th>\n  <td>A message describing the error that happened, example: \"We could not find a product for id: '5d30f60e0a6fc464f4f376b0'\"</td>\n  </tr>\n  <tr>\n  <th>Code</th>\n  <td>A unique number which represents the error that has occurred, example: 1008 or 0 if success.</td>\n  </tr>\n  <tr>\n  <th>Data</th>\n  <td>For errors this will be empty.</td>\n  </tr>\n  </tbody>\n  </table>\n\n ## General Querying Techniques\n\n ### Partial Resources\n All GET endpoints (except OAuth) support a fields parameter which allows for requesting a partial response. Any fields specified in the response schema of an endpoint can be selected. The top level attribute `data` can be ignored when using the fields parameter.\n\n **Syntax**\n * Comma-separated list to select multiple fields\n * Use forward slash `/` to select nested field: `field1/nested_field`\n * Use parentheses `( )` to select multiple nested fields: `field1(nested_field1,nested_field2)`\n * Use `*` for wildcard selection: `field1/nested_field/*`\n\n\n **Example:**\n ```\n https://merchant.wish.com/api/v3/demo/get?fields=title,items(id,info/name)\n ```\n Which would result in the following partial response:\n ```\n {\n   \"title\": \"demo\",\n   \"items\": [\n     {\n       \"id\": \"1\",\n       \"info\": {\n         \"name\": \"demo_item_1\"\n       }\n     }, {\n       \"id\": \"2\",\n       \"info\": {\n         \"name\": \"demo_item_2\"\n       }\n     },\n     ...\n   ]\n }\n ```\n\n ## Locale\n   You can optionally specify locale in order to translate content and error messages into your language.\n   To do this use the [Accept-Language](https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Accept-Language) header to specify your preferred locales.\n   If none is provided, your default locale will be used.\n\n   For example, to request content in Chinese use: `Accept-Language: zh`\n\n   In the response, you will receive a [Content-Language](https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Content-Language) header that specifies the locale code of the response content.\n\n\n ## Rate-Limiting\n\n  Rate-limiting will be performed on a per-merchant basis for each app. It is your responsibility to ensure you are not making frequent unnecessary calls to the API.\n\n  If the rate limits cannot satisfy your need, we highly recommend integrating webhooks for your app. With webhooks, instead of pulling resources periodically, your app will receive real-time notifications for particular events that occur to a merchant’s store. [Learn more](https://merchant.wish.com/documentation/webhooks)\n\n  **Normal Usage**\n\n  To help you track the rate-limiter status, the following response header(s) will be provided with each response:\n\n   * `Wish-Rate-Limit-Remaining`: The number of calls remaining in the current rate-limiting window.\n\n\n  **Rate-Limit Exceeded**\n\n  After you exceed the number of allowed calls in the current rate-limiting window, you will receive a `429 Too Many Requests` error response and the following additional header(s):\n\n   * `Wish-Rate-Limit-Reset`: The time the rate-limiter will reset.\n\n\n  Once you receive this response there is nothing you can do except wait for the rate-limiter to reset. In order to avoid being rate-limited, you may want to cache your responses.\n\n ## Sorting\n   ### Overview\n   Sorting is available for most endpoints that return a collection (list) of objects. Each collection has a different set of enabled parameters for sorting, so please check specific collection section for detail.\n\n   ### Usage\n   Append `sort_by={parameter_name}.{asc|desc}` in your API request where `parameter_name` is a valid sortable parameter of that endpoint.\n\n   Example:\n   ```\n   /api/v3/penalties?sort_by=created_at.asc\n   ```\n\n ## Pagination\n  All bulk-fetching API methods that return lists of resource support pagination.\n  These methods commonly take at least 3 parameters: `limit`, `{attribute}_min`, `{attribute}_max`. Attribute can be `id`, `create_at`, etc., depending on each specific method.\n  For instance, you make a request to get a list of penalties `/api/v3/penalties?limit=20&created_at_max=2020-04-08T23:59:59Z&sort_by=created_at_max.desc`,\n  which means to fetch 20 penalities sorted by their creation time, with the most recent one being created before `2020-04-08T23:59:59Z`.\n  Assume that the response contains 20 `penalty` objects with the last object being `penalty_foo`,\n  then your subsequent request can be `/api/v3/penalties?limit=20&created_at_max={penalty_foo.create_at}&sort_by=created_at_max.desc` to fetch the next page of list.\n  Note that when fetching next page using `id_min` or `id_max`, you need to perform `+/- 1`(correspondingly) on the last object's ID in the current page, as `id_min` and `id_max` are inclusive. (All V3 API resources' IDs are either integer or BSON object ID - a hex number).\n\n\n ## Request ID\n  Each API request is associated with a unique identifier. You can find this value in response headers, under `Wish-Request-Id`.\n  **When you need to contact us about a specific request, please provide this ID to ensure the fastest possible reply**\n\n# Authentication\nFor all requests that require OAuth2 authentication, the access token must be provided in the `Authorization` request header in the following format: `Authorization: Bearer <token>`\n\nFor example:\n```\nAuthorization: Bearer 3d6e2d71bc464e42bfbdb081afb73c1e\n```\n<!-- ReDoc-Inject: <security-definitions> -->\n\n\nContact Support:\n Email: partner-api@wish.com",
+      "type": "text/plain"
+    }
+  }
+}

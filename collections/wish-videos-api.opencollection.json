@@ -1,0 +1,55 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "Wish Marketplace V3 Brands Videos API",
+    "version": "3.0.65"
+  },
+  "request": {
+    "auth": {
+      "type": "oauth2",
+      "flow": "authorization_code",
+      "authorizationUrl": "https://merchant.wish.com/v3/oauth/authorize",
+      "accessTokenUrl": "https://merchant.wish.com/api/v3/oauth/access_token",
+      "credentials": {
+        "clientId": "{{clientId}}",
+        "clientSecret": "{{clientSecret}}"
+      }
+    }
+  },
+  "items": [
+    {
+      "info": {
+        "name": "Videos",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Create video for a product asynchronously",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://merchant.wish.com/api/v3/videos/product",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            },
+            "auth": {
+              "type": "oauth2",
+              "flow": "authorization_code",
+              "authorizationUrl": "https://merchant.wish.com/v3/oauth/authorize",
+              "accessTokenUrl": "https://merchant.wish.com/api/v3/oauth/access_token",
+              "credentials": {
+                "clientId": "{{clientId}}",
+                "clientSecret": "{{clientSecret}}"
+              }
+            }
+          },
+          "docs": "Create or replace a video for a product"
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

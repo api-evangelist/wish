@@ -1,0 +1,1951 @@
+{
+  "item": [
+    {
+      "id": "c7b528d2-9c66-4880-90cc-baa63d1ffd3f",
+      "name": "Promotions Platform",
+      "description": {
+        "content": "",
+        "type": "text/plain"
+      },
+      "item": [
+        {
+          "id": "5b2770bb-f0c8-4bd3-b4e1-492273eeaab4",
+          "name": "Get eligible products",
+          "request": {
+            "name": "Get eligible products",
+            "description": {
+              "content": "Get eligible products",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "api",
+                "v3",
+                "promotions",
+                "eligible_products"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [
+                {
+                  "disabled": false,
+                  "key": "updated_at_min",
+                  "value": "<dateTime>",
+                  "description": "Only return products that were updated since the given time. Currently only time with precision up to 'millisecond' will be accepted. Any time that is more precise than 'millisecond' level will be processed so that it only keeps its 'millisecond'."
+                },
+                {
+                  "disabled": false,
+                  "key": "updated_at_max",
+                  "value": "<dateTime>",
+                  "description": "Only return products that were updated before the given time. Currently only time with precision up to 'millisecond' will be accepted. Any time that is more precise than 'millisecond' level will be processed so that it only keeps its 'millisecond'."
+                },
+                {
+                  "disabled": false,
+                  "key": "promotion_type",
+                  "value": "<string>",
+                  "description": "Promotion type for eligible products search. This field is required if there is no event ID specified."
+                },
+                {
+                  "disabled": false,
+                  "key": "product_ids",
+                  "value": "<object-id>",
+                  "description": "List of product IDs for eligible products search."
+                },
+                {
+                  "disabled": false,
+                  "key": "product_ids",
+                  "value": "<object-id>",
+                  "description": "List of product IDs for eligible products search."
+                },
+                {
+                  "disabled": false,
+                  "key": "event_id",
+                  "value": "<object-id>",
+                  "description": "ID of the promotion event"
+                },
+                {
+                  "disabled": false,
+                  "key": "limit",
+                  "value": "25",
+                  "description": "The limit on the number of products that will be returned."
+                },
+                {
+                  "disabled": false,
+                  "key": "sort_by",
+                  "value": "updated_at.desc",
+                  "description": "The attribute to sort products in the response. The most recently updated products will be returned first if `desc`."
+                }
+              ],
+              "variable": []
+            },
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "GET",
+            "auth": {
+              "type": "oauth2",
+              "oauth2": [
+                {
+                  "key": "scope",
+                  "value": "payments:write tickets:write epc:read returns:write returns:read fbw:read products:read payments:read fbw:write merchant:write products:write ratings:read videos:read compliance:write product_boost:read listing_quality:read webhook:write orders:read compliance:read fbs:read penalties:read penalties:write infractions:read orders:write merchant:read notifications:write announcements:read product_boost:write notifications:read webhook:read qoo10:read wps_parcel:write wps_parcel:read tickets:read infractions:write videos:write epc:write"
+                },
+                {
+                  "key": "redirect_uri",
+                  "value": "https://merchant.wish.com/api/v3/oauth/refresh_token"
+                },
+                {
+                  "key": "accessTokenUrl",
+                  "value": "https://merchant.wish.com/api/v3/oauth/access_token"
+                },
+                {
+                  "key": "authUrl",
+                  "value": "https://merchant.wish.com/v3/oauth/authorize"
+                },
+                {
+                  "key": "grant_type",
+                  "value": "authorization_code"
+                }
+              ]
+            }
+          },
+          "response": [
+            {
+              "id": "fa4db888-36d9-4e10-a3be-79a2d462b6f8",
+              "name": "successfully queried for eligible products",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "api",
+                    "v3",
+                    "promotions",
+                    "eligible_products"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "updated_at_min",
+                      "value": "<dateTime>"
+                    },
+                    {
+                      "key": "updated_at_max",
+                      "value": "<dateTime>"
+                    },
+                    {
+                      "key": "promotion_type",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "product_ids",
+                      "value": "<object-id>"
+                    },
+                    {
+                      "key": "product_ids",
+                      "value": "<object-id>"
+                    },
+                    {
+                      "key": "event_id",
+                      "value": "<object-id>"
+                    },
+                    {
+                      "key": "limit",
+                      "value": "25"
+                    },
+                    {
+                      "key": "sort_by",
+                      "value": "updated_at.desc"
+                    }
+                  ],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: oauth2",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "<token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "[\n  {\n    \"variations\": [\n      {\n        \"id\": \"string\"\n      },\n      {\n        \"id\": \"string\"\n      }\n    ],\n    \"id\": \"string\"\n  },\n  {\n    \"variations\": [\n      {\n        \"id\": \"string\"\n      },\n      {\n        \"id\": \"string\"\n      }\n    ],\n    \"id\": \"string\"\n  }\n]",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "6d4560c0-0772-4679-b177-06be2e0c3258",
+              "name": "failed to queried for eligible products",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "api",
+                    "v3",
+                    "promotions",
+                    "eligible_products"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "updated_at_min",
+                      "value": "<dateTime>"
+                    },
+                    {
+                      "key": "updated_at_max",
+                      "value": "<dateTime>"
+                    },
+                    {
+                      "key": "promotion_type",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "product_ids",
+                      "value": "<object-id>"
+                    },
+                    {
+                      "key": "product_ids",
+                      "value": "<object-id>"
+                    },
+                    {
+                      "key": "event_id",
+                      "value": "<object-id>"
+                    },
+                    {
+                      "key": "limit",
+                      "value": "25"
+                    },
+                    {
+                      "key": "sort_by",
+                      "value": "updated_at.desc"
+                    }
+                  ],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: oauth2",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "<token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "Bad Request",
+              "code": 400,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"code\": 7415,\n  \"message\": \"string\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "e44eb053-a3cd-4b0d-9526-7604cee8535e",
+          "name": "Cancel a promotion campaign",
+          "request": {
+            "name": "Cancel a promotion campaign",
+            "description": {
+              "content": "Cancel a promotion campaign.",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "api",
+                "v3",
+                "promotions",
+                "campaigns",
+                ":id",
+                "cancel"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": [
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<object-id>",
+                  "key": "id",
+                  "description": "(Required) ID of the campaign you want to Cancel"
+                }
+              ]
+            },
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "PUT",
+            "auth": {
+              "type": "oauth2",
+              "oauth2": [
+                {
+                  "key": "scope",
+                  "value": "payments:write tickets:write epc:read returns:write returns:read fbw:read products:read payments:read fbw:write merchant:write products:write ratings:read videos:read compliance:write product_boost:read listing_quality:read webhook:write orders:read compliance:read fbs:read penalties:read penalties:write infractions:read orders:write merchant:read notifications:write announcements:read product_boost:write notifications:read webhook:read qoo10:read wps_parcel:write wps_parcel:read tickets:read infractions:write videos:write epc:write"
+                },
+                {
+                  "key": "redirect_uri",
+                  "value": "https://merchant.wish.com/api/v3/oauth/refresh_token"
+                },
+                {
+                  "key": "accessTokenUrl",
+                  "value": "https://merchant.wish.com/api/v3/oauth/access_token"
+                },
+                {
+                  "key": "authUrl",
+                  "value": "https://merchant.wish.com/v3/oauth/authorize"
+                },
+                {
+                  "key": "grant_type",
+                  "value": "authorization_code"
+                }
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"reason\": \"<string>\",\n  \"comment\": \"<string>\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": [
+            {
+              "id": "65f7dad4-bc73-4cb4-a571-39be267db809",
+              "name": "successfully cancelled a campaign",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "api",
+                    "v3",
+                    "promotions",
+                    "campaigns",
+                    ":id",
+                    "cancel"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<object-id>",
+                      "key": "id",
+                      "description": "(Required) ID of the campaign you want to Cancel"
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: oauth2",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "<token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "PUT",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"reason\": \"<string>\",\n  \"comment\": \"<string>\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"unqualified_product_variations\": [\n    {\n      \"reason\": \"LOW_RATING\",\n      \"product_id\": \"string\",\n      \"variation_id\": \"string\"\n    },\n    {\n      \"reason\": \"NOT_OWNED_BY_MERCHANT\",\n      \"product_id\": \"string\",\n      \"variation_id\": \"string\"\n    }\n  ],\n  \"cancel_reason\": \"USER_CANCELLED_WRONG_CAMPAIGN_INFO\",\n  \"name\": \"string\",\n  \"cancel_comment\": \"<string>\",\n  \"countries\": [\n    \"US\",\n    \"US\"\n  ],\n  \"event_id\": \"string\",\n  \"created_at\": \"2022-04-12T07:00:00Z\",\n  \"variations_discount_data\": [\n    {\n      \"product_id\": \"string\",\n      \"variation_id\": \"string\",\n      \"scheduled_start_time\": \"2022-04-15T07:00:00Z\",\n      \"discount_percentage\": 9.380946654820425,\n      \"max_quantity\": 2856,\n      \"scheduled_end_time\": \"2022-04-15T19:00:00Z\"\n    },\n    {\n      \"product_id\": \"string\",\n      \"variation_id\": \"string\",\n      \"scheduled_start_time\": \"2022-04-15T07:00:00Z\",\n      \"discount_percentage\": 39.61449990652345,\n      \"max_quantity\": 3248,\n      \"scheduled_end_time\": \"2022-04-15T19:00:00Z\"\n    }\n  ],\n  \"end_at\": \"2022-04-20T07:00:00Z\",\n  \"state\": \"APPROVED\",\n  \"cancel_at\": \"2022-04-12T17:00:00Z\",\n  \"promotion_type\": \"<string>\",\n  \"start_at\": \"2022-04-13T07:00:00Z\",\n  \"id\": \"string\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "79989229-58a6-4e94-8572-be096cbde836",
+              "name": "failed to cancel a campaign",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "api",
+                    "v3",
+                    "promotions",
+                    "campaigns",
+                    ":id",
+                    "cancel"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<object-id>",
+                      "key": "id",
+                      "description": "(Required) ID of the campaign you want to Cancel"
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: oauth2",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "<token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "PUT",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"reason\": \"<string>\",\n  \"comment\": \"<string>\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Bad Request",
+              "code": 400,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"code\": 7415,\n  \"message\": \"string\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "5b608adb-925e-4486-bb4e-20ab5fbb23ce",
+          "name": "Create a promotion campaign",
+          "request": {
+            "name": "Create a promotion campaign",
+            "description": {
+              "content": "Create a promotion campaign.",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "api",
+                "v3",
+                "promotions",
+                "campaigns"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": []
+            },
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "POST",
+            "auth": {
+              "type": "oauth2",
+              "oauth2": [
+                {
+                  "key": "scope",
+                  "value": "payments:write tickets:write epc:read returns:write returns:read fbw:read products:read payments:read fbw:write merchant:write products:write ratings:read videos:read compliance:write product_boost:read listing_quality:read webhook:write orders:read compliance:read fbs:read penalties:read penalties:write infractions:read orders:write merchant:read notifications:write announcements:read product_boost:write notifications:read webhook:read qoo10:read wps_parcel:write wps_parcel:read tickets:read infractions:write videos:write epc:write"
+                },
+                {
+                  "key": "redirect_uri",
+                  "value": "https://merchant.wish.com/api/v3/oauth/refresh_token"
+                },
+                {
+                  "key": "accessTokenUrl",
+                  "value": "https://merchant.wish.com/api/v3/oauth/access_token"
+                },
+                {
+                  "key": "authUrl",
+                  "value": "https://merchant.wish.com/v3/oauth/authorize"
+                },
+                {
+                  "key": "grant_type",
+                  "value": "authorization_code"
+                }
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"<string>\",\n  \"start_at\": \"<dateTime>\",\n  \"countries\": [\n    \"<iso-3166>\",\n    \"<iso-3166>\"\n  ],\n  \"event_id\": \"<object-id>\",\n  \"end_at\": \"<dateTime>\",\n  \"variations_discount_data\": {\n    \"discount_data\": [\n      {\n        \"product_id\": \"<object-id>\",\n        \"variation_id\": \"<object-id>\",\n        \"discount_percentage\": \"<float>\",\n        \"max_quantity\": \"<integer>\"\n      },\n      {\n        \"product_id\": \"<object-id>\",\n        \"variation_id\": \"<object-id>\",\n        \"discount_percentage\": \"<float>\",\n        \"max_quantity\": \"<integer>\"\n      }\n    ],\n    \"default_max_quantity\": \"<integer>\",\n    \"default_discount_percentage\": \"<float>\"\n  },\n  \"promotion_type\": \"<string>\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": [
+            {
+              "id": "3dadba34-0de7-4dc4-978d-ae60f039f13f",
+              "name": "successfully created a campaign",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "api",
+                    "v3",
+                    "promotions",
+                    "campaigns"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: oauth2",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "<token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"name\": \"<string>\",\n  \"start_at\": \"2022-04-13T07:00:00Z\",\n  \"countries\": [\n    \"US\",\n    \"US\"\n  ],\n  \"event_id\": \"<object-id>\",\n  \"end_at\": \"2022-04-20T07:00:00Z\",\n  \"variations_discount_data\": {\n    \"discount_data\": [\n      {\n        \"product_id\": \"<object-id>\",\n        \"variation_id\": \"<object-id>\",\n        \"discount_percentage\": \"<float>\",\n        \"max_quantity\": \"<integer>\"\n      },\n      {\n        \"product_id\": \"<object-id>\",\n        \"variation_id\": \"<object-id>\",\n        \"discount_percentage\": \"<float>\",\n        \"max_quantity\": \"<integer>\"\n      }\n    ],\n    \"default_max_quantity\": \"<integer>\",\n    \"default_discount_percentage\": \"<float>\"\n  },\n  \"promotion_type\": \"<string>\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"unqualified_product_variations\": [\n    {\n      \"reason\": \"FLASH_SALE_MINIMUM_VARIATION_INVENTORY\",\n      \"product_id\": \"string\",\n      \"variation_id\": \"string\"\n    },\n    {\n      \"reason\": \"PRODUCT_LISTED_DAYS\",\n      \"product_id\": \"string\",\n      \"variation_id\": \"string\"\n    }\n  ],\n  \"cancel_reason\": \"USER_CANCELLED_OTHER\",\n  \"name\": \"string\",\n  \"cancel_comment\": \"<string>\",\n  \"countries\": [\n    \"US\",\n    \"US\"\n  ],\n  \"event_id\": \"string\",\n  \"created_at\": \"2022-04-12T07:00:00Z\",\n  \"variations_discount_data\": [\n    {\n      \"product_id\": \"<object-id>\",\n      \"variation_id\": \"<object-id>\",\n      \"scheduled_start_time\": \"2022-04-15T07:00:00Z\",\n      \"discount_percentage\": \"<float>\",\n      \"max_quantity\": \"<integer>\",\n      \"scheduled_end_time\": \"2022-04-15T19:00:00Z\"\n    },\n    {\n      \"product_id\": \"<object-id>\",\n      \"variation_id\": \"<object-id>\",\n      \"scheduled_start_time\": \"2022-04-15T07:00:00Z\",\n      \"discount_percentage\": \"<float>\",\n      \"max_quantity\": \"<integer>\",\n      \"scheduled_end_time\": \"2022-04-15T19:00:00Z\"\n    }\n  ],\n  \"end_at\": \"2022-04-20T07:00:00Z\",\n  \"state\": \"APPROVED\",\n  \"cancel_at\": \"2022-04-12T17:00:00Z\",\n  \"promotion_type\": \"<string>\",\n  \"start_at\": \"2022-04-13T07:00:00Z\",\n  \"id\": \"string\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "a3b2abe4-b62b-4ca9-9820-ee0b6df068d0",
+              "name": "failed to create a campaign",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "api",
+                    "v3",
+                    "promotions",
+                    "campaigns"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: oauth2",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "<token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"name\": \"<string>\",\n  \"start_at\": \"2022-04-13T07:00:00Z\",\n  \"countries\": [\n    \"US\",\n    \"US\"\n  ],\n  \"event_id\": \"<object-id>\",\n  \"end_at\": \"2022-04-20T07:00:00Z\",\n  \"variations_discount_data\": {\n    \"discount_data\": [\n      {\n        \"product_id\": \"<object-id>\",\n        \"variation_id\": \"<object-id>\",\n        \"discount_percentage\": \"<float>\",\n        \"max_quantity\": \"<integer>\"\n      },\n      {\n        \"product_id\": \"<object-id>\",\n        \"variation_id\": \"<object-id>\",\n        \"discount_percentage\": \"<float>\",\n        \"max_quantity\": \"<integer>\"\n      }\n    ],\n    \"default_max_quantity\": \"<integer>\",\n    \"default_discount_percentage\": \"<float>\"\n  },\n  \"promotion_type\": \"<string>\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Bad Request",
+              "code": 400,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"code\": 7415,\n  \"message\": \"string\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "58d43b38-5cbf-4ce4-8b9e-277a1031c4b6",
+          "name": "List promotion campaigns",
+          "request": {
+            "name": "List promotion campaigns",
+            "description": {
+              "content": "List promotion campaigns",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "api",
+                "v3",
+                "promotions",
+                "campaigns"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [
+                {
+                  "disabled": false,
+                  "key": "start_at_min",
+                  "value": "<dateTime>",
+                  "description": "Only return campaigns that start at or after this time."
+                },
+                {
+                  "disabled": false,
+                  "key": "start_at_max",
+                  "value": "<dateTime>",
+                  "description": "Only return campaigns that start at or before this time."
+                },
+                {
+                  "disabled": false,
+                  "key": "end_at_min",
+                  "value": "<dateTime>",
+                  "description": "Only return campaigns that end on or after this time."
+                },
+                {
+                  "disabled": false,
+                  "key": "end_at_max",
+                  "value": "<dateTime>",
+                  "description": "Only return campaigns that end on or before this time."
+                },
+                {
+                  "disabled": false,
+                  "key": "created_at_min",
+                  "value": "<dateTime>",
+                  "description": "Specify the beginning of the time window to view desired campaigns when filtering by campaign creation time. Campaigns created before this time will not show."
+                },
+                {
+                  "disabled": false,
+                  "key": "created_at_max",
+                  "value": "<dateTime>",
+                  "description": "Specify the end of the time window to view desired campaigns when filtering by campaign creation time. Campaigns created after this time will not show."
+                },
+                {
+                  "disabled": false,
+                  "key": "states",
+                  "value": "<string>",
+                  "description": "Restrict campaigns within provided states. Usually used with start_at_min/max and end_at_min/max filters."
+                },
+                {
+                  "disabled": false,
+                  "key": "states",
+                  "value": "<string>",
+                  "description": "Restrict campaigns within provided states. Usually used with start_at_min/max and end_at_min/max filters."
+                },
+                {
+                  "disabled": false,
+                  "key": "promotion_types",
+                  "value": "<string>",
+                  "description": "Restrict campaigns within provided promotion types"
+                },
+                {
+                  "disabled": false,
+                  "key": "promotion_types",
+                  "value": "<string>",
+                  "description": "Restrict campaigns within provided promotion types"
+                },
+                {
+                  "disabled": false,
+                  "key": "product_id",
+                  "value": "<object-id>",
+                  "description": "ID of the product that result campaigns should include."
+                },
+                {
+                  "disabled": false,
+                  "key": "name",
+                  "value": "<string>",
+                  "description": "Name of the campaigns that result campaigns should include."
+                },
+                {
+                  "disabled": false,
+                  "key": "limit",
+                  "value": "25",
+                  "description": "A limit on the number of campaigns that will be returned."
+                },
+                {
+                  "disabled": false,
+                  "key": "sort_by",
+                  "value": "end_at.desc",
+                  "description": "Only 3 fields are enabled for sorting:`start_at`, `end_at` or `created_at`. Default order is `desc`, use `asc` to sort in reverse."
+                }
+              ],
+              "variable": []
+            },
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "GET",
+            "auth": {
+              "type": "oauth2",
+              "oauth2": [
+                {
+                  "key": "scope",
+                  "value": "payments:write tickets:write epc:read returns:write returns:read fbw:read products:read payments:read fbw:write merchant:write products:write ratings:read videos:read compliance:write product_boost:read listing_quality:read webhook:write orders:read compliance:read fbs:read penalties:read penalties:write infractions:read orders:write merchant:read notifications:write announcements:read product_boost:write notifications:read webhook:read qoo10:read wps_parcel:write wps_parcel:read tickets:read infractions:write videos:write epc:write"
+                },
+                {
+                  "key": "redirect_uri",
+                  "value": "https://merchant.wish.com/api/v3/oauth/refresh_token"
+                },
+                {
+                  "key": "accessTokenUrl",
+                  "value": "https://merchant.wish.com/api/v3/oauth/access_token"
+                },
+                {
+                  "key": "authUrl",
+                  "value": "https://merchant.wish.com/v3/oauth/authorize"
+                },
+                {
+                  "key": "grant_type",
+                  "value": "authorization_code"
+                }
+              ]
+            }
+          },
+          "response": [
+            {
+              "id": "3fba3d89-1047-4c16-b648-83fb3ac007c4",
+              "name": "successfully queried for campaigns",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "api",
+                    "v3",
+                    "promotions",
+                    "campaigns"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "start_at_min",
+                      "value": "2022-04-13T07:00:00Z"
+                    },
+                    {
+                      "key": "start_at_max",
+                      "value": "2022-04-14T07:00:00Z"
+                    },
+                    {
+                      "key": "end_at_min",
+                      "value": "2022-04-20T07:00:00Z"
+                    },
+                    {
+                      "key": "end_at_max",
+                      "value": "2022-04-21T07:00:00Z"
+                    },
+                    {
+                      "key": "created_at_min",
+                      "value": "2022-04-12T07:00:00.000Z"
+                    },
+                    {
+                      "key": "created_at_max",
+                      "value": "2022-04-13T07:00:00.000Z"
+                    },
+                    {
+                      "key": "states",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "states",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "promotion_types",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "promotion_types",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "product_id",
+                      "value": "<object-id>"
+                    },
+                    {
+                      "key": "name",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "limit",
+                      "value": "25"
+                    },
+                    {
+                      "key": "sort_by",
+                      "value": "end_at.desc"
+                    }
+                  ],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: oauth2",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "<token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "[\n  {\n    \"unqualified_product_variations\": [\n      {\n        \"reason\": \"MERCHANT_ELIGIBILITY\",\n        \"product_id\": \"string\",\n        \"variation_id\": \"string\"\n      },\n      {\n        \"reason\": \"CAMPAIGN_LIMIT\",\n        \"product_id\": \"string\",\n        \"variation_id\": \"string\"\n      }\n    ],\n    \"cancel_reason\": \"USER_CANCELLED_OTHER\",\n    \"name\": \"string\",\n    \"cancel_comment\": \"<string>\",\n    \"countries\": [\n      \"US\",\n      \"US\"\n    ],\n    \"event_id\": \"string\",\n    \"created_at\": \"2022-04-12T07:00:00Z\",\n    \"variations_discount_data\": [\n      {\n        \"product_id\": \"<object-id>\",\n        \"variation_id\": \"<object-id>\",\n        \"scheduled_start_time\": \"2022-04-15T07:00:00Z\",\n        \"discount_percentage\": \"<float>\",\n        \"max_quantity\": \"<integer>\",\n        \"scheduled_end_time\": \"2022-04-15T19:00:00Z\"\n      },\n      {\n        \"product_id\": \"<object-id>\",\n        \"variation_id\": \"<object-id>\",\n        \"scheduled_start_time\": \"2022-04-15T07:00:00Z\",\n        \"discount_percentage\": \"<float>\",\n        \"max_quantity\": \"<integer>\",\n        \"scheduled_end_time\": \"2022-04-15T19:00:00Z\"\n      }\n    ],\n    \"end_at\": \"2022-04-20T07:00:00Z\",\n    \"state\": \"<string>\",\n    \"cancel_at\": \"2022-04-12T17:00:00Z\",\n    \"promotion_type\": \"<string>\",\n    \"start_at\": \"2022-04-13T07:00:00Z\",\n    \"id\": \"string\"\n  },\n  {\n    \"unqualified_product_variations\": [\n      {\n        \"reason\": \"UNITY_PRODUCT\",\n        \"product_id\": \"string\",\n        \"variation_id\": \"string\"\n      },\n      {\n        \"reason\": \"UNITY_PRODUCT\",\n        \"product_id\": \"string\",\n        \"variation_id\": \"string\"\n      }\n    ],\n    \"cancel_reason\": \"USER_CANCELLED_WRONG_PRODUCTS\",\n    \"name\": \"string\",\n    \"cancel_comment\": \"<string>\",\n    \"countries\": [\n      \"US\",\n      \"US\"\n    ],\n    \"event_id\": \"string\",\n    \"created_at\": \"2022-04-12T07:00:00Z\",\n    \"variations_discount_data\": [\n      {\n        \"product_id\": \"<object-id>\",\n        \"variation_id\": \"<object-id>\",\n        \"scheduled_start_time\": \"2022-04-15T07:00:00Z\",\n        \"discount_percentage\": \"<float>\",\n        \"max_quantity\": \"<integer>\",\n        \"scheduled_end_time\": \"2022-04-15T19:00:00Z\"\n      },\n      {\n        \"product_id\": \"<object-id>\",\n        \"variation_id\": \"<object-id>\",\n        \"scheduled_start_time\": \"2022-04-15T07:00:00Z\",\n        \"discount_percentage\": \"<float>\",\n        \"max_quantity\": \"<integer>\",\n        \"scheduled_end_time\": \"2022-04-15T19:00:00Z\"\n      }\n    ],\n    \"end_at\": \"2022-04-20T07:00:00Z\",\n    \"state\": \"<string>\",\n    \"cancel_at\": \"2022-04-12T17:00:00Z\",\n    \"promotion_type\": \"<string>\",\n    \"start_at\": \"2022-04-13T07:00:00Z\",\n    \"id\": \"string\"\n  }\n]",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "97b49d5e-3ab6-4ead-b4ab-e45d6e1e2cde",
+              "name": "failed to query for campaigns",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "api",
+                    "v3",
+                    "promotions",
+                    "campaigns"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "start_at_min",
+                      "value": "2022-04-13T07:00:00Z"
+                    },
+                    {
+                      "key": "start_at_max",
+                      "value": "2022-04-14T07:00:00Z"
+                    },
+                    {
+                      "key": "end_at_min",
+                      "value": "2022-04-20T07:00:00Z"
+                    },
+                    {
+                      "key": "end_at_max",
+                      "value": "2022-04-21T07:00:00Z"
+                    },
+                    {
+                      "key": "created_at_min",
+                      "value": "2022-04-12T07:00:00.000Z"
+                    },
+                    {
+                      "key": "created_at_max",
+                      "value": "2022-04-13T07:00:00.000Z"
+                    },
+                    {
+                      "key": "states",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "states",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "promotion_types",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "promotion_types",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "product_id",
+                      "value": "<object-id>"
+                    },
+                    {
+                      "key": "name",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "limit",
+                      "value": "25"
+                    },
+                    {
+                      "key": "sort_by",
+                      "value": "end_at.desc"
+                    }
+                  ],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: oauth2",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "<token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "Bad Request",
+              "code": 400,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"code\": 7415,\n  \"message\": \"string\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "2b4f4b21-efd6-4c82-9220-44a42e166e4c",
+          "name": "Update a promotion campaign",
+          "request": {
+            "name": "Update a promotion campaign",
+            "description": {
+              "content": "Update a promotion campaign.",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "api",
+                "v3",
+                "promotions",
+                "campaigns",
+                ":id"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": [
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<object-id>",
+                  "key": "id",
+                  "description": "(Required) ID of the campaign you want to update"
+                }
+              ]
+            },
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "PUT",
+            "auth": {
+              "type": "oauth2",
+              "oauth2": [
+                {
+                  "key": "scope",
+                  "value": "payments:write tickets:write epc:read returns:write returns:read fbw:read products:read payments:read fbw:write merchant:write products:write ratings:read videos:read compliance:write product_boost:read listing_quality:read webhook:write orders:read compliance:read fbs:read penalties:read penalties:write infractions:read orders:write merchant:read notifications:write announcements:read product_boost:write notifications:read webhook:read qoo10:read wps_parcel:write wps_parcel:read tickets:read infractions:write videos:write epc:write"
+                },
+                {
+                  "key": "redirect_uri",
+                  "value": "https://merchant.wish.com/api/v3/oauth/refresh_token"
+                },
+                {
+                  "key": "accessTokenUrl",
+                  "value": "https://merchant.wish.com/api/v3/oauth/access_token"
+                },
+                {
+                  "key": "authUrl",
+                  "value": "https://merchant.wish.com/v3/oauth/authorize"
+                },
+                {
+                  "key": "grant_type",
+                  "value": "authorization_code"
+                }
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"variations_discount_data\": {\n    \"discount_data\": [\n      {\n        \"product_id\": \"<object-id>\",\n        \"variation_id\": \"<object-id>\",\n        \"discount_percentage\": \"<float>\",\n        \"max_quantity\": \"<integer>\"\n      },\n      {\n        \"product_id\": \"<object-id>\",\n        \"variation_id\": \"<object-id>\",\n        \"discount_percentage\": \"<float>\",\n        \"max_quantity\": \"<integer>\"\n      }\n    ],\n    \"default_max_quantity\": \"<integer>\",\n    \"default_discount_percentage\": \"<float>\"\n  }\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": [
+            {
+              "id": "8b817b48-e3ff-4f90-87d3-afe24e24f9ea",
+              "name": "successfully updated a campaign",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "api",
+                    "v3",
+                    "promotions",
+                    "campaigns",
+                    ":id"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<object-id>",
+                      "key": "id",
+                      "description": "(Required) ID of the campaign you want to update"
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: oauth2",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "<token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "PUT",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"variations_discount_data\": {\n    \"discount_data\": [\n      {\n        \"product_id\": \"<object-id>\",\n        \"variation_id\": \"<object-id>\",\n        \"discount_percentage\": \"<float>\",\n        \"max_quantity\": \"<integer>\"\n      },\n      {\n        \"product_id\": \"<object-id>\",\n        \"variation_id\": \"<object-id>\",\n        \"discount_percentage\": \"<float>\",\n        \"max_quantity\": \"<integer>\"\n      }\n    ],\n    \"default_max_quantity\": \"<integer>\",\n    \"default_discount_percentage\": \"<float>\"\n  }\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"unqualified_product_variations\": [\n    {\n      \"reason\": \"NOT_IN_STOCK\",\n      \"product_id\": \"string\",\n      \"variation_id\": \"string\"\n    },\n    {\n      \"reason\": \"FRS_DISCOUNT_PRICE\",\n      \"product_id\": \"string\",\n      \"variation_id\": \"string\"\n    }\n  ],\n  \"cancel_reason\": \"USER_CANCELLED_WRONG_PRODUCTS\",\n  \"name\": \"string\",\n  \"cancel_comment\": \"<string>\",\n  \"countries\": [\n    \"US\",\n    \"US\"\n  ],\n  \"event_id\": \"string\",\n  \"created_at\": \"2022-04-12T07:00:00Z\",\n  \"variations_discount_data\": [\n    {\n      \"product_id\": \"<object-id>\",\n      \"variation_id\": \"<object-id>\",\n      \"scheduled_start_time\": \"2022-04-15T07:00:00Z\",\n      \"discount_percentage\": \"<float>\",\n      \"max_quantity\": \"<integer>\",\n      \"scheduled_end_time\": \"2022-04-15T19:00:00Z\"\n    },\n    {\n      \"product_id\": \"<object-id>\",\n      \"variation_id\": \"<object-id>\",\n      \"scheduled_start_time\": \"2022-04-15T07:00:00Z\",\n      \"discount_percentage\": \"<float>\",\n      \"max_quantity\": \"<integer>\",\n      \"scheduled_end_time\": \"2022-04-15T19:00:00Z\"\n    }\n  ],\n  \"end_at\": \"2022-04-20T07:00:00Z\",\n  \"state\": \"<string>\",\n  \"cancel_at\": \"2022-04-12T17:00:00Z\",\n  \"promotion_type\": \"<string>\",\n  \"start_at\": \"2022-04-13T07:00:00Z\",\n  \"id\": \"string\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "9e2761c1-0a38-45c7-be0d-beb8b7b4bbb5",
+              "name": "failed to update a campaign",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "api",
+                    "v3",
+                    "promotions",
+                    "campaigns",
+                    ":id"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<object-id>",
+                      "key": "id",
+                      "description": "(Required) ID of the campaign you want to update"
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: oauth2",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "<token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "PUT",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"variations_discount_data\": {\n    \"discount_data\": [\n      {\n        \"product_id\": \"<object-id>\",\n        \"variation_id\": \"<object-id>\",\n        \"discount_percentage\": \"<float>\",\n        \"max_quantity\": \"<integer>\"\n      },\n      {\n        \"product_id\": \"<object-id>\",\n        \"variation_id\": \"<object-id>\",\n        \"discount_percentage\": \"<float>\",\n        \"max_quantity\": \"<integer>\"\n      }\n    ],\n    \"default_max_quantity\": \"<integer>\",\n    \"default_discount_percentage\": \"<float>\"\n  }\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Bad Request",
+              "code": 400,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"code\": 7415,\n  \"message\": \"string\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "44703286-9559-4e87-a821-50f6db7dc741",
+          "name": "Get a single promotion campaign",
+          "request": {
+            "name": "Get a single promotion campaign",
+            "description": {
+              "content": "Get a single promotion campaign by its ID",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "api",
+                "v3",
+                "promotions",
+                "campaigns",
+                ":id"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": [
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<object-id>",
+                  "key": "id",
+                  "description": "(Required) ID of the campaign you want to query"
+                }
+              ]
+            },
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "GET",
+            "auth": {
+              "type": "oauth2",
+              "oauth2": [
+                {
+                  "key": "scope",
+                  "value": "payments:write tickets:write epc:read returns:write returns:read fbw:read products:read payments:read fbw:write merchant:write products:write ratings:read videos:read compliance:write product_boost:read listing_quality:read webhook:write orders:read compliance:read fbs:read penalties:read penalties:write infractions:read orders:write merchant:read notifications:write announcements:read product_boost:write notifications:read webhook:read qoo10:read wps_parcel:write wps_parcel:read tickets:read infractions:write videos:write epc:write"
+                },
+                {
+                  "key": "redirect_uri",
+                  "value": "https://merchant.wish.com/api/v3/oauth/refresh_token"
+                },
+                {
+                  "key": "accessTokenUrl",
+                  "value": "https://merchant.wish.com/api/v3/oauth/access_token"
+                },
+                {
+                  "key": "authUrl",
+                  "value": "https://merchant.wish.com/v3/oauth/authorize"
+                },
+                {
+                  "key": "grant_type",
+                  "value": "authorization_code"
+                }
+              ]
+            }
+          },
+          "response": [
+            {
+              "id": "521615fb-e41c-4330-88d7-c269c70fa7b2",
+              "name": "successfully queried for a campaign",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "api",
+                    "v3",
+                    "promotions",
+                    "campaigns",
+                    ":id"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<object-id>",
+                      "key": "id",
+                      "description": "(Required) ID of the campaign you want to query"
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: oauth2",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "<token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"unqualified_product_variations\": [\n    {\n      \"reason\": \"NOT_IN_STOCK\",\n      \"product_id\": \"string\",\n      \"variation_id\": \"string\"\n    },\n    {\n      \"reason\": \"FRS_DISCOUNT_PRICE\",\n      \"product_id\": \"string\",\n      \"variation_id\": \"string\"\n    }\n  ],\n  \"cancel_reason\": \"USER_CANCELLED_WRONG_PRODUCTS\",\n  \"name\": \"string\",\n  \"cancel_comment\": \"<string>\",\n  \"countries\": [\n    \"US\",\n    \"US\"\n  ],\n  \"event_id\": \"string\",\n  \"created_at\": \"2022-04-12T07:00:00Z\",\n  \"variations_discount_data\": [\n    {\n      \"product_id\": \"<object-id>\",\n      \"variation_id\": \"<object-id>\",\n      \"scheduled_start_time\": \"2022-04-15T07:00:00Z\",\n      \"discount_percentage\": \"<float>\",\n      \"max_quantity\": \"<integer>\",\n      \"scheduled_end_time\": \"2022-04-15T19:00:00Z\"\n    },\n    {\n      \"product_id\": \"<object-id>\",\n      \"variation_id\": \"<object-id>\",\n      \"scheduled_start_time\": \"2022-04-15T07:00:00Z\",\n      \"discount_percentage\": \"<float>\",\n      \"max_quantity\": \"<integer>\",\n      \"scheduled_end_time\": \"2022-04-15T19:00:00Z\"\n    }\n  ],\n  \"end_at\": \"2022-04-20T07:00:00Z\",\n  \"state\": \"<string>\",\n  \"cancel_at\": \"2022-04-12T17:00:00Z\",\n  \"promotion_type\": \"<string>\",\n  \"start_at\": \"2022-04-13T07:00:00Z\",\n  \"id\": \"string\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "97f4770a-0997-4896-922e-0b1805bca5a6",
+              "name": "failed to query for a campaign",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "api",
+                    "v3",
+                    "promotions",
+                    "campaigns",
+                    ":id"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<object-id>",
+                      "key": "id",
+                      "description": "(Required) ID of the campaign you want to query"
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: oauth2",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "<token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "Bad Request",
+              "code": 400,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"code\": 7415,\n  \"message\": \"string\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "656885d3-84f1-4e42-8dd0-9919eab6a817",
+          "name": "List promotion events",
+          "request": {
+            "name": "List promotion events",
+            "description": {
+              "content": "Get a list of promotion events",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "api",
+                "v3",
+                "promotions",
+                "events"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [
+                {
+                  "disabled": false,
+                  "key": "ids",
+                  "value": "<object-id>",
+                  "description": "IDs of promotion events, if this field is non-empty, all other fields will be ignored."
+                },
+                {
+                  "disabled": false,
+                  "key": "ids",
+                  "value": "<object-id>",
+                  "description": "IDs of promotion events, if this field is non-empty, all other fields will be ignored."
+                },
+                {
+                  "disabled": false,
+                  "key": "promotion_types",
+                  "value": "<string>",
+                  "description": "Restrict promotion events within provided promotion types"
+                },
+                {
+                  "disabled": false,
+                  "key": "promotion_types",
+                  "value": "<string>",
+                  "description": "Restrict promotion events within provided promotion types"
+                },
+                {
+                  "disabled": false,
+                  "key": "submission_deadline_min",
+                  "value": "<dateTime>",
+                  "description": "Only return promotion events with the submission deadline on or after this time. If the field is not specified, the current date-time will be used by default."
+                },
+                {
+                  "disabled": false,
+                  "key": "submission_deadline_max",
+                  "value": "<dateTime>",
+                  "description": "Only return promotion events with the submission deadline on or before this time"
+                },
+                {
+                  "disabled": false,
+                  "key": "limit",
+                  "value": "25",
+                  "description": "The limit on the number of promotion events that will be returned"
+                },
+                {
+                  "disabled": false,
+                  "key": "sort_by",
+                  "value": "submission_deadline.asc",
+                  "description": "The attribute to sort promotion events in the response. Default order is descending (desc), use asc to sort in reverse."
+                }
+              ],
+              "variable": []
+            },
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "GET",
+            "auth": {
+              "type": "oauth2",
+              "oauth2": [
+                {
+                  "key": "scope",
+                  "value": "payments:write tickets:write epc:read returns:write returns:read fbw:read products:read payments:read fbw:write merchant:write products:write ratings:read videos:read compliance:write product_boost:read listing_quality:read webhook:write orders:read compliance:read fbs:read penalties:read penalties:write infractions:read orders:write merchant:read notifications:write announcements:read product_boost:write notifications:read webhook:read qoo10:read wps_parcel:write wps_parcel:read tickets:read infractions:write videos:write epc:write"
+                },
+                {
+                  "key": "redirect_uri",
+                  "value": "https://merchant.wish.com/api/v3/oauth/refresh_token"
+                },
+                {
+                  "key": "accessTokenUrl",
+                  "value": "https://merchant.wish.com/api/v3/oauth/access_token"
+                },
+                {
+                  "key": "authUrl",
+                  "value": "https://merchant.wish.com/v3/oauth/authorize"
+                },
+                {
+                  "key": "grant_type",
+                  "value": "authorization_code"
+                }
+              ]
+            }
+          },
+          "response": [
+            {
+              "id": "9081ca4b-ae89-40ca-9262-9c452e18af23",
+              "name": "successfully queried for promotion events",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "api",
+                    "v3",
+                    "promotions",
+                    "events"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "ids",
+                      "value": "<object-id>"
+                    },
+                    {
+                      "key": "ids",
+                      "value": "<object-id>"
+                    },
+                    {
+                      "key": "promotion_types",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "promotion_types",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "submission_deadline_min",
+                      "value": "2023-11-20T07:00:00Z"
+                    },
+                    {
+                      "key": "submission_deadline_max",
+                      "value": "2023-11-20T07:00:00Z"
+                    },
+                    {
+                      "key": "limit",
+                      "value": "25"
+                    },
+                    {
+                      "key": "sort_by",
+                      "value": "submission_deadline.asc"
+                    }
+                  ],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: oauth2",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "<token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "[\n  {\n    \"product_category_restrictions\": [\n      9365,\n      9860\n    ],\n    \"start_at\": \"2023-11-20T07:00:00Z\",\n    \"description\": \"string\",\n    \"countries\": [\n      \"US\",\n      \"US\"\n    ],\n    \"submission_deadline\": \"2023-11-20T07:00:00Z\",\n    \"min_discount_percentage\": 3616.113074393028,\n    \"end_at\": \"2023-11-20T07:00:00Z\",\n    \"promotion_type\": \"<string>\",\n    \"id\": \"string\",\n    \"name\": \"string\"\n  },\n  {\n    \"product_category_restrictions\": [\n      2630,\n      4978\n    ],\n    \"start_at\": \"2023-11-20T07:00:00Z\",\n    \"description\": \"string\",\n    \"countries\": [\n      \"US\",\n      \"US\"\n    ],\n    \"submission_deadline\": \"2023-11-20T07:00:00Z\",\n    \"min_discount_percentage\": 47.24750562082214,\n    \"end_at\": \"2023-11-20T07:00:00Z\",\n    \"promotion_type\": \"<string>\",\n    \"id\": \"string\",\n    \"name\": \"string\"\n  }\n]",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "0a726083-c353-4621-9863-92a472ca53c6",
+              "name": "failed to query for promotion events",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "api",
+                    "v3",
+                    "promotions",
+                    "events"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "ids",
+                      "value": "<object-id>"
+                    },
+                    {
+                      "key": "ids",
+                      "value": "<object-id>"
+                    },
+                    {
+                      "key": "promotion_types",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "promotion_types",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "submission_deadline_min",
+                      "value": "2023-11-20T07:00:00Z"
+                    },
+                    {
+                      "key": "submission_deadline_max",
+                      "value": "2023-11-20T07:00:00Z"
+                    },
+                    {
+                      "key": "limit",
+                      "value": "25"
+                    },
+                    {
+                      "key": "sort_by",
+                      "value": "submission_deadline.asc"
+                    }
+                  ],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: oauth2",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "<token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "Bad Request",
+              "code": 400,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"code\": 7415,\n  \"message\": \"string\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "1b16f291-8f3e-4e2c-adc8-7e4d6a50f037",
+          "name": "Get eligible products count",
+          "request": {
+            "name": "Get eligible products count",
+            "description": {
+              "content": "Get eligible products count",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "api",
+                "v3",
+                "promotions",
+                "eligible_products",
+                "count"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [
+                {
+                  "disabled": false,
+                  "key": "updated_at_min",
+                  "value": "<dateTime>",
+                  "description": "Only return products that were updated since the given time. Currently only time with precision up to 'millisecond' will be accepted. Any time that is more precise than 'millisecond' level will be processed so that it only keeps its 'millisecond'."
+                },
+                {
+                  "disabled": false,
+                  "key": "updated_at_max",
+                  "value": "<dateTime>",
+                  "description": "Only return products that were updated before the given time. Currently only time with precision up to 'millisecond' will be accepted. Any time that is more precise than 'millisecond' level will be processed so that it only keeps its 'millisecond'."
+                },
+                {
+                  "disabled": false,
+                  "key": "promotion_type",
+                  "value": "<string>",
+                  "description": "Promotion type for eligible products search. This field is required if there is no event ID specified."
+                },
+                {
+                  "disabled": false,
+                  "key": "event_id",
+                  "value": "<object-id>",
+                  "description": "ID of the promotion event"
+                }
+              ],
+              "variable": []
+            },
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "GET",
+            "auth": {
+              "type": "oauth2",
+              "oauth2": [
+                {
+                  "key": "scope",
+                  "value": "payments:write tickets:write epc:read returns:write returns:read fbw:read products:read payments:read fbw:write merchant:write products:write ratings:read videos:read compliance:write product_boost:read listing_quality:read webhook:write orders:read compliance:read fbs:read penalties:read penalties:write infractions:read orders:write merchant:read notifications:write announcements:read product_boost:write notifications:read webhook:read qoo10:read wps_parcel:write wps_parcel:read tickets:read infractions:write videos:write epc:write"
+                },
+                {
+                  "key": "redirect_uri",
+                  "value": "https://merchant.wish.com/api/v3/oauth/refresh_token"
+                },
+                {
+                  "key": "accessTokenUrl",
+                  "value": "https://merchant.wish.com/api/v3/oauth/access_token"
+                },
+                {
+                  "key": "authUrl",
+                  "value": "https://merchant.wish.com/v3/oauth/authorize"
+                },
+                {
+                  "key": "grant_type",
+                  "value": "authorization_code"
+                }
+              ]
+            }
+          },
+          "response": [
+            {
+              "id": "06e60b97-d440-44d5-a23d-c006b21c790c",
+              "name": "successfully returned eligible products count",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "api",
+                    "v3",
+                    "promotions",
+                    "eligible_products",
+                    "count"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "updated_at_min",
+                      "value": "<dateTime>"
+                    },
+                    {
+                      "key": "updated_at_max",
+                      "value": "<dateTime>"
+                    },
+                    {
+                      "key": "promotion_type",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "event_id",
+                      "value": "<object-id>"
+                    }
+                  ],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: oauth2",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "<token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"count\": 9507\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "b2e57f32-a5af-48c5-bc02-84a52b577bd6",
+              "name": "failed to get eligible products count",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "api",
+                    "v3",
+                    "promotions",
+                    "eligible_products",
+                    "count"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "updated_at_min",
+                      "value": "<dateTime>"
+                    },
+                    {
+                      "key": "updated_at_max",
+                      "value": "<dateTime>"
+                    },
+                    {
+                      "key": "promotion_type",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "event_id",
+                      "value": "<object-id>"
+                    }
+                  ],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: oauth2",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "<token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "Bad Request",
+              "code": 400,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"code\": 7415,\n  \"message\": \"string\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        }
+      ],
+      "event": []
+    }
+  ],
+  "event": [],
+  "variable": [
+    {
+      "type": "string",
+      "value": "https://merchant.wish.com",
+      "key": "baseUrl"
+    }
+  ],
+  "auth": {
+    "type": "oauth2",
+    "oauth2": [
+      {
+        "key": "scope",
+        "value": "payments:write tickets:write epc:read returns:write returns:read fbw:read products:read payments:read fbw:write merchant:write products:write ratings:read videos:read compliance:write product_boost:read listing_quality:read webhook:write orders:read compliance:read fbs:read penalties:read penalties:write infractions:read orders:write merchant:read notifications:write announcements:read product_boost:write notifications:read webhook:read qoo10:read wps_parcel:write wps_parcel:read tickets:read infractions:write videos:write epc:write"
+      },
+      {
+        "key": "redirect_uri",
+        "value": "https://merchant.wish.com/api/v3/oauth/refresh_token"
+      },
+      {
+        "key": "accessTokenUrl",
+        "value": "https://merchant.wish.com/api/v3/oauth/access_token"
+      },
+      {
+        "key": "authUrl",
+        "value": "https://merchant.wish.com/v3/oauth/authorize"
+      },
+      {
+        "key": "grant_type",
+        "value": "authorization_code"
+      }
+    ]
+  },
+  "info": {
+    "_postman_id": "7ac713b5-a480-4ebd-a033-c2b0d08cdcee",
+    "name": "Wish Marketplace V3 Brands Promotions Platform API",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "description": {
+      "content": "\nWish Marketplace V3 API\n\n# General Information\n\n The Wish Marketplace API will be using oAuth to authenticate in order to offer better security for its users\n\n *   Learn about oAuth [here](oauth).\n *   If you are a merchant and want to create an application for yourself, learn about how to create a private app [here](../../private-app)\n *   If you are a ERP and create applications that'll be used by multiple merchants, learn about how to create a public app [here]( ../../public-app). You will need to apply to be a verified public application\n\n ## How to Test\n\n To avoid testing the API on production data, use our sandbox. The sandbox is completely contained and will not affect Wish users or your merchant account. \n \n To reach the sandbox, visit: https://sandbox.merchant.wish.com.\n\n To use the sandbox in testing, use https://sandbox.merchant.wish.com/api/v3/ as your base URL.\n\n How to Generate test data after you have created a sandbox account:\n 1. Navigate to the [unfulfilled orders page](https://sandbox.merchant.wish.com/transactions/action)\n 2. Hover over the dropdown next to the 'fulfill with csv' button and select Generate Orders\n\n ## Date/Time Format\n\n  All dates and times in our API are returned in the same format. It is in the form `YYYY-MM-DDTHH:mm:ss.sss±XX:ZZ` or `YYYY-MM-DDTHH:mm:ss.sssZ`, where 'Z' represents UTC timezone.\n  When sending timestamps in URL parameters or the request body, millisecond is optional and will defaults to 0 if not provided.\n\n  * `YYYY` is the year\n  * `MM` is the month\n  * `DD` is the day\n  * `HH` is the hour (in 24-hour clock format)\n  * `mm` is the minutes\n  * `ss.sss` is the seconds and milliseconds\n  * `±XX:ZZ` is the UTC offset of the form +XX:ZZ or -XX:ZZ where XX is a 2-digit string giving the number of UTC offset hours, and ZZ is a 2-digit string giving the number of UTC offset minutes.\n\n ## Response Schema\n\n  Every response returned from the Wish API will have the same schema. This schema is intended to give you a predictable manner to check the status of your request and know where to get the data. Each response will have the following top level attributes: message, code and data.\n\n  **Attributes**\n\n  <table>\n  <tbody>\n  <tr>\n  <th>Message</th>\n  <td>A message describing the error that happened, example: \"We could not find a product for id: '5d30f60e0a6fc464f4f376b0'\"</td>\n  </tr>\n  <tr>\n  <th>Code</th>\n  <td>A unique number which represents the error that has occurred, example: 1008 or 0 if success.</td>\n  </tr>\n  <tr>\n  <th>Data</th>\n  <td>For errors this will be empty.</td>\n  </tr>\n  </tbody>\n  </table>\n\n ## General Querying Techniques\n\n ### Partial Resources\n All GET endpoints (except OAuth) support a fields parameter which allows for requesting a partial response. Any fields specified in the response schema of an endpoint can be selected. The top level attribute `data` can be ignored when using the fields parameter.\n\n **Syntax**\n * Comma-separated list to select multiple fields\n * Use forward slash `/` to select nested field: `field1/nested_field`\n * Use parentheses `( )` to select multiple nested fields: `field1(nested_field1,nested_field2)`\n * Use `*` for wildcard selection: `field1/nested_field/*`\n\n\n **Example:**\n ```\n https://merchant.wish.com/api/v3/demo/get?fields=title,items(id,info/name)\n ```\n Which would result in the following partial response:\n ```\n {\n   \"title\": \"demo\",\n   \"items\": [\n     {\n       \"id\": \"1\",\n       \"info\": {\n         \"name\": \"demo_item_1\"\n       }\n     }, {\n       \"id\": \"2\",\n       \"info\": {\n         \"name\": \"demo_item_2\"\n       }\n     },\n     ...\n   ]\n }\n ```\n\n ## Locale\n   You can optionally specify locale in order to translate content and error messages into your language.\n   To do this use the [Accept-Language](https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Accept-Language) header to specify your preferred locales.\n   If none is provided, your default locale will be used.\n\n   For example, to request content in Chinese use: `Accept-Language: zh`\n\n   In the response, you will receive a [Content-Language](https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Content-Language) header that specifies the locale code of the response content.\n\n\n ## Rate-Limiting\n\n  Rate-limiting will be performed on a per-merchant basis for each app. It is your responsibility to ensure you are not making frequent unnecessary calls to the API.\n\n  If the rate limits cannot satisfy your need, we highly recommend integrating webhooks for your app. With webhooks, instead of pulling resources periodically, your app will receive real-time notifications for particular events that occur to a merchant’s store. [Learn more](https://merchant.wish.com/documentation/webhooks)\n\n  **Normal Usage**\n\n  To help you track the rate-limiter status, the following response header(s) will be provided with each response:\n\n   * `Wish-Rate-Limit-Remaining`: The number of calls remaining in the current rate-limiting window.\n\n\n  **Rate-Limit Exceeded**\n\n  After you exceed the number of allowed calls in the current rate-limiting window, you will receive a `429 Too Many Requests` error response and the following additional header(s):\n\n   * `Wish-Rate-Limit-Reset`: The time the rate-limiter will reset.\n\n\n  Once you receive this response there is nothing you can do except wait for the rate-limiter to reset. In order to avoid being rate-limited, you may want to cache your responses.\n\n ## Sorting\n   ### Overview\n   Sorting is available for most endpoints that return a collection (list) of objects. Each collection has a different set of enabled parameters for sorting, so please check specific collection section for detail.\n\n   ### Usage\n   Append `sort_by={parameter_name}.{asc|desc}` in your API request where `parameter_name` is a valid sortable parameter of that endpoint.\n\n   Example:\n   ```\n   /api/v3/penalties?sort_by=created_at.asc\n   ```\n\n ## Pagination\n  All bulk-fetching API methods that return lists of resource support pagination.\n  These methods commonly take at least 3 parameters: `limit`, `{attribute}_min`, `{attribute}_max`. Attribute can be `id`, `create_at`, etc., depending on each specific method.\n  For instance, you make a request to get a list of penalties `/api/v3/penalties?limit=20&created_at_max=2020-04-08T23:59:59Z&sort_by=created_at_max.desc`,\n  which means to fetch 20 penalities sorted by their creation time, with the most recent one being created before `2020-04-08T23:59:59Z`.\n  Assume that the response contains 20 `penalty` objects with the last object being `penalty_foo`,\n  then your subsequent request can be `/api/v3/penalties?limit=20&created_at_max={penalty_foo.create_at}&sort_by=created_at_max.desc` to fetch the next page of list.\n  Note that when fetching next page using `id_min` or `id_max`, you need to perform `+/- 1`(correspondingly) on the last object's ID in the current page, as `id_min` and `id_max` are inclusive. (All V3 API resources' IDs are either integer or BSON object ID - a hex number).\n\n\n ## Request ID\n  Each API request is associated with a unique identifier. You can find this value in response headers, under `Wish-Request-Id`.\n  **When you need to contact us about a specific request, please provide this ID to ensure the fastest possible reply**\n\n# Authentication\nFor all requests that require OAuth2 authentication, the access token must be provided in the `Authorization` request header in the following format: `Authorization: Bearer <token>`\n\nFor example:\n```\nAuthorization: Bearer 3d6e2d71bc464e42bfbdb081afb73c1e\n```\n<!-- ReDoc-Inject: <security-definitions> -->\n\n\nContact Support:\n Email: partner-api@wish.com",
+      "type": "text/plain"
+    }
+  }
+}

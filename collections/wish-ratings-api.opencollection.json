@@ -1,0 +1,124 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "Wish Marketplace V3 Brands Ratings API",
+    "version": "3.0.65"
+  },
+  "request": {
+    "auth": {
+      "type": "oauth2",
+      "flow": "authorization_code",
+      "authorizationUrl": "https://merchant.wish.com/v3/oauth/authorize",
+      "accessTokenUrl": "https://merchant.wish.com/api/v3/oauth/access_token",
+      "credentials": {
+        "clientId": "{{clientId}}",
+        "clientSecret": "{{clientSecret}}"
+      }
+    }
+  },
+  "items": [
+    {
+      "info": {
+        "name": "Ratings",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Fetch product ratings",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://merchant.wish.com/api/v3/ratings/products",
+            "params": [
+              {
+                "name": "product_id",
+                "value": "",
+                "type": "query",
+                "description": "Id of a product associated with the ratings. If the id is provided, it will only return the ratings of the specific product. If the id is not given, it will return ratings of all products starting from September 9th, 2019 unless a later created_at_min time is specified"
+              },
+              {
+                "name": "offset",
+                "value": "",
+                "type": "query",
+                "description": "The starting point of the ratings retrieved"
+              },
+              {
+                "name": "limit",
+                "value": "",
+                "type": "query",
+                "description": "It is a limit on the number of ratings that can be returned. Limit can range from <b>1</b> to <b>500</b> items."
+              },
+              {
+                "name": "created_at_min",
+                "value": "",
+                "type": "query",
+                "description": "A date/time string which indicates the earliest creation time of product ratings to fetch. If created_at_min is not provided, the default is to set it to the creation time of the earliest created rating."
+              },
+              {
+                "name": "created_at_max",
+                "value": "",
+                "type": "query",
+                "description": "A date/time string which indicates the latest creation time of product ratings to fetch. If created_at_max is not provided, created_at_max will be set to the current time."
+              },
+              {
+                "name": "ratings",
+                "value": "",
+                "type": "query",
+                "description": "Filter ratings by value. ratings range from <b>1</b> to <b>5</b>. If ratings is not provided, the default is to select ratings in all values."
+              },
+              {
+                "name": "sort_by",
+                "value": "",
+                "type": "query",
+                "description": "Sort results by the given attribute. Enabled attributes are `created_at` and `rating` Default order is `desc`, use `asc` to sort in reverse."
+              }
+            ],
+            "auth": {
+              "type": "oauth2",
+              "flow": "authorization_code",
+              "authorizationUrl": "https://merchant.wish.com/v3/oauth/authorize",
+              "accessTokenUrl": "https://merchant.wish.com/api/v3/oauth/access_token",
+              "credentials": {
+                "clientId": "{{clientId}}",
+                "clientSecret": "{{clientSecret}}"
+              }
+            }
+          },
+          "docs": "The goal of the rating API is to allow merchants to locate and track their product ratings more easily. If the total rating of a specific product changed, merchants should easily be able to determine which orders caused the changes."
+        },
+        {
+          "info": {
+            "name": "Fetch the overall rating of the product",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://merchant.wish.com/api/v3/ratings/products/:id",
+            "params": [
+              {
+                "name": "id",
+                "value": "",
+                "type": "path",
+                "description": "ID of the product to query"
+              }
+            ],
+            "auth": {
+              "type": "oauth2",
+              "flow": "authorization_code",
+              "authorizationUrl": "https://merchant.wish.com/v3/oauth/authorize",
+              "accessTokenUrl": "https://merchant.wish.com/api/v3/oauth/access_token",
+              "credentials": {
+                "clientId": "{{clientId}}",
+                "clientSecret": "{{clientSecret}}"
+              }
+            }
+          },
+          "docs": "Enable merchants to retrieve the overall rating metrics for the product"
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

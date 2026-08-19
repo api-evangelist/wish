@@ -1,0 +1,441 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "Wish Marketplace V3 Brands ProductBoost API",
+    "version": "3.0.65"
+  },
+  "request": {
+    "auth": {
+      "type": "oauth2",
+      "flow": "authorization_code",
+      "authorizationUrl": "https://merchant.wish.com/v3/oauth/authorize",
+      "accessTokenUrl": "https://merchant.wish.com/api/v3/oauth/access_token",
+      "credentials": {
+        "clientId": "{{clientId}}",
+        "clientSecret": "{{clientSecret}}"
+      }
+    }
+  },
+  "items": [
+    {
+      "info": {
+        "name": "ProductBoost",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Get information for the given keywords or keywords that match the query",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://merchant.wish.com/api/v3/product_boost/keywords",
+            "params": [
+              {
+                "name": "keywords",
+                "value": "",
+                "type": "query",
+                "description": "A list of keywords. Maximum 50 keywords allowed. Only one of 'keywords' and 'query' parameters should be provided. 'keywords' parameter does exact match while 'query' returns all matching keywords."
+              },
+              {
+                "name": "query",
+                "value": "",
+                "type": "query",
+                "description": "The query used to search all related keywords. Only one of 'keywords' and 'query' parameters should be provided. 'keywords' parameter does exact match while 'query' returns all matching keyword."
+              },
+              {
+                "name": "exclude",
+                "value": "",
+                "type": "query",
+                "description": "A list of keywords to be excluded from the search results. Maximum 30 allowed. This parameter is only in use if 'query' parameter is provided."
+              }
+            ],
+            "auth": {
+              "type": "oauth2",
+              "flow": "authorization_code",
+              "authorizationUrl": "https://merchant.wish.com/v3/oauth/authorize",
+              "accessTokenUrl": "https://merchant.wish.com/api/v3/oauth/access_token",
+              "credentials": {
+                "clientId": "{{clientId}}",
+                "clientSecret": "{{clientSecret}}"
+              }
+            }
+          },
+          "docs": "Obtain details on a list of ProductBoost keywords."
+        },
+        {
+          "info": {
+            "name": "List ProductBoost campaigns",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://merchant.wish.com/api/v3/product_boost/campaigns",
+            "params": [
+              {
+                "name": "product_id",
+                "value": "",
+                "type": "query",
+                "description": "ID of the product that result campaigns should include."
+              },
+              {
+                "name": "campaign_name",
+                "value": "",
+                "type": "query",
+                "description": "Name of the Campaigns you want to query."
+              },
+              {
+                "name": "limit",
+                "value": "",
+                "type": "query",
+                "description": "A limit on the number of campaigns that will be returned. Used for paging."
+              },
+              {
+                "name": "states",
+                "value": "",
+                "type": "query",
+                "description": "Restrict campaigns within provided states"
+              },
+              {
+                "name": "auto_renew",
+                "value": "",
+                "type": "query",
+                "description": "Only return campaigns that will or will not auto-renew upon completion."
+              },
+              {
+                "name": "is_automated",
+                "value": "",
+                "type": "query",
+                "description": "Only return campaigns that are or are not automated campaigns, or duplicated from automated campaigns."
+              },
+              {
+                "name": "created_at_min",
+                "value": "2020-01-01T07:00:00Z",
+                "type": "query",
+                "description": "Only return campaigns that are created at or after this time."
+              },
+              {
+                "name": "created_at_max",
+                "value": "2020-01-01T07:00:00Z",
+                "type": "query",
+                "description": "Only return campaigns that are created at or before this time."
+              },
+              {
+                "name": "campaign_id_min",
+                "value": "5e0c27500000000000000000",
+                "type": "query",
+                "description": "Only return campaigns with campaign id values greater than or equal to this id. Intended for paging."
+              },
+              {
+                "name": "campaign_id_max",
+                "value": "5e0c27500000000000000000",
+                "type": "query",
+                "description": "Only return campaigns with campaign id values less than or equal to this id. Intended for paging."
+              },
+              {
+                "name": "updated_at_min",
+                "value": "2020-01-01T07:00:00Z",
+                "type": "query",
+                "description": "Only return campaigns whose attributes are updated at or after this time."
+              },
+              {
+                "name": "updated_at_max",
+                "value": "2020-01-01T07:00:00Z",
+                "type": "query",
+                "description": "Only return campaigns whose attributes are updated at or before this time."
+              },
+              {
+                "name": "start_at_min",
+                "value": "2020-01-01T07:00:00Z",
+                "type": "query",
+                "description": "Only return campaigns that start at or after this time."
+              },
+              {
+                "name": "start_at_max",
+                "value": "2020-01-01T07:00:00Z",
+                "type": "query",
+                "description": "Only return campaigns that start at or before this time."
+              },
+              {
+                "name": "end_at_min",
+                "value": "2020-01-01T07:00:00Z",
+                "type": "query",
+                "description": "Only return campaigns that end on or after this time."
+              },
+              {
+                "name": "end_at_max",
+                "value": "2020-01-01T07:00:00Z",
+                "type": "query",
+                "description": "Only return campaigns that end on or before this time."
+              },
+              {
+                "name": "sort_by",
+                "value": "",
+                "type": "query",
+                "description": " Only 3 fields are enabled for sorting:`start_at`, `end_at` or `campaign_id` Default order is `desc`, use `asc` to sort in reverse. Only sorting by 'campaign_id' is allowed when paging using 'campaign_id_min' or 'campaign_id_max'. "
+              }
+            ],
+            "auth": {
+              "type": "oauth2",
+              "flow": "authorization_code",
+              "authorizationUrl": "https://merchant.wish.com/v3/oauth/authorize",
+              "accessTokenUrl": "https://merchant.wish.com/api/v3/oauth/access_token",
+              "credentials": {
+                "clientId": "{{clientId}}",
+                "clientSecret": "{{clientSecret}}"
+              }
+            }
+          },
+          "docs": "List ProductBoost campaigns by criteria."
+        },
+        {
+          "info": {
+            "name": "Create a ProductBoost campaign",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://merchant.wish.com/api/v3/product_boost/campaigns",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            },
+            "auth": {
+              "type": "oauth2",
+              "flow": "authorization_code",
+              "authorizationUrl": "https://merchant.wish.com/v3/oauth/authorize",
+              "accessTokenUrl": "https://merchant.wish.com/api/v3/oauth/access_token",
+              "credentials": {
+                "clientId": "{{clientId}}",
+                "clientSecret": "{{clientSecret}}"
+              }
+            }
+          },
+          "docs": "Create a ProductBoost campaign."
+        },
+        {
+          "info": {
+            "name": "List products' feedback in a ProductBoost campaign",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://merchant.wish.com/api/v3/product_boost/campaigns/:id/product_feedback",
+            "params": [
+              {
+                "name": "id",
+                "value": "",
+                "type": "path",
+                "description": "ID of the campaign that you want to query for product feedback."
+              },
+              {
+                "name": "product_ids",
+                "value": "",
+                "type": "query",
+                "description": "IDs of products in the campaign that you want to obtain feedback for. If not provided, feedback for all products with lower than expected number of paid impressions in the campaign will be returned."
+              }
+            ],
+            "auth": {
+              "type": "oauth2",
+              "flow": "authorization_code",
+              "authorizationUrl": "https://merchant.wish.com/v3/oauth/authorize",
+              "accessTokenUrl": "https://merchant.wish.com/api/v3/oauth/access_token",
+              "credentials": {
+                "clientId": "{{clientId}}",
+                "clientSecret": "{{clientSecret}}"
+              }
+            }
+          },
+          "docs": "List products' feedback for products who received lower than expected number of paid impressions in a ProductBoost campaign."
+        },
+        {
+          "info": {
+            "name": "Get the ProductBoost budget breakdown",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://merchant.wish.com/api/v3/product_boost/budget",
+            "params": [
+              {
+                "name": "campaign_id",
+                "value": "",
+                "type": "query",
+                "description": "ID of the campaign that you want to acquire budget breakdown for. If not provided, the budget breakdown associated to all campaigns will be returned."
+              }
+            ],
+            "auth": {
+              "type": "oauth2",
+              "flow": "authorization_code",
+              "authorizationUrl": "https://merchant.wish.com/v3/oauth/authorize",
+              "accessTokenUrl": "https://merchant.wish.com/api/v3/oauth/access_token",
+              "credentials": {
+                "clientId": "{{clientId}}",
+                "clientSecret": "{{clientSecret}}"
+              }
+            }
+          },
+          "docs": "Get the ProductBoost budget breakdown for either all campaigns or one specific campaign."
+        },
+        {
+          "info": {
+            "name": "Get a single ProductBoost campaign",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://merchant.wish.com/api/v3/product_boost/campaigns/:id",
+            "params": [
+              {
+                "name": "id",
+                "value": "",
+                "type": "path",
+                "description": "ID of the campaign you want to query"
+              }
+            ],
+            "auth": {
+              "type": "oauth2",
+              "flow": "authorization_code",
+              "authorizationUrl": "https://merchant.wish.com/v3/oauth/authorize",
+              "accessTokenUrl": "https://merchant.wish.com/api/v3/oauth/access_token",
+              "credentials": {
+                "clientId": "{{clientId}}",
+                "clientSecret": "{{clientSecret}}"
+              }
+            }
+          },
+          "docs": "Get a single ProductBoost campaign by its ID"
+        },
+        {
+          "info": {
+            "name": "Update a ProductBoost campaign",
+            "type": "http"
+          },
+          "http": {
+            "method": "PUT",
+            "url": "https://merchant.wish.com/api/v3/product_boost/campaigns/:id",
+            "params": [
+              {
+                "name": "id",
+                "value": "",
+                "type": "path",
+                "description": "ID of the campaign you want to update"
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            },
+            "auth": {
+              "type": "oauth2",
+              "flow": "authorization_code",
+              "authorizationUrl": "https://merchant.wish.com/v3/oauth/authorize",
+              "accessTokenUrl": "https://merchant.wish.com/api/v3/oauth/access_token",
+              "credentials": {
+                "clientId": "{{clientId}}",
+                "clientSecret": "{{clientSecret}}"
+              }
+            }
+          },
+          "docs": "Update a ProductBoost campaign."
+        },
+        {
+          "info": {
+            "name": "Obtain campaign metrics",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://merchant.wish.com/api/v3/product_boost/campaigns/:id/metrics",
+            "params": [
+              {
+                "name": "id",
+                "value": "",
+                "type": "path",
+                "description": "ID of the campaign you want to query for metrics."
+              },
+              {
+                "name": "product_ids",
+                "value": "",
+                "type": "query",
+                "description": "IDs of the products whose performances should be included in the result. If not provided, performances of all products in the campaign will be returned."
+              },
+              {
+                "name": "time_min",
+                "value": "2020-01-01T07:00:00Z",
+                "type": "query",
+                "description": "Only return performances for dates at or after this time. Currently only time with precision up to 'date' level in Pacific Time (PT) will be accepted. Any time that is more precise than 'date' level and/or not in PT will be processed so that it only keeps its 'date', in PT. That is, a passed in date-time will be first converted in PT and then its fields other than 'year', 'month', 'day' are ignored."
+              },
+              {
+                "name": "time_max",
+                "value": "2020-01-01T07:00:00Z",
+                "type": "query",
+                "description": "Only return performances for dates at or before this time. Currently only time with precision up to 'date' level in Pacific Time (PT) will be accepted. Any time that is more precise than 'date' level and/or not in PT will be processed so that it only keeps its 'date', in PT. That is, a passed in date-time will be first converted in PT and then its fields other than 'year', 'month', 'day' are ignored."
+              }
+            ],
+            "auth": {
+              "type": "oauth2",
+              "flow": "authorization_code",
+              "authorizationUrl": "https://merchant.wish.com/v3/oauth/authorize",
+              "accessTokenUrl": "https://merchant.wish.com/api/v3/oauth/access_token",
+              "credentials": {
+                "clientId": "{{clientId}}",
+                "clientSecret": "{{clientSecret}}"
+              }
+            }
+          },
+          "docs": "Obtain a list of daily performances of products in the campaign. By default, the time range is from one week before the campaign starts to one week after the campaign ends."
+        },
+        {
+          "info": {
+            "name": "List ProductBoost account balance updates",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://merchant.wish.com/api/v3/product_boost/balance_updates",
+            "params": [
+              {
+                "name": "type",
+                "value": "",
+                "type": "query",
+                "description": "Restrict queried update records to be of the provided type."
+              },
+              {
+                "name": "created_at_min",
+                "value": "2020-01-01T07:00:00Z",
+                "type": "query",
+                "description": "Only return balance update records generated at or after this time."
+              },
+              {
+                "name": "created_at_max",
+                "value": "2020-01-01T07:00:00Z",
+                "type": "query",
+                "description": "Only return balance update records generated at or before this time."
+              },
+              {
+                "name": "limit",
+                "value": "",
+                "type": "query",
+                "description": "A limit on the number of records that will be returned."
+              }
+            ],
+            "auth": {
+              "type": "oauth2",
+              "flow": "authorization_code",
+              "authorizationUrl": "https://merchant.wish.com/v3/oauth/authorize",
+              "accessTokenUrl": "https://merchant.wish.com/api/v3/oauth/access_token",
+              "credentials": {
+                "clientId": "{{clientId}}",
+                "clientSecret": "{{clientSecret}}"
+              }
+            }
+          },
+          "docs": "Obtain a list of deposit and withdraw activities on ProductBoost account balance."
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

@@ -1,0 +1,416 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "Wish Marketplace V3 Brands Promotions Platform API",
+    "version": "3.0.65"
+  },
+  "request": {
+    "auth": {
+      "type": "oauth2",
+      "flow": "authorization_code",
+      "authorizationUrl": "https://merchant.wish.com/v3/oauth/authorize",
+      "accessTokenUrl": "https://merchant.wish.com/api/v3/oauth/access_token",
+      "credentials": {
+        "clientId": "{{clientId}}",
+        "clientSecret": "{{clientSecret}}"
+      }
+    }
+  },
+  "items": [
+    {
+      "info": {
+        "name": "Promotions Platform",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Get eligible products",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://merchant.wish.com/api/v3/promotions/eligible_products",
+            "params": [
+              {
+                "name": "updated_at_min",
+                "value": "",
+                "type": "query",
+                "description": "Only return products that were updated since the given time. Currently only time with precision up to 'millisecond' will be accepted. Any time that is more precise than 'millisecond' level will be processed so that it only keeps its 'millisecond'."
+              },
+              {
+                "name": "updated_at_max",
+                "value": "",
+                "type": "query",
+                "description": "Only return products that were updated before the given time. Currently only time with precision up to 'millisecond' will be accepted. Any time that is more precise than 'millisecond' level will be processed so that it only keeps its 'millisecond'."
+              },
+              {
+                "name": "promotion_type",
+                "value": "",
+                "type": "query",
+                "description": "Promotion type for eligible products search. This field is required if there is no event ID specified."
+              },
+              {
+                "name": "product_ids",
+                "value": "",
+                "type": "query",
+                "description": "List of product IDs for eligible products search."
+              },
+              {
+                "name": "event_id",
+                "value": "",
+                "type": "query",
+                "description": "ID of the promotion event"
+              },
+              {
+                "name": "limit",
+                "value": "",
+                "type": "query",
+                "description": "The limit on the number of products that will be returned."
+              },
+              {
+                "name": "sort_by",
+                "value": "",
+                "type": "query",
+                "description": "The attribute to sort products in the response. The most recently updated products will be returned first if `desc`."
+              }
+            ],
+            "auth": {
+              "type": "oauth2",
+              "flow": "authorization_code",
+              "authorizationUrl": "https://merchant.wish.com/v3/oauth/authorize",
+              "accessTokenUrl": "https://merchant.wish.com/api/v3/oauth/access_token",
+              "credentials": {
+                "clientId": "{{clientId}}",
+                "clientSecret": "{{clientSecret}}"
+              }
+            }
+          },
+          "docs": "Get eligible products"
+        },
+        {
+          "info": {
+            "name": "Cancel a promotion campaign",
+            "type": "http"
+          },
+          "http": {
+            "method": "PUT",
+            "url": "https://merchant.wish.com/api/v3/promotions/campaigns/:id/cancel",
+            "params": [
+              {
+                "name": "id",
+                "value": "",
+                "type": "path",
+                "description": "ID of the campaign you want to Cancel"
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            },
+            "auth": {
+              "type": "oauth2",
+              "flow": "authorization_code",
+              "authorizationUrl": "https://merchant.wish.com/v3/oauth/authorize",
+              "accessTokenUrl": "https://merchant.wish.com/api/v3/oauth/access_token",
+              "credentials": {
+                "clientId": "{{clientId}}",
+                "clientSecret": "{{clientSecret}}"
+              }
+            }
+          },
+          "docs": "Cancel a promotion campaign."
+        },
+        {
+          "info": {
+            "name": "List promotion campaigns",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://merchant.wish.com/api/v3/promotions/campaigns",
+            "params": [
+              {
+                "name": "start_at_min",
+                "value": "2022-04-13T07:00:00Z",
+                "type": "query",
+                "description": "Only return campaigns that start at or after this time."
+              },
+              {
+                "name": "start_at_max",
+                "value": "2022-04-14T07:00:00Z",
+                "type": "query",
+                "description": "Only return campaigns that start at or before this time."
+              },
+              {
+                "name": "end_at_min",
+                "value": "2022-04-20T07:00:00Z",
+                "type": "query",
+                "description": "Only return campaigns that end on or after this time."
+              },
+              {
+                "name": "end_at_max",
+                "value": "2022-04-21T07:00:00Z",
+                "type": "query",
+                "description": "Only return campaigns that end on or before this time."
+              },
+              {
+                "name": "created_at_min",
+                "value": "2022-04-12T07:00:00.000Z",
+                "type": "query",
+                "description": "Specify the beginning of the time window to view desired campaigns when filtering by campaign creation time. Campaigns created before this time will not show."
+              },
+              {
+                "name": "created_at_max",
+                "value": "2022-04-13T07:00:00.000Z",
+                "type": "query",
+                "description": "Specify the end of the time window to view desired campaigns when filtering by campaign creation time. Campaigns created after this time will not show."
+              },
+              {
+                "name": "states",
+                "value": "",
+                "type": "query",
+                "description": "Restrict campaigns within provided states. Usually used with start_at_min/max and end_at_min/max filters."
+              },
+              {
+                "name": "promotion_types",
+                "value": "",
+                "type": "query",
+                "description": "Restrict campaigns within provided promotion types"
+              },
+              {
+                "name": "product_id",
+                "value": "",
+                "type": "query",
+                "description": "ID of the product that result campaigns should include."
+              },
+              {
+                "name": "name",
+                "value": "",
+                "type": "query",
+                "description": "Name of the campaigns that result campaigns should include."
+              },
+              {
+                "name": "limit",
+                "value": "",
+                "type": "query",
+                "description": "A limit on the number of campaigns that will be returned."
+              },
+              {
+                "name": "sort_by",
+                "value": "",
+                "type": "query",
+                "description": "Only 3 fields are enabled for sorting:`start_at`, `end_at` or `created_at`. Default order is `desc`, use `asc` to sort in reverse."
+              }
+            ],
+            "auth": {
+              "type": "oauth2",
+              "flow": "authorization_code",
+              "authorizationUrl": "https://merchant.wish.com/v3/oauth/authorize",
+              "accessTokenUrl": "https://merchant.wish.com/api/v3/oauth/access_token",
+              "credentials": {
+                "clientId": "{{clientId}}",
+                "clientSecret": "{{clientSecret}}"
+              }
+            }
+          },
+          "docs": "List promotion campaigns"
+        },
+        {
+          "info": {
+            "name": "Create a promotion campaign",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://merchant.wish.com/api/v3/promotions/campaigns",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            },
+            "auth": {
+              "type": "oauth2",
+              "flow": "authorization_code",
+              "authorizationUrl": "https://merchant.wish.com/v3/oauth/authorize",
+              "accessTokenUrl": "https://merchant.wish.com/api/v3/oauth/access_token",
+              "credentials": {
+                "clientId": "{{clientId}}",
+                "clientSecret": "{{clientSecret}}"
+              }
+            }
+          },
+          "docs": "Create a promotion campaign."
+        },
+        {
+          "info": {
+            "name": "Get a single promotion campaign",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://merchant.wish.com/api/v3/promotions/campaigns/:id",
+            "params": [
+              {
+                "name": "id",
+                "value": "",
+                "type": "path",
+                "description": "ID of the campaign you want to query"
+              }
+            ],
+            "auth": {
+              "type": "oauth2",
+              "flow": "authorization_code",
+              "authorizationUrl": "https://merchant.wish.com/v3/oauth/authorize",
+              "accessTokenUrl": "https://merchant.wish.com/api/v3/oauth/access_token",
+              "credentials": {
+                "clientId": "{{clientId}}",
+                "clientSecret": "{{clientSecret}}"
+              }
+            }
+          },
+          "docs": "Get a single promotion campaign by its ID"
+        },
+        {
+          "info": {
+            "name": "Update a promotion campaign",
+            "type": "http"
+          },
+          "http": {
+            "method": "PUT",
+            "url": "https://merchant.wish.com/api/v3/promotions/campaigns/:id",
+            "params": [
+              {
+                "name": "id",
+                "value": "",
+                "type": "path",
+                "description": "ID of the campaign you want to update"
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            },
+            "auth": {
+              "type": "oauth2",
+              "flow": "authorization_code",
+              "authorizationUrl": "https://merchant.wish.com/v3/oauth/authorize",
+              "accessTokenUrl": "https://merchant.wish.com/api/v3/oauth/access_token",
+              "credentials": {
+                "clientId": "{{clientId}}",
+                "clientSecret": "{{clientSecret}}"
+              }
+            }
+          },
+          "docs": "Update a promotion campaign."
+        },
+        {
+          "info": {
+            "name": "List promotion events",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://merchant.wish.com/api/v3/promotions/events",
+            "params": [
+              {
+                "name": "ids",
+                "value": "",
+                "type": "query",
+                "description": "IDs of promotion events, if this field is non-empty, all other fields will be ignored."
+              },
+              {
+                "name": "promotion_types",
+                "value": "",
+                "type": "query",
+                "description": "Restrict promotion events within provided promotion types"
+              },
+              {
+                "name": "submission_deadline_min",
+                "value": "2023-11-20T07:00:00Z",
+                "type": "query",
+                "description": "Only return promotion events with the submission deadline on or after this time. If the field is not specified, the current date-time will be used by default."
+              },
+              {
+                "name": "submission_deadline_max",
+                "value": "2023-11-20T07:00:00Z",
+                "type": "query",
+                "description": "Only return promotion events with the submission deadline on or before this time"
+              },
+              {
+                "name": "limit",
+                "value": "",
+                "type": "query",
+                "description": "The limit on the number of promotion events that will be returned"
+              },
+              {
+                "name": "sort_by",
+                "value": "",
+                "type": "query",
+                "description": "The attribute to sort promotion events in the response. Default order is descending (desc), use asc to sort in reverse."
+              }
+            ],
+            "auth": {
+              "type": "oauth2",
+              "flow": "authorization_code",
+              "authorizationUrl": "https://merchant.wish.com/v3/oauth/authorize",
+              "accessTokenUrl": "https://merchant.wish.com/api/v3/oauth/access_token",
+              "credentials": {
+                "clientId": "{{clientId}}",
+                "clientSecret": "{{clientSecret}}"
+              }
+            }
+          },
+          "docs": "Get a list of promotion events"
+        },
+        {
+          "info": {
+            "name": "Get eligible products count",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://merchant.wish.com/api/v3/promotions/eligible_products/count",
+            "params": [
+              {
+                "name": "updated_at_min",
+                "value": "",
+                "type": "query",
+                "description": "Only return products that were updated since the given time. Currently only time with precision up to 'millisecond' will be accepted. Any time that is more precise than 'millisecond' level will be processed so that it only keeps its 'millisecond'."
+              },
+              {
+                "name": "updated_at_max",
+                "value": "",
+                "type": "query",
+                "description": "Only return products that were updated before the given time. Currently only time with precision up to 'millisecond' will be accepted. Any time that is more precise than 'millisecond' level will be processed so that it only keeps its 'millisecond'."
+              },
+              {
+                "name": "promotion_type",
+                "value": "",
+                "type": "query",
+                "description": "Promotion type for eligible products search. This field is required if there is no event ID specified."
+              },
+              {
+                "name": "event_id",
+                "value": "",
+                "type": "query",
+                "description": "ID of the promotion event"
+              }
+            ],
+            "auth": {
+              "type": "oauth2",
+              "flow": "authorization_code",
+              "authorizationUrl": "https://merchant.wish.com/v3/oauth/authorize",
+              "accessTokenUrl": "https://merchant.wish.com/api/v3/oauth/access_token",
+              "credentials": {
+                "clientId": "{{clientId}}",
+                "clientSecret": "{{clientSecret}}"
+              }
+            }
+          },
+          "docs": "Get eligible products count"
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

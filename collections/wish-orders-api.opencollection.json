@@ -1,0 +1,426 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "Wish Marketplace V3 Brands Orders API",
+    "version": "3.0.65"
+  },
+  "request": {
+    "auth": {
+      "type": "oauth2",
+      "flow": "authorization_code",
+      "authorizationUrl": "https://merchant.wish.com/v3/oauth/authorize",
+      "accessTokenUrl": "https://merchant.wish.com/api/v3/oauth/access_token",
+      "credentials": {
+        "clientId": "{{clientId}}",
+        "clientSecret": "{{clientSecret}}"
+      }
+    }
+  },
+  "items": [
+    {
+      "info": {
+        "name": "Orders",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Get accepted shipping carriers",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://merchant.wish.com/api/v3/orders/shipping_carriers",
+            "params": [
+              {
+                "name": "dest_country_code",
+                "value": "",
+                "type": "query",
+                "description": "Country code of the country the order is being shipped to. For GENERAL order_type, leave this parameter blank. The 2-letter country codes are defined in [ISO 3166](https://www.iso.org/iso-3166-country-codes.html)."
+              },
+              {
+                "name": "order_type",
+                "value": "",
+                "type": "query",
+                "description": "Choose the specific order type to get a list of approved carriers for. Current values include:\n1. GENERAL: All accepted shipping carriers on Wish\n2. CONFIRMED_DELIVERY: All accepted shipping carriers for Confirmed Delivery Policy. CONFIRMED_DELIVERY is a subset of the carrier list for GENERAL.\n"
+              }
+            ],
+            "auth": {
+              "type": "oauth2",
+              "flow": "authorization_code",
+              "authorizationUrl": "https://merchant.wish.com/v3/oauth/authorize",
+              "accessTokenUrl": "https://merchant.wish.com/api/v3/oauth/access_token",
+              "credentials": {
+                "clientId": "{{clientId}}",
+                "clientSecret": "{{clientSecret}}"
+              }
+            }
+          },
+          "docs": "Get a list of accepted shipping carriers based on order_type and dest_country_code. dest_country_code is only needed when order_type is not GENERAL."
+        },
+        {
+          "info": {
+            "name": "Batch download orders",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://merchant.wish.com/api/v3/orders/bulk_get",
+            "params": [
+              {
+                "name": "limit",
+                "value": "",
+                "type": "query",
+                "description": "The limit on the number of orders that will be returned."
+              },
+              {
+                "name": "updated_at_max",
+                "value": "2020-01-01T07:00:00.000Z",
+                "type": "query",
+                "description": "Specify the end of the time window to view orders by last order update. Orders updated after this time will not show."
+              },
+              {
+                "name": "updated_at_min",
+                "value": "2020-01-01T07:00:00.000Z",
+                "type": "query",
+                "description": "Specify the beginning of the window to view orders by last order update. Orders updated before this time will not show."
+              },
+              {
+                "name": "released_at_min",
+                "value": "2020-01-01T07:00:00.000Z",
+                "type": "query",
+                "description": "Specify the beginning of the time window to view desired orders when filtering by order release time. Orders released before this time will not show."
+              },
+              {
+                "name": "released_at_max",
+                "value": "2020-01-01T07:00:00.000Z",
+                "type": "query",
+                "description": "Specify the end of the time window to view desired orders when filtering by order release time. Orders released after this time will not show."
+              },
+              {
+                "name": "sort_by",
+                "value": "",
+                "type": "query",
+                "description": "Choose which timestamp to filter orders by. Current values are:\n* updated_at: Last time the order was updated.\n* released_at: The time the order was released.\n"
+              },
+              {
+                "name": "order_type",
+                "value": "",
+                "type": "query",
+                "description": "Choose the specific programs to filter output orders by. Current input values are:\n1. WISH_EXPRESS\n2. FULFILLED_BY_WISH\n3. FULFILLED_BY_STORE\n4. LESS_THAN_TRUCKLOAD\n5. ADVANCED_LOGISTICS\n6. WISH_PLUS\n\nNote: This parameter does not support combinations (ex: FULFILLED_BY_WISH & WISH_EXPRESS). If looking for overlaps, query these separately & then manually find the overlap, using Order ID.\n"
+              },
+              {
+                "name": "states",
+                "value": "",
+                "type": "query",
+                "description": "\nChoose the specific order state to filter output orders by. Current input values are:\n\n1. APPROVED: Order ready to be shipped.\n2. SHIPPED: Order has been shipped.\n3. REFUNDED: Order has been refunded.\n4. REQUIRE_REVIEW: Order has been placed under review\n5. DECLINED: Customer's payment had an issue for this order\n"
+              }
+            ],
+            "auth": {
+              "type": "oauth2",
+              "flow": "authorization_code",
+              "authorizationUrl": "https://merchant.wish.com/v3/oauth/authorize",
+              "accessTokenUrl": "https://merchant.wish.com/api/v3/oauth/access_token",
+              "credentials": {
+                "clientId": "{{clientId}}",
+                "clientSecret": "{{clientSecret}}"
+              }
+            }
+          },
+          "docs": "Batch download orders"
+        },
+        {
+          "info": {
+            "name": "Get batch download job status",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://merchant.wish.com/api/v3/orders/bulk_get/:id",
+            "params": [
+              {
+                "name": "id",
+                "value": "",
+                "type": "path",
+                "description": "ID of the batch download job to query"
+              }
+            ],
+            "auth": {
+              "type": "oauth2",
+              "flow": "authorization_code",
+              "authorizationUrl": "https://merchant.wish.com/v3/oauth/authorize",
+              "accessTokenUrl": "https://merchant.wish.com/api/v3/oauth/access_token",
+              "credentials": {
+                "clientId": "{{clientId}}",
+                "clientSecret": "{{clientSecret}}"
+              }
+            }
+          },
+          "docs": "Get batch download job status"
+        },
+        {
+          "info": {
+            "name": "Ship or update tracking",
+            "type": "http"
+          },
+          "http": {
+            "method": "PUT",
+            "url": "https://merchant.wish.com/api/v3/orders/:id/tracking",
+            "params": [
+              {
+                "name": "id",
+                "value": "",
+                "type": "path",
+                "description": "Wish's unique identifier for the order"
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            },
+            "auth": {
+              "type": "oauth2",
+              "flow": "authorization_code",
+              "authorizationUrl": "https://merchant.wish.com/v3/oauth/authorize",
+              "accessTokenUrl": "https://merchant.wish.com/api/v3/oauth/access_token",
+              "credentials": {
+                "clientId": "{{clientId}}",
+                "clientSecret": "{{clientSecret}}"
+              }
+            }
+          },
+          "docs": "Ship or update tracking for an order. This operation is asynchronous."
+        },
+        {
+          "info": {
+            "name": "Get valid refund reasons",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://merchant.wish.com/api/v3/orders/:id/refund_reasons",
+            "params": [
+              {
+                "name": "id",
+                "value": "",
+                "type": "path",
+                "description": "Wish's unique identifier for the order"
+              }
+            ],
+            "auth": {
+              "type": "oauth2",
+              "flow": "authorization_code",
+              "authorizationUrl": "https://merchant.wish.com/v3/oauth/authorize",
+              "accessTokenUrl": "https://merchant.wish.com/api/v3/oauth/access_token",
+              "credentials": {
+                "clientId": "{{clientId}}",
+                "clientSecret": "{{clientSecret}}"
+              }
+            }
+          },
+          "docs": "Valid refund reasons can differ per order - use this endpoint to reference valid refund reasons. Note: refund reasons can change throughout an order's lifecycle, so reference this just before refunding."
+        },
+        {
+          "info": {
+            "name": "Get an order",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://merchant.wish.com/api/v3/orders/:id",
+            "params": [
+              {
+                "name": "id",
+                "value": "",
+                "type": "path",
+                "description": "Wish's unique identifier for the order"
+              }
+            ],
+            "auth": {
+              "type": "oauth2",
+              "flow": "authorization_code",
+              "authorizationUrl": "https://merchant.wish.com/v3/oauth/authorize",
+              "accessTokenUrl": "https://merchant.wish.com/api/v3/oauth/access_token",
+              "credentials": {
+                "clientId": "{{clientId}}",
+                "clientSecret": "{{clientSecret}}"
+              }
+            }
+          },
+          "docs": "Retrieves the details of an existing order."
+        },
+        {
+          "info": {
+            "name": "Update an LTL order",
+            "type": "http"
+          },
+          "http": {
+            "method": "PUT",
+            "url": "https://merchant.wish.com/api/v3/orders/:id",
+            "params": [
+              {
+                "name": "id",
+                "value": "",
+                "type": "path",
+                "description": "Wish's unique identifier for the order"
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            },
+            "auth": {
+              "type": "oauth2",
+              "flow": "authorization_code",
+              "authorizationUrl": "https://merchant.wish.com/v3/oauth/authorize",
+              "accessTokenUrl": "https://merchant.wish.com/api/v3/oauth/access_token",
+              "credentials": {
+                "clientId": "{{clientId}}",
+                "clientSecret": "{{clientSecret}}"
+              }
+            }
+          },
+          "docs": "Update tracking for a less-than-truckload (LTL) order. This operation is synchronous."
+        },
+        {
+          "info": {
+            "name": "Modify shipping address",
+            "type": "http"
+          },
+          "http": {
+            "method": "PUT",
+            "url": "https://merchant.wish.com/api/v3/orders/:id/address",
+            "params": [
+              {
+                "name": "id",
+                "value": "",
+                "type": "path",
+                "description": "Wish's unique identifier for the order"
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            },
+            "auth": {
+              "type": "oauth2",
+              "flow": "authorization_code",
+              "authorizationUrl": "https://merchant.wish.com/v3/oauth/authorize",
+              "accessTokenUrl": "https://merchant.wish.com/api/v3/oauth/access_token",
+              "credentials": {
+                "clientId": "{{clientId}}",
+                "clientSecret": "{{clientSecret}}"
+              }
+            }
+          },
+          "docs": "Modify shipping address for an order before it is shipped. This operation is asynchronous."
+        },
+        {
+          "info": {
+            "name": "Refund/Cancel an order",
+            "type": "http"
+          },
+          "http": {
+            "method": "PUT",
+            "url": "https://merchant.wish.com/api/v3/orders/:id/refund",
+            "params": [
+              {
+                "name": "id",
+                "value": "",
+                "type": "path",
+                "description": "Wish's unique identifier for the order"
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            },
+            "auth": {
+              "type": "oauth2",
+              "flow": "authorization_code",
+              "authorizationUrl": "https://merchant.wish.com/v3/oauth/authorize",
+              "accessTokenUrl": "https://merchant.wish.com/api/v3/oauth/access_token",
+              "credentials": {
+                "clientId": "{{clientId}}",
+                "clientSecret": "{{clientSecret}}"
+              }
+            }
+          },
+          "docs": "Refund/Cancel an order. This operation is asynchronous. Please use /api/v3/orders/{id}/refund_reasons endpoint to reference valid refund reasons for orders before refunding them."
+        },
+        {
+          "info": {
+            "name": "List orders",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://merchant.wish.com/api/v3/orders",
+            "params": [
+              {
+                "name": "limit",
+                "value": "",
+                "type": "query",
+                "description": "Specify a limit on the number of orders that can be returned."
+              },
+              {
+                "name": "states",
+                "value": "",
+                "type": "query",
+                "description": "\nChoose the specific order state to filter output orders by. Current input values are:\n\n1. APPROVED: Order ready to be shipped.\n2. SHIPPED: Order has been shipped.\n3. REFUNDED: Order has been refunded.\n4. REQUIRE_REVIEW: Order has been placed under review\n5. DECLINED: Customer's payment had an issue for this order\n"
+              },
+              {
+                "name": "updated_at_min",
+                "value": "2020-01-01T07:00:00.000Z",
+                "type": "query",
+                "description": "Specify the beginning of the window to view orders by last order update. Orders updated before this time will not show."
+              },
+              {
+                "name": "updated_at_max",
+                "value": "2020-01-01T07:00:00.000Z",
+                "type": "query",
+                "description": "Specify the end of the time window to view orders by last order update. Orders updated after this time will not show."
+              },
+              {
+                "name": "released_at_min",
+                "value": "2020-01-01T07:00:00.000Z",
+                "type": "query",
+                "description": "Specify the beginning of the time window to view desired orders when filtering by order release time. Orders released before this time will not show."
+              },
+              {
+                "name": "released_at_max",
+                "value": "2020-01-01T07:00:00.000Z",
+                "type": "query",
+                "description": "Specify the end of the time window to view desired orders when filtering by order release time. Orders released after this time will not show."
+              },
+              {
+                "name": "sort_by",
+                "value": "",
+                "type": "query",
+                "description": "Choose which timestamp to filter orders by. Current values are:\n* updated_at: Last time the order was updated.\n* released_at: The time the order was released.\n"
+              },
+              {
+                "name": "order_type",
+                "value": "",
+                "type": "query",
+                "description": "Choose the specific programs to filter output orders by. Current input values are:\n1. WISH_EXPRESS\n2. FULFILLED_BY_WISH\n3. FULFILLED_BY_STORE\n4. LESS_THAN_TRUCKLOAD\n5. ADVANCED_LOGISTICS\n6. WISH_PLUS\n\nNote: This parameter does not support combinations (ex: FULFILLED_BY_WISH & WISH_EXPRESS). If looking for overlaps, query these separately & then manually find the overlap, using Order ID.\n"
+              }
+            ],
+            "auth": {
+              "type": "oauth2",
+              "flow": "authorization_code",
+              "authorizationUrl": "https://merchant.wish.com/v3/oauth/authorize",
+              "accessTokenUrl": "https://merchant.wish.com/api/v3/oauth/access_token",
+              "credentials": {
+                "clientId": "{{clientId}}",
+                "clientSecret": "{{clientSecret}}"
+              }
+            }
+          },
+          "docs": "List orders"
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

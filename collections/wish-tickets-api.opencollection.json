@@ -1,0 +1,184 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "Wish Marketplace V3 Brands Tickets API",
+    "version": "3.0.65"
+  },
+  "request": {
+    "auth": {
+      "type": "oauth2",
+      "flow": "authorization_code",
+      "authorizationUrl": "https://merchant.wish.com/v3/oauth/authorize",
+      "accessTokenUrl": "https://merchant.wish.com/api/v3/oauth/access_token",
+      "credentials": {
+        "clientId": "{{clientId}}",
+        "clientSecret": "{{clientSecret}}"
+      }
+    }
+  },
+  "items": [
+    {
+      "info": {
+        "name": "Tickets",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Get a ticket",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://merchant.wish.com/api/v3/tickets/:id",
+            "params": [
+              {
+                "name": "id",
+                "value": "",
+                "type": "path",
+                "description": "Wish's unique identifier for the ticket"
+              }
+            ],
+            "auth": {
+              "type": "oauth2",
+              "flow": "authorization_code",
+              "authorizationUrl": "https://merchant.wish.com/v3/oauth/authorize",
+              "accessTokenUrl": "https://merchant.wish.com/api/v3/oauth/access_token",
+              "credentials": {
+                "clientId": "{{clientId}}",
+                "clientSecret": "{{clientSecret}}"
+              }
+            }
+          },
+          "docs": "Get a ticket by its ID"
+        },
+        {
+          "info": {
+            "name": "Update a ticket",
+            "type": "http"
+          },
+          "http": {
+            "method": "PUT",
+            "url": "https://merchant.wish.com/api/v3/tickets/:id",
+            "params": [
+              {
+                "name": "id",
+                "value": "",
+                "type": "path",
+                "description": "Wish's unique identifier for the ticket"
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            },
+            "auth": {
+              "type": "oauth2",
+              "flow": "authorization_code",
+              "authorizationUrl": "https://merchant.wish.com/v3/oauth/authorize",
+              "accessTokenUrl": "https://merchant.wish.com/api/v3/oauth/access_token",
+              "credentials": {
+                "clientId": "{{clientId}}",
+                "clientSecret": "{{clientSecret}}"
+              }
+            }
+          },
+          "docs": "Close/re-open a ticket or appeal to Wish support for the ticket."
+        },
+        {
+          "info": {
+            "name": "Reply to a ticket",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://merchant.wish.com/api/v3/tickets/:id/replies",
+            "params": [
+              {
+                "name": "id",
+                "value": "",
+                "type": "path",
+                "description": "Wish's unique identifier for the ticket"
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            },
+            "auth": {
+              "type": "oauth2",
+              "flow": "authorization_code",
+              "authorizationUrl": "https://merchant.wish.com/v3/oauth/authorize",
+              "accessTokenUrl": "https://merchant.wish.com/api/v3/oauth/access_token",
+              "credentials": {
+                "clientId": "{{clientId}}",
+                "clientSecret": "{{clientSecret}}"
+              }
+            }
+          },
+          "docs": "Reply to a ticket by its ID. Note that you can only reply to a ticket in the AWAITING_MERCHANT state. Our system will automatically update the ticket state after you reply"
+        },
+        {
+          "info": {
+            "name": "List all tickets",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://merchant.wish.com/api/v3/tickets",
+            "params": [
+              {
+                "name": "types",
+                "value": "",
+                "type": "query",
+                "description": "Parameter used to choose which type of tickets to retrieve. Default to list all three types if not supplied."
+              },
+              {
+                "name": "states",
+                "value": "",
+                "type": "query",
+                "description": "Parameter used to choose the state of tickets to retrieve. Default to list tickets in all states if not supplied. Tickets in PERMANENTLY_CLOSED state can never be re-opened. Tickets in CLOSED state can be re-opened by merchants who have corresponding permissions"
+              },
+              {
+                "name": "limit",
+                "value": "",
+                "type": "query",
+                "description": "A limit on the number of tickets that can be returned. Limit can range from 1 to 500 items and the default is 50"
+              },
+              {
+                "name": "sort_by",
+                "value": "",
+                "type": "query",
+                "description": "Sort results by the given attribute. Enabled attributes are `updated_at`. Default order is `desc`, use `asc` to sort in reverse."
+              },
+              {
+                "name": "updated_at_min",
+                "value": "",
+                "type": "query",
+                "description": "Show tickets updated after the given date time. Default to the date time of the earliest updated ticket if not provided"
+              },
+              {
+                "name": "updated_at_max",
+                "value": "",
+                "type": "query",
+                "description": "Show tickets updated before the given date time. Default to the date time of the latest updated ticket if not provided"
+              }
+            ],
+            "auth": {
+              "type": "oauth2",
+              "flow": "authorization_code",
+              "authorizationUrl": "https://merchant.wish.com/v3/oauth/authorize",
+              "accessTokenUrl": "https://merchant.wish.com/api/v3/oauth/access_token",
+              "credentials": {
+                "clientId": "{{clientId}}",
+                "clientSecret": "{{clientSecret}}"
+              }
+            }
+          },
+          "docs": "Get all tickets"
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

@@ -1,0 +1,373 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "Wish Marketplace V3 Brands Products API",
+    "version": "3.0.65"
+  },
+  "request": {
+    "auth": {
+      "type": "oauth2",
+      "flow": "authorization_code",
+      "authorizationUrl": "https://merchant.wish.com/v3/oauth/authorize",
+      "accessTokenUrl": "https://merchant.wish.com/api/v3/oauth/access_token",
+      "credentials": {
+        "clientId": "{{clientId}}",
+        "clientSecret": "{{clientSecret}}"
+      }
+    }
+  },
+  "items": [
+    {
+      "info": {
+        "name": "Products",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "List product create or update requests",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://merchant.wish.com/api/v3/products/requests",
+            "params": [
+              {
+                "name": "min_created_at",
+                "value": "",
+                "type": "query",
+                "description": "Only return product create or update requests that were created since the given time."
+              },
+              {
+                "name": "max_created_at",
+                "value": "",
+                "type": "query",
+                "description": "Only return product create or update requests that were created before the given time."
+              },
+              {
+                "name": "product_id",
+                "value": "",
+                "type": "query",
+                "description": "Only return the product create or update request for the given product ID."
+              },
+              {
+                "name": "id",
+                "value": "",
+                "type": "query",
+                "description": "Only return the product create or update request with the given ID."
+              },
+              {
+                "name": "statuses",
+                "value": "",
+                "type": "query",
+                "description": "Only return product create or update requests with the given statuses."
+              },
+              {
+                "name": "sort_by",
+                "value": "",
+                "type": "query",
+                "description": "The attribute to sort product create or update requests in the response."
+              }
+            ],
+            "auth": {
+              "type": "oauth2",
+              "flow": "authorization_code",
+              "authorizationUrl": "https://merchant.wish.com/v3/oauth/authorize",
+              "accessTokenUrl": "https://merchant.wish.com/api/v3/oauth/access_token",
+              "credentials": {
+                "clientId": "{{clientId}}",
+                "clientSecret": "{{clientSecret}}"
+              }
+            }
+          },
+          "docs": "List product create or update requests"
+        },
+        {
+          "info": {
+            "name": "Enable/disable Calculated Shipping for the product",
+            "type": "http"
+          },
+          "http": {
+            "method": "PUT",
+            "url": "https://merchant.wish.com/api/v3/products/:id/calculated_shipping",
+            "params": [
+              {
+                "name": "id",
+                "value": "",
+                "type": "path",
+                "description": "ID of a product"
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            },
+            "auth": {
+              "type": "oauth2",
+              "flow": "authorization_code",
+              "authorizationUrl": "https://merchant.wish.com/v3/oauth/authorize",
+              "accessTokenUrl": "https://merchant.wish.com/api/v3/oauth/access_token",
+              "credentials": {
+                "clientId": "{{clientId}}",
+                "clientSecret": "{{clientSecret}}"
+              }
+            }
+          },
+          "docs": "Merchants can enable or disable Calculated Shipping for a product. Feature is only applicable to CN merchants and eligible products shipping via Advanced Logistics Program."
+        },
+        {
+          "info": {
+            "name": "Get a product create or update request",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://merchant.wish.com/api/v3/products/requests/:id",
+            "params": [
+              {
+                "name": "id",
+                "value": "",
+                "type": "path",
+                "description": "ID of the product create or update request to query"
+              }
+            ],
+            "auth": {
+              "type": "oauth2",
+              "flow": "authorization_code",
+              "authorizationUrl": "https://merchant.wish.com/v3/oauth/authorize",
+              "accessTokenUrl": "https://merchant.wish.com/api/v3/oauth/access_token",
+              "credentials": {
+                "clientId": "{{clientId}}",
+                "clientSecret": "{{clientSecret}}"
+              }
+            }
+          },
+          "docs": "Get a product create or update request"
+        },
+        {
+          "info": {
+            "name": "Delete a product create or update request",
+            "type": "http"
+          },
+          "http": {
+            "method": "DELETE",
+            "url": "https://merchant.wish.com/api/v3/products/requests/:id",
+            "params": [
+              {
+                "name": "id",
+                "value": "",
+                "type": "path",
+                "description": "ID of the product create or update request to delete"
+              }
+            ],
+            "auth": {
+              "type": "oauth2",
+              "flow": "authorization_code",
+              "authorizationUrl": "https://merchant.wish.com/v3/oauth/authorize",
+              "accessTokenUrl": "https://merchant.wish.com/api/v3/oauth/access_token",
+              "credentials": {
+                "clientId": "{{clientId}}",
+                "clientSecret": "{{clientSecret}}"
+              }
+            }
+          },
+          "docs": "Delete a product create or update request"
+        },
+        {
+          "info": {
+            "name": "List products",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://merchant.wish.com/api/v3/products",
+            "params": [
+              {
+                "name": "parent_sku",
+                "value": "",
+                "type": "query",
+                "description": "The parent sku of the product that will be returned."
+              },
+              {
+                "name": "limit",
+                "value": "",
+                "type": "query",
+                "description": "The limit on the number of products that will be returned."
+              },
+              {
+                "name": "created_at_min",
+                "value": "",
+                "type": "query",
+                "description": "Only return products that were created since the given time. Currently only time with precision up to 'second' will be accepted. Any time that is more precise than 'second' level will be processed so that it only keeps its 'second'."
+              },
+              {
+                "name": "created_at_max",
+                "value": "",
+                "type": "query",
+                "description": "Only return products that were created before the given time. Currently only time with precision up to 'second' will be accepted. Any time that is more precise than 'second' level will be processed so that it only keeps its 'second'."
+              },
+              {
+                "name": "updated_at_min",
+                "value": "",
+                "type": "query",
+                "description": "Only return products that were updated since the given time. Currently only time with precision up to 'millisecond' will be accepted. Any time that is more precise than 'millisecond' level will be processed so that it only keeps its 'millisecond'."
+              },
+              {
+                "name": "updated_at_max",
+                "value": "",
+                "type": "query",
+                "description": "Only return products that were updated before the given time. Currently only time with precision up to 'millisecond' will be accepted. Any time that is more precise than 'millisecond' level will be processed so that it only keeps its 'millisecond'."
+              },
+              {
+                "name": "sort_by",
+                "value": "",
+                "type": "query",
+                "description": "The attribute to sort products in the response. The most recently updated products will be returned first if `desc`."
+              },
+              {
+                "name": "statuses",
+                "value": "",
+                "type": "query",
+                "description": "Only return products with the given statuses. Default to PENDING_REVIEW + APPROVED.</br> `This field will be deprecated soon and replaced with state.`"
+              },
+              {
+                "name": "state",
+                "value": "",
+                "type": "query",
+                "description": "Only return products with the given states. Default to all states if null.</br> __ACTIVE__ - state reflects listings that are live. Note that edits to these listings might still be under review and might not be live.</br> __WISH_INACTIVE__ - state reflects listings that are being processed and not live yet. This could likely be because the listing is under product review.</br> __MERCHANT_INACTIVE__ - are listings disabled by the merchant.</br> __REMOVED_BY_WISH__ - are listings removed by Wish.</br> __REMOVED_BY_MERCHANT__ - are listings that are removed by the merchant."
+              }
+            ],
+            "auth": {
+              "type": "oauth2",
+              "flow": "authorization_code",
+              "authorizationUrl": "https://merchant.wish.com/v3/oauth/authorize",
+              "accessTokenUrl": "https://merchant.wish.com/api/v3/oauth/access_token",
+              "credentials": {
+                "clientId": "{{clientId}}",
+                "clientSecret": "{{clientSecret}}"
+              }
+            }
+          },
+          "docs": "List products synchronously"
+        },
+        {
+          "info": {
+            "name": "Create a product",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://merchant.wish.com/api/v3/products",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            },
+            "auth": {
+              "type": "oauth2",
+              "flow": "authorization_code",
+              "authorizationUrl": "https://merchant.wish.com/v3/oauth/authorize",
+              "accessTokenUrl": "https://merchant.wish.com/api/v3/oauth/access_token",
+              "credentials": {
+                "clientId": "{{clientId}}",
+                "clientSecret": "{{clientSecret}}"
+              }
+            }
+          },
+          "docs": "Create a product synchronously"
+        },
+        {
+          "info": {
+            "name": "Get a product",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://merchant.wish.com/api/v3/products/:id",
+            "params": [
+              {
+                "name": "id",
+                "value": "",
+                "type": "path",
+                "description": "ID of the product to query"
+              }
+            ],
+            "auth": {
+              "type": "oauth2",
+              "flow": "authorization_code",
+              "authorizationUrl": "https://merchant.wish.com/v3/oauth/authorize",
+              "accessTokenUrl": "https://merchant.wish.com/api/v3/oauth/access_token",
+              "credentials": {
+                "clientId": "{{clientId}}",
+                "clientSecret": "{{clientSecret}}"
+              }
+            }
+          },
+          "docs": "Get a product synchronously"
+        },
+        {
+          "info": {
+            "name": "Update a product",
+            "type": "http"
+          },
+          "http": {
+            "method": "PUT",
+            "url": "https://merchant.wish.com/api/v3/products/:id",
+            "params": [
+              {
+                "name": "id",
+                "value": "",
+                "type": "path",
+                "description": "ID of the product to update"
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            },
+            "auth": {
+              "type": "oauth2",
+              "flow": "authorization_code",
+              "authorizationUrl": "https://merchant.wish.com/v3/oauth/authorize",
+              "accessTokenUrl": "https://merchant.wish.com/api/v3/oauth/access_token",
+              "credentials": {
+                "clientId": "{{clientId}}",
+                "clientSecret": "{{clientSecret}}"
+              }
+            }
+          },
+          "docs": "Update a product synchronously"
+        },
+        {
+          "info": {
+            "name": "Delete a product",
+            "type": "http"
+          },
+          "http": {
+            "method": "DELETE",
+            "url": "https://merchant.wish.com/api/v3/products/:id",
+            "params": [
+              {
+                "name": "id",
+                "value": "",
+                "type": "path",
+                "description": "ID of the product to delete"
+              }
+            ],
+            "auth": {
+              "type": "oauth2",
+              "flow": "authorization_code",
+              "authorizationUrl": "https://merchant.wish.com/v3/oauth/authorize",
+              "accessTokenUrl": "https://merchant.wish.com/api/v3/oauth/access_token",
+              "credentials": {
+                "clientId": "{{clientId}}",
+                "clientSecret": "{{clientSecret}}"
+              }
+            }
+          },
+          "docs": "Delete a product"
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

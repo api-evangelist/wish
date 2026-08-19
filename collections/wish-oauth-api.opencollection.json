@@ -1,0 +1,136 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "Wish Marketplace V3 Brands OAuth API",
+    "version": "3.0.65"
+  },
+  "request": {
+    "auth": {
+      "type": "oauth2",
+      "flow": "authorization_code",
+      "authorizationUrl": "https://merchant.wish.com/v3/oauth/authorize",
+      "accessTokenUrl": "https://merchant.wish.com/api/v3/oauth/access_token",
+      "credentials": {
+        "clientId": "{{clientId}}",
+        "clientSecret": "{{clientSecret}}"
+      }
+    }
+  },
+  "items": [
+    {
+      "info": {
+        "name": "OAuth",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Retrieve an access token",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://merchant.wish.com/api/v3/oauth/access_token",
+            "params": [
+              {
+                "name": "client_id",
+                "value": "",
+                "type": "query",
+                "description": "Your app's client ID"
+              },
+              {
+                "name": "client_secret",
+                "value": "",
+                "type": "query",
+                "description": "Your app's client secret"
+              },
+              {
+                "name": "code",
+                "value": "",
+                "type": "query",
+                "description": "The authorization code you received"
+              },
+              {
+                "name": "grant_type",
+                "value": "",
+                "type": "query",
+                "description": "The string 'authorization_code'"
+              },
+              {
+                "name": "redirect_uri",
+                "value": "",
+                "type": "query",
+                "description": "Your app's redirect uri that you specified when you created the app"
+              }
+            ]
+          },
+          "docs": "An access token and a refresh token will be returned through this API. Your application should store both tokens. The access token is used to make authorized requests and the refresh token is used to obtain new access tokens. For security reasons, the access token will expire after 30 days. When the access token expires, please use refresh_token API to get new ones."
+        },
+        {
+          "info": {
+            "name": "Retrieve an access token",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://merchant.wish.com/api/v3/oauth/access_token",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "An access token and a refresh token will be returned through this API. Your application should store both tokens. The access token is used to make authorized requests and the refresh token is used to obtain new access tokens. For security reasons, the access token will expire after 30 days. When the access token expires, please use refresh_token API to get new ones."
+        },
+        {
+          "info": {
+            "name": "Test if an access token is valid",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://merchant.wish.com/api/v3/oauth/test"
+          },
+          "docs": "This is a convenient endpoint for users to quickly verify if a given access token can be used."
+        },
+        {
+          "info": {
+            "name": "Obtain a new token when the current token expires",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://merchant.wish.com/api/v3/oauth/refresh_token",
+            "params": [
+              {
+                "name": "client_id",
+                "value": "",
+                "type": "query",
+                "description": "Your app's client ID"
+              },
+              {
+                "name": "client_secret",
+                "value": "",
+                "type": "query",
+                "description": "Your app's client secret"
+              },
+              {
+                "name": "refresh_token",
+                "value": "",
+                "type": "query",
+                "description": "The refresh token"
+              },
+              {
+                "name": "grant_type",
+                "value": "",
+                "type": "query",
+                "description": "The string 'refresh_token'"
+              }
+            ]
+          },
+          "docs": "This API will generate a new token without going through the full OAuth process again. Existing access tokens will be revoked after calling this API"
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

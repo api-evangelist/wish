@@ -1,0 +1,245 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "Wish Marketplace V3 Brands Germany EPR Compliance API",
+    "version": "3.0.65"
+  },
+  "request": {
+    "auth": {
+      "type": "oauth2",
+      "flow": "authorization_code",
+      "authorizationUrl": "https://merchant.wish.com/v3/oauth/authorize",
+      "accessTokenUrl": "https://merchant.wish.com/api/v3/oauth/access_token",
+      "credentials": {
+        "clientId": "{{clientId}}",
+        "clientSecret": "{{clientSecret}}"
+      }
+    }
+  },
+  "items": [
+    {
+      "info": {
+        "name": "Germany EPR Compliance",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "List Germany EPR Registration Numbers",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://merchant.wish.com/api/v3/germany_epr_compliance/epr_registration_number",
+            "auth": {
+              "type": "oauth2",
+              "flow": "authorization_code",
+              "authorizationUrl": "https://merchant.wish.com/v3/oauth/authorize",
+              "accessTokenUrl": "https://merchant.wish.com/api/v3/oauth/access_token",
+              "credentials": {
+                "clientId": "{{clientId}}",
+                "clientSecret": "{{clientSecret}}"
+              }
+            }
+          },
+          "docs": "List all Germany product EPR numbers and their product categories created by a merchant."
+        },
+        {
+          "info": {
+            "name": "Create a Germany Product EPR Registration Number",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://merchant.wish.com/api/v3/germany_epr_compliance/epr_registration_number",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            },
+            "auth": {
+              "type": "oauth2",
+              "flow": "authorization_code",
+              "authorizationUrl": "https://merchant.wish.com/v3/oauth/authorize",
+              "accessTokenUrl": "https://merchant.wish.com/api/v3/oauth/access_token",
+              "credentials": {
+                "clientId": "{{clientId}}",
+                "clientSecret": "{{clientSecret}}"
+              }
+            }
+          },
+          "docs": "Create a Germany Product EPR Registration Number"
+        },
+        {
+          "info": {
+            "name": "Get Germany EPR Product Compliance Status",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://merchant.wish.com/api/v3/germany_epr_compliance/compliance_status",
+            "params": [
+              {
+                "name": "product_ids",
+                "value": "",
+                "type": "query",
+                "description": "The list of the product IDs that will be returned with the compliance status"
+              },
+              {
+                "name": "product_id_min",
+                "value": "",
+                "type": "query",
+                "description": "The beginning product id(inclusive) of the result array. If not provided, will use the smallest product id.</br> Ignored when `product_ids` is provided."
+              },
+              {
+                "name": "product_id_max",
+                "value": "",
+                "type": "query",
+                "description": "The ending product id(inclusive) of the result array. If not provided, will use the largest product id.</br> Ignored when `product_ids` is provided."
+              },
+              {
+                "name": "limit",
+                "value": "",
+                "type": "query",
+                "description": "A limit on the number of records that will be returned.</br> Ignored when `product_ids` is provided."
+              },
+              {
+                "name": "sort_by",
+                "value": "",
+                "type": "query",
+                "description": "Sort results by the given attribute. Enabled attributes are `product_id`. Default order is `asc`, use `desc` to sort in reverse.</br> Ignored when `product_ids` is provided."
+              }
+            ],
+            "auth": {
+              "type": "oauth2",
+              "flow": "authorization_code",
+              "authorizationUrl": "https://merchant.wish.com/v3/oauth/authorize",
+              "accessTokenUrl": "https://merchant.wish.com/api/v3/oauth/access_token",
+              "credentials": {
+                "clientId": "{{clientId}}",
+                "clientSecret": "{{clientSecret}}"
+              }
+            }
+          },
+          "docs": "Get the Germany Extended Producer Responsibility product compliance status and the EPR registration number ids (if linked) for each input product.</br> If there is no input product id, then get the result of all products from a merchant.</br> The EPR registration id will be empty for products that are not linked with any EPR registration number."
+        },
+        {
+          "info": {
+            "name": "Bulk update Germany EPR Product Compliance Status",
+            "type": "http"
+          },
+          "http": {
+            "method": "PUT",
+            "url": "https://merchant.wish.com/api/v3/germany_epr_compliance/compliance_status",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            },
+            "auth": {
+              "type": "oauth2",
+              "flow": "authorization_code",
+              "authorizationUrl": "https://merchant.wish.com/v3/oauth/authorize",
+              "accessTokenUrl": "https://merchant.wish.com/api/v3/oauth/access_token",
+              "credentials": {
+                "clientId": "{{clientId}}",
+                "clientSecret": "{{clientSecret}}"
+              }
+            }
+          },
+          "docs": "Update the Germany Extended Producer Responsibility compliance status for each input product by linking with the associated input epr_id or unlinking the existing EPR number if the associated input epr_id is empty or null.</br> The input array size limitation is 500."
+        },
+        {
+          "info": {
+            "name": "Get a Germany Product EPR Registration Number",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://merchant.wish.com/api/v3/germany_epr_compliance/epr_registration_number/:id",
+            "params": [
+              {
+                "name": "id",
+                "value": "",
+                "type": "path",
+                "description": "The unique identifier of the Germany product EPR registration number"
+              }
+            ],
+            "auth": {
+              "type": "oauth2",
+              "flow": "authorization_code",
+              "authorizationUrl": "https://merchant.wish.com/v3/oauth/authorize",
+              "accessTokenUrl": "https://merchant.wish.com/api/v3/oauth/access_token",
+              "credentials": {
+                "clientId": "{{clientId}}",
+                "clientSecret": "{{clientSecret}}"
+              }
+            }
+          },
+          "docs": "Get a Germany product EPR number and product category given its id."
+        },
+        {
+          "info": {
+            "name": "Update a Germany Product EPR Registration Number",
+            "type": "http"
+          },
+          "http": {
+            "method": "PUT",
+            "url": "https://merchant.wish.com/api/v3/germany_epr_compliance/epr_registration_number/:id",
+            "params": [
+              {
+                "name": "id",
+                "value": "",
+                "type": "path",
+                "description": "The unique identifier of the Germany product EPR registration number"
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            },
+            "auth": {
+              "type": "oauth2",
+              "flow": "authorization_code",
+              "authorizationUrl": "https://merchant.wish.com/v3/oauth/authorize",
+              "accessTokenUrl": "https://merchant.wish.com/api/v3/oauth/access_token",
+              "credentials": {
+                "clientId": "{{clientId}}",
+                "clientSecret": "{{clientSecret}}"
+              }
+            }
+          },
+          "docs": "Update details of a Germany Product EPR Registration Number."
+        },
+        {
+          "info": {
+            "name": "Delete a Germany Product EPR Registration Number",
+            "type": "http"
+          },
+          "http": {
+            "method": "DELETE",
+            "url": "https://merchant.wish.com/api/v3/germany_epr_compliance/epr_registration_number/:id",
+            "params": [
+              {
+                "name": "id",
+                "value": "",
+                "type": "path",
+                "description": "The unique identifier of the Germany product EPR registration number"
+              }
+            ],
+            "auth": {
+              "type": "oauth2",
+              "flow": "authorization_code",
+              "authorizationUrl": "https://merchant.wish.com/v3/oauth/authorize",
+              "accessTokenUrl": "https://merchant.wish.com/api/v3/oauth/access_token",
+              "credentials": {
+                "clientId": "{{clientId}}",
+                "clientSecret": "{{clientSecret}}"
+              }
+            }
+          },
+          "docs": "Delete a Germany Product EPR Registration Number. [This will remove all linked products]"
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

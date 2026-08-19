@@ -1,0 +1,1386 @@
+{
+  "item": [
+    {
+      "id": "bd8385a8-ae98-4ebe-a6b1-8bd9cc0bb8b7",
+      "name": "France EPR Compliance",
+      "description": {
+        "content": "APIs that support France Extended Producer Responsibility (EPR) Compliance.</br> For a merchant to be compliant with the EPR regulation, a product category they intend to sell must be linked with one or more EPR registration number(s). ",
+        "type": "text/plain"
+      },
+      "item": [
+        {
+          "id": "aa87c9c0-b672-4b92-83ca-bf0d8129e551",
+          "name": "Bulk update France EPR Product Compliance Status",
+          "request": {
+            "name": "Bulk update France EPR Product Compliance Status",
+            "description": {
+              "content": "Update the France Extended Producer Responsibility compliance status for each input product by linking with the associated input uin_id or unlinking the existing UIN if the associated input uin_id is empty or null.</br> The input array size limitation is 500.",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "api",
+                "v3",
+                "france_epr_compliance",
+                "compliance_status"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": []
+            },
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "PUT",
+            "auth": {
+              "type": "oauth2",
+              "oauth2": [
+                {
+                  "key": "scope",
+                  "value": "payments:write tickets:write epc:read returns:write returns:read fbw:read products:read payments:read fbw:write merchant:write products:write ratings:read videos:read compliance:write product_boost:read listing_quality:read webhook:write orders:read compliance:read fbs:read penalties:read penalties:write infractions:read orders:write merchant:read notifications:write announcements:read product_boost:write notifications:read webhook:read qoo10:read wps_parcel:write wps_parcel:read tickets:read infractions:write videos:write epc:write"
+                },
+                {
+                  "key": "redirect_uri",
+                  "value": "https://merchant.wish.com/api/v3/oauth/refresh_token"
+                },
+                {
+                  "key": "accessTokenUrl",
+                  "value": "https://merchant.wish.com/api/v3/oauth/access_token"
+                },
+                {
+                  "key": "authUrl",
+                  "value": "https://merchant.wish.com/v3/oauth/authorize"
+                },
+                {
+                  "key": "grant_type",
+                  "value": "authorization_code"
+                }
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "[\n  {\n    \"product_id\": \"<object-id>\",\n    \"unique_identification_number_id\": \"<object-id>\"\n  },\n  {\n    \"product_id\": \"<object-id>\",\n    \"unique_identification_number_id\": \"<object-id>\"\n  }\n]",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": [
+            {
+              "id": "e253e08b-4d23-436c-bb36-df48c6ba4fc1",
+              "name": "successfully updated france product compliance status for input products",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "api",
+                    "v3",
+                    "france_epr_compliance",
+                    "compliance_status"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: oauth2",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "<token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "PUT",
+                "body": {
+                  "mode": "raw",
+                  "raw": "[\n  {\n    \"product_id\": \"<object-id>\",\n    \"unique_identification_number_id\": \"<object-id>\"\n  },\n  {\n    \"product_id\": \"<object-id>\",\n    \"unique_identification_number_id\": \"<object-id>\"\n  }\n]",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "[\n  {\n    \"unique_identification_number_ids\": [\n      \"string\",\n      \"string\"\n    ],\n    \"compliance_status\": \"NO_UNIQUE_IDENTIFICATION_NUMBER\",\n    \"product_id\": \"string\"\n  },\n  {\n    \"unique_identification_number_ids\": [\n      \"string\",\n      \"string\"\n    ],\n    \"compliance_status\": \"NO_UNIQUE_IDENTIFICATION_NUMBER\",\n    \"product_id\": \"string\"\n  }\n]",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "622e9a50-fa5f-4cc0-8bc1-26d5eb34fc90",
+              "name": "failed to update for france product compliance status for input products",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "api",
+                    "v3",
+                    "france_epr_compliance",
+                    "compliance_status"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: oauth2",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "<token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "PUT",
+                "body": {
+                  "mode": "raw",
+                  "raw": "[\n  {\n    \"product_id\": \"<object-id>\",\n    \"unique_identification_number_id\": \"<object-id>\"\n  },\n  {\n    \"product_id\": \"<object-id>\",\n    \"unique_identification_number_id\": \"<object-id>\"\n  }\n]",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Bad Request",
+              "code": 400,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"code\": 1943,\n  \"message\": \"string\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "21c8196f-a5a9-42eb-a392-f0009be3141b",
+          "name": "Get France EPR Product Compliance Status",
+          "request": {
+            "name": "Get France EPR Product Compliance Status",
+            "description": {
+              "content": "Get the France Extended Producer Responsibility product compliance status and the unique identifier number ids (if linked) for each input product.</br> If there is no input product id, then get the result of all products from a merchant.</br> The unique identifier number id will be empty for products that are not linked with any unique identifier number.",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "api",
+                "v3",
+                "france_epr_compliance",
+                "compliance_status"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [
+                {
+                  "disabled": false,
+                  "key": "product_ids",
+                  "value": "<object-id>",
+                  "description": "The list of the product IDs that will be returned with the compliance status"
+                },
+                {
+                  "disabled": false,
+                  "key": "product_ids",
+                  "value": "<object-id>",
+                  "description": "The list of the product IDs that will be returned with the compliance status"
+                },
+                {
+                  "disabled": false,
+                  "key": "product_id_min",
+                  "value": "<object-id>",
+                  "description": "The beginning product id(inclusive) of the result array. If not provided, will use the smallest product id.</br> Ignored when `product_ids` is provided."
+                },
+                {
+                  "disabled": false,
+                  "key": "product_id_max",
+                  "value": "<object-id>",
+                  "description": "The ending product id(inclusive) of the result array. If not provided, will use the largest product id.</br> Ignored when `product_ids` is provided."
+                },
+                {
+                  "disabled": false,
+                  "key": "limit",
+                  "value": "100",
+                  "description": "A limit on the number of records that will be returned.</br> Ignored when `product_ids` is provided."
+                },
+                {
+                  "disabled": false,
+                  "key": "sort_by",
+                  "value": "product_id.asc",
+                  "description": "Sort results by the given attribute. Enabled attributes are `product_id`. Default order is `asc`, use `desc` to sort in reverse.</br> Ignored when `product_ids` is provided."
+                }
+              ],
+              "variable": []
+            },
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "GET",
+            "auth": {
+              "type": "oauth2",
+              "oauth2": [
+                {
+                  "key": "scope",
+                  "value": "payments:write tickets:write epc:read returns:write returns:read fbw:read products:read payments:read fbw:write merchant:write products:write ratings:read videos:read compliance:write product_boost:read listing_quality:read webhook:write orders:read compliance:read fbs:read penalties:read penalties:write infractions:read orders:write merchant:read notifications:write announcements:read product_boost:write notifications:read webhook:read qoo10:read wps_parcel:write wps_parcel:read tickets:read infractions:write videos:write epc:write"
+                },
+                {
+                  "key": "redirect_uri",
+                  "value": "https://merchant.wish.com/api/v3/oauth/refresh_token"
+                },
+                {
+                  "key": "accessTokenUrl",
+                  "value": "https://merchant.wish.com/api/v3/oauth/access_token"
+                },
+                {
+                  "key": "authUrl",
+                  "value": "https://merchant.wish.com/v3/oauth/authorize"
+                },
+                {
+                  "key": "grant_type",
+                  "value": "authorization_code"
+                }
+              ]
+            }
+          },
+          "response": [
+            {
+              "id": "7140e3f7-0d8d-4f16-85ef-c696ea16ca06",
+              "name": "successfully queried for product compliance status",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "api",
+                    "v3",
+                    "france_epr_compliance",
+                    "compliance_status"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "product_ids",
+                      "value": "<object-id>"
+                    },
+                    {
+                      "key": "product_ids",
+                      "value": "<object-id>"
+                    },
+                    {
+                      "key": "product_id_min",
+                      "value": "<object-id>"
+                    },
+                    {
+                      "key": "product_id_max",
+                      "value": "<object-id>"
+                    },
+                    {
+                      "key": "limit",
+                      "value": "100"
+                    },
+                    {
+                      "key": "sort_by",
+                      "value": "product_id.asc"
+                    }
+                  ],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: oauth2",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "<token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "[\n  {\n    \"unique_identification_number_ids\": [\n      \"string\",\n      \"string\"\n    ],\n    \"compliance_status\": \"NOT_RECOMMENDED_TO_LINK_UNIQUE_IDENTIFICATION_NUMBER\",\n    \"product_id\": \"string\"\n  },\n  {\n    \"unique_identification_number_ids\": [\n      \"string\",\n      \"string\"\n    ],\n    \"compliance_status\": \"NO_UNIQUE_IDENTIFICATION_NUMBER\",\n    \"product_id\": \"string\"\n  }\n]",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "f82d802c-7cb1-4c8c-9745-283cea723be7",
+              "name": "failed to query for product compliance status",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "api",
+                    "v3",
+                    "france_epr_compliance",
+                    "compliance_status"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "product_ids",
+                      "value": "<object-id>"
+                    },
+                    {
+                      "key": "product_ids",
+                      "value": "<object-id>"
+                    },
+                    {
+                      "key": "product_id_min",
+                      "value": "<object-id>"
+                    },
+                    {
+                      "key": "product_id_max",
+                      "value": "<object-id>"
+                    },
+                    {
+                      "key": "limit",
+                      "value": "100"
+                    },
+                    {
+                      "key": "sort_by",
+                      "value": "product_id.asc"
+                    }
+                  ],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: oauth2",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "<token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "Bad Request",
+              "code": 400,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"message\": \"The input france product unique identification number is not found by the given id.\",\n  \"code\": \"10003\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "1d53e5e5-3451-4d3b-9eb2-1b2ebd5e899c",
+          "name": "Create a France Product Unique Identification Number",
+          "request": {
+            "name": "Create a France Product Unique Identification Number",
+            "description": {
+              "content": "Create a France Product Unique Identification Number",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "api",
+                "v3",
+                "france_epr_compliance",
+                "unique_identification_number"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": []
+            },
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "POST",
+            "auth": {
+              "type": "oauth2",
+              "oauth2": [
+                {
+                  "key": "scope",
+                  "value": "payments:write tickets:write epc:read returns:write returns:read fbw:read products:read payments:read fbw:write merchant:write products:write ratings:read videos:read compliance:write product_boost:read listing_quality:read webhook:write orders:read compliance:read fbs:read penalties:read penalties:write infractions:read orders:write merchant:read notifications:write announcements:read product_boost:write notifications:read webhook:read qoo10:read wps_parcel:write wps_parcel:read tickets:read infractions:write videos:write epc:write"
+                },
+                {
+                  "key": "redirect_uri",
+                  "value": "https://merchant.wish.com/api/v3/oauth/refresh_token"
+                },
+                {
+                  "key": "accessTokenUrl",
+                  "value": "https://merchant.wish.com/api/v3/oauth/access_token"
+                },
+                {
+                  "key": "authUrl",
+                  "value": "https://merchant.wish.com/v3/oauth/authorize"
+                },
+                {
+                  "key": "grant_type",
+                  "value": "authorization_code"
+                }
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "<object>",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": [
+            {
+              "id": "41aa1717-5c5e-4878-b2ed-1cb985a15ae8",
+              "name": "successfully created a new france product unique identification number.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "api",
+                    "v3",
+                    "france_epr_compliance",
+                    "unique_identification_number"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: oauth2",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "<token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "<object>",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"category\": \"<string>\",\n  \"uin\": \"<string>\",\n  \"product_responsibility_organization\": \"<string>\",\n  \"id\": \"string\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "92df8945-06a6-4b78-8dcf-1a7e9598d775",
+              "name": "failed to create a new new france product unique identification number.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "api",
+                    "v3",
+                    "france_epr_compliance",
+                    "unique_identification_number"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: oauth2",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "<token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "<object>",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Bad Request",
+              "code": 400,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"message\": \"The input unique identification number has invalid fields.\",\n  \"code\": \"10001\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "89fc1a38-59b8-4d95-8716-71a7a672b291",
+          "name": "List France Product Unique Identification Numbers",
+          "request": {
+            "name": "List France Product Unique Identification Numbers",
+            "description": {
+              "content": "List all France Product Identification Numbers and their product categories created by a merchant.",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "api",
+                "v3",
+                "france_epr_compliance",
+                "unique_identification_number"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": []
+            },
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "GET",
+            "auth": {
+              "type": "oauth2",
+              "oauth2": [
+                {
+                  "key": "scope",
+                  "value": "payments:write tickets:write epc:read returns:write returns:read fbw:read products:read payments:read fbw:write merchant:write products:write ratings:read videos:read compliance:write product_boost:read listing_quality:read webhook:write orders:read compliance:read fbs:read penalties:read penalties:write infractions:read orders:write merchant:read notifications:write announcements:read product_boost:write notifications:read webhook:read qoo10:read wps_parcel:write wps_parcel:read tickets:read infractions:write videos:write epc:write"
+                },
+                {
+                  "key": "redirect_uri",
+                  "value": "https://merchant.wish.com/api/v3/oauth/refresh_token"
+                },
+                {
+                  "key": "accessTokenUrl",
+                  "value": "https://merchant.wish.com/api/v3/oauth/access_token"
+                },
+                {
+                  "key": "authUrl",
+                  "value": "https://merchant.wish.com/v3/oauth/authorize"
+                },
+                {
+                  "key": "grant_type",
+                  "value": "authorization_code"
+                }
+              ]
+            }
+          },
+          "response": [
+            {
+              "id": "c3b05cfa-cf8e-4713-bbad-8ebd4853d8a8",
+              "name": "successfully queried for France product unique identification numbers.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "api",
+                    "v3",
+                    "france_epr_compliance",
+                    "unique_identification_number"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: oauth2",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "<token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "[\n  {\n    \"category\": \"<string>\",\n    \"uin\": \"<string>\",\n    \"product_responsibility_organization\": \"<string>\",\n    \"id\": \"string\"\n  },\n  {\n    \"category\": \"<string>\",\n    \"uin\": \"<string>\",\n    \"product_responsibility_organization\": \"<string>\",\n    \"id\": \"string\"\n  }\n]",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "c6828ff2-baaf-40a2-9548-64962361b6b4",
+              "name": "failed to query for France product unique identification numbers.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "api",
+                    "v3",
+                    "france_epr_compliance",
+                    "unique_identification_number"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: oauth2",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "<token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "Bad Request",
+              "code": 400,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"code\": 1943,\n  \"message\": \"string\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "536911b8-743c-4251-86be-07e91a563f6c",
+          "name": "Update a France Product Unique Identification Number",
+          "request": {
+            "name": "Update a France Product Unique Identification Number",
+            "description": {
+              "content": "Update details of a France Product Identification Number.",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "api",
+                "v3",
+                "france_epr_compliance",
+                "unique_identification_number",
+                ":id"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": [
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<object-id>",
+                  "key": "id",
+                  "description": "(Required) The unique identifier of the france product unique identification number"
+                }
+              ]
+            },
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "PUT",
+            "auth": {
+              "type": "oauth2",
+              "oauth2": [
+                {
+                  "key": "scope",
+                  "value": "payments:write tickets:write epc:read returns:write returns:read fbw:read products:read payments:read fbw:write merchant:write products:write ratings:read videos:read compliance:write product_boost:read listing_quality:read webhook:write orders:read compliance:read fbs:read penalties:read penalties:write infractions:read orders:write merchant:read notifications:write announcements:read product_boost:write notifications:read webhook:read qoo10:read wps_parcel:write wps_parcel:read tickets:read infractions:write videos:write epc:write"
+                },
+                {
+                  "key": "redirect_uri",
+                  "value": "https://merchant.wish.com/api/v3/oauth/refresh_token"
+                },
+                {
+                  "key": "accessTokenUrl",
+                  "value": "https://merchant.wish.com/api/v3/oauth/access_token"
+                },
+                {
+                  "key": "authUrl",
+                  "value": "https://merchant.wish.com/v3/oauth/authorize"
+                },
+                {
+                  "key": "grant_type",
+                  "value": "authorization_code"
+                }
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"uin\": \"<string>\",\n  \"product_responsibility_organization\": \"<string>\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": [
+            {
+              "id": "7e6a5031-4eb3-4a3c-b082-f908df50e043",
+              "name": "successfully updated a france product unique identification number.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "api",
+                    "v3",
+                    "france_epr_compliance",
+                    "unique_identification_number",
+                    ":id"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<object-id>",
+                      "key": "id",
+                      "description": "(Required) The unique identifier of the france product unique identification number"
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: oauth2",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "<token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "PUT",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"uin\": \"<string>\",\n  \"product_responsibility_organization\": \"<string>\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"category\": \"<string>\",\n  \"uin\": \"<string>\",\n  \"product_responsibility_organization\": \"<string>\",\n  \"id\": \"string\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "458615bb-ead1-4dbf-be4a-1d381984635f",
+              "name": "failed to update a france product unique identification number.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "api",
+                    "v3",
+                    "france_epr_compliance",
+                    "unique_identification_number",
+                    ":id"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<object-id>",
+                      "key": "id",
+                      "description": "(Required) The unique identifier of the france product unique identification number"
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: oauth2",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "<token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "PUT",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"uin\": \"<string>\",\n  \"product_responsibility_organization\": \"<string>\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Bad Request",
+              "code": 400,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"message\": \"The input unique identification number has invalid fields.\",\n  \"code\": \"10001\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "c27a2c87-1573-4cb5-9283-e687fc6e532e",
+          "name": "Get a France Product Unique Identification Number",
+          "request": {
+            "name": "Get a France Product Unique Identification Number",
+            "description": {
+              "content": "Get a France Product Identification Number and its product categories given its id.",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "api",
+                "v3",
+                "france_epr_compliance",
+                "unique_identification_number",
+                ":id"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": [
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<object-id>",
+                  "key": "id",
+                  "description": "(Required) The unique identifier of the france product unique identification number"
+                }
+              ]
+            },
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "GET",
+            "auth": {
+              "type": "oauth2",
+              "oauth2": [
+                {
+                  "key": "scope",
+                  "value": "payments:write tickets:write epc:read returns:write returns:read fbw:read products:read payments:read fbw:write merchant:write products:write ratings:read videos:read compliance:write product_boost:read listing_quality:read webhook:write orders:read compliance:read fbs:read penalties:read penalties:write infractions:read orders:write merchant:read notifications:write announcements:read product_boost:write notifications:read webhook:read qoo10:read wps_parcel:write wps_parcel:read tickets:read infractions:write videos:write epc:write"
+                },
+                {
+                  "key": "redirect_uri",
+                  "value": "https://merchant.wish.com/api/v3/oauth/refresh_token"
+                },
+                {
+                  "key": "accessTokenUrl",
+                  "value": "https://merchant.wish.com/api/v3/oauth/access_token"
+                },
+                {
+                  "key": "authUrl",
+                  "value": "https://merchant.wish.com/v3/oauth/authorize"
+                },
+                {
+                  "key": "grant_type",
+                  "value": "authorization_code"
+                }
+              ]
+            }
+          },
+          "response": [
+            {
+              "id": "d5cf6c6a-86bd-4069-8ffb-d870777bf23f",
+              "name": "successfully queried for a france product unique identification number.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "api",
+                    "v3",
+                    "france_epr_compliance",
+                    "unique_identification_number",
+                    ":id"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<object-id>",
+                      "key": "id",
+                      "description": "(Required) The unique identifier of the france product unique identification number"
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: oauth2",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "<token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"category\": \"<string>\",\n  \"uin\": \"<string>\",\n  \"product_responsibility_organization\": \"<string>\",\n  \"id\": \"string\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "3d400ffa-d4c9-4456-8a39-749e771cc7a8",
+              "name": "failed to query for a france product unique identification number.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "api",
+                    "v3",
+                    "france_epr_compliance",
+                    "unique_identification_number",
+                    ":id"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<object-id>",
+                      "key": "id",
+                      "description": "(Required) The unique identifier of the france product unique identification number"
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: oauth2",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "<token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "Bad Request",
+              "code": 400,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"message\": \"The input france product unique identification number is not found by the given id.\",\n  \"code\": \"10003\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "f7c34487-189e-447f-89c6-abac53aa60d7",
+          "name": "Delete a France Product Unique Identification Number",
+          "request": {
+            "name": "Delete a France Product Unique Identification Number",
+            "description": {
+              "content": "Delete a France Product Unique Identification Number.",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "api",
+                "v3",
+                "france_epr_compliance",
+                "unique_identification_number",
+                ":id"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": [
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<object-id>",
+                  "key": "id",
+                  "description": "(Required) The unique identifier of the france product unique identification number"
+                }
+              ]
+            },
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "DELETE",
+            "auth": {
+              "type": "oauth2",
+              "oauth2": [
+                {
+                  "key": "scope",
+                  "value": "payments:write tickets:write epc:read returns:write returns:read fbw:read products:read payments:read fbw:write merchant:write products:write ratings:read videos:read compliance:write product_boost:read listing_quality:read webhook:write orders:read compliance:read fbs:read penalties:read penalties:write infractions:read orders:write merchant:read notifications:write announcements:read product_boost:write notifications:read webhook:read qoo10:read wps_parcel:write wps_parcel:read tickets:read infractions:write videos:write epc:write"
+                },
+                {
+                  "key": "redirect_uri",
+                  "value": "https://merchant.wish.com/api/v3/oauth/refresh_token"
+                },
+                {
+                  "key": "accessTokenUrl",
+                  "value": "https://merchant.wish.com/api/v3/oauth/access_token"
+                },
+                {
+                  "key": "authUrl",
+                  "value": "https://merchant.wish.com/v3/oauth/authorize"
+                },
+                {
+                  "key": "grant_type",
+                  "value": "authorization_code"
+                }
+              ]
+            }
+          },
+          "response": [
+            {
+              "id": "52c611c9-fd80-490a-9d26-d420ff8a46e5",
+              "name": "successfully deleted a France Product Unique Identification Number.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "api",
+                    "v3",
+                    "france_epr_compliance",
+                    "unique_identification_number",
+                    ":id"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<object-id>",
+                      "key": "id",
+                      "description": "(Required) The unique identifier of the france product unique identification number"
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: oauth2",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "<token>"
+                  }
+                ],
+                "method": "DELETE",
+                "body": {}
+              },
+              "status": "No Content",
+              "code": 204,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "text/plain"
+                }
+              ],
+              "body": "",
+              "cookie": [],
+              "_postman_previewlanguage": "text"
+            },
+            {
+              "id": "3c708889-62c0-4405-89cf-ca9a3855cc83",
+              "name": "failed to delete a France Product Unique Identification Number.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "api",
+                    "v3",
+                    "france_epr_compliance",
+                    "unique_identification_number",
+                    ":id"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<object-id>",
+                      "key": "id",
+                      "description": "(Required) The unique identifier of the france product unique identification number"
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: oauth2",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "<token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "DELETE",
+                "body": {}
+              },
+              "status": "Bad Request",
+              "code": 400,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"message\": \"The unique identification number is still linked with some products, so not able to delete before unlinking to all related products.\",\n  \"code\": \"10006\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        }
+      ],
+      "event": []
+    }
+  ],
+  "event": [],
+  "variable": [
+    {
+      "type": "string",
+      "value": "https://merchant.wish.com",
+      "key": "baseUrl"
+    }
+  ],
+  "auth": {
+    "type": "oauth2",
+    "oauth2": [
+      {
+        "key": "scope",
+        "value": "payments:write tickets:write epc:read returns:write returns:read fbw:read products:read payments:read fbw:write merchant:write products:write ratings:read videos:read compliance:write product_boost:read listing_quality:read webhook:write orders:read compliance:read fbs:read penalties:read penalties:write infractions:read orders:write merchant:read notifications:write announcements:read product_boost:write notifications:read webhook:read qoo10:read wps_parcel:write wps_parcel:read tickets:read infractions:write videos:write epc:write"
+      },
+      {
+        "key": "redirect_uri",
+        "value": "https://merchant.wish.com/api/v3/oauth/refresh_token"
+      },
+      {
+        "key": "accessTokenUrl",
+        "value": "https://merchant.wish.com/api/v3/oauth/access_token"
+      },
+      {
+        "key": "authUrl",
+        "value": "https://merchant.wish.com/v3/oauth/authorize"
+      },
+      {
+        "key": "grant_type",
+        "value": "authorization_code"
+      }
+    ]
+  },
+  "info": {
+    "_postman_id": "d7c8b60d-b938-441d-8c44-fc544c2fbd7a",
+    "name": "Wish Marketplace V3 Brands France EPR Compliance API",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "description": {
+      "content": "\nWish Marketplace V3 API\n\n# General Information\n\n The Wish Marketplace API will be using oAuth to authenticate in order to offer better security for its users\n\n *   Learn about oAuth [here](oauth).\n *   If you are a merchant and want to create an application for yourself, learn about how to create a private app [here](../../private-app)\n *   If you are a ERP and create applications that'll be used by multiple merchants, learn about how to create a public app [here]( ../../public-app). You will need to apply to be a verified public application\n\n ## How to Test\n\n To avoid testing the API on production data, use our sandbox. The sandbox is completely contained and will not affect Wish users or your merchant account. \n \n To reach the sandbox, visit: https://sandbox.merchant.wish.com.\n\n To use the sandbox in testing, use https://sandbox.merchant.wish.com/api/v3/ as your base URL.\n\n How to Generate test data after you have created a sandbox account:\n 1. Navigate to the [unfulfilled orders page](https://sandbox.merchant.wish.com/transactions/action)\n 2. Hover over the dropdown next to the 'fulfill with csv' button and select Generate Orders\n\n ## Date/Time Format\n\n  All dates and times in our API are returned in the same format. It is in the form `YYYY-MM-DDTHH:mm:ss.sss±XX:ZZ` or `YYYY-MM-DDTHH:mm:ss.sssZ`, where 'Z' represents UTC timezone.\n  When sending timestamps in URL parameters or the request body, millisecond is optional and will defaults to 0 if not provided.\n\n  * `YYYY` is the year\n  * `MM` is the month\n  * `DD` is the day\n  * `HH` is the hour (in 24-hour clock format)\n  * `mm` is the minutes\n  * `ss.sss` is the seconds and milliseconds\n  * `±XX:ZZ` is the UTC offset of the form +XX:ZZ or -XX:ZZ where XX is a 2-digit string giving the number of UTC offset hours, and ZZ is a 2-digit string giving the number of UTC offset minutes.\n\n ## Response Schema\n\n  Every response returned from the Wish API will have the same schema. This schema is intended to give you a predictable manner to check the status of your request and know where to get the data. Each response will have the following top level attributes: message, code and data.\n\n  **Attributes**\n\n  <table>\n  <tbody>\n  <tr>\n  <th>Message</th>\n  <td>A message describing the error that happened, example: \"We could not find a product for id: '5d30f60e0a6fc464f4f376b0'\"</td>\n  </tr>\n  <tr>\n  <th>Code</th>\n  <td>A unique number which represents the error that has occurred, example: 1008 or 0 if success.</td>\n  </tr>\n  <tr>\n  <th>Data</th>\n  <td>For errors this will be empty.</td>\n  </tr>\n  </tbody>\n  </table>\n\n ## General Querying Techniques\n\n ### Partial Resources\n All GET endpoints (except OAuth) support a fields parameter which allows for requesting a partial response. Any fields specified in the response schema of an endpoint can be selected. The top level attribute `data` can be ignored when using the fields parameter.\n\n **Syntax**\n * Comma-separated list to select multiple fields\n * Use forward slash `/` to select nested field: `field1/nested_field`\n * Use parentheses `( )` to select multiple nested fields: `field1(nested_field1,nested_field2)`\n * Use `*` for wildcard selection: `field1/nested_field/*`\n\n\n **Example:**\n ```\n https://merchant.wish.com/api/v3/demo/get?fields=title,items(id,info/name)\n ```\n Which would result in the following partial response:\n ```\n {\n   \"title\": \"demo\",\n   \"items\": [\n     {\n       \"id\": \"1\",\n       \"info\": {\n         \"name\": \"demo_item_1\"\n       }\n     }, {\n       \"id\": \"2\",\n       \"info\": {\n         \"name\": \"demo_item_2\"\n       }\n     },\n     ...\n   ]\n }\n ```\n\n ## Locale\n   You can optionally specify locale in order to translate content and error messages into your language.\n   To do this use the [Accept-Language](https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Accept-Language) header to specify your preferred locales.\n   If none is provided, your default locale will be used.\n\n   For example, to request content in Chinese use: `Accept-Language: zh`\n\n   In the response, you will receive a [Content-Language](https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Content-Language) header that specifies the locale code of the response content.\n\n\n ## Rate-Limiting\n\n  Rate-limiting will be performed on a per-merchant basis for each app. It is your responsibility to ensure you are not making frequent unnecessary calls to the API.\n\n  If the rate limits cannot satisfy your need, we highly recommend integrating webhooks for your app. With webhooks, instead of pulling resources periodically, your app will receive real-time notifications for particular events that occur to a merchant’s store. [Learn more](https://merchant.wish.com/documentation/webhooks)\n\n  **Normal Usage**\n\n  To help you track the rate-limiter status, the following response header(s) will be provided with each response:\n\n   * `Wish-Rate-Limit-Remaining`: The number of calls remaining in the current rate-limiting window.\n\n\n  **Rate-Limit Exceeded**\n\n  After you exceed the number of allowed calls in the current rate-limiting window, you will receive a `429 Too Many Requests` error response and the following additional header(s):\n\n   * `Wish-Rate-Limit-Reset`: The time the rate-limiter will reset.\n\n\n  Once you receive this response there is nothing you can do except wait for the rate-limiter to reset. In order to avoid being rate-limited, you may want to cache your responses.\n\n ## Sorting\n   ### Overview\n   Sorting is available for most endpoints that return a collection (list) of objects. Each collection has a different set of enabled parameters for sorting, so please check specific collection section for detail.\n\n   ### Usage\n   Append `sort_by={parameter_name}.{asc|desc}` in your API request where `parameter_name` is a valid sortable parameter of that endpoint.\n\n   Example:\n   ```\n   /api/v3/penalties?sort_by=created_at.asc\n   ```\n\n ## Pagination\n  All bulk-fetching API methods that return lists of resource support pagination.\n  These methods commonly take at least 3 parameters: `limit`, `{attribute}_min`, `{attribute}_max`. Attribute can be `id`, `create_at`, etc., depending on each specific method.\n  For instance, you make a request to get a list of penalties `/api/v3/penalties?limit=20&created_at_max=2020-04-08T23:59:59Z&sort_by=created_at_max.desc`,\n  which means to fetch 20 penalities sorted by their creation time, with the most recent one being created before `2020-04-08T23:59:59Z`.\n  Assume that the response contains 20 `penalty` objects with the last object being `penalty_foo`,\n  then your subsequent request can be `/api/v3/penalties?limit=20&created_at_max={penalty_foo.create_at}&sort_by=created_at_max.desc` to fetch the next page of list.\n  Note that when fetching next page using `id_min` or `id_max`, you need to perform `+/- 1`(correspondingly) on the last object's ID in the current page, as `id_min` and `id_max` are inclusive. (All V3 API resources' IDs are either integer or BSON object ID - a hex number).\n\n\n ## Request ID\n  Each API request is associated with a unique identifier. You can find this value in response headers, under `Wish-Request-Id`.\n  **When you need to contact us about a specific request, please provide this ID to ensure the fastest possible reply**\n\n# Authentication\nFor all requests that require OAuth2 authentication, the access token must be provided in the `Authorization` request header in the following format: `Authorization: Bearer <token>`\n\nFor example:\n```\nAuthorization: Bearer 3d6e2d71bc464e42bfbdb081afb73c1e\n```\n<!-- ReDoc-Inject: <security-definitions> -->\n\n\nContact Support:\n Email: partner-api@wish.com",
+      "type": "text/plain"
+    }
+  }
+}

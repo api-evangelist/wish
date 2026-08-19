@@ -1,0 +1,341 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "Wish Marketplace V3 Brands EU Product Compliance API",
+    "version": "3.0.65"
+  },
+  "request": {
+    "auth": {
+      "type": "oauth2",
+      "flow": "authorization_code",
+      "authorizationUrl": "https://merchant.wish.com/v3/oauth/authorize",
+      "accessTokenUrl": "https://merchant.wish.com/api/v3/oauth/access_token",
+      "credentials": {
+        "clientId": "{{clientId}}",
+        "clientSecret": "{{clientSecret}}"
+      }
+    }
+  },
+  "items": [
+    {
+      "info": {
+        "name": "EU Product Compliance",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Get an EU Responsible Person",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://merchant.wish.com/api/v3/eu_product_compliance/responsible_person/:id",
+            "params": [
+              {
+                "name": "id",
+                "value": "",
+                "type": "path",
+                "description": "id of the responsible person"
+              }
+            ],
+            "auth": {
+              "type": "oauth2",
+              "flow": "authorization_code",
+              "authorizationUrl": "https://merchant.wish.com/v3/oauth/authorize",
+              "accessTokenUrl": "https://merchant.wish.com/api/v3/oauth/access_token",
+              "credentials": {
+                "clientId": "{{clientId}}",
+                "clientSecret": "{{clientSecret}}"
+              }
+            }
+          },
+          "docs": "Get an EU Responsible Person given its id."
+        },
+        {
+          "info": {
+            "name": "Update an EU Responsible Person",
+            "type": "http"
+          },
+          "http": {
+            "method": "PUT",
+            "url": "https://merchant.wish.com/api/v3/eu_product_compliance/responsible_person/:id",
+            "params": [
+              {
+                "name": "id",
+                "value": "",
+                "type": "path",
+                "description": "id of the responsible person"
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            },
+            "auth": {
+              "type": "oauth2",
+              "flow": "authorization_code",
+              "authorizationUrl": "https://merchant.wish.com/v3/oauth/authorize",
+              "accessTokenUrl": "https://merchant.wish.com/api/v3/oauth/access_token",
+              "credentials": {
+                "clientId": "{{clientId}}",
+                "clientSecret": "{{clientSecret}}"
+              }
+            }
+          },
+          "docs": "Update details of an EU Responsible Person."
+        },
+        {
+          "info": {
+            "name": "Delete an EU Responsible Person",
+            "type": "http"
+          },
+          "http": {
+            "method": "DELETE",
+            "url": "https://merchant.wish.com/api/v3/eu_product_compliance/responsible_person/:id",
+            "params": [
+              {
+                "name": "id",
+                "value": "",
+                "type": "path",
+                "description": "id of the responsible person"
+              }
+            ],
+            "auth": {
+              "type": "oauth2",
+              "flow": "authorization_code",
+              "authorizationUrl": "https://merchant.wish.com/v3/oauth/authorize",
+              "accessTokenUrl": "https://merchant.wish.com/api/v3/oauth/access_token",
+              "credentials": {
+                "clientId": "{{clientId}}",
+                "clientSecret": "{{clientSecret}}"
+              }
+            }
+          },
+          "docs": "Delete an EU responsible person. Please first call [Bulk Update EU Product Compliance Status API](/documentation/api/v3/reference#operation/BulkUpdateProducts) to remove all links with products of input responsible person."
+        },
+        {
+          "info": {
+            "name": "Bulk Update EU Product Compliance Status",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://merchant.wish.com/api/v3/eu_product_compliance/products/bulk_update",
+            "params": [
+              {
+                "name": "old_person_id",
+                "value": "",
+                "type": "query",
+                "description": "id of the responsible person to unlink for all associated products."
+              },
+              {
+                "name": "new_person_id",
+                "value": "",
+                "type": "query",
+                "description": "id of the responsible person to update for all associated products of old_person_id.</br> No input (null or empty) means to unlink old_person_id from all its associated products."
+              }
+            ],
+            "auth": {
+              "type": "oauth2",
+              "flow": "authorization_code",
+              "authorizationUrl": "https://merchant.wish.com/v3/oauth/authorize",
+              "accessTokenUrl": "https://merchant.wish.com/api/v3/oauth/access_token",
+              "credentials": {
+                "clientId": "{{clientId}}",
+                "clientSecret": "{{clientSecret}}"
+              }
+            }
+          },
+          "docs": "Bulk update links of an EU responsible person with products given a responsible person id.</br> Find all products associated with the old responsible person id.</br> If new responsible person id is also given, reset above products with new responsible person.</br> If no new responsible person id given, unlink above products as no responsible person status.</br> This API processes the request asynchronously and triggers a running job.</br> Please use [Get Bulk Update Job Status API](/documentatio"
+        },
+        {
+          "info": {
+            "name": "Get Bulk Update Job Status",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://merchant.wish.com/api/v3/eu_product_compliance/products/bulk_update/:id",
+            "params": [
+              {
+                "name": "id",
+                "value": "",
+                "type": "path",
+                "description": "id of the bulk update job to query"
+              }
+            ],
+            "auth": {
+              "type": "oauth2",
+              "flow": "authorization_code",
+              "authorizationUrl": "https://merchant.wish.com/v3/oauth/authorize",
+              "accessTokenUrl": "https://merchant.wish.com/api/v3/oauth/access_token",
+              "credentials": {
+                "clientId": "{{clientId}}",
+                "clientSecret": "{{clientSecret}}"
+              }
+            }
+          },
+          "docs": "Get Status of Bulk Update Job to reset or unlink a responsible person with associated products.</br> The job should be triggered by [Bulk Update EU Product Compliance Status API](/documentation/api/v3/reference#operation/BulkUpdateProducts)"
+        },
+        {
+          "info": {
+            "name": "Get EU Product Compliance Status",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://merchant.wish.com/api/v3/eu_product_compliance/products",
+            "params": [
+              {
+                "name": "compliance_statuses",
+                "value": "",
+                "type": "query",
+                "description": "\nChoose the specific compliance status to filter output. Current input values are:\n\n1. RESPONSIBLE_PERSON_LINKED: a responsible person linked.\n2. NO_RESPONSIBLE_PERSON: no responsible person.\n3. NOT_RECOMMENDED_TO_LINK_RESPONSIBLE_PERSON: not recommended to link a responsible person.\n"
+              },
+              {
+                "name": "product_ids",
+                "value": "",
+                "type": "query",
+                "description": "The list of the product IDs that will be returned with the compliance status"
+              },
+              {
+                "name": "product_id_min",
+                "value": "",
+                "type": "query",
+                "description": "The beginning product id(inclusive) of the result array. If not provided, will use the smallest product id.</br> Ignored when product_ids is provided."
+              },
+              {
+                "name": "product_id_max",
+                "value": "",
+                "type": "query",
+                "description": "The ending product id(inclusive) of the result array. If not provided, will use the largest product id.</br> Ignored when product_ids is provided."
+              },
+              {
+                "name": "limit",
+                "value": "",
+                "type": "query",
+                "description": "A limit on the number of records that will be returned.</br> Ignored when product_ids is provided."
+              },
+              {
+                "name": "sort_by",
+                "value": "",
+                "type": "query",
+                "description": "Sort results by the given attribute. Enabled attributes are `product_id`. Default order is `asc`, use `desc` to sort in reverse.</br> Ignored when product_ids is provided."
+              }
+            ],
+            "auth": {
+              "type": "oauth2",
+              "flow": "authorization_code",
+              "authorizationUrl": "https://merchant.wish.com/v3/oauth/authorize",
+              "accessTokenUrl": "https://merchant.wish.com/api/v3/oauth/access_token",
+              "credentials": {
+                "clientId": "{{clientId}}",
+                "clientSecret": "{{clientSecret}}"
+              }
+            }
+          },
+          "docs": "Get the EU product compliance status and responsible person id (if linked) for each input product.</br> If there is no input product ids, then get the result of all products from a merchant.</br> compliance_statuses is an optional input to filter the response.</br> The responsible person id will be empty for products not linked with any responsible person."
+        },
+        {
+          "info": {
+            "name": "Update EU Product Compliance Status",
+            "type": "http"
+          },
+          "http": {
+            "method": "PUT",
+            "url": "https://merchant.wish.com/api/v3/eu_product_compliance/products",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            },
+            "auth": {
+              "type": "oauth2",
+              "flow": "authorization_code",
+              "authorizationUrl": "https://merchant.wish.com/v3/oauth/authorize",
+              "accessTokenUrl": "https://merchant.wish.com/api/v3/oauth/access_token",
+              "credentials": {
+                "clientId": "{{clientId}}",
+                "clientSecret": "{{clientSecret}}"
+              }
+            }
+          },
+          "docs": "Update the EU product compliance status for each input product by linking with aassociated input responsible_person_id or unlinking the existing responsible person if associated input responsible_person_id is empty or null.</br> The input array size limitation is 500."
+        },
+        {
+          "info": {
+            "name": "List EU Responsible Persons",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://merchant.wish.com/api/v3/eu_product_compliance/responsible_person",
+            "params": [
+              {
+                "name": "id_min",
+                "value": "",
+                "type": "query",
+                "description": "The beginning id(inclusive) of the result array of records. If not provided, will use the smallest responsible person id."
+              },
+              {
+                "name": "id_max",
+                "value": "",
+                "type": "query",
+                "description": "The ending id(inclusive) of the result array of records. If not provided, will use the largest responsible person id."
+              },
+              {
+                "name": "limit",
+                "value": "",
+                "type": "query",
+                "description": "A limit on the number of records that will be returned."
+              },
+              {
+                "name": "sort_by",
+                "value": "",
+                "type": "query",
+                "description": "Sort results by the given attribute. Enabled attributes are `id`. Default order is `asc`, use `desc` to sort in reverse."
+              }
+            ],
+            "auth": {
+              "type": "oauth2",
+              "flow": "authorization_code",
+              "authorizationUrl": "https://merchant.wish.com/v3/oauth/authorize",
+              "accessTokenUrl": "https://merchant.wish.com/api/v3/oauth/access_token",
+              "credentials": {
+                "clientId": "{{clientId}}",
+                "clientSecret": "{{clientSecret}}"
+              }
+            }
+          },
+          "docs": "List all EU Responsible Persons created by a merchant."
+        },
+        {
+          "info": {
+            "name": "Create an EU Responsible Person",
+            "type": "http"
+          },
+          "http": {
+            "method": "PUT",
+            "url": "https://merchant.wish.com/api/v3/eu_product_compliance/responsible_person",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            },
+            "auth": {
+              "type": "oauth2",
+              "flow": "authorization_code",
+              "authorizationUrl": "https://merchant.wish.com/v3/oauth/authorize",
+              "accessTokenUrl": "https://merchant.wish.com/api/v3/oauth/access_token",
+              "credentials": {
+                "clientId": "{{clientId}}",
+                "clientSecret": "{{clientSecret}}"
+              }
+            }
+          },
+          "docs": "Create an EU Responsible Person."
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

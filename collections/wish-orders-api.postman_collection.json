@@ -1,0 +1,1658 @@
+{
+  "item": [
+    {
+      "id": "5bfcfef9-e965-4326-8200-be97d87913df",
+      "name": "Orders",
+      "description": {
+        "content": "",
+        "type": "text/plain"
+      },
+      "item": [
+        {
+          "id": "0bc1ca41-08a3-48ac-a043-793aa07e52df",
+          "name": "Get accepted shipping carriers",
+          "request": {
+            "name": "Get accepted shipping carriers",
+            "description": {
+              "content": "Get a list of accepted shipping carriers based on order_type and dest_country_code. dest_country_code is only needed when order_type is not GENERAL.",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "api",
+                "v3",
+                "orders",
+                "shipping_carriers"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [
+                {
+                  "disabled": false,
+                  "key": "dest_country_code",
+                  "value": "<iso-3166>",
+                  "description": "Country code of the country the order is being shipped to. For GENERAL order_type, leave this parameter blank. The 2-letter country codes are defined in [ISO 3166](https://www.iso.org/iso-3166-country-codes.html)."
+                },
+                {
+                  "disabled": false,
+                  "key": "order_type",
+                  "value": "<string>",
+                  "description": "(Required) Choose the specific order type to get a list of approved carriers for. Current values include:\n1. GENERAL: All accepted shipping carriers on Wish\n2. CONFIRMED_DELIVERY: All accepted shipping carriers for Confirmed Delivery Policy. CONFIRMED_DELIVERY is a subset of the carrier list for GENERAL.\n"
+                }
+              ],
+              "variable": []
+            },
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "GET",
+            "auth": {
+              "type": "oauth2",
+              "oauth2": [
+                {
+                  "key": "scope",
+                  "value": "payments:write tickets:write epc:read returns:write returns:read fbw:read products:read payments:read fbw:write merchant:write products:write ratings:read videos:read compliance:write product_boost:read listing_quality:read webhook:write orders:read compliance:read fbs:read penalties:read penalties:write infractions:read orders:write merchant:read notifications:write announcements:read product_boost:write notifications:read webhook:read qoo10:read wps_parcel:write wps_parcel:read tickets:read infractions:write videos:write epc:write"
+                },
+                {
+                  "key": "redirect_uri",
+                  "value": "https://merchant.wish.com/api/v3/oauth/refresh_token"
+                },
+                {
+                  "key": "accessTokenUrl",
+                  "value": "https://merchant.wish.com/api/v3/oauth/access_token"
+                },
+                {
+                  "key": "authUrl",
+                  "value": "https://merchant.wish.com/v3/oauth/authorize"
+                },
+                {
+                  "key": "grant_type",
+                  "value": "authorization_code"
+                }
+              ]
+            }
+          },
+          "response": [
+            {
+              "id": "1f735f21-a25a-48a8-b89d-0175ed167d4a",
+              "name": "Successful request - List of valid providers",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "api",
+                    "v3",
+                    "orders",
+                    "shipping_carriers"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "dest_country_code",
+                      "value": "<iso-3166>"
+                    },
+                    {
+                      "key": "order_type",
+                      "value": "<string>"
+                    }
+                  ],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: oauth2",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "<token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "[\n  {\n    \"name\": \"string\"\n  },\n  {\n    \"name\": \"string\"\n  }\n]",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "ce4009d9-0427-4002-b7b6-078fcf44d39b",
+          "name": "Batch download orders",
+          "request": {
+            "name": "Batch download orders",
+            "description": {
+              "content": "Batch download orders",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "api",
+                "v3",
+                "orders",
+                "bulk_get"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [
+                {
+                  "disabled": false,
+                  "key": "limit",
+                  "value": "<integer>",
+                  "description": "The limit on the number of orders that will be returned."
+                },
+                {
+                  "disabled": false,
+                  "key": "updated_at_max",
+                  "value": "<dateTime>",
+                  "description": "Specify the end of the time window to view orders by last order update. Orders updated after this time will not show."
+                },
+                {
+                  "disabled": false,
+                  "key": "updated_at_min",
+                  "value": "<dateTime>",
+                  "description": "Specify the beginning of the window to view orders by last order update. Orders updated before this time will not show."
+                },
+                {
+                  "disabled": false,
+                  "key": "released_at_min",
+                  "value": "<dateTime>",
+                  "description": "Specify the beginning of the time window to view desired orders when filtering by order release time. Orders released before this time will not show."
+                },
+                {
+                  "disabled": false,
+                  "key": "released_at_max",
+                  "value": "<dateTime>",
+                  "description": "Specify the end of the time window to view desired orders when filtering by order release time. Orders released after this time will not show."
+                },
+                {
+                  "disabled": false,
+                  "key": "sort_by",
+                  "value": "updated_at.desc",
+                  "description": "Choose which timestamp to filter orders by. Current values are:\n* updated_at: Last time the order was updated.\n* released_at: The time the order was released.\n"
+                },
+                {
+                  "disabled": false,
+                  "key": "order_type",
+                  "value": "<string>",
+                  "description": "Choose the specific programs to filter output orders by. Current input values are:\n1. WISH_EXPRESS\n2. FULFILLED_BY_WISH\n3. FULFILLED_BY_STORE\n4. LESS_THAN_TRUCKLOAD\n5. ADVANCED_LOGISTICS\n6. WISH_PLUS\n\nNote: This parameter does not support combinations (ex: FULFILLED_BY_WISH & WISH_EXPRESS). If looking for overlaps, query these separately & then manually find the overlap, using Order ID.\n"
+                },
+                {
+                  "disabled": false,
+                  "key": "states",
+                  "value": "<string>",
+                  "description": "\nChoose the specific order state to filter output orders by. Current input values are:\n\n1. APPROVED: Order ready to be shipped.\n2. SHIPPED: Order has been shipped.\n3. REFUNDED: Order has been refunded.\n4. REQUIRE_REVIEW: Order has been placed under review\n5. DECLINED: Customer's payment had an issue for this order\n"
+                }
+              ],
+              "variable": []
+            },
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "POST",
+            "auth": {
+              "type": "oauth2",
+              "oauth2": [
+                {
+                  "key": "scope",
+                  "value": "payments:write tickets:write epc:read returns:write returns:read fbw:read products:read payments:read fbw:write merchant:write products:write ratings:read videos:read compliance:write product_boost:read listing_quality:read webhook:write orders:read compliance:read fbs:read penalties:read penalties:write infractions:read orders:write merchant:read notifications:write announcements:read product_boost:write notifications:read webhook:read qoo10:read wps_parcel:write wps_parcel:read tickets:read infractions:write videos:write epc:write"
+                },
+                {
+                  "key": "redirect_uri",
+                  "value": "https://merchant.wish.com/api/v3/oauth/refresh_token"
+                },
+                {
+                  "key": "accessTokenUrl",
+                  "value": "https://merchant.wish.com/api/v3/oauth/access_token"
+                },
+                {
+                  "key": "authUrl",
+                  "value": "https://merchant.wish.com/v3/oauth/authorize"
+                },
+                {
+                  "key": "grant_type",
+                  "value": "authorization_code"
+                }
+              ]
+            }
+          },
+          "response": [
+            {
+              "id": "1fe9b328-519c-476b-9bfd-208ed7d03e67",
+              "name": "successfully queued a batch download job",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "api",
+                    "v3",
+                    "orders",
+                    "bulk_get"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "limit",
+                      "value": "<integer>"
+                    },
+                    {
+                      "key": "updated_at_max",
+                      "value": "2020-01-01T07:00:00.000Z"
+                    },
+                    {
+                      "key": "updated_at_min",
+                      "value": "2020-01-01T07:00:00.000Z"
+                    },
+                    {
+                      "key": "released_at_min",
+                      "value": "2020-01-01T07:00:00.000Z"
+                    },
+                    {
+                      "key": "released_at_max",
+                      "value": "2020-01-01T07:00:00.000Z"
+                    },
+                    {
+                      "key": "sort_by",
+                      "value": "updated_at.desc"
+                    },
+                    {
+                      "key": "order_type",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "states",
+                      "value": "<string>"
+                    }
+                  ],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: oauth2",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "<token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {}
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"total_count\": 514.6624567131008,\n  \"processed_count\": 4084.324493713358,\n  \"status\": \"READY\",\n  \"expiry_time\": \"2006-10-26T10:50:45.340Z\",\n  \"created_at\": \"1951-09-08T10:24:21.733Z\",\n  \"completed_at\": \"2009-09-10T15:52:00.657Z\",\n  \"file_urls\": [\n    \"string\",\n    \"string\"\n  ],\n  \"id\": \"string\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "b23619f5-9d40-4e88-a8a1-196e74638e12",
+              "name": "failed to queue a download job",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "api",
+                    "v3",
+                    "orders",
+                    "bulk_get"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "limit",
+                      "value": "<integer>"
+                    },
+                    {
+                      "key": "updated_at_max",
+                      "value": "2020-01-01T07:00:00.000Z"
+                    },
+                    {
+                      "key": "updated_at_min",
+                      "value": "2020-01-01T07:00:00.000Z"
+                    },
+                    {
+                      "key": "released_at_min",
+                      "value": "2020-01-01T07:00:00.000Z"
+                    },
+                    {
+                      "key": "released_at_max",
+                      "value": "2020-01-01T07:00:00.000Z"
+                    },
+                    {
+                      "key": "sort_by",
+                      "value": "updated_at.desc"
+                    },
+                    {
+                      "key": "order_type",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "states",
+                      "value": "<string>"
+                    }
+                  ],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: oauth2",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "<token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {}
+              },
+              "status": "Bad Request",
+              "code": 400,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"message\": \"There is no such download job for the merchant.\",\n  \"code\": \"90001\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "6472eff6-97a1-489c-83ec-a5f2af742c8a",
+          "name": "Get batch download job status",
+          "request": {
+            "name": "Get batch download job status",
+            "description": {
+              "content": "Get batch download job status",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "api",
+                "v3",
+                "orders",
+                "bulk_get",
+                ":id"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": [
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<object-id>",
+                  "key": "id",
+                  "description": "(Required) ID of the batch download job to query"
+                }
+              ]
+            },
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "GET",
+            "auth": {
+              "type": "oauth2",
+              "oauth2": [
+                {
+                  "key": "scope",
+                  "value": "payments:write tickets:write epc:read returns:write returns:read fbw:read products:read payments:read fbw:write merchant:write products:write ratings:read videos:read compliance:write product_boost:read listing_quality:read webhook:write orders:read compliance:read fbs:read penalties:read penalties:write infractions:read orders:write merchant:read notifications:write announcements:read product_boost:write notifications:read webhook:read qoo10:read wps_parcel:write wps_parcel:read tickets:read infractions:write videos:write epc:write"
+                },
+                {
+                  "key": "redirect_uri",
+                  "value": "https://merchant.wish.com/api/v3/oauth/refresh_token"
+                },
+                {
+                  "key": "accessTokenUrl",
+                  "value": "https://merchant.wish.com/api/v3/oauth/access_token"
+                },
+                {
+                  "key": "authUrl",
+                  "value": "https://merchant.wish.com/v3/oauth/authorize"
+                },
+                {
+                  "key": "grant_type",
+                  "value": "authorization_code"
+                }
+              ]
+            }
+          },
+          "response": [
+            {
+              "id": "2bdee04f-41e7-411e-8b71-673ab3845b80",
+              "name": "successfully queried for the download job",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "api",
+                    "v3",
+                    "orders",
+                    "bulk_get",
+                    ":id"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<object-id>",
+                      "key": "id",
+                      "description": "(Required) ID of the batch download job to query"
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: oauth2",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "<token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"total_count\": 1568.8087939560635,\n  \"processed_count\": 6762.757467525948,\n  \"status\": \"READY\",\n  \"expiry_time\": \"2022-11-06T16:21:52.317Z\",\n  \"created_at\": \"1952-07-07T14:25:38.788Z\",\n  \"completed_at\": \"1959-11-20T23:55:06.984Z\",\n  \"file_urls\": [\n    \"string\",\n    \"string\"\n  ],\n  \"id\": \"string\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "1a6ff494-f294-4acf-8522-4c2532197511",
+              "name": "failed to query for a download job",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "api",
+                    "v3",
+                    "orders",
+                    "bulk_get",
+                    ":id"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<object-id>",
+                      "key": "id",
+                      "description": "(Required) ID of the batch download job to query"
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: oauth2",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "<token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "Bad Request",
+              "code": 400,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"message\": \"There is no such download job for the merchant.\",\n  \"code\": \"90001\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "98c0618a-8cdc-4d39-a10c-f3ec80f24ee5",
+          "name": "Ship or update tracking",
+          "request": {
+            "name": "Ship or update tracking",
+            "description": {
+              "content": "Ship or update tracking for an order. This operation is asynchronous.",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "api",
+                "v3",
+                "orders",
+                ":id",
+                "tracking"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": [
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<object-id>",
+                  "key": "id",
+                  "description": "(Required) Wish's unique identifier for the order"
+                }
+              ]
+            },
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "PUT",
+            "auth": {
+              "type": "oauth2",
+              "oauth2": [
+                {
+                  "key": "scope",
+                  "value": "payments:write tickets:write epc:read returns:write returns:read fbw:read products:read payments:read fbw:write merchant:write products:write ratings:read videos:read compliance:write product_boost:read listing_quality:read webhook:write orders:read compliance:read fbs:read penalties:read penalties:write infractions:read orders:write merchant:read notifications:write announcements:read product_boost:write notifications:read webhook:read qoo10:read wps_parcel:write wps_parcel:read tickets:read infractions:write videos:write epc:write"
+                },
+                {
+                  "key": "redirect_uri",
+                  "value": "https://merchant.wish.com/api/v3/oauth/refresh_token"
+                },
+                {
+                  "key": "accessTokenUrl",
+                  "value": "https://merchant.wish.com/api/v3/oauth/access_token"
+                },
+                {
+                  "key": "authUrl",
+                  "value": "https://merchant.wish.com/v3/oauth/authorize"
+                },
+                {
+                  "key": "grant_type",
+                  "value": "authorization_code"
+                }
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"shipping_provider\": \"<string>\",\n  \"tracking_number\": \"<string>\",\n  \"origin_country\": \"<iso-3166>\",\n  \"ship_note\": \"<string>\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": [
+            {
+              "id": "25992215-425f-4300-bb3d-bd1b3d695004",
+              "name": "Successful request",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "api",
+                    "v3",
+                    "orders",
+                    ":id",
+                    "tracking"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<object-id>",
+                      "key": "id",
+                      "description": "(Required) Wish's unique identifier for the order"
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: oauth2",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "<token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "PUT",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"shipping_provider\": \"<string>\",\n  \"tracking_number\": \"<string>\",\n  \"origin_country\": \"<iso-3166>\",\n  \"ship_note\": \"<string>\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"tracking_information\": [\n    {\n      \"tracking_number\": \"string\",\n      \"origin_country\": \"string\",\n      \"ship_note\": \"string\",\n      \"shipping_provider\": {\n        \"name\": \"string\"\n      }\n    },\n    {\n      \"tracking_number\": \"string\",\n      \"origin_country\": \"string\",\n      \"ship_note\": \"string\",\n      \"shipping_provider\": {\n        \"name\": \"string\"\n      }\n    }\n  ],\n  \"warehouse_information\": {\n    \"warehouse_type\": \"SECONDARY\",\n    \"warehouse_name\": \"string\",\n    \"warehouse_id\": \"string\",\n    \"fbw_information\": {\n      \"fbw_warehouse_code\": \"string\",\n      \"fbw_fees\": [\n        {\n          \"amount\": {},\n          \"fee_name\": \"string\",\n          \"fee_type\": \"ORDER_HANDLING_FEE\"\n        },\n        {\n          \"amount\": {},\n          \"fee_name\": \"string\",\n          \"fee_type\": \"PER_ORDER\"\n        }\n      ],\n      \"lot_information\": [\n        {\n          \"lot_id\": \"string\",\n          \"quantity\": 8578\n        },\n        {\n          \"lot_id\": \"string\",\n          \"quantity\": 4172\n        }\n      ]\n    }\n  },\n  \"order_payment\": {\n    \"carrier_subsidies\": [\n      {\n        \"subsidy\": {\n          \"amount\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          \"currency_code\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          }\n        },\n        \"carrier_name\": \"string\"\n      },\n      {\n        \"subsidy\": {\n          \"amount\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          \"currency_code\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          }\n        },\n        \"carrier_name\": \"string\"\n      }\n    ],\n    \"shipping_reimbursements\": [\n      {\n        \"status\": \"FINAL\",\n        \"amount\": {\n          \"amount\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          \"currency_code\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          }\n        }\n      },\n      {\n        \"status\": \"PENDING\",\n        \"amount\": {\n          \"amount\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          \"currency_code\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          }\n        }\n      }\n    ],\n    \"rev_share\": {\n      \"merchant_commission_fees\": {\n        \"amount\": {\n          \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n        },\n        \"currency_code\": {\n          \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n        }\n      },\n      \"destination_region\": \"EUROPEAN_UNION\",\n      \"rev_share\": 2234.065386385148,\n      \"product_category\": \"SHOES\",\n      \"entity_region\": \"NORTH_AMERICA\",\n      \"source_region\": \"NORTH_AMERICA\",\n      \"shipping_type\": \"WISH_EXPRESS\"\n    },\n    \"general_payment_details\": {\n      \"original_discounted_price\": {\n        \"amount\": {\n          \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n        },\n        \"currency_code\": {\n          \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n        }\n      },\n      \"shipping_merchant_payment\": {\n        \"amount\": {\n          \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n        },\n        \"currency_code\": {\n          \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n        }\n      },\n      \"discounted_price\": {\n        \"amount\": {\n          \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n        },\n        \"currency_code\": {\n          \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n        }\n      },\n      \"original_product_price\": {\n        \"amount\": {\n          \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n        },\n        \"currency_code\": {\n          \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n        }\n      },\n      \"payment_total\": {\n        \"amount\": {\n          \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n        },\n        \"currency_code\": {\n          \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n        }\n      },\n      \"product_price\": {\n        \"amount\": {\n          \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n        },\n        \"currency_code\": {\n          \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n        }\n      },\n      \"product_merchant_payment\": {\n        \"amount\": {\n          \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n        },\n        \"currency_code\": {\n          \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n        }\n      },\n      \"product_shipping_price\": {\n        \"amount\": {\n          \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n        },\n        \"currency_code\": {\n          \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n        }\n      },\n      \"product_quantity\": 2151,\n      \"customer_paid_prices_detail\": {\n        \"total\": {\n          \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n        },\n        \"product_price\": {\n          \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n        },\n        \"product_price_total\": {\n          \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n        },\n        \"shipping_price\": {\n          \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n        },\n        \"shipping_price_total\": {\n          \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n        }\n      }\n    }\n  },\n  \"fulfillment_records\": [\n    {\n      \"event_type\": \"CONFIRMED_DELIVERED\",\n      \"event_time\": \"1990-11-03T05:08:42.315Z\"\n    },\n    {\n      \"event_type\": \"TRACKING_CANCELLED\",\n      \"event_time\": \"2007-09-14T17:20:57.497Z\"\n    }\n  ],\n  \"released_at\": \"1976-02-21T02:57:49.816Z\",\n  \"product_information\": {\n    \"sku\": \"string\",\n    \"name\": \"string\",\n    \"color\": \"string\",\n    \"manufactured_country\": \"string\",\n    \"variation_image_url\": \"string\",\n    \"variation_id\": \"string\",\n    \"id\": \"string\",\n    \"size\": \"string\"\n  },\n  \"penalties\": [\n    \"string\",\n    \"string\"\n  ],\n  \"processing_status\": \"FAILED\",\n  \"updated_at\": \"1978-02-01T12:54:51.416Z\",\n  \"full_address\": {\n    \"shipping_detail\": {\n      \"phone_number\": {\n        \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n      },\n      \"region\": \"string\",\n      \"neighborhood\": \"string\",\n      \"name\": \"string\"\n    }\n  },\n  \"processing_source\": \"MODIFY_SHIPPING\",\n  \"fulfillment_requirements\": {\n    \"expected_ship_time\": \"1953-07-09T03:59:10.533Z\",\n    \"expected_delivery_time\": \"2002-02-27T10:07:54.861Z\"\n  },\n  \"state\": \"<string>\",\n  \"transaction_id\": \"string\",\n  \"tax_information\": {\n    \"transaction_tax\": [\n      {\n        \"tax_amount_in_merchant_currency\": {\n          \"amount\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          \"currency_code\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          }\n        },\n        \"tax_amount_in_authority_currency\": {\n          \"amount\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          \"currency_code\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          }\n        },\n        \"tax_type\": \"REFUNDED_TRANSACTION_TAX\",\n        \"remit_type\": \"MERCHANT_REMIT\"\n      },\n      {\n        \"tax_amount_in_merchant_currency\": {\n          \"amount\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          \"currency_code\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          }\n        },\n        \"tax_amount_in_authority_currency\": {\n          \"amount\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          \"currency_code\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          }\n        },\n        \"tax_type\": \"REFUNDED_TRANSACTION_TAX\",\n        \"remit_type\": \"MERCHANT_REMIT\"\n      }\n    ],\n    \"customer_identity_number_type\": \"PASSPORT\",\n    \"vat_information\": {\n      \"eu_vat_customs_declaration\": {\n        \"product\": {\n          \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n        },\n        \"merchant_identity\": {\n          \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n        },\n        \"vat_paid_in_authority_currency\": {\n          \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n        },\n        \"vat_paid_in_customer_currency\": {\n          \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n        },\n        \"shipping_cost_in_customer_currency\": {\n          \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n        },\n        \"customer_identity\": {\n          \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n        },\n        \"vat_payer\": {\n          \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n        },\n        \"merchant_address\": {\n          \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n        },\n        \"invoice_amount_in_customer_currency\": {\n          \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n        },\n        \"shipping_cost_in_authority_currency\": {\n          \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n        },\n        \"invoice_amount_in_authority_currency\": {\n          \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n        },\n        \"customer_address\": {\n          \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n        },\n        \"merchant_name\": {\n          \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n        },\n        \"platform_status\": {\n          \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n        },\n        \"customer_name\": {\n          \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n        }\n      },\n      \"vat_amount\": {\n        \"shipping_level_vat\": {\n          \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n        },\n        \"final_vat\": {\n          \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n        },\n        \"product_level_vat\": {\n          \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n        }\n      },\n      \"country_code\": \"string\",\n      \"required_vat_numbers\": {\n        \"voec\": {\n          \"number\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          \"entity\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          }\n        },\n        \"eori\": {\n          \"number\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          \"entity\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          }\n        },\n        \"vat\": {\n          \"number\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          \"name\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          \"entity\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          }\n        }\n      },\n      \"vat_instructions\": \"string\",\n      \"additional_materials\": [\n        \"PACKAGE_OVERVIEW_DOCUMENT\",\n        \"PACKAGE_OVERVIEW_DOCUMENT\"\n      ]\n    },\n    \"customer_identity_number\": \"string\"\n  },\n  \"refunds\": [\n    {\n      \"refund_reason_note\": \"string\",\n      \"refund_source\": \"PAYMENT_PROVIDER\",\n      \"refund_amount\": {\n        \"amount\": 10.4,\n        \"currency_code\": \"USD\"\n      },\n      \"merchant_responsible_amount\": {\n        \"amount\": 10.4,\n        \"currency_code\": \"USD\"\n      },\n      \"refund_time\": \"1979-11-17T12:18:23.634Z\",\n      \"refund_reason\": \"string\"\n    },\n    {\n      \"refund_reason_note\": \"string\",\n      \"refund_source\": \"MERCHANT\",\n      \"refund_amount\": {\n        \"amount\": 10.4,\n        \"currency_code\": \"USD\"\n      },\n      \"merchant_responsible_amount\": {\n        \"amount\": 10.4,\n        \"currency_code\": \"USD\"\n      },\n      \"refund_time\": \"1975-08-08T21:30:40.560Z\",\n      \"refund_reason\": \"string\"\n    }\n  ],\n  \"total_frs_quantity\": 6165,\n  \"special_programs\": [\n    {\n      \"status\": \"PENDING\",\n      \"display_name\": \"string\"\n    },\n    {\n      \"status\": \"FAILED\",\n      \"display_name\": \"string\"\n    }\n  ],\n  \"id\": \"string\",\n  \"fulfillment_order_types\": [\n    \"OPTIONAL_ADVANCED_LOGISTICS\",\n    \"FULFILLED_BY_STORE\"\n  ]\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "dd472209-8309-4b68-bc3d-699e0d03c8da",
+          "name": "Get valid refund reasons",
+          "request": {
+            "name": "Get valid refund reasons",
+            "description": {
+              "content": "Valid refund reasons can differ per order - use this endpoint to reference valid refund reasons. Note: refund reasons can change throughout an order's lifecycle, so reference this just before refunding.",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "api",
+                "v3",
+                "orders",
+                ":id",
+                "refund_reasons"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": [
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<object-id>",
+                  "key": "id",
+                  "description": "(Required) Wish's unique identifier for the order"
+                }
+              ]
+            },
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "GET",
+            "auth": {
+              "type": "oauth2",
+              "oauth2": [
+                {
+                  "key": "scope",
+                  "value": "payments:write tickets:write epc:read returns:write returns:read fbw:read products:read payments:read fbw:write merchant:write products:write ratings:read videos:read compliance:write product_boost:read listing_quality:read webhook:write orders:read compliance:read fbs:read penalties:read penalties:write infractions:read orders:write merchant:read notifications:write announcements:read product_boost:write notifications:read webhook:read qoo10:read wps_parcel:write wps_parcel:read tickets:read infractions:write videos:write epc:write"
+                },
+                {
+                  "key": "redirect_uri",
+                  "value": "https://merchant.wish.com/api/v3/oauth/refresh_token"
+                },
+                {
+                  "key": "accessTokenUrl",
+                  "value": "https://merchant.wish.com/api/v3/oauth/access_token"
+                },
+                {
+                  "key": "authUrl",
+                  "value": "https://merchant.wish.com/v3/oauth/authorize"
+                },
+                {
+                  "key": "grant_type",
+                  "value": "authorization_code"
+                }
+              ]
+            }
+          },
+          "response": [
+            {
+              "id": "15e16643-b134-4329-a8b9-14f8b17c499d",
+              "name": "Successful request - List of valid refund reasons",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "api",
+                    "v3",
+                    "orders",
+                    ":id",
+                    "refund_reasons"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<object-id>",
+                      "key": "id",
+                      "description": "(Required) Wish's unique identifier for the order"
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: oauth2",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "<token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "[\n  \"MERCHANT_REPORTED_ORDER\",\n  \"UNABLE_TO_SHIP\"\n]",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "23244290-ef4c-4748-91ed-5b84997dc4cf",
+          "name": "Update an LTL order",
+          "request": {
+            "name": "Update an LTL order",
+            "description": {
+              "content": "Update tracking for a less-than-truckload (LTL) order. This operation is synchronous.",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "api",
+                "v3",
+                "orders",
+                ":id"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": [
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<object-id>",
+                  "key": "id",
+                  "description": "(Required) Wish's unique identifier for the order"
+                }
+              ]
+            },
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "PUT",
+            "auth": {
+              "type": "oauth2",
+              "oauth2": [
+                {
+                  "key": "scope",
+                  "value": "payments:write tickets:write epc:read returns:write returns:read fbw:read products:read payments:read fbw:write merchant:write products:write ratings:read videos:read compliance:write product_boost:read listing_quality:read webhook:write orders:read compliance:read fbs:read penalties:read penalties:write infractions:read orders:write merchant:read notifications:write announcements:read product_boost:write notifications:read webhook:read qoo10:read wps_parcel:write wps_parcel:read tickets:read infractions:write videos:write epc:write"
+                },
+                {
+                  "key": "redirect_uri",
+                  "value": "https://merchant.wish.com/api/v3/oauth/refresh_token"
+                },
+                {
+                  "key": "accessTokenUrl",
+                  "value": "https://merchant.wish.com/api/v3/oauth/access_token"
+                },
+                {
+                  "key": "authUrl",
+                  "value": "https://merchant.wish.com/v3/oauth/authorize"
+                },
+                {
+                  "key": "grant_type",
+                  "value": "authorization_code"
+                }
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"delivery_receipt_file_url\": \"<string>\",\n  \"delivered_at\": \"<dateTime>\",\n  \"tracking_url\": \"<string>\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": [
+            {
+              "id": "3b41f553-eecd-471a-81a1-69877f5a4e54",
+              "name": "Successful request",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "api",
+                    "v3",
+                    "orders",
+                    ":id"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<object-id>",
+                      "key": "id",
+                      "description": "(Required) Wish's unique identifier for the order"
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: oauth2",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "<token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "PUT",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"delivery_receipt_file_url\": \"<string>\",\n  \"delivered_at\": \"<dateTime>\",\n  \"tracking_url\": \"<string>\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"tracking_information\": [\n    {\n      \"tracking_number\": \"string\",\n      \"origin_country\": \"string\",\n      \"ship_note\": \"string\",\n      \"shipping_provider\": {\n        \"name\": \"string\"\n      }\n    },\n    {\n      \"tracking_number\": \"string\",\n      \"origin_country\": \"string\",\n      \"ship_note\": \"string\",\n      \"shipping_provider\": {\n        \"name\": \"string\"\n      }\n    }\n  ],\n  \"warehouse_information\": {\n    \"warehouse_type\": \"PRIMARY\",\n    \"warehouse_name\": \"string\",\n    \"warehouse_id\": \"string\",\n    \"fbw_information\": {\n      \"fbw_warehouse_code\": \"string\",\n      \"fbw_fees\": [\n        {\n          \"amount\": {},\n          \"fee_name\": \"string\",\n          \"fee_type\": \"PER_RETURN_SHIPMENT\"\n        },\n        {\n          \"amount\": {},\n          \"fee_name\": \"string\",\n          \"fee_type\": \"PER_SKU\"\n        }\n      ],\n      \"lot_information\": [\n        {\n          \"lot_id\": \"string\",\n          \"quantity\": 7727\n        },\n        {\n          \"lot_id\": \"string\",\n          \"quantity\": 4473\n        }\n      ]\n    }\n  },\n  \"order_payment\": {\n    \"carrier_subsidies\": [\n      {\n        \"subsidy\": {\n          \"amount\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          \"currency_code\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          }\n        },\n        \"carrier_name\": \"string\"\n      },\n      {\n        \"subsidy\": {\n          \"amount\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          \"currency_code\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          }\n        },\n        \"carrier_name\": \"string\"\n      }\n    ],\n    \"shipping_reimbursements\": [\n      {\n        \"status\": \"FINAL\",\n        \"amount\": {\n          \"amount\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          \"currency_code\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          }\n        }\n      },\n      {\n        \"status\": \"PENDING\",\n        \"amount\": {\n          \"amount\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          \"currency_code\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          }\n        }\n      }\n    ],\n    \"rev_share\": {\n      \"merchant_commission_fees\": {\n        \"amount\": {\n          \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n        },\n        \"currency_code\": {\n          \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n        }\n      },\n      \"destination_region\": \"EUROPEAN_UNION\",\n      \"rev_share\": 6028.387990749884,\n      \"product_category\": \"ELECTRONICS\",\n      \"entity_region\": \"NORTH_AMERICA\",\n      \"source_region\": \"EUROPEAN_UNION\",\n      \"shipping_type\": \"WISH_EXPRESS\"\n    },\n    \"general_payment_details\": {\n      \"original_discounted_price\": {\n        \"amount\": {\n          \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n        },\n        \"currency_code\": {\n          \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n        }\n      },\n      \"shipping_merchant_payment\": {\n        \"amount\": {\n          \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n        },\n        \"currency_code\": {\n          \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n        }\n      },\n      \"discounted_price\": {\n        \"amount\": {\n          \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n        },\n        \"currency_code\": {\n          \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n        }\n      },\n      \"original_product_price\": {\n        \"amount\": {\n          \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n        },\n        \"currency_code\": {\n          \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n        }\n      },\n      \"payment_total\": {\n        \"amount\": {\n          \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n        },\n        \"currency_code\": {\n          \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n        }\n      },\n      \"product_price\": {\n        \"amount\": {\n          \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n        },\n        \"currency_code\": {\n          \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n        }\n      },\n      \"product_merchant_payment\": {\n        \"amount\": {\n          \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n        },\n        \"currency_code\": {\n          \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n        }\n      },\n      \"product_shipping_price\": {\n        \"amount\": {\n          \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n        },\n        \"currency_code\": {\n          \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n        }\n      },\n      \"product_quantity\": 4193,\n      \"customer_paid_prices_detail\": {\n        \"total\": {\n          \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n        },\n        \"product_price\": {\n          \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n        },\n        \"product_price_total\": {\n          \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n        },\n        \"shipping_price\": {\n          \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n        },\n        \"shipping_price_total\": {\n          \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n        }\n      }\n    }\n  },\n  \"fulfillment_records\": [\n    {\n      \"event_type\": \"CONFIRM_FULFILLED\",\n      \"event_time\": \"1974-07-20T21:35:31.227Z\"\n    },\n    {\n      \"event_type\": \"CONFIRMED_DELIVERED\",\n      \"event_time\": \"1995-08-05T18:26:42.629Z\"\n    }\n  ],\n  \"released_at\": \"1994-06-25T16:11:27.183Z\",\n  \"product_information\": {\n    \"sku\": \"string\",\n    \"name\": \"string\",\n    \"color\": \"string\",\n    \"manufactured_country\": \"string\",\n    \"variation_image_url\": \"string\",\n    \"variation_id\": \"string\",\n    \"id\": \"string\",\n    \"size\": \"string\"\n  },\n  \"penalties\": [\n    \"string\",\n    \"string\"\n  ],\n  \"processing_status\": \"FAILED\",\n  \"updated_at\": \"1948-12-17T06:05:19.134Z\",\n  \"full_address\": {\n    \"shipping_detail\": {\n      \"phone_number\": {\n        \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n      },\n      \"region\": \"string\",\n      \"neighborhood\": \"string\",\n      \"name\": \"string\"\n    }\n  },\n  \"processing_source\": \"REFUND\",\n  \"fulfillment_requirements\": {\n    \"expected_ship_time\": \"1973-02-21T17:43:30.539Z\",\n    \"expected_delivery_time\": \"2022-11-26T11:56:33.753Z\"\n  },\n  \"state\": \"<string>\",\n  \"transaction_id\": \"string\",\n  \"tax_information\": {\n    \"transaction_tax\": [\n      {\n        \"tax_amount_in_merchant_currency\": {\n          \"amount\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          \"currency_code\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          }\n        },\n        \"tax_amount_in_authority_currency\": {\n          \"amount\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          \"currency_code\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          }\n        },\n        \"tax_type\": \"REFUNDED_TRANSACTION_TAX\",\n        \"remit_type\": \"WISH_REMIT\"\n      },\n      {\n        \"tax_amount_in_merchant_currency\": {\n          \"amount\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          \"currency_code\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          }\n        },\n        \"tax_amount_in_authority_currency\": {\n          \"amount\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          \"currency_code\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          }\n        },\n        \"tax_type\": \"TRANSACTION_TAX\",\n        \"remit_type\": \"WISH_REMIT\"\n      }\n    ],\n    \"customer_identity_number_type\": \"PCCC\",\n    \"vat_information\": {\n      \"eu_vat_customs_declaration\": {\n        \"product\": {\n          \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n        },\n        \"merchant_identity\": {\n          \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n        },\n        \"vat_paid_in_authority_currency\": {\n          \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n        },\n        \"vat_paid_in_customer_currency\": {\n          \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n        },\n        \"shipping_cost_in_customer_currency\": {\n          \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n        },\n        \"customer_identity\": {\n          \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n        },\n        \"vat_payer\": {\n          \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n        },\n        \"merchant_address\": {\n          \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n        },\n        \"invoice_amount_in_customer_currency\": {\n          \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n        },\n        \"shipping_cost_in_authority_currency\": {\n          \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n        },\n        \"invoice_amount_in_authority_currency\": {\n          \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n        },\n        \"customer_address\": {\n          \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n        },\n        \"merchant_name\": {\n          \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n        },\n        \"platform_status\": {\n          \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n        },\n        \"customer_name\": {\n          \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n        }\n      },\n      \"vat_amount\": {\n        \"shipping_level_vat\": {\n          \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n        },\n        \"final_vat\": {\n          \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n        },\n        \"product_level_vat\": {\n          \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n        }\n      },\n      \"country_code\": \"string\",\n      \"required_vat_numbers\": {\n        \"voec\": {\n          \"number\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          \"entity\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          }\n        },\n        \"eori\": {\n          \"number\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          \"entity\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          }\n        },\n        \"vat\": {\n          \"number\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          \"name\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          \"entity\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          }\n        }\n      },\n      \"vat_instructions\": \"string\",\n      \"additional_materials\": [\n        \"PACKAGE_OVERVIEW_DOCUMENT\",\n        \"PACKAGE_OVERVIEW_DOCUMENT\"\n      ]\n    },\n    \"customer_identity_number\": \"string\"\n  },\n  \"refunds\": [\n    {\n      \"refund_reason_note\": \"string\",\n      \"refund_source\": \"PAYMENT_PROVIDER\",\n      \"refund_amount\": {\n        \"amount\": 10.4,\n        \"currency_code\": \"USD\"\n      },\n      \"merchant_responsible_amount\": {\n        \"amount\": 10.4,\n        \"currency_code\": \"USD\"\n      },\n      \"refund_time\": \"1958-10-21T02:37:09.195Z\",\n      \"refund_reason\": \"string\"\n    },\n    {\n      \"refund_reason_note\": \"string\",\n      \"refund_source\": \"MERCHANT\",\n      \"refund_amount\": {\n        \"amount\": 10.4,\n        \"currency_code\": \"USD\"\n      },\n      \"merchant_responsible_amount\": {\n        \"amount\": 10.4,\n        \"currency_code\": \"USD\"\n      },\n      \"refund_time\": \"2015-08-05T10:24:26.701Z\",\n      \"refund_reason\": \"string\"\n    }\n  ],\n  \"total_frs_quantity\": 6971,\n  \"special_programs\": [\n    {\n      \"status\": \"PENDING\",\n      \"display_name\": \"string\"\n    },\n    {\n      \"status\": \"PENDING\",\n      \"display_name\": \"string\"\n    }\n  ],\n  \"id\": \"string\",\n  \"fulfillment_order_types\": [\n    \"LESS_THAN_TRUCKLOAD\",\n    \"LESS_THAN_TRUCKLOAD\"\n  ]\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "6271ae03-03d2-4abb-b6aa-5afca0b1e125",
+          "name": "Get an order",
+          "request": {
+            "name": "Get an order",
+            "description": {
+              "content": "Retrieves the details of an existing order.",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "api",
+                "v3",
+                "orders",
+                ":id"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": [
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<object-id>",
+                  "key": "id",
+                  "description": "(Required) Wish's unique identifier for the order"
+                }
+              ]
+            },
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "GET",
+            "auth": {
+              "type": "oauth2",
+              "oauth2": [
+                {
+                  "key": "scope",
+                  "value": "payments:write tickets:write epc:read returns:write returns:read fbw:read products:read payments:read fbw:write merchant:write products:write ratings:read videos:read compliance:write product_boost:read listing_quality:read webhook:write orders:read compliance:read fbs:read penalties:read penalties:write infractions:read orders:write merchant:read notifications:write announcements:read product_boost:write notifications:read webhook:read qoo10:read wps_parcel:write wps_parcel:read tickets:read infractions:write videos:write epc:write"
+                },
+                {
+                  "key": "redirect_uri",
+                  "value": "https://merchant.wish.com/api/v3/oauth/refresh_token"
+                },
+                {
+                  "key": "accessTokenUrl",
+                  "value": "https://merchant.wish.com/api/v3/oauth/access_token"
+                },
+                {
+                  "key": "authUrl",
+                  "value": "https://merchant.wish.com/v3/oauth/authorize"
+                },
+                {
+                  "key": "grant_type",
+                  "value": "authorization_code"
+                }
+              ]
+            }
+          },
+          "response": [
+            {
+              "id": "b55a46bc-bbe2-4ac0-a882-8fcb0e7b61bf",
+              "name": "Successful request - Order-level schema for the desired order ID",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "api",
+                    "v3",
+                    "orders",
+                    ":id"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<object-id>",
+                      "key": "id",
+                      "description": "(Required) Wish's unique identifier for the order"
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: oauth2",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "<token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"tracking_information\": [\n    {\n      \"tracking_number\": \"string\",\n      \"origin_country\": \"string\",\n      \"ship_note\": \"string\",\n      \"shipping_provider\": {\n        \"name\": \"string\"\n      }\n    },\n    {\n      \"tracking_number\": \"string\",\n      \"origin_country\": \"string\",\n      \"ship_note\": \"string\",\n      \"shipping_provider\": {\n        \"name\": \"string\"\n      }\n    }\n  ],\n  \"warehouse_information\": {\n    \"warehouse_type\": \"PRIMARY\",\n    \"warehouse_name\": \"string\",\n    \"warehouse_id\": \"string\",\n    \"fbw_information\": {\n      \"fbw_warehouse_code\": \"string\",\n      \"fbw_fees\": [\n        {\n          \"amount\": {},\n          \"fee_name\": \"string\",\n          \"fee_type\": \"PER_RETURN_SHIPMENT\"\n        },\n        {\n          \"amount\": {},\n          \"fee_name\": \"string\",\n          \"fee_type\": \"PER_SKU\"\n        }\n      ],\n      \"lot_information\": [\n        {\n          \"lot_id\": \"string\",\n          \"quantity\": 7727\n        },\n        {\n          \"lot_id\": \"string\",\n          \"quantity\": 4473\n        }\n      ]\n    }\n  },\n  \"order_payment\": {\n    \"carrier_subsidies\": [\n      {\n        \"subsidy\": {\n          \"amount\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          \"currency_code\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          }\n        },\n        \"carrier_name\": \"string\"\n      },\n      {\n        \"subsidy\": {\n          \"amount\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          \"currency_code\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          }\n        },\n        \"carrier_name\": \"string\"\n      }\n    ],\n    \"shipping_reimbursements\": [\n      {\n        \"status\": \"FINAL\",\n        \"amount\": {\n          \"amount\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          \"currency_code\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          }\n        }\n      },\n      {\n        \"status\": \"PENDING\",\n        \"amount\": {\n          \"amount\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          \"currency_code\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          }\n        }\n      }\n    ],\n    \"rev_share\": {\n      \"merchant_commission_fees\": {\n        \"amount\": {\n          \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n        },\n        \"currency_code\": {\n          \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n        }\n      },\n      \"destination_region\": \"EUROPEAN_UNION\",\n      \"rev_share\": 6028.387990749884,\n      \"product_category\": \"ELECTRONICS\",\n      \"entity_region\": \"NORTH_AMERICA\",\n      \"source_region\": \"EUROPEAN_UNION\",\n      \"shipping_type\": \"WISH_EXPRESS\"\n    },\n    \"general_payment_details\": {\n      \"original_discounted_price\": {\n        \"amount\": {\n          \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n        },\n        \"currency_code\": {\n          \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n        }\n      },\n      \"shipping_merchant_payment\": {\n        \"amount\": {\n          \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n        },\n        \"currency_code\": {\n          \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n        }\n      },\n      \"discounted_price\": {\n        \"amount\": {\n          \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n        },\n        \"currency_code\": {\n          \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n        }\n      },\n      \"original_product_price\": {\n        \"amount\": {\n          \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n        },\n        \"currency_code\": {\n          \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n        }\n      },\n      \"payment_total\": {\n        \"amount\": {\n          \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n        },\n        \"currency_code\": {\n          \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n        }\n      },\n      \"product_price\": {\n        \"amount\": {\n          \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n        },\n        \"currency_code\": {\n          \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n        }\n      },\n      \"product_merchant_payment\": {\n        \"amount\": {\n          \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n        },\n        \"currency_code\": {\n          \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n        }\n      },\n      \"product_shipping_price\": {\n        \"amount\": {\n          \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n        },\n        \"currency_code\": {\n          \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n        }\n      },\n      \"product_quantity\": 4193,\n      \"customer_paid_prices_detail\": {\n        \"total\": {\n          \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n        },\n        \"product_price\": {\n          \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n        },\n        \"product_price_total\": {\n          \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n        },\n        \"shipping_price\": {\n          \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n        },\n        \"shipping_price_total\": {\n          \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n        }\n      }\n    }\n  },\n  \"fulfillment_records\": [\n    {\n      \"event_type\": \"CONFIRM_FULFILLED\",\n      \"event_time\": \"1974-07-20T21:35:31.227Z\"\n    },\n    {\n      \"event_type\": \"CONFIRMED_DELIVERED\",\n      \"event_time\": \"1995-08-05T18:26:42.629Z\"\n    }\n  ],\n  \"released_at\": \"1994-06-25T16:11:27.183Z\",\n  \"product_information\": {\n    \"sku\": \"string\",\n    \"name\": \"string\",\n    \"color\": \"string\",\n    \"manufactured_country\": \"string\",\n    \"variation_image_url\": \"string\",\n    \"variation_id\": \"string\",\n    \"id\": \"string\",\n    \"size\": \"string\"\n  },\n  \"penalties\": [\n    \"string\",\n    \"string\"\n  ],\n  \"processing_status\": \"FAILED\",\n  \"updated_at\": \"1948-12-17T06:05:19.134Z\",\n  \"full_address\": {\n    \"shipping_detail\": {\n      \"phone_number\": {\n        \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n      },\n      \"region\": \"string\",\n      \"neighborhood\": \"string\",\n      \"name\": \"string\"\n    }\n  },\n  \"processing_source\": \"REFUND\",\n  \"fulfillment_requirements\": {\n    \"expected_ship_time\": \"1973-02-21T17:43:30.539Z\",\n    \"expected_delivery_time\": \"2022-11-26T11:56:33.753Z\"\n  },\n  \"state\": \"<string>\",\n  \"transaction_id\": \"string\",\n  \"tax_information\": {\n    \"transaction_tax\": [\n      {\n        \"tax_amount_in_merchant_currency\": {\n          \"amount\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          \"currency_code\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          }\n        },\n        \"tax_amount_in_authority_currency\": {\n          \"amount\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          \"currency_code\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          }\n        },\n        \"tax_type\": \"REFUNDED_TRANSACTION_TAX\",\n        \"remit_type\": \"WISH_REMIT\"\n      },\n      {\n        \"tax_amount_in_merchant_currency\": {\n          \"amount\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          \"currency_code\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          }\n        },\n        \"tax_amount_in_authority_currency\": {\n          \"amount\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          \"currency_code\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          }\n        },\n        \"tax_type\": \"TRANSACTION_TAX\",\n        \"remit_type\": \"WISH_REMIT\"\n      }\n    ],\n    \"customer_identity_number_type\": \"PCCC\",\n    \"vat_information\": {\n      \"eu_vat_customs_declaration\": {\n        \"product\": {\n          \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n        },\n        \"merchant_identity\": {\n          \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n        },\n        \"vat_paid_in_authority_currency\": {\n          \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n        },\n        \"vat_paid_in_customer_currency\": {\n          \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n        },\n        \"shipping_cost_in_customer_currency\": {\n          \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n        },\n        \"customer_identity\": {\n          \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n        },\n        \"vat_payer\": {\n          \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n        },\n        \"merchant_address\": {\n          \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n        },\n        \"invoice_amount_in_customer_currency\": {\n          \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n        },\n        \"shipping_cost_in_authority_currency\": {\n          \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n        },\n        \"invoice_amount_in_authority_currency\": {\n          \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n        },\n        \"customer_address\": {\n          \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n        },\n        \"merchant_name\": {\n          \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n        },\n        \"platform_status\": {\n          \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n        },\n        \"customer_name\": {\n          \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n        }\n      },\n      \"vat_amount\": {\n        \"shipping_level_vat\": {\n          \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n        },\n        \"final_vat\": {\n          \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n        },\n        \"product_level_vat\": {\n          \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n        }\n      },\n      \"country_code\": \"string\",\n      \"required_vat_numbers\": {\n        \"voec\": {\n          \"number\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          \"entity\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          }\n        },\n        \"eori\": {\n          \"number\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          \"entity\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          }\n        },\n        \"vat\": {\n          \"number\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          \"name\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          \"entity\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          }\n        }\n      },\n      \"vat_instructions\": \"string\",\n      \"additional_materials\": [\n        \"PACKAGE_OVERVIEW_DOCUMENT\",\n        \"PACKAGE_OVERVIEW_DOCUMENT\"\n      ]\n    },\n    \"customer_identity_number\": \"string\"\n  },\n  \"refunds\": [\n    {\n      \"refund_reason_note\": \"string\",\n      \"refund_source\": \"PAYMENT_PROVIDER\",\n      \"refund_amount\": {\n        \"amount\": 10.4,\n        \"currency_code\": \"USD\"\n      },\n      \"merchant_responsible_amount\": {\n        \"amount\": 10.4,\n        \"currency_code\": \"USD\"\n      },\n      \"refund_time\": \"1958-10-21T02:37:09.195Z\",\n      \"refund_reason\": \"string\"\n    },\n    {\n      \"refund_reason_note\": \"string\",\n      \"refund_source\": \"MERCHANT\",\n      \"refund_amount\": {\n        \"amount\": 10.4,\n        \"currency_code\": \"USD\"\n      },\n      \"merchant_responsible_amount\": {\n        \"amount\": 10.4,\n        \"currency_code\": \"USD\"\n      },\n      \"refund_time\": \"2015-08-05T10:24:26.701Z\",\n      \"refund_reason\": \"string\"\n    }\n  ],\n  \"total_frs_quantity\": 6971,\n  \"special_programs\": [\n    {\n      \"status\": \"PENDING\",\n      \"display_name\": \"string\"\n    },\n    {\n      \"status\": \"PENDING\",\n      \"display_name\": \"string\"\n    }\n  ],\n  \"id\": \"string\",\n  \"fulfillment_order_types\": [\n    \"LESS_THAN_TRUCKLOAD\",\n    \"LESS_THAN_TRUCKLOAD\"\n  ]\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "c536c5df-f1eb-4a53-a10e-54bfb5a219e8",
+          "name": "Modify shipping address",
+          "request": {
+            "name": "Modify shipping address",
+            "description": {
+              "content": "Modify shipping address for an order before it is shipped. This operation is asynchronous.",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "api",
+                "v3",
+                "orders",
+                ":id",
+                "address"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": [
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<object-id>",
+                  "key": "id",
+                  "description": "(Required) Wish's unique identifier for the order"
+                }
+              ]
+            },
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "PUT",
+            "auth": {
+              "type": "oauth2",
+              "oauth2": [
+                {
+                  "key": "scope",
+                  "value": "payments:write tickets:write epc:read returns:write returns:read fbw:read products:read payments:read fbw:write merchant:write products:write ratings:read videos:read compliance:write product_boost:read listing_quality:read webhook:write orders:read compliance:read fbs:read penalties:read penalties:write infractions:read orders:write merchant:read notifications:write announcements:read product_boost:write notifications:read webhook:read qoo10:read wps_parcel:write wps_parcel:read tickets:read infractions:write videos:write epc:write"
+                },
+                {
+                  "key": "redirect_uri",
+                  "value": "https://merchant.wish.com/api/v3/oauth/refresh_token"
+                },
+                {
+                  "key": "accessTokenUrl",
+                  "value": "https://merchant.wish.com/api/v3/oauth/access_token"
+                },
+                {
+                  "key": "authUrl",
+                  "value": "https://merchant.wish.com/v3/oauth/authorize"
+                },
+                {
+                  "key": "grant_type",
+                  "value": "authorization_code"
+                }
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"street_address1\": \"<string>\",\n  \"city\": \"<string>\",\n  \"state\": \"<string>\",\n  \"zipcode\": \"<string>\",\n  \"country_code\": \"<iso-3166>\",\n  \"phone_number\": \"<object>\",\n  \"country\": \"<string>\",\n  \"region\": \"<string>\",\n  \"street_address3\": \"<string>\",\n  \"street_address2\": \"<string>\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": [
+            {
+              "id": "316e50cf-a428-4f40-80f7-8a663067282a",
+              "name": "Successful request",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "api",
+                    "v3",
+                    "orders",
+                    ":id",
+                    "address"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<object-id>",
+                      "key": "id",
+                      "description": "(Required) Wish's unique identifier for the order"
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: oauth2",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "<token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "PUT",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"street_address1\": \"<string>\",\n  \"city\": \"<string>\",\n  \"state\": \"<string>\",\n  \"zipcode\": \"<string>\",\n  \"country_code\": \"US\",\n  \"phone_number\": {\n    \"number\": \"<string>\",\n    \"country_code\": \"<string>\"\n  },\n  \"country\": \"<string>\",\n  \"region\": \"<string>\",\n  \"street_address3\": \"<string>\",\n  \"street_address2\": \"<string>\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"tracking_information\": [\n    {\n      \"tracking_number\": \"string\",\n      \"origin_country\": \"string\",\n      \"ship_note\": \"string\",\n      \"shipping_provider\": {\n        \"name\": \"string\"\n      }\n    },\n    {\n      \"tracking_number\": \"string\",\n      \"origin_country\": \"string\",\n      \"ship_note\": \"string\",\n      \"shipping_provider\": {\n        \"name\": \"string\"\n      }\n    }\n  ],\n  \"warehouse_information\": {\n    \"warehouse_type\": \"PRIMARY\",\n    \"warehouse_name\": \"string\",\n    \"warehouse_id\": \"string\",\n    \"fbw_information\": {\n      \"fbw_warehouse_code\": \"string\",\n      \"fbw_fees\": [\n        {\n          \"amount\": {},\n          \"fee_name\": \"string\",\n          \"fee_type\": \"PER_RETURN_SHIPMENT\"\n        },\n        {\n          \"amount\": {},\n          \"fee_name\": \"string\",\n          \"fee_type\": \"PER_SKU\"\n        }\n      ],\n      \"lot_information\": [\n        {\n          \"lot_id\": \"string\",\n          \"quantity\": 7727\n        },\n        {\n          \"lot_id\": \"string\",\n          \"quantity\": 4473\n        }\n      ]\n    }\n  },\n  \"order_payment\": {\n    \"carrier_subsidies\": [\n      {\n        \"subsidy\": {\n          \"amount\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          \"currency_code\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          }\n        },\n        \"carrier_name\": \"string\"\n      },\n      {\n        \"subsidy\": {\n          \"amount\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          \"currency_code\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          }\n        },\n        \"carrier_name\": \"string\"\n      }\n    ],\n    \"shipping_reimbursements\": [\n      {\n        \"status\": \"FINAL\",\n        \"amount\": {\n          \"amount\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          \"currency_code\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          }\n        }\n      },\n      {\n        \"status\": \"PENDING\",\n        \"amount\": {\n          \"amount\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          \"currency_code\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          }\n        }\n      }\n    ],\n    \"rev_share\": {\n      \"merchant_commission_fees\": {\n        \"amount\": {\n          \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n        },\n        \"currency_code\": {\n          \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n        }\n      },\n      \"destination_region\": \"EUROPEAN_UNION\",\n      \"rev_share\": 6028.387990749884,\n      \"product_category\": \"ELECTRONICS\",\n      \"entity_region\": \"NORTH_AMERICA\",\n      \"source_region\": \"EUROPEAN_UNION\",\n      \"shipping_type\": \"WISH_EXPRESS\"\n    },\n    \"general_payment_details\": {\n      \"original_discounted_price\": {\n        \"amount\": {\n          \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n        },\n        \"currency_code\": {\n          \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n        }\n      },\n      \"shipping_merchant_payment\": {\n        \"amount\": {\n          \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n        },\n        \"currency_code\": {\n          \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n        }\n      },\n      \"discounted_price\": {\n        \"amount\": {\n          \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n        },\n        \"currency_code\": {\n          \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n        }\n      },\n      \"original_product_price\": {\n        \"amount\": {\n          \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n        },\n        \"currency_code\": {\n          \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n        }\n      },\n      \"payment_total\": {\n        \"amount\": {\n          \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n        },\n        \"currency_code\": {\n          \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n        }\n      },\n      \"product_price\": {\n        \"amount\": {\n          \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n        },\n        \"currency_code\": {\n          \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n        }\n      },\n      \"product_merchant_payment\": {\n        \"amount\": {\n          \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n        },\n        \"currency_code\": {\n          \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n        }\n      },\n      \"product_shipping_price\": {\n        \"amount\": {\n          \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n        },\n        \"currency_code\": {\n          \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n        }\n      },\n      \"product_quantity\": 4193,\n      \"customer_paid_prices_detail\": {\n        \"total\": {\n          \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n        },\n        \"product_price\": {\n          \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n        },\n        \"product_price_total\": {\n          \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n        },\n        \"shipping_price\": {\n          \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n        },\n        \"shipping_price_total\": {\n          \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n        }\n      }\n    }\n  },\n  \"fulfillment_records\": [\n    {\n      \"event_type\": \"CONFIRM_FULFILLED\",\n      \"event_time\": \"1974-07-20T21:35:31.227Z\"\n    },\n    {\n      \"event_type\": \"CONFIRMED_DELIVERED\",\n      \"event_time\": \"1995-08-05T18:26:42.629Z\"\n    }\n  ],\n  \"released_at\": \"1994-06-25T16:11:27.183Z\",\n  \"product_information\": {\n    \"sku\": \"string\",\n    \"name\": \"string\",\n    \"color\": \"string\",\n    \"manufactured_country\": \"string\",\n    \"variation_image_url\": \"string\",\n    \"variation_id\": \"string\",\n    \"id\": \"string\",\n    \"size\": \"string\"\n  },\n  \"penalties\": [\n    \"string\",\n    \"string\"\n  ],\n  \"processing_status\": \"FAILED\",\n  \"updated_at\": \"1948-12-17T06:05:19.134Z\",\n  \"full_address\": {\n    \"shipping_detail\": {\n      \"phone_number\": {\n        \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n      },\n      \"region\": \"string\",\n      \"neighborhood\": \"string\",\n      \"name\": \"string\"\n    }\n  },\n  \"processing_source\": \"REFUND\",\n  \"fulfillment_requirements\": {\n    \"expected_ship_time\": \"1973-02-21T17:43:30.539Z\",\n    \"expected_delivery_time\": \"2022-11-26T11:56:33.753Z\"\n  },\n  \"state\": \"<string>\",\n  \"transaction_id\": \"string\",\n  \"tax_information\": {\n    \"transaction_tax\": [\n      {\n        \"tax_amount_in_merchant_currency\": {\n          \"amount\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          \"currency_code\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          }\n        },\n        \"tax_amount_in_authority_currency\": {\n          \"amount\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          \"currency_code\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          }\n        },\n        \"tax_type\": \"REFUNDED_TRANSACTION_TAX\",\n        \"remit_type\": \"WISH_REMIT\"\n      },\n      {\n        \"tax_amount_in_merchant_currency\": {\n          \"amount\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          \"currency_code\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          }\n        },\n        \"tax_amount_in_authority_currency\": {\n          \"amount\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          \"currency_code\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          }\n        },\n        \"tax_type\": \"TRANSACTION_TAX\",\n        \"remit_type\": \"WISH_REMIT\"\n      }\n    ],\n    \"customer_identity_number_type\": \"PCCC\",\n    \"vat_information\": {\n      \"eu_vat_customs_declaration\": {\n        \"product\": {\n          \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n        },\n        \"merchant_identity\": {\n          \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n        },\n        \"vat_paid_in_authority_currency\": {\n          \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n        },\n        \"vat_paid_in_customer_currency\": {\n          \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n        },\n        \"shipping_cost_in_customer_currency\": {\n          \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n        },\n        \"customer_identity\": {\n          \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n        },\n        \"vat_payer\": {\n          \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n        },\n        \"merchant_address\": {\n          \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n        },\n        \"invoice_amount_in_customer_currency\": {\n          \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n        },\n        \"shipping_cost_in_authority_currency\": {\n          \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n        },\n        \"invoice_amount_in_authority_currency\": {\n          \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n        },\n        \"customer_address\": {\n          \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n        },\n        \"merchant_name\": {\n          \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n        },\n        \"platform_status\": {\n          \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n        },\n        \"customer_name\": {\n          \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n        }\n      },\n      \"vat_amount\": {\n        \"shipping_level_vat\": {\n          \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n        },\n        \"final_vat\": {\n          \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n        },\n        \"product_level_vat\": {\n          \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n        }\n      },\n      \"country_code\": \"string\",\n      \"required_vat_numbers\": {\n        \"voec\": {\n          \"number\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          \"entity\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          }\n        },\n        \"eori\": {\n          \"number\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          \"entity\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          }\n        },\n        \"vat\": {\n          \"number\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          \"name\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          \"entity\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          }\n        }\n      },\n      \"vat_instructions\": \"string\",\n      \"additional_materials\": [\n        \"PACKAGE_OVERVIEW_DOCUMENT\",\n        \"PACKAGE_OVERVIEW_DOCUMENT\"\n      ]\n    },\n    \"customer_identity_number\": \"string\"\n  },\n  \"refunds\": [\n    {\n      \"refund_reason_note\": \"string\",\n      \"refund_source\": \"PAYMENT_PROVIDER\",\n      \"refund_amount\": {\n        \"amount\": 10.4,\n        \"currency_code\": \"USD\"\n      },\n      \"merchant_responsible_amount\": {\n        \"amount\": 10.4,\n        \"currency_code\": \"USD\"\n      },\n      \"refund_time\": \"1958-10-21T02:37:09.195Z\",\n      \"refund_reason\": \"string\"\n    },\n    {\n      \"refund_reason_note\": \"string\",\n      \"refund_source\": \"MERCHANT\",\n      \"refund_amount\": {\n        \"amount\": 10.4,\n        \"currency_code\": \"USD\"\n      },\n      \"merchant_responsible_amount\": {\n        \"amount\": 10.4,\n        \"currency_code\": \"USD\"\n      },\n      \"refund_time\": \"2015-08-05T10:24:26.701Z\",\n      \"refund_reason\": \"string\"\n    }\n  ],\n  \"total_frs_quantity\": 6971,\n  \"special_programs\": [\n    {\n      \"status\": \"PENDING\",\n      \"display_name\": \"string\"\n    },\n    {\n      \"status\": \"PENDING\",\n      \"display_name\": \"string\"\n    }\n  ],\n  \"id\": \"string\",\n  \"fulfillment_order_types\": [\n    \"LESS_THAN_TRUCKLOAD\",\n    \"LESS_THAN_TRUCKLOAD\"\n  ]\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "2ba2b966-83ca-4d2c-8984-84d2919af114",
+          "name": "Refund/Cancel an order",
+          "request": {
+            "name": "Refund/Cancel an order",
+            "description": {
+              "content": "Refund/Cancel an order. This operation is asynchronous. Please use /api/v3/orders/{id}/refund_reasons endpoint to reference valid refund reasons for orders before refunding them.",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "api",
+                "v3",
+                "orders",
+                ":id",
+                "refund"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": [
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<object-id>",
+                  "key": "id",
+                  "description": "(Required) Wish's unique identifier for the order"
+                }
+              ]
+            },
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "PUT",
+            "auth": {
+              "type": "oauth2",
+              "oauth2": [
+                {
+                  "key": "scope",
+                  "value": "payments:write tickets:write epc:read returns:write returns:read fbw:read products:read payments:read fbw:write merchant:write products:write ratings:read videos:read compliance:write product_boost:read listing_quality:read webhook:write orders:read compliance:read fbs:read penalties:read penalties:write infractions:read orders:write merchant:read notifications:write announcements:read product_boost:write notifications:read webhook:read qoo10:read wps_parcel:write wps_parcel:read tickets:read infractions:write videos:write epc:write"
+                },
+                {
+                  "key": "redirect_uri",
+                  "value": "https://merchant.wish.com/api/v3/oauth/refresh_token"
+                },
+                {
+                  "key": "accessTokenUrl",
+                  "value": "https://merchant.wish.com/api/v3/oauth/access_token"
+                },
+                {
+                  "key": "authUrl",
+                  "value": "https://merchant.wish.com/v3/oauth/authorize"
+                },
+                {
+                  "key": "grant_type",
+                  "value": "authorization_code"
+                }
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"refund_reason\": \"<string>\",\n  \"refund_reason_note\": \"<string>\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": [
+            {
+              "id": "38ad144a-e16f-40d2-ae51-6c8a1bef5c34",
+              "name": "Successful request",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "api",
+                    "v3",
+                    "orders",
+                    ":id",
+                    "refund"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<object-id>",
+                      "key": "id",
+                      "description": "(Required) Wish's unique identifier for the order"
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: oauth2",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "<token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "PUT",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"refund_reason\": \"<string>\",\n  \"refund_reason_note\": \"<string>\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"tracking_information\": [\n    {\n      \"tracking_number\": \"string\",\n      \"origin_country\": \"string\",\n      \"ship_note\": \"string\",\n      \"shipping_provider\": {\n        \"name\": \"string\"\n      }\n    },\n    {\n      \"tracking_number\": \"string\",\n      \"origin_country\": \"string\",\n      \"ship_note\": \"string\",\n      \"shipping_provider\": {\n        \"name\": \"string\"\n      }\n    }\n  ],\n  \"warehouse_information\": {\n    \"warehouse_type\": \"PRIMARY\",\n    \"warehouse_name\": \"string\",\n    \"warehouse_id\": \"string\",\n    \"fbw_information\": {\n      \"fbw_warehouse_code\": \"string\",\n      \"fbw_fees\": [\n        {\n          \"amount\": {},\n          \"fee_name\": \"string\",\n          \"fee_type\": \"PER_RETURN_SHIPMENT\"\n        },\n        {\n          \"amount\": {},\n          \"fee_name\": \"string\",\n          \"fee_type\": \"PER_SKU\"\n        }\n      ],\n      \"lot_information\": [\n        {\n          \"lot_id\": \"string\",\n          \"quantity\": 7727\n        },\n        {\n          \"lot_id\": \"string\",\n          \"quantity\": 4473\n        }\n      ]\n    }\n  },\n  \"order_payment\": {\n    \"carrier_subsidies\": [\n      {\n        \"subsidy\": {\n          \"amount\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          \"currency_code\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          }\n        },\n        \"carrier_name\": \"string\"\n      },\n      {\n        \"subsidy\": {\n          \"amount\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          \"currency_code\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          }\n        },\n        \"carrier_name\": \"string\"\n      }\n    ],\n    \"shipping_reimbursements\": [\n      {\n        \"status\": \"FINAL\",\n        \"amount\": {\n          \"amount\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          \"currency_code\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          }\n        }\n      },\n      {\n        \"status\": \"PENDING\",\n        \"amount\": {\n          \"amount\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          \"currency_code\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          }\n        }\n      }\n    ],\n    \"rev_share\": {\n      \"merchant_commission_fees\": {\n        \"amount\": {\n          \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n        },\n        \"currency_code\": {\n          \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n        }\n      },\n      \"destination_region\": \"EUROPEAN_UNION\",\n      \"rev_share\": 6028.387990749884,\n      \"product_category\": \"ELECTRONICS\",\n      \"entity_region\": \"NORTH_AMERICA\",\n      \"source_region\": \"EUROPEAN_UNION\",\n      \"shipping_type\": \"WISH_EXPRESS\"\n    },\n    \"general_payment_details\": {\n      \"original_discounted_price\": {\n        \"amount\": {\n          \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n        },\n        \"currency_code\": {\n          \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n        }\n      },\n      \"shipping_merchant_payment\": {\n        \"amount\": {\n          \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n        },\n        \"currency_code\": {\n          \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n        }\n      },\n      \"discounted_price\": {\n        \"amount\": {\n          \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n        },\n        \"currency_code\": {\n          \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n        }\n      },\n      \"original_product_price\": {\n        \"amount\": {\n          \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n        },\n        \"currency_code\": {\n          \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n        }\n      },\n      \"payment_total\": {\n        \"amount\": {\n          \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n        },\n        \"currency_code\": {\n          \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n        }\n      },\n      \"product_price\": {\n        \"amount\": {\n          \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n        },\n        \"currency_code\": {\n          \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n        }\n      },\n      \"product_merchant_payment\": {\n        \"amount\": {\n          \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n        },\n        \"currency_code\": {\n          \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n        }\n      },\n      \"product_shipping_price\": {\n        \"amount\": {\n          \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n        },\n        \"currency_code\": {\n          \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n        }\n      },\n      \"product_quantity\": 4193,\n      \"customer_paid_prices_detail\": {\n        \"total\": {\n          \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n        },\n        \"product_price\": {\n          \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n        },\n        \"product_price_total\": {\n          \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n        },\n        \"shipping_price\": {\n          \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n        },\n        \"shipping_price_total\": {\n          \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n        }\n      }\n    }\n  },\n  \"fulfillment_records\": [\n    {\n      \"event_type\": \"CONFIRM_FULFILLED\",\n      \"event_time\": \"1974-07-20T21:35:31.227Z\"\n    },\n    {\n      \"event_type\": \"CONFIRMED_DELIVERED\",\n      \"event_time\": \"1995-08-05T18:26:42.629Z\"\n    }\n  ],\n  \"released_at\": \"1994-06-25T16:11:27.183Z\",\n  \"product_information\": {\n    \"sku\": \"string\",\n    \"name\": \"string\",\n    \"color\": \"string\",\n    \"manufactured_country\": \"string\",\n    \"variation_image_url\": \"string\",\n    \"variation_id\": \"string\",\n    \"id\": \"string\",\n    \"size\": \"string\"\n  },\n  \"penalties\": [\n    \"string\",\n    \"string\"\n  ],\n  \"processing_status\": \"FAILED\",\n  \"updated_at\": \"1948-12-17T06:05:19.134Z\",\n  \"full_address\": {\n    \"shipping_detail\": {\n      \"phone_number\": {\n        \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n      },\n      \"region\": \"string\",\n      \"neighborhood\": \"string\",\n      \"name\": \"string\"\n    }\n  },\n  \"processing_source\": \"REFUND\",\n  \"fulfillment_requirements\": {\n    \"expected_ship_time\": \"1973-02-21T17:43:30.539Z\",\n    \"expected_delivery_time\": \"2022-11-26T11:56:33.753Z\"\n  },\n  \"state\": \"<string>\",\n  \"transaction_id\": \"string\",\n  \"tax_information\": {\n    \"transaction_tax\": [\n      {\n        \"tax_amount_in_merchant_currency\": {\n          \"amount\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          \"currency_code\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          }\n        },\n        \"tax_amount_in_authority_currency\": {\n          \"amount\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          \"currency_code\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          }\n        },\n        \"tax_type\": \"REFUNDED_TRANSACTION_TAX\",\n        \"remit_type\": \"WISH_REMIT\"\n      },\n      {\n        \"tax_amount_in_merchant_currency\": {\n          \"amount\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          \"currency_code\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          }\n        },\n        \"tax_amount_in_authority_currency\": {\n          \"amount\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          \"currency_code\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          }\n        },\n        \"tax_type\": \"TRANSACTION_TAX\",\n        \"remit_type\": \"WISH_REMIT\"\n      }\n    ],\n    \"customer_identity_number_type\": \"PCCC\",\n    \"vat_information\": {\n      \"eu_vat_customs_declaration\": {\n        \"product\": {\n          \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n        },\n        \"merchant_identity\": {\n          \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n        },\n        \"vat_paid_in_authority_currency\": {\n          \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n        },\n        \"vat_paid_in_customer_currency\": {\n          \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n        },\n        \"shipping_cost_in_customer_currency\": {\n          \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n        },\n        \"customer_identity\": {\n          \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n        },\n        \"vat_payer\": {\n          \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n        },\n        \"merchant_address\": {\n          \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n        },\n        \"invoice_amount_in_customer_currency\": {\n          \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n        },\n        \"shipping_cost_in_authority_currency\": {\n          \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n        },\n        \"invoice_amount_in_authority_currency\": {\n          \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n        },\n        \"customer_address\": {\n          \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n        },\n        \"merchant_name\": {\n          \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n        },\n        \"platform_status\": {\n          \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n        },\n        \"customer_name\": {\n          \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n        }\n      },\n      \"vat_amount\": {\n        \"shipping_level_vat\": {\n          \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n        },\n        \"final_vat\": {\n          \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n        },\n        \"product_level_vat\": {\n          \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n        }\n      },\n      \"country_code\": \"string\",\n      \"required_vat_numbers\": {\n        \"voec\": {\n          \"number\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          \"entity\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          }\n        },\n        \"eori\": {\n          \"number\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          \"entity\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          }\n        },\n        \"vat\": {\n          \"number\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          \"name\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          \"entity\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          }\n        }\n      },\n      \"vat_instructions\": \"string\",\n      \"additional_materials\": [\n        \"PACKAGE_OVERVIEW_DOCUMENT\",\n        \"PACKAGE_OVERVIEW_DOCUMENT\"\n      ]\n    },\n    \"customer_identity_number\": \"string\"\n  },\n  \"refunds\": [\n    {\n      \"refund_reason_note\": \"string\",\n      \"refund_source\": \"PAYMENT_PROVIDER\",\n      \"refund_amount\": {\n        \"amount\": 10.4,\n        \"currency_code\": \"USD\"\n      },\n      \"merchant_responsible_amount\": {\n        \"amount\": 10.4,\n        \"currency_code\": \"USD\"\n      },\n      \"refund_time\": \"1958-10-21T02:37:09.195Z\",\n      \"refund_reason\": \"string\"\n    },\n    {\n      \"refund_reason_note\": \"string\",\n      \"refund_source\": \"MERCHANT\",\n      \"refund_amount\": {\n        \"amount\": 10.4,\n        \"currency_code\": \"USD\"\n      },\n      \"merchant_responsible_amount\": {\n        \"amount\": 10.4,\n        \"currency_code\": \"USD\"\n      },\n      \"refund_time\": \"2015-08-05T10:24:26.701Z\",\n      \"refund_reason\": \"string\"\n    }\n  ],\n  \"total_frs_quantity\": 6971,\n  \"special_programs\": [\n    {\n      \"status\": \"PENDING\",\n      \"display_name\": \"string\"\n    },\n    {\n      \"status\": \"PENDING\",\n      \"display_name\": \"string\"\n    }\n  ],\n  \"id\": \"string\",\n  \"fulfillment_order_types\": [\n    \"LESS_THAN_TRUCKLOAD\",\n    \"LESS_THAN_TRUCKLOAD\"\n  ]\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "21d45f58-7026-4e41-8caf-7b9619d716dd",
+          "name": "List orders",
+          "request": {
+            "name": "List orders",
+            "description": {},
+            "url": {
+              "path": [
+                "api",
+                "v3",
+                "orders"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [
+                {
+                  "disabled": false,
+                  "key": "limit",
+                  "value": "50",
+                  "description": "Specify a limit on the number of orders that can be returned."
+                },
+                {
+                  "disabled": false,
+                  "key": "states",
+                  "value": "<string>",
+                  "description": "\nChoose the specific order state to filter output orders by. Current input values are:\n\n1. APPROVED: Order ready to be shipped.\n2. SHIPPED: Order has been shipped.\n3. REFUNDED: Order has been refunded.\n4. REQUIRE_REVIEW: Order has been placed under review\n5. DECLINED: Customer's payment had an issue for this order\n"
+                },
+                {
+                  "disabled": false,
+                  "key": "updated_at_min",
+                  "value": "<dateTime>",
+                  "description": "Specify the beginning of the window to view orders by last order update. Orders updated before this time will not show."
+                },
+                {
+                  "disabled": false,
+                  "key": "updated_at_max",
+                  "value": "<dateTime>",
+                  "description": "Specify the end of the time window to view orders by last order update. Orders updated after this time will not show."
+                },
+                {
+                  "disabled": false,
+                  "key": "released_at_min",
+                  "value": "<dateTime>",
+                  "description": "Specify the beginning of the time window to view desired orders when filtering by order release time. Orders released before this time will not show."
+                },
+                {
+                  "disabled": false,
+                  "key": "released_at_max",
+                  "value": "<dateTime>",
+                  "description": "Specify the end of the time window to view desired orders when filtering by order release time. Orders released after this time will not show."
+                },
+                {
+                  "disabled": false,
+                  "key": "sort_by",
+                  "value": "updated_at.desc",
+                  "description": "Choose which timestamp to filter orders by. Current values are:\n* updated_at: Last time the order was updated.\n* released_at: The time the order was released.\n"
+                },
+                {
+                  "disabled": false,
+                  "key": "order_type",
+                  "value": "<string>",
+                  "description": "Choose the specific programs to filter output orders by. Current input values are:\n1. WISH_EXPRESS\n2. FULFILLED_BY_WISH\n3. FULFILLED_BY_STORE\n4. LESS_THAN_TRUCKLOAD\n5. ADVANCED_LOGISTICS\n6. WISH_PLUS\n\nNote: This parameter does not support combinations (ex: FULFILLED_BY_WISH & WISH_EXPRESS). If looking for overlaps, query these separately & then manually find the overlap, using Order ID.\n"
+                }
+              ],
+              "variable": []
+            },
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "GET",
+            "auth": {
+              "type": "oauth2",
+              "oauth2": [
+                {
+                  "key": "scope",
+                  "value": "payments:write tickets:write epc:read returns:write returns:read fbw:read products:read payments:read fbw:write merchant:write products:write ratings:read videos:read compliance:write product_boost:read listing_quality:read webhook:write orders:read compliance:read fbs:read penalties:read penalties:write infractions:read orders:write merchant:read notifications:write announcements:read product_boost:write notifications:read webhook:read qoo10:read wps_parcel:write wps_parcel:read tickets:read infractions:write videos:write epc:write"
+                },
+                {
+                  "key": "redirect_uri",
+                  "value": "https://merchant.wish.com/api/v3/oauth/refresh_token"
+                },
+                {
+                  "key": "accessTokenUrl",
+                  "value": "https://merchant.wish.com/api/v3/oauth/access_token"
+                },
+                {
+                  "key": "authUrl",
+                  "value": "https://merchant.wish.com/v3/oauth/authorize"
+                },
+                {
+                  "key": "grant_type",
+                  "value": "authorization_code"
+                }
+              ]
+            }
+          },
+          "response": [
+            {
+              "id": "a4895b23-2fe6-415c-a6e6-c4b64304c8b9",
+              "name": "Successful request - Order-level schema for each relevant order",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "api",
+                    "v3",
+                    "orders"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "limit",
+                      "value": "50"
+                    },
+                    {
+                      "key": "states",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "updated_at_min",
+                      "value": "2020-01-01T07:00:00.000Z"
+                    },
+                    {
+                      "key": "updated_at_max",
+                      "value": "2020-01-01T07:00:00.000Z"
+                    },
+                    {
+                      "key": "released_at_min",
+                      "value": "2020-01-01T07:00:00.000Z"
+                    },
+                    {
+                      "key": "released_at_max",
+                      "value": "2020-01-01T07:00:00.000Z"
+                    },
+                    {
+                      "key": "sort_by",
+                      "value": "updated_at.desc"
+                    },
+                    {
+                      "key": "order_type",
+                      "value": "<string>"
+                    }
+                  ],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: oauth2",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "<token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "[\n  {\n    \"tracking_information\": [\n      {\n        \"tracking_number\": \"string\",\n        \"origin_country\": \"string\",\n        \"ship_note\": \"string\",\n        \"shipping_provider\": {\n          \"name\": \"string\"\n        }\n      },\n      {\n        \"tracking_number\": \"string\",\n        \"origin_country\": \"string\",\n        \"ship_note\": \"string\",\n        \"shipping_provider\": {\n          \"name\": \"string\"\n        }\n      }\n    ],\n    \"warehouse_information\": {\n      \"warehouse_type\": \"SECONDARY\",\n      \"warehouse_name\": \"string\",\n      \"warehouse_id\": \"string\",\n      \"fbw_information\": {\n        \"fbw_warehouse_code\": \"string\",\n        \"fbw_fees\": [\n          {\n            \"amount\": {\n              \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n            },\n            \"fee_name\": {\n              \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n            },\n            \"fee_type\": {\n              \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n            }\n          },\n          {\n            \"amount\": {\n              \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n            },\n            \"fee_name\": {\n              \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n            },\n            \"fee_type\": {\n              \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n            }\n          }\n        ],\n        \"lot_information\": [\n          {\n            \"lot_id\": {\n              \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n            },\n            \"quantity\": {\n              \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n            }\n          },\n          {\n            \"lot_id\": {\n              \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n            },\n            \"quantity\": {\n              \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n            }\n          }\n        ]\n      }\n    },\n    \"order_payment\": {\n      \"carrier_subsidies\": [\n        {\n          \"subsidy\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          \"carrier_name\": \"string\"\n        },\n        {\n          \"subsidy\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          \"carrier_name\": \"string\"\n        }\n      ],\n      \"shipping_reimbursements\": [\n        {\n          \"status\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          \"amount\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          }\n        },\n        {\n          \"status\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          \"amount\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          }\n        }\n      ],\n      \"rev_share\": {\n        \"merchant_commission_fees\": {\n          \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n        },\n        \"destination_region\": {\n          \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n        },\n        \"rev_share\": 2459.725975691025,\n        \"product_category\": \"JEWELRY_AND_ACCESSORY\",\n        \"entity_region\": {\n          \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n        },\n        \"source_region\": {\n          \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n        },\n        \"shipping_type\": \"WISH_EXPRESS\"\n      },\n      \"general_payment_details\": {\n        \"original_discounted_price\": {\n          \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n        },\n        \"shipping_merchant_payment\": {\n          \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n        },\n        \"discounted_price\": {\n          \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n        },\n        \"original_product_price\": {\n          \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n        },\n        \"payment_total\": {\n          \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n        },\n        \"product_price\": {\n          \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n        },\n        \"product_merchant_payment\": {\n          \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n        },\n        \"product_shipping_price\": {\n          \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n        },\n        \"product_quantity\": 2378,\n        \"customer_paid_prices_detail\": {\n          \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n        }\n      }\n    },\n    \"fulfillment_records\": [\n      {\n        \"event_type\": \"CONFIRM_FULFILLED\",\n        \"event_time\": \"1962-10-14T15:16:46.396Z\"\n      },\n      {\n        \"event_type\": \"CONFIRM_FULFILLED\",\n        \"event_time\": \"1967-11-17T16:58:31.381Z\"\n      }\n    ],\n    \"released_at\": \"1951-08-26T06:19:16.662Z\",\n    \"product_information\": {\n      \"sku\": \"string\",\n      \"name\": \"string\",\n      \"color\": \"string\",\n      \"manufactured_country\": \"string\",\n      \"variation_image_url\": \"string\",\n      \"variation_id\": \"string\",\n      \"id\": \"string\",\n      \"size\": \"string\"\n    },\n    \"penalties\": [\n      \"string\",\n      \"string\"\n    ],\n    \"processing_status\": \"IN_PROGRESS\",\n    \"updated_at\": \"1947-09-03T06:32:28.614Z\",\n    \"full_address\": {\n      \"shipping_detail\": {\n        \"region\": {\n          \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n        },\n        \"neighborhood\": \"string\",\n        \"name\": \"string\"\n      }\n    },\n    \"processing_source\": \"UPDATE_TRACKING\",\n    \"fulfillment_requirements\": {\n      \"expected_ship_time\": \"1950-10-12T21:33:20.448Z\",\n      \"expected_delivery_time\": \"2016-10-08T08:26:47.692Z\"\n    },\n    \"state\": \"<string>\",\n    \"transaction_id\": \"string\",\n    \"tax_information\": {\n      \"transaction_tax\": [\n        {\n          \"tax_amount_in_merchant_currency\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          \"tax_amount_in_authority_currency\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          \"tax_type\": \"REFUNDED_TRANSACTION_TAX\",\n          \"remit_type\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          }\n        },\n        {\n          \"tax_amount_in_merchant_currency\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          \"tax_amount_in_authority_currency\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          \"tax_type\": \"REFUNDED_TRANSACTION_TAX\",\n          \"remit_type\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          }\n        }\n      ],\n      \"customer_identity_number_type\": \"PCCC\",\n      \"vat_information\": {\n        \"eu_vat_customs_declaration\": {\n          \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n        },\n        \"vat_amount\": {\n          \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n        },\n        \"country_code\": \"string\",\n        \"required_vat_numbers\": {\n          \"voec\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          \"eori\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          \"vat\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          }\n        },\n        \"vat_instructions\": \"string\",\n        \"additional_materials\": [\n          {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          }\n        ]\n      },\n      \"customer_identity_number\": \"string\"\n    },\n    \"refunds\": [\n      {\n        \"refund_reason_note\": \"string\",\n        \"refund_source\": \"WISH\",\n        \"refund_amount\": {\n          \"amount\": 10.4,\n          \"currency_code\": \"USD\"\n        },\n        \"merchant_responsible_amount\": {\n          \"amount\": 10.4,\n          \"currency_code\": \"USD\"\n        },\n        \"refund_time\": \"1947-06-29T11:19:52.351Z\",\n        \"refund_reason\": \"string\"\n      },\n      {\n        \"refund_reason_note\": \"string\",\n        \"refund_source\": \"PAYMENT_PROVIDER\",\n        \"refund_amount\": {\n          \"amount\": 10.4,\n          \"currency_code\": \"USD\"\n        },\n        \"merchant_responsible_amount\": {\n          \"amount\": 10.4,\n          \"currency_code\": \"USD\"\n        },\n        \"refund_time\": \"1959-12-15T03:06:20.207Z\",\n        \"refund_reason\": \"string\"\n      }\n    ],\n    \"total_frs_quantity\": 274,\n    \"special_programs\": [\n      {\n        \"status\": \"FAILED\",\n        \"display_name\": \"string\"\n      },\n      {\n        \"status\": \"PENDING\",\n        \"display_name\": \"string\"\n      }\n    ],\n    \"id\": \"string\",\n    \"fulfillment_order_types\": [\n      \"VAT\",\n      \"CALCULATED_SHIPPING\"\n    ]\n  },\n  {\n    \"tracking_information\": [\n      {\n        \"tracking_number\": \"string\",\n        \"origin_country\": \"string\",\n        \"ship_note\": \"string\",\n        \"shipping_provider\": {\n          \"name\": \"string\"\n        }\n      },\n      {\n        \"tracking_number\": \"string\",\n        \"origin_country\": \"string\",\n        \"ship_note\": \"string\",\n        \"shipping_provider\": {\n          \"name\": \"string\"\n        }\n      }\n    ],\n    \"warehouse_information\": {\n      \"warehouse_type\": \"PRIMARY\",\n      \"warehouse_name\": \"string\",\n      \"warehouse_id\": \"string\",\n      \"fbw_information\": {\n        \"fbw_warehouse_code\": \"string\",\n        \"fbw_fees\": [\n          {\n            \"amount\": {\n              \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n            },\n            \"fee_name\": {\n              \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n            },\n            \"fee_type\": {\n              \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n            }\n          },\n          {\n            \"amount\": {\n              \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n            },\n            \"fee_name\": {\n              \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n            },\n            \"fee_type\": {\n              \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n            }\n          }\n        ],\n        \"lot_information\": [\n          {\n            \"lot_id\": {\n              \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n            },\n            \"quantity\": {\n              \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n            }\n          },\n          {\n            \"lot_id\": {\n              \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n            },\n            \"quantity\": {\n              \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n            }\n          }\n        ]\n      }\n    },\n    \"order_payment\": {\n      \"carrier_subsidies\": [\n        {\n          \"subsidy\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          \"carrier_name\": \"string\"\n        },\n        {\n          \"subsidy\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          \"carrier_name\": \"string\"\n        }\n      ],\n      \"shipping_reimbursements\": [\n        {\n          \"status\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          \"amount\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          }\n        },\n        {\n          \"status\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          \"amount\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          }\n        }\n      ],\n      \"rev_share\": {\n        \"merchant_commission_fees\": {\n          \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n        },\n        \"destination_region\": {\n          \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n        },\n        \"rev_share\": 4929.357030690075,\n        \"product_category\": \"ELECTRONICS\",\n        \"entity_region\": {\n          \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n        },\n        \"source_region\": {\n          \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n        },\n        \"shipping_type\": \"WISH_EXPRESS\"\n      },\n      \"general_payment_details\": {\n        \"original_discounted_price\": {\n          \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n        },\n        \"shipping_merchant_payment\": {\n          \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n        },\n        \"discounted_price\": {\n          \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n        },\n        \"original_product_price\": {\n          \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n        },\n        \"payment_total\": {\n          \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n        },\n        \"product_price\": {\n          \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n        },\n        \"product_merchant_payment\": {\n          \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n        },\n        \"product_shipping_price\": {\n          \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n        },\n        \"product_quantity\": 6872,\n        \"customer_paid_prices_detail\": {\n          \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n        }\n      }\n    },\n    \"fulfillment_records\": [\n      {\n        \"event_type\": \"ORDER_RELEASED\",\n        \"event_time\": \"1995-11-27T04:06:14.178Z\"\n      },\n      {\n        \"event_type\": \"ORDER_RE_RELEASED\",\n        \"event_time\": \"1994-01-13T14:44:36.909Z\"\n      }\n    ],\n    \"released_at\": \"2019-11-16T23:48:41.220Z\",\n    \"product_information\": {\n      \"sku\": \"string\",\n      \"name\": \"string\",\n      \"color\": \"string\",\n      \"manufactured_country\": \"string\",\n      \"variation_image_url\": \"string\",\n      \"variation_id\": \"string\",\n      \"id\": \"string\",\n      \"size\": \"string\"\n    },\n    \"penalties\": [\n      \"string\",\n      \"string\"\n    ],\n    \"processing_status\": \"SUCCEEDED\",\n    \"updated_at\": \"2018-01-31T02:40:07.584Z\",\n    \"full_address\": {\n      \"shipping_detail\": {\n        \"region\": {\n          \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n        },\n        \"neighborhood\": \"string\",\n        \"name\": \"string\"\n      }\n    },\n    \"processing_source\": \"UPDATE_TRACKING\",\n    \"fulfillment_requirements\": {\n      \"expected_ship_time\": \"1969-07-13T07:12:03.975Z\",\n      \"expected_delivery_time\": \"1950-05-06T02:44:45.211Z\"\n    },\n    \"state\": \"<string>\",\n    \"transaction_id\": \"string\",\n    \"tax_information\": {\n      \"transaction_tax\": [\n        {\n          \"tax_amount_in_merchant_currency\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          \"tax_amount_in_authority_currency\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          \"tax_type\": \"TRANSACTION_TAX\",\n          \"remit_type\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          }\n        },\n        {\n          \"tax_amount_in_merchant_currency\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          \"tax_amount_in_authority_currency\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          \"tax_type\": \"REFUNDED_TRANSACTION_TAX\",\n          \"remit_type\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          }\n        }\n      ],\n      \"customer_identity_number_type\": \"PASSPORT\",\n      \"vat_information\": {\n        \"eu_vat_customs_declaration\": {\n          \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n        },\n        \"vat_amount\": {\n          \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n        },\n        \"country_code\": \"string\",\n        \"required_vat_numbers\": {\n          \"voec\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          \"eori\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          \"vat\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          }\n        },\n        \"vat_instructions\": \"string\",\n        \"additional_materials\": [\n          {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          }\n        ]\n      },\n      \"customer_identity_number\": \"string\"\n    },\n    \"refunds\": [\n      {\n        \"refund_reason_note\": \"string\",\n        \"refund_source\": \"MERCHANT\",\n        \"refund_amount\": {\n          \"amount\": 10.4,\n          \"currency_code\": \"USD\"\n        },\n        \"merchant_responsible_amount\": {\n          \"amount\": 10.4,\n          \"currency_code\": \"USD\"\n        },\n        \"refund_time\": \"1953-11-26T10:49:11.700Z\",\n        \"refund_reason\": \"string\"\n      },\n      {\n        \"refund_reason_note\": \"string\",\n        \"refund_source\": \"MERCHANT\",\n        \"refund_amount\": {\n          \"amount\": 10.4,\n          \"currency_code\": \"USD\"\n        },\n        \"merchant_responsible_amount\": {\n          \"amount\": 10.4,\n          \"currency_code\": \"USD\"\n        },\n        \"refund_time\": \"1982-03-08T01:56:42.463Z\",\n        \"refund_reason\": \"string\"\n      }\n    ],\n    \"total_frs_quantity\": 5400,\n    \"special_programs\": [\n      {\n        \"status\": \"PENDING\",\n        \"display_name\": \"string\"\n      },\n      {\n        \"status\": \"PENDING\",\n        \"display_name\": \"string\"\n      }\n    ],\n    \"id\": \"string\",\n    \"fulfillment_order_types\": [\n      \"FULFILLED_BY_WISH\",\n      \"PC-VAT\"\n    ]\n  }\n]",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        }
+      ],
+      "event": []
+    }
+  ],
+  "event": [],
+  "variable": [
+    {
+      "type": "string",
+      "value": "https://merchant.wish.com",
+      "key": "baseUrl"
+    }
+  ],
+  "auth": {
+    "type": "oauth2",
+    "oauth2": [
+      {
+        "key": "scope",
+        "value": "payments:write tickets:write epc:read returns:write returns:read fbw:read products:read payments:read fbw:write merchant:write products:write ratings:read videos:read compliance:write product_boost:read listing_quality:read webhook:write orders:read compliance:read fbs:read penalties:read penalties:write infractions:read orders:write merchant:read notifications:write announcements:read product_boost:write notifications:read webhook:read qoo10:read wps_parcel:write wps_parcel:read tickets:read infractions:write videos:write epc:write"
+      },
+      {
+        "key": "redirect_uri",
+        "value": "https://merchant.wish.com/api/v3/oauth/refresh_token"
+      },
+      {
+        "key": "accessTokenUrl",
+        "value": "https://merchant.wish.com/api/v3/oauth/access_token"
+      },
+      {
+        "key": "authUrl",
+        "value": "https://merchant.wish.com/v3/oauth/authorize"
+      },
+      {
+        "key": "grant_type",
+        "value": "authorization_code"
+      }
+    ]
+  },
+  "info": {
+    "_postman_id": "043b7510-ce6c-43cb-a5a5-b88959887866",
+    "name": "Wish Marketplace V3 Brands Orders API",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "description": {
+      "content": "\nWish Marketplace V3 API\n\n# General Information\n\n The Wish Marketplace API will be using oAuth to authenticate in order to offer better security for its users\n\n *   Learn about oAuth [here](oauth).\n *   If you are a merchant and want to create an application for yourself, learn about how to create a private app [here](../../private-app)\n *   If you are a ERP and create applications that'll be used by multiple merchants, learn about how to create a public app [here]( ../../public-app). You will need to apply to be a verified public application\n\n ## How to Test\n\n To avoid testing the API on production data, use our sandbox. The sandbox is completely contained and will not affect Wish users or your merchant account. \n \n To reach the sandbox, visit: https://sandbox.merchant.wish.com.\n\n To use the sandbox in testing, use https://sandbox.merchant.wish.com/api/v3/ as your base URL.\n\n How to Generate test data after you have created a sandbox account:\n 1. Navigate to the [unfulfilled orders page](https://sandbox.merchant.wish.com/transactions/action)\n 2. Hover over the dropdown next to the 'fulfill with csv' button and select Generate Orders\n\n ## Date/Time Format\n\n  All dates and times in our API are returned in the same format. It is in the form `YYYY-MM-DDTHH:mm:ss.sss±XX:ZZ` or `YYYY-MM-DDTHH:mm:ss.sssZ`, where 'Z' represents UTC timezone.\n  When sending timestamps in URL parameters or the request body, millisecond is optional and will defaults to 0 if not provided.\n\n  * `YYYY` is the year\n  * `MM` is the month\n  * `DD` is the day\n  * `HH` is the hour (in 24-hour clock format)\n  * `mm` is the minutes\n  * `ss.sss` is the seconds and milliseconds\n  * `±XX:ZZ` is the UTC offset of the form +XX:ZZ or -XX:ZZ where XX is a 2-digit string giving the number of UTC offset hours, and ZZ is a 2-digit string giving the number of UTC offset minutes.\n\n ## Response Schema\n\n  Every response returned from the Wish API will have the same schema. This schema is intended to give you a predictable manner to check the status of your request and know where to get the data. Each response will have the following top level attributes: message, code and data.\n\n  **Attributes**\n\n  <table>\n  <tbody>\n  <tr>\n  <th>Message</th>\n  <td>A message describing the error that happened, example: \"We could not find a product for id: '5d30f60e0a6fc464f4f376b0'\"</td>\n  </tr>\n  <tr>\n  <th>Code</th>\n  <td>A unique number which represents the error that has occurred, example: 1008 or 0 if success.</td>\n  </tr>\n  <tr>\n  <th>Data</th>\n  <td>For errors this will be empty.</td>\n  </tr>\n  </tbody>\n  </table>\n\n ## General Querying Techniques\n\n ### Partial Resources\n All GET endpoints (except OAuth) support a fields parameter which allows for requesting a partial response. Any fields specified in the response schema of an endpoint can be selected. The top level attribute `data` can be ignored when using the fields parameter.\n\n **Syntax**\n * Comma-separated list to select multiple fields\n * Use forward slash `/` to select nested field: `field1/nested_field`\n * Use parentheses `( )` to select multiple nested fields: `field1(nested_field1,nested_field2)`\n * Use `*` for wildcard selection: `field1/nested_field/*`\n\n\n **Example:**\n ```\n https://merchant.wish.com/api/v3/demo/get?fields=title,items(id,info/name)\n ```\n Which would result in the following partial response:\n ```\n {\n   \"title\": \"demo\",\n   \"items\": [\n     {\n       \"id\": \"1\",\n       \"info\": {\n         \"name\": \"demo_item_1\"\n       }\n     }, {\n       \"id\": \"2\",\n       \"info\": {\n         \"name\": \"demo_item_2\"\n       }\n     },\n     ...\n   ]\n }\n ```\n\n ## Locale\n   You can optionally specify locale in order to translate content and error messages into your language.\n   To do this use the [Accept-Language](https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Accept-Language) header to specify your preferred locales.\n   If none is provided, your default locale will be used.\n\n   For example, to request content in Chinese use: `Accept-Language: zh`\n\n   In the response, you will receive a [Content-Language](https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Content-Language) header that specifies the locale code of the response content.\n\n\n ## Rate-Limiting\n\n  Rate-limiting will be performed on a per-merchant basis for each app. It is your responsibility to ensure you are not making frequent unnecessary calls to the API.\n\n  If the rate limits cannot satisfy your need, we highly recommend integrating webhooks for your app. With webhooks, instead of pulling resources periodically, your app will receive real-time notifications for particular events that occur to a merchant’s store. [Learn more](https://merchant.wish.com/documentation/webhooks)\n\n  **Normal Usage**\n\n  To help you track the rate-limiter status, the following response header(s) will be provided with each response:\n\n   * `Wish-Rate-Limit-Remaining`: The number of calls remaining in the current rate-limiting window.\n\n\n  **Rate-Limit Exceeded**\n\n  After you exceed the number of allowed calls in the current rate-limiting window, you will receive a `429 Too Many Requests` error response and the following additional header(s):\n\n   * `Wish-Rate-Limit-Reset`: The time the rate-limiter will reset.\n\n\n  Once you receive this response there is nothing you can do except wait for the rate-limiter to reset. In order to avoid being rate-limited, you may want to cache your responses.\n\n ## Sorting\n   ### Overview\n   Sorting is available for most endpoints that return a collection (list) of objects. Each collection has a different set of enabled parameters for sorting, so please check specific collection section for detail.\n\n   ### Usage\n   Append `sort_by={parameter_name}.{asc|desc}` in your API request where `parameter_name` is a valid sortable parameter of that endpoint.\n\n   Example:\n   ```\n   /api/v3/penalties?sort_by=created_at.asc\n   ```\n\n ## Pagination\n  All bulk-fetching API methods that return lists of resource support pagination.\n  These methods commonly take at least 3 parameters: `limit`, `{attribute}_min`, `{attribute}_max`. Attribute can be `id`, `create_at`, etc., depending on each specific method.\n  For instance, you make a request to get a list of penalties `/api/v3/penalties?limit=20&created_at_max=2020-04-08T23:59:59Z&sort_by=created_at_max.desc`,\n  which means to fetch 20 penalities sorted by their creation time, with the most recent one being created before `2020-04-08T23:59:59Z`.\n  Assume that the response contains 20 `penalty` objects with the last object being `penalty_foo`,\n  then your subsequent request can be `/api/v3/penalties?limit=20&created_at_max={penalty_foo.create_at}&sort_by=created_at_max.desc` to fetch the next page of list.\n  Note that when fetching next page using `id_min` or `id_max`, you need to perform `+/- 1`(correspondingly) on the last object's ID in the current page, as `id_min` and `id_max` are inclusive. (All V3 API resources' IDs are either integer or BSON object ID - a hex number).\n\n\n ## Request ID\n  Each API request is associated with a unique identifier. You can find this value in response headers, under `Wish-Request-Id`.\n  **When you need to contact us about a specific request, please provide this ID to ensure the fastest possible reply**\n\n# Authentication\nFor all requests that require OAuth2 authentication, the access token must be provided in the `Authorization` request header in the following format: `Authorization: Bearer <token>`\n\nFor example:\n```\nAuthorization: Bearer 3d6e2d71bc464e42bfbdb081afb73c1e\n```\n<!-- ReDoc-Inject: <security-definitions> -->\n\n\nContact Support:\n Email: partner-api@wish.com",
+      "type": "text/plain"
+    }
+  }
+}

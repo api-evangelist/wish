@@ -1,0 +1,2319 @@
+{
+  "item": [
+    {
+      "id": "9e9934d6-b283-4bb1-9355-7a7a415f97dc",
+      "name": "ProductBoost",
+      "description": {
+        "content": "",
+        "type": "text/plain"
+      },
+      "item": [
+        {
+          "id": "b4ffa412-3c1e-40f6-8dcd-c48a55a2919f",
+          "name": "Get information for the given keywords or keywords that match the query",
+          "request": {
+            "name": "Get information for the given keywords or keywords that match the query",
+            "description": {
+              "content": "Obtain details on a list of ProductBoost keywords.",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "api",
+                "v3",
+                "product_boost",
+                "keywords"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [
+                {
+                  "disabled": false,
+                  "key": "keywords",
+                  "value": "<string>",
+                  "description": "A list of keywords. Maximum 50 keywords allowed. Only one of 'keywords' and 'query' parameters should be provided. 'keywords' parameter does exact match while 'query' returns all matching keywords."
+                },
+                {
+                  "disabled": false,
+                  "key": "query",
+                  "value": "<string>",
+                  "description": "The query used to search all related keywords. Only one of 'keywords' and 'query' parameters should be provided. 'keywords' parameter does exact match while 'query' returns all matching keyword."
+                },
+                {
+                  "disabled": false,
+                  "key": "exclude",
+                  "value": "<string>",
+                  "description": "A list of keywords to be excluded from the search results. Maximum 30 allowed. This parameter is only in use if 'query' parameter is provided."
+                },
+                {
+                  "disabled": false,
+                  "key": "exclude",
+                  "value": "<string>",
+                  "description": "A list of keywords to be excluded from the search results. Maximum 30 allowed. This parameter is only in use if 'query' parameter is provided."
+                },
+                {
+                  "disabled": false,
+                  "key": "exclude",
+                  "value": "<string>",
+                  "description": "A list of keywords to be excluded from the search results. Maximum 30 allowed. This parameter is only in use if 'query' parameter is provided."
+                },
+                {
+                  "disabled": false,
+                  "key": "exclude",
+                  "value": "<string>",
+                  "description": "A list of keywords to be excluded from the search results. Maximum 30 allowed. This parameter is only in use if 'query' parameter is provided."
+                },
+                {
+                  "disabled": false,
+                  "key": "exclude",
+                  "value": "<string>",
+                  "description": "A list of keywords to be excluded from the search results. Maximum 30 allowed. This parameter is only in use if 'query' parameter is provided."
+                },
+                {
+                  "disabled": false,
+                  "key": "exclude",
+                  "value": "<string>",
+                  "description": "A list of keywords to be excluded from the search results. Maximum 30 allowed. This parameter is only in use if 'query' parameter is provided."
+                },
+                {
+                  "disabled": false,
+                  "key": "exclude",
+                  "value": "<string>",
+                  "description": "A list of keywords to be excluded from the search results. Maximum 30 allowed. This parameter is only in use if 'query' parameter is provided."
+                },
+                {
+                  "disabled": false,
+                  "key": "exclude",
+                  "value": "<string>",
+                  "description": "A list of keywords to be excluded from the search results. Maximum 30 allowed. This parameter is only in use if 'query' parameter is provided."
+                },
+                {
+                  "disabled": false,
+                  "key": "exclude",
+                  "value": "<string>",
+                  "description": "A list of keywords to be excluded from the search results. Maximum 30 allowed. This parameter is only in use if 'query' parameter is provided."
+                },
+                {
+                  "disabled": false,
+                  "key": "exclude",
+                  "value": "<string>",
+                  "description": "A list of keywords to be excluded from the search results. Maximum 30 allowed. This parameter is only in use if 'query' parameter is provided."
+                },
+                {
+                  "disabled": false,
+                  "key": "exclude",
+                  "value": "<string>",
+                  "description": "A list of keywords to be excluded from the search results. Maximum 30 allowed. This parameter is only in use if 'query' parameter is provided."
+                },
+                {
+                  "disabled": false,
+                  "key": "exclude",
+                  "value": "<string>",
+                  "description": "A list of keywords to be excluded from the search results. Maximum 30 allowed. This parameter is only in use if 'query' parameter is provided."
+                },
+                {
+                  "disabled": false,
+                  "key": "exclude",
+                  "value": "<string>",
+                  "description": "A list of keywords to be excluded from the search results. Maximum 30 allowed. This parameter is only in use if 'query' parameter is provided."
+                },
+                {
+                  "disabled": false,
+                  "key": "exclude",
+                  "value": "<string>",
+                  "description": "A list of keywords to be excluded from the search results. Maximum 30 allowed. This parameter is only in use if 'query' parameter is provided."
+                },
+                {
+                  "disabled": false,
+                  "key": "exclude",
+                  "value": "<string>",
+                  "description": "A list of keywords to be excluded from the search results. Maximum 30 allowed. This parameter is only in use if 'query' parameter is provided."
+                },
+                {
+                  "disabled": false,
+                  "key": "exclude",
+                  "value": "<string>",
+                  "description": "A list of keywords to be excluded from the search results. Maximum 30 allowed. This parameter is only in use if 'query' parameter is provided."
+                },
+                {
+                  "disabled": false,
+                  "key": "exclude",
+                  "value": "<string>",
+                  "description": "A list of keywords to be excluded from the search results. Maximum 30 allowed. This parameter is only in use if 'query' parameter is provided."
+                },
+                {
+                  "disabled": false,
+                  "key": "exclude",
+                  "value": "<string>",
+                  "description": "A list of keywords to be excluded from the search results. Maximum 30 allowed. This parameter is only in use if 'query' parameter is provided."
+                },
+                {
+                  "disabled": false,
+                  "key": "exclude",
+                  "value": "<string>",
+                  "description": "A list of keywords to be excluded from the search results. Maximum 30 allowed. This parameter is only in use if 'query' parameter is provided."
+                },
+                {
+                  "disabled": false,
+                  "key": "exclude",
+                  "value": "<string>",
+                  "description": "A list of keywords to be excluded from the search results. Maximum 30 allowed. This parameter is only in use if 'query' parameter is provided."
+                }
+              ],
+              "variable": []
+            },
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "GET",
+            "auth": {
+              "type": "oauth2",
+              "oauth2": [
+                {
+                  "key": "scope",
+                  "value": "payments:write tickets:write epc:read returns:write returns:read fbw:read products:read payments:read fbw:write merchant:write products:write ratings:read videos:read compliance:write product_boost:read listing_quality:read webhook:write orders:read compliance:read fbs:read penalties:read penalties:write infractions:read orders:write merchant:read notifications:write announcements:read product_boost:write notifications:read webhook:read qoo10:read wps_parcel:write wps_parcel:read tickets:read infractions:write videos:write epc:write"
+                },
+                {
+                  "key": "redirect_uri",
+                  "value": "https://merchant.wish.com/api/v3/oauth/refresh_token"
+                },
+                {
+                  "key": "accessTokenUrl",
+                  "value": "https://merchant.wish.com/api/v3/oauth/access_token"
+                },
+                {
+                  "key": "authUrl",
+                  "value": "https://merchant.wish.com/v3/oauth/authorize"
+                },
+                {
+                  "key": "grant_type",
+                  "value": "authorization_code"
+                }
+              ]
+            }
+          },
+          "response": [
+            {
+              "id": "fd0ad61a-7a00-45c5-9011-b6d6409a3b40",
+              "name": "successfully queried for ProductBoost keywords",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "api",
+                    "v3",
+                    "product_boost",
+                    "keywords"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "keywords",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "query",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "exclude",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "exclude",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "exclude",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "exclude",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "exclude",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "exclude",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "exclude",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "exclude",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "exclude",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "exclude",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "exclude",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "exclude",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "exclude",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "exclude",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "exclude",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "exclude",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "exclude",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "exclude",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "exclude",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "exclude",
+                      "value": "<string>"
+                    }
+                  ],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: oauth2",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "<token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "[\n  {\n    \"hotness\": \"VERY_LOW\",\n    \"keyword\": \"string\"\n  },\n  {\n    \"hotness\": \"VERY_HIGH\",\n    \"keyword\": \"string\"\n  }\n]",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "22379a18-99a0-4158-805b-37a134b98d8b",
+              "name": "failed to query for ProductBoost keywords",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "api",
+                    "v3",
+                    "product_boost",
+                    "keywords"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "keywords",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "query",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "exclude",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "exclude",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "exclude",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "exclude",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "exclude",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "exclude",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "exclude",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "exclude",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "exclude",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "exclude",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "exclude",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "exclude",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "exclude",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "exclude",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "exclude",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "exclude",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "exclude",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "exclude",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "exclude",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "exclude",
+                      "value": "<string>"
+                    }
+                  ],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: oauth2",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "<token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "Bad Request",
+              "code": 400,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"message\": \"Invalid 'keywords' parameter.\",\n  \"code\": \"20501\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "baf04f2d-164a-40d3-9eb0-d834c00a2a36",
+          "name": "Create a ProductBoost campaign",
+          "request": {
+            "name": "Create a ProductBoost campaign",
+            "description": {
+              "content": "Create a ProductBoost campaign.",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "api",
+                "v3",
+                "product_boost",
+                "campaigns"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": []
+            },
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "POST",
+            "auth": {
+              "type": "oauth2",
+              "oauth2": [
+                {
+                  "key": "scope",
+                  "value": "payments:write tickets:write epc:read returns:write returns:read fbw:read products:read payments:read fbw:write merchant:write products:write ratings:read videos:read compliance:write product_boost:read listing_quality:read webhook:write orders:read compliance:read fbs:read penalties:read penalties:write infractions:read orders:write merchant:read notifications:write announcements:read product_boost:write notifications:read webhook:read qoo10:read wps_parcel:write wps_parcel:read tickets:read infractions:write videos:write epc:write"
+                },
+                {
+                  "key": "redirect_uri",
+                  "value": "https://merchant.wish.com/api/v3/oauth/refresh_token"
+                },
+                {
+                  "key": "accessTokenUrl",
+                  "value": "https://merchant.wish.com/api/v3/oauth/access_token"
+                },
+                {
+                  "key": "authUrl",
+                  "value": "https://merchant.wish.com/v3/oauth/authorize"
+                },
+                {
+                  "key": "grant_type",
+                  "value": "authorization_code"
+                }
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"campaign_name\": \"<string>\",\n  \"auto_renew\": \"<boolean>\",\n  \"start_at\": \"<dateTime>\",\n  \"end_at\": \"<dateTime>\",\n  \"products\": [\n    {\n      \"product_id\": \"<object-id>\",\n      \"keywords\": [\n        \"<string>\",\n        \"<string>\"\n      ]\n    }\n  ],\n  \"scheduled_add_budget_amount\": \"<object>\",\n  \"merchant_budget\": \"<object>\",\n  \"scheduled_add_budget_days\": [\n    \"<integer>\",\n    \"<integer>\"\n  ],\n  \"max_budget\": \"<object>\",\n  \"intense_boost\": \"<boolean>\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": [
+            {
+              "id": "2fca1770-a7f2-49a2-beaa-df080d0121e0",
+              "name": "successfully created a campaign",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "api",
+                    "v3",
+                    "product_boost",
+                    "campaigns"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: oauth2",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "<token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"campaign_name\": \"<string>\",\n  \"auto_renew\": \"<boolean>\",\n  \"start_at\": \"<dateTime>\",\n  \"end_at\": \"<dateTime>\",\n  \"products\": [\n    {\n      \"product_id\": \"<object-id>\",\n      \"keywords\": [\n        \"<string>\",\n        \"<string>\"\n      ]\n    }\n  ],\n  \"scheduled_add_budget_amount\": {\n    \"amount\": 10.4,\n    \"currency_code\": \"USD\"\n  },\n  \"merchant_budget\": {\n    \"amount\": 10.4,\n    \"currency_code\": \"USD\"\n  },\n  \"scheduled_add_budget_days\": [\n    \"<integer>\",\n    \"<integer>\"\n  ],\n  \"max_budget\": {\n    \"amount\": 10.4,\n    \"currency_code\": \"USD\"\n  },\n  \"intense_boost\": \"<boolean>\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"is_automated_campaign\": true,\n  \"auto_renew\": false,\n  \"total_impressions\": 923,\n  \"pb_sales\": 8661,\n  \"sales\": 9780,\n  \"campaign_name\": \"string\",\n  \"id\": \"string\",\n  \"discount_ratio\": 0.09779254437498675,\n  \"total_campaign_spend\": {\n    \"amount\": 10.4,\n    \"currency_code\": \"USD\"\n  },\n  \"merchant_budget\": {\n    \"amount\": 10.4,\n    \"currency_code\": \"USD\"\n  },\n  \"bonus_budget_spend\": {\n    \"amount\": 10.4,\n    \"currency_code\": \"USD\"\n  },\n  \"scheduled_add_budget_days\": [\n    3,\n    4\n  ],\n  \"paid_impressions\": 5264,\n  \"end_at\": \"2026-05-29T15:00:01.405Z\",\n  \"state\": \"STARTED\",\n  \"type\": \"SIMPLE_BOOST\",\n  \"gmv\": {\n    \"amount\": 10.4,\n    \"currency_code\": \"USD\"\n  },\n  \"intense_boost\": false,\n  \"scheduled_add_budget_amount\": {\n    \"amount\": 10.4,\n    \"currency_code\": \"USD\"\n  },\n  \"start_at\": \"1966-10-26T16:05:08.142Z\",\n  \"pb_impressions\": 880,\n  \"bonus_budget\": {\n    \"amount\": 10.4,\n    \"currency_code\": \"USD\"\n  },\n  \"updated_at\": \"2012-08-10T22:40:27.201Z\",\n  \"pb_clicks\": 5851,\n  \"merchant_id\": \"string\",\n  \"min_spend\": {\n    \"amount\": 10.4,\n    \"currency_code\": \"USD\"\n  },\n  \"total_impression_fees_charged\": {\n    \"amount\": 10.4,\n    \"currency_code\": \"USD\"\n  },\n  \"impression_fees_breakdowns\": [\n    {\n      \"amount\": {\n        \"amount\": 10.4,\n        \"currency_code\": \"USD\"\n      },\n      \"start_at\": \"1947-05-08T13:16:56.729Z\",\n      \"state\": \"NOT_CHARGED\",\n      \"end_at\": \"1951-09-12T09:46:52.022Z\"\n    },\n    {\n      \"amount\": {\n        \"amount\": 10.4,\n        \"currency_code\": \"USD\"\n      },\n      \"start_at\": \"1977-07-02T03:33:28.976Z\",\n      \"state\": \"CHARGED\",\n      \"end_at\": \"1965-10-06T06:30:03.954Z\"\n    }\n  ],\n  \"max_budget\": {\n    \"amount\": 10.4,\n    \"currency_code\": \"USD\"\n  },\n  \"products\": [\n    {\n      \"merchant_bid_rate\": {\n        \"amount\": 10.4,\n        \"currency_code\": \"USD\"\n      },\n      \"product_id\": \"string\",\n      \"is_maxboost\": true,\n      \"paid_impressions\": 9072,\n      \"keywords\": [\n        \"string\",\n        \"string\"\n      ],\n      \"enrollment_fee\": {\n        \"amount\": 10.4,\n        \"currency_code\": \"USD\"\n      },\n      \"actual_charge_rate\": {\n        \"amount\": 10.4,\n        \"currency_code\": \"USD\"\n      }\n    },\n    {\n      \"merchant_bid_rate\": {\n        \"amount\": 10.4,\n        \"currency_code\": \"USD\"\n      },\n      \"product_id\": \"string\",\n      \"is_maxboost\": true,\n      \"paid_impressions\": 8094,\n      \"keywords\": [\n        \"string\",\n        \"string\"\n      ],\n      \"enrollment_fee\": {\n        \"amount\": 10.4,\n        \"currency_code\": \"USD\"\n      },\n      \"actual_charge_rate\": {\n        \"amount\": 10.4,\n        \"currency_code\": \"USD\"\n      }\n    }\n  ],\n  \"total_enrollment_fees\": {\n    \"amount\": 10.4,\n    \"currency_code\": \"USD\"\n  },\n  \"pb_gmv\": {\n    \"amount\": 10.4,\n    \"currency_code\": \"USD\"\n  }\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "a81ba62f-d041-466a-a918-5d9127ca7131",
+              "name": "failed to create a campaign",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "api",
+                    "v3",
+                    "product_boost",
+                    "campaigns"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: oauth2",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "<token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"campaign_name\": \"<string>\",\n  \"auto_renew\": \"<boolean>\",\n  \"start_at\": \"<dateTime>\",\n  \"end_at\": \"<dateTime>\",\n  \"products\": [\n    {\n      \"product_id\": \"<object-id>\",\n      \"keywords\": [\n        \"<string>\",\n        \"<string>\"\n      ]\n    }\n  ],\n  \"scheduled_add_budget_amount\": {\n    \"amount\": 10.4,\n    \"currency_code\": \"USD\"\n  },\n  \"merchant_budget\": {\n    \"amount\": 10.4,\n    \"currency_code\": \"USD\"\n  },\n  \"scheduled_add_budget_days\": [\n    \"<integer>\",\n    \"<integer>\"\n  ],\n  \"max_budget\": {\n    \"amount\": 10.4,\n    \"currency_code\": \"USD\"\n  },\n  \"intense_boost\": \"<boolean>\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Bad Request",
+              "code": 400,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"message\": \"Maximum allowed spending is too low to run this campaign.\",\n  \"code\": \"20810\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "70070ebd-a348-4bc6-939d-2115b10469fb",
+          "name": "List ProductBoost campaigns",
+          "request": {
+            "name": "List ProductBoost campaigns",
+            "description": {
+              "content": "List ProductBoost campaigns by criteria.",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "api",
+                "v3",
+                "product_boost",
+                "campaigns"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [
+                {
+                  "disabled": false,
+                  "key": "product_id",
+                  "value": "<object-id>",
+                  "description": "ID of the product that result campaigns should include."
+                },
+                {
+                  "disabled": false,
+                  "key": "campaign_name",
+                  "value": "<string>",
+                  "description": "Name of the Campaigns you want to query."
+                },
+                {
+                  "disabled": false,
+                  "key": "limit",
+                  "value": "50",
+                  "description": "A limit on the number of campaigns that will be returned. Used for paging."
+                },
+                {
+                  "disabled": false,
+                  "key": "states",
+                  "value": "<string>",
+                  "description": "Restrict campaigns within provided states"
+                },
+                {
+                  "disabled": false,
+                  "key": "states",
+                  "value": "<string>",
+                  "description": "Restrict campaigns within provided states"
+                },
+                {
+                  "disabled": false,
+                  "key": "auto_renew",
+                  "value": "<boolean>",
+                  "description": "Only return campaigns that will or will not auto-renew upon completion."
+                },
+                {
+                  "disabled": false,
+                  "key": "is_automated",
+                  "value": "<boolean>",
+                  "description": "Only return campaigns that are or are not automated campaigns, or duplicated from automated campaigns."
+                },
+                {
+                  "disabled": false,
+                  "key": "created_at_min",
+                  "value": "<dateTime>",
+                  "description": "Only return campaigns that are created at or after this time."
+                },
+                {
+                  "disabled": false,
+                  "key": "created_at_max",
+                  "value": "<dateTime>",
+                  "description": "Only return campaigns that are created at or before this time."
+                },
+                {
+                  "disabled": false,
+                  "key": "campaign_id_min",
+                  "value": "<object-id>",
+                  "description": "Only return campaigns with campaign id values greater than or equal to this id. Intended for paging."
+                },
+                {
+                  "disabled": false,
+                  "key": "campaign_id_max",
+                  "value": "<object-id>",
+                  "description": "Only return campaigns with campaign id values less than or equal to this id. Intended for paging."
+                },
+                {
+                  "disabled": false,
+                  "key": "updated_at_min",
+                  "value": "<dateTime>",
+                  "description": "Only return campaigns whose attributes are updated at or after this time."
+                },
+                {
+                  "disabled": false,
+                  "key": "updated_at_max",
+                  "value": "<dateTime>",
+                  "description": "Only return campaigns whose attributes are updated at or before this time."
+                },
+                {
+                  "disabled": false,
+                  "key": "start_at_min",
+                  "value": "<dateTime>",
+                  "description": "Only return campaigns that start at or after this time."
+                },
+                {
+                  "disabled": false,
+                  "key": "start_at_max",
+                  "value": "<dateTime>",
+                  "description": "Only return campaigns that start at or before this time."
+                },
+                {
+                  "disabled": false,
+                  "key": "end_at_min",
+                  "value": "<dateTime>",
+                  "description": "Only return campaigns that end on or after this time."
+                },
+                {
+                  "disabled": false,
+                  "key": "end_at_max",
+                  "value": "<dateTime>",
+                  "description": "Only return campaigns that end on or before this time."
+                },
+                {
+                  "disabled": false,
+                  "key": "sort_by",
+                  "value": "end_at.desc",
+                  "description": " Only 3 fields are enabled for sorting:`start_at`, `end_at` or `campaign_id` Default order is `desc`, use `asc` to sort in reverse. Only sorting by 'campaign_id' is allowed when paging using 'campaign_id_min' or 'campaign_id_max'. "
+                }
+              ],
+              "variable": []
+            },
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "GET",
+            "auth": {
+              "type": "oauth2",
+              "oauth2": [
+                {
+                  "key": "scope",
+                  "value": "payments:write tickets:write epc:read returns:write returns:read fbw:read products:read payments:read fbw:write merchant:write products:write ratings:read videos:read compliance:write product_boost:read listing_quality:read webhook:write orders:read compliance:read fbs:read penalties:read penalties:write infractions:read orders:write merchant:read notifications:write announcements:read product_boost:write notifications:read webhook:read qoo10:read wps_parcel:write wps_parcel:read tickets:read infractions:write videos:write epc:write"
+                },
+                {
+                  "key": "redirect_uri",
+                  "value": "https://merchant.wish.com/api/v3/oauth/refresh_token"
+                },
+                {
+                  "key": "accessTokenUrl",
+                  "value": "https://merchant.wish.com/api/v3/oauth/access_token"
+                },
+                {
+                  "key": "authUrl",
+                  "value": "https://merchant.wish.com/v3/oauth/authorize"
+                },
+                {
+                  "key": "grant_type",
+                  "value": "authorization_code"
+                }
+              ]
+            }
+          },
+          "response": [
+            {
+              "id": "a210fe02-46be-4ebc-a5c3-286b1964a1a4",
+              "name": "successfully queried for ProductBoost campaigns",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "api",
+                    "v3",
+                    "product_boost",
+                    "campaigns"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "product_id",
+                      "value": "<object-id>"
+                    },
+                    {
+                      "key": "campaign_name",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "limit",
+                      "value": "50"
+                    },
+                    {
+                      "key": "states",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "states",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "auto_renew",
+                      "value": "<boolean>"
+                    },
+                    {
+                      "key": "is_automated",
+                      "value": "<boolean>"
+                    },
+                    {
+                      "key": "created_at_min",
+                      "value": "2020-01-01T07:00:00Z"
+                    },
+                    {
+                      "key": "created_at_max",
+                      "value": "2020-01-01T07:00:00Z"
+                    },
+                    {
+                      "key": "campaign_id_min",
+                      "value": "5e0c27500000000000000000"
+                    },
+                    {
+                      "key": "campaign_id_max",
+                      "value": "5e0c27500000000000000000"
+                    },
+                    {
+                      "key": "updated_at_min",
+                      "value": "2020-01-01T07:00:00Z"
+                    },
+                    {
+                      "key": "updated_at_max",
+                      "value": "2020-01-01T07:00:00Z"
+                    },
+                    {
+                      "key": "start_at_min",
+                      "value": "2020-01-01T07:00:00Z"
+                    },
+                    {
+                      "key": "start_at_max",
+                      "value": "2020-01-01T07:00:00Z"
+                    },
+                    {
+                      "key": "end_at_min",
+                      "value": "2020-01-01T07:00:00Z"
+                    },
+                    {
+                      "key": "end_at_max",
+                      "value": "2020-01-01T07:00:00Z"
+                    },
+                    {
+                      "key": "sort_by",
+                      "value": "end_at.desc"
+                    }
+                  ],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: oauth2",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "<token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "[\n  {\n    \"is_automated_campaign\": false,\n    \"auto_renew\": false,\n    \"total_impressions\": 2114,\n    \"pb_sales\": 8561,\n    \"sales\": 6563,\n    \"campaign_name\": \"string\",\n    \"id\": \"string\",\n    \"discount_ratio\": 0.8963523140430668,\n    \"total_campaign_spend\": {\n      \"amount\": 10.4,\n      \"currency_code\": \"USD\"\n    },\n    \"merchant_budget\": {\n      \"amount\": 10.4,\n      \"currency_code\": \"USD\"\n    },\n    \"bonus_budget_spend\": {\n      \"amount\": 10.4,\n      \"currency_code\": \"USD\"\n    },\n    \"scheduled_add_budget_days\": [\n      4,\n      4\n    ],\n    \"paid_impressions\": 7776,\n    \"end_at\": \"2015-07-31T04:41:23.989Z\",\n    \"state\": \"<string>\",\n    \"type\": \"CLASSIC_BOOST\",\n    \"gmv\": {\n      \"amount\": 10.4,\n      \"currency_code\": \"USD\"\n    },\n    \"intense_boost\": true,\n    \"scheduled_add_budget_amount\": {\n      \"amount\": 10.4,\n      \"currency_code\": \"USD\"\n    },\n    \"start_at\": \"1955-02-24T06:02:52.439Z\",\n    \"pb_impressions\": 5681,\n    \"bonus_budget\": {\n      \"amount\": 10.4,\n      \"currency_code\": \"USD\"\n    },\n    \"updated_at\": \"1975-03-03T03:42:09.931Z\",\n    \"pb_clicks\": 8970,\n    \"merchant_id\": \"string\",\n    \"min_spend\": {\n      \"amount\": 10.4,\n      \"currency_code\": \"USD\"\n    },\n    \"total_impression_fees_charged\": {\n      \"amount\": 10.4,\n      \"currency_code\": \"USD\"\n    },\n    \"impression_fees_breakdowns\": [\n      {\n        \"amount\": {\n          \"amount\": 10.4,\n          \"currency_code\": \"USD\"\n        },\n        \"start_at\": \"2006-12-31T18:02:05.146Z\",\n        \"state\": \"CHARGED\",\n        \"end_at\": \"1986-01-22T20:44:55.539Z\"\n      },\n      {\n        \"amount\": {\n          \"amount\": 10.4,\n          \"currency_code\": \"USD\"\n        },\n        \"start_at\": \"1974-05-15T12:29:58.237Z\",\n        \"state\": \"NOT_CHARGED\",\n        \"end_at\": \"1946-11-20T13:30:04.756Z\"\n      }\n    ],\n    \"max_budget\": {\n      \"amount\": 10.4,\n      \"currency_code\": \"USD\"\n    },\n    \"products\": [\n      {\n        \"merchant_bid_rate\": {\n          \"amount\": 10.4,\n          \"currency_code\": \"USD\"\n        },\n        \"product_id\": \"string\",\n        \"is_maxboost\": true,\n        \"paid_impressions\": 2744,\n        \"keywords\": [\n          \"string\",\n          \"string\"\n        ],\n        \"enrollment_fee\": {\n          \"amount\": 10.4,\n          \"currency_code\": \"USD\"\n        },\n        \"actual_charge_rate\": {\n          \"amount\": 10.4,\n          \"currency_code\": \"USD\"\n        }\n      },\n      {\n        \"merchant_bid_rate\": {\n          \"amount\": 10.4,\n          \"currency_code\": \"USD\"\n        },\n        \"product_id\": \"string\",\n        \"is_maxboost\": true,\n        \"paid_impressions\": 9309,\n        \"keywords\": [\n          \"string\",\n          \"string\"\n        ],\n        \"enrollment_fee\": {\n          \"amount\": 10.4,\n          \"currency_code\": \"USD\"\n        },\n        \"actual_charge_rate\": {\n          \"amount\": 10.4,\n          \"currency_code\": \"USD\"\n        }\n      }\n    ],\n    \"total_enrollment_fees\": {\n      \"amount\": 10.4,\n      \"currency_code\": \"USD\"\n    },\n    \"pb_gmv\": {\n      \"amount\": 10.4,\n      \"currency_code\": \"USD\"\n    }\n  },\n  {\n    \"is_automated_campaign\": false,\n    \"auto_renew\": false,\n    \"total_impressions\": 1545,\n    \"pb_sales\": 2903,\n    \"sales\": 3354,\n    \"campaign_name\": \"string\",\n    \"id\": \"string\",\n    \"discount_ratio\": 0.8396079856245456,\n    \"total_campaign_spend\": {\n      \"amount\": 10.4,\n      \"currency_code\": \"USD\"\n    },\n    \"merchant_budget\": {\n      \"amount\": 10.4,\n      \"currency_code\": \"USD\"\n    },\n    \"bonus_budget_spend\": {\n      \"amount\": 10.4,\n      \"currency_code\": \"USD\"\n    },\n    \"scheduled_add_budget_days\": [\n      3,\n      2\n    ],\n    \"paid_impressions\": 4176,\n    \"end_at\": \"1982-07-05T22:02:53.544Z\",\n    \"state\": \"<string>\",\n    \"type\": \"CLASSIC_BOOST\",\n    \"gmv\": {\n      \"amount\": 10.4,\n      \"currency_code\": \"USD\"\n    },\n    \"intense_boost\": true,\n    \"scheduled_add_budget_amount\": {\n      \"amount\": 10.4,\n      \"currency_code\": \"USD\"\n    },\n    \"start_at\": \"1990-12-15T03:01:50.020Z\",\n    \"pb_impressions\": 7458,\n    \"bonus_budget\": {\n      \"amount\": 10.4,\n      \"currency_code\": \"USD\"\n    },\n    \"updated_at\": \"2024-11-11T00:25:47.345Z\",\n    \"pb_clicks\": 7156,\n    \"merchant_id\": \"string\",\n    \"min_spend\": {\n      \"amount\": 10.4,\n      \"currency_code\": \"USD\"\n    },\n    \"total_impression_fees_charged\": {\n      \"amount\": 10.4,\n      \"currency_code\": \"USD\"\n    },\n    \"impression_fees_breakdowns\": [\n      {\n        \"amount\": {\n          \"amount\": 10.4,\n          \"currency_code\": \"USD\"\n        },\n        \"start_at\": \"1958-12-20T12:24:33.694Z\",\n        \"state\": \"NOT_CHARGED\",\n        \"end_at\": \"1997-05-17T16:41:11.993Z\"\n      },\n      {\n        \"amount\": {\n          \"amount\": 10.4,\n          \"currency_code\": \"USD\"\n        },\n        \"start_at\": \"1990-05-05T07:12:28.801Z\",\n        \"state\": \"NOT_CHARGED\",\n        \"end_at\": \"2018-12-07T00:39:25.185Z\"\n      }\n    ],\n    \"max_budget\": {\n      \"amount\": 10.4,\n      \"currency_code\": \"USD\"\n    },\n    \"products\": [\n      {\n        \"merchant_bid_rate\": {\n          \"amount\": 10.4,\n          \"currency_code\": \"USD\"\n        },\n        \"product_id\": \"string\",\n        \"is_maxboost\": false,\n        \"paid_impressions\": 6702,\n        \"keywords\": [\n          \"string\",\n          \"string\"\n        ],\n        \"enrollment_fee\": {\n          \"amount\": 10.4,\n          \"currency_code\": \"USD\"\n        },\n        \"actual_charge_rate\": {\n          \"amount\": 10.4,\n          \"currency_code\": \"USD\"\n        }\n      },\n      {\n        \"merchant_bid_rate\": {\n          \"amount\": 10.4,\n          \"currency_code\": \"USD\"\n        },\n        \"product_id\": \"string\",\n        \"is_maxboost\": false,\n        \"paid_impressions\": 1134,\n        \"keywords\": [\n          \"string\",\n          \"string\"\n        ],\n        \"enrollment_fee\": {\n          \"amount\": 10.4,\n          \"currency_code\": \"USD\"\n        },\n        \"actual_charge_rate\": {\n          \"amount\": 10.4,\n          \"currency_code\": \"USD\"\n        }\n      }\n    ],\n    \"total_enrollment_fees\": {\n      \"amount\": 10.4,\n      \"currency_code\": \"USD\"\n    },\n    \"pb_gmv\": {\n      \"amount\": 10.4,\n      \"currency_code\": \"USD\"\n    }\n  }\n]",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "33bce713-e3ab-4bd0-a492-67a76e47df3c",
+              "name": "failed to query for ProductBoost campaigns",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "api",
+                    "v3",
+                    "product_boost",
+                    "campaigns"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "product_id",
+                      "value": "<object-id>"
+                    },
+                    {
+                      "key": "campaign_name",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "limit",
+                      "value": "50"
+                    },
+                    {
+                      "key": "states",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "states",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "auto_renew",
+                      "value": "<boolean>"
+                    },
+                    {
+                      "key": "is_automated",
+                      "value": "<boolean>"
+                    },
+                    {
+                      "key": "created_at_min",
+                      "value": "2020-01-01T07:00:00Z"
+                    },
+                    {
+                      "key": "created_at_max",
+                      "value": "2020-01-01T07:00:00Z"
+                    },
+                    {
+                      "key": "campaign_id_min",
+                      "value": "5e0c27500000000000000000"
+                    },
+                    {
+                      "key": "campaign_id_max",
+                      "value": "5e0c27500000000000000000"
+                    },
+                    {
+                      "key": "updated_at_min",
+                      "value": "2020-01-01T07:00:00Z"
+                    },
+                    {
+                      "key": "updated_at_max",
+                      "value": "2020-01-01T07:00:00Z"
+                    },
+                    {
+                      "key": "start_at_min",
+                      "value": "2020-01-01T07:00:00Z"
+                    },
+                    {
+                      "key": "start_at_max",
+                      "value": "2020-01-01T07:00:00Z"
+                    },
+                    {
+                      "key": "end_at_min",
+                      "value": "2020-01-01T07:00:00Z"
+                    },
+                    {
+                      "key": "end_at_max",
+                      "value": "2020-01-01T07:00:00Z"
+                    },
+                    {
+                      "key": "sort_by",
+                      "value": "end_at.desc"
+                    }
+                  ],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: oauth2",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "<token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "Bad Request",
+              "code": 400,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"message\": \"Invalid 'start_at_min' and 'start_at_max' parameters. 'start_at_min' must be less than or equal to 'start_at_max'.\",\n  \"code\": \"20405\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "9f3ed6b1-4feb-4ca2-8df0-8f87aed3d377",
+          "name": "List products' feedback in a ProductBoost campaign",
+          "request": {
+            "name": "List products' feedback in a ProductBoost campaign",
+            "description": {
+              "content": "List products' feedback for products who received lower than expected number of paid impressions in a ProductBoost campaign.",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "api",
+                "v3",
+                "product_boost",
+                "campaigns",
+                ":id",
+                "product_feedback"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [
+                {
+                  "disabled": false,
+                  "key": "product_ids",
+                  "value": "<object-id>",
+                  "description": "IDs of products in the campaign that you want to obtain feedback for. If not provided, feedback for all products with lower than expected number of paid impressions in the campaign will be returned."
+                }
+              ],
+              "variable": [
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<object-id>",
+                  "key": "id",
+                  "description": "(Required) ID of the campaign that you want to query for product feedback."
+                }
+              ]
+            },
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "GET",
+            "auth": {
+              "type": "oauth2",
+              "oauth2": [
+                {
+                  "key": "scope",
+                  "value": "payments:write tickets:write epc:read returns:write returns:read fbw:read products:read payments:read fbw:write merchant:write products:write ratings:read videos:read compliance:write product_boost:read listing_quality:read webhook:write orders:read compliance:read fbs:read penalties:read penalties:write infractions:read orders:write merchant:read notifications:write announcements:read product_boost:write notifications:read webhook:read qoo10:read wps_parcel:write wps_parcel:read tickets:read infractions:write videos:write epc:write"
+                },
+                {
+                  "key": "redirect_uri",
+                  "value": "https://merchant.wish.com/api/v3/oauth/refresh_token"
+                },
+                {
+                  "key": "accessTokenUrl",
+                  "value": "https://merchant.wish.com/api/v3/oauth/access_token"
+                },
+                {
+                  "key": "authUrl",
+                  "value": "https://merchant.wish.com/v3/oauth/authorize"
+                },
+                {
+                  "key": "grant_type",
+                  "value": "authorization_code"
+                }
+              ]
+            }
+          },
+          "response": [
+            {
+              "id": "28e896ee-637a-471f-8a50-de02a532d71b",
+              "name": "successfully queried for products' feedback in the campaign",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "api",
+                    "v3",
+                    "product_boost",
+                    "campaigns",
+                    ":id",
+                    "product_feedback"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "product_ids",
+                      "value": "<object-id>"
+                    }
+                  ],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<object-id>",
+                      "key": "id",
+                      "description": "(Required) ID of the campaign that you want to query for product feedback."
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: oauth2",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "<token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "[\n  {\n    \"feedback_message\": \"string\",\n    \"product_id\": \"string\",\n    \"feedback_type\": \"PRODUCT_LOW_BID\",\n    \"campaign_id\": \"string\"\n  },\n  {\n    \"feedback_message\": \"string\",\n    \"product_id\": \"string\",\n    \"feedback_type\": \"PRODUCT_LOW_RATING\",\n    \"campaign_id\": \"string\"\n  }\n]",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "26b46bca-a6df-43b4-8380-e286b4b834a9",
+              "name": "failed to queried for products' feedback in the campaign",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "api",
+                    "v3",
+                    "product_boost",
+                    "campaigns",
+                    ":id",
+                    "product_feedback"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "product_ids",
+                      "value": "<object-id>"
+                    }
+                  ],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<object-id>",
+                      "key": "id",
+                      "description": "(Required) ID of the campaign that you want to query for product feedback."
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: oauth2",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "<token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "Bad Request",
+              "code": 400,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"code\": 4958,\n  \"message\": \"string\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "79b82bc3-44e9-4474-84eb-16593db592b1",
+          "name": "Get the ProductBoost budget breakdown",
+          "request": {
+            "name": "Get the ProductBoost budget breakdown",
+            "description": {
+              "content": "Get the ProductBoost budget breakdown for either all campaigns or one specific campaign.",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "api",
+                "v3",
+                "product_boost",
+                "budget"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [
+                {
+                  "disabled": false,
+                  "key": "campaign_id",
+                  "value": "<object-id>",
+                  "description": "ID of the campaign that you want to acquire budget breakdown for. If not provided, the budget breakdown associated to all campaigns will be returned."
+                }
+              ],
+              "variable": []
+            },
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "GET",
+            "auth": {
+              "type": "oauth2",
+              "oauth2": [
+                {
+                  "key": "scope",
+                  "value": "payments:write tickets:write epc:read returns:write returns:read fbw:read products:read payments:read fbw:write merchant:write products:write ratings:read videos:read compliance:write product_boost:read listing_quality:read webhook:write orders:read compliance:read fbs:read penalties:read penalties:write infractions:read orders:write merchant:read notifications:write announcements:read product_boost:write notifications:read webhook:read qoo10:read wps_parcel:write wps_parcel:read tickets:read infractions:write videos:write epc:write"
+                },
+                {
+                  "key": "redirect_uri",
+                  "value": "https://merchant.wish.com/api/v3/oauth/refresh_token"
+                },
+                {
+                  "key": "accessTokenUrl",
+                  "value": "https://merchant.wish.com/api/v3/oauth/access_token"
+                },
+                {
+                  "key": "authUrl",
+                  "value": "https://merchant.wish.com/v3/oauth/authorize"
+                },
+                {
+                  "key": "grant_type",
+                  "value": "authorization_code"
+                }
+              ]
+            }
+          },
+          "response": [
+            {
+              "id": "60c22d29-a446-40aa-b95b-e92911d3ad3a",
+              "name": "successfully obtained the budget breakdown",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "api",
+                    "v3",
+                    "product_boost",
+                    "budget"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "campaign_id",
+                      "value": "<object-id>"
+                    }
+                  ],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: oauth2",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "<token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"product_boost_bonus\": {\n    \"amount\": 10.4,\n    \"currency_code\": \"USD\"\n  },\n  \"product_boost_credit\": {\n    \"amount\": 10.4,\n    \"currency_code\": \"USD\"\n  },\n  \"total_available_budget\": {\n    \"amount\": 10.4,\n    \"currency_code\": \"USD\"\n  },\n  \"merchant_account_balance\": {\n    \"amount\": 10.4,\n    \"currency_code\": \"USD\"\n  },\n  \"product_boost_balance\": {\n    \"amount\": 10.4,\n    \"currency_code\": \"USD\"\n  },\n  \"product_boost_loan\": {\n    \"amount\": 10.4,\n    \"currency_code\": \"USD\"\n  },\n  \"product_boost_unpaid_balance\": {\n    \"amount\": 10.4,\n    \"currency_code\": \"USD\"\n  }\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "ded6976c-fc05-41ac-b5f7-62da6a8b63ed",
+              "name": "failed to obtain the budget breakdown",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "api",
+                    "v3",
+                    "product_boost",
+                    "budget"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "campaign_id",
+                      "value": "<object-id>"
+                    }
+                  ],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: oauth2",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "<token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "Bad Request",
+              "code": 400,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"code\": 4958,\n  \"message\": \"string\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "d221868d-b08f-4fc6-a7bb-a7c76a2af0b4",
+          "name": "Update a ProductBoost campaign",
+          "request": {
+            "name": "Update a ProductBoost campaign",
+            "description": {
+              "content": "Update a ProductBoost campaign.",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "api",
+                "v3",
+                "product_boost",
+                "campaigns",
+                ":id"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": [
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<object-id>",
+                  "key": "id",
+                  "description": "(Required) ID of the campaign you want to update"
+                }
+              ]
+            },
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "PUT",
+            "auth": {
+              "type": "oauth2",
+              "oauth2": [
+                {
+                  "key": "scope",
+                  "value": "payments:write tickets:write epc:read returns:write returns:read fbw:read products:read payments:read fbw:write merchant:write products:write ratings:read videos:read compliance:write product_boost:read listing_quality:read webhook:write orders:read compliance:read fbs:read penalties:read penalties:write infractions:read orders:write merchant:read notifications:write announcements:read product_boost:write notifications:read webhook:read qoo10:read wps_parcel:write wps_parcel:read tickets:read infractions:write videos:write epc:write"
+                },
+                {
+                  "key": "redirect_uri",
+                  "value": "https://merchant.wish.com/api/v3/oauth/refresh_token"
+                },
+                {
+                  "key": "accessTokenUrl",
+                  "value": "https://merchant.wish.com/api/v3/oauth/access_token"
+                },
+                {
+                  "key": "authUrl",
+                  "value": "https://merchant.wish.com/v3/oauth/authorize"
+                },
+                {
+                  "key": "grant_type",
+                  "value": "authorization_code"
+                }
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"scheduled_add_budget_amount\": \"<object>\",\n  \"start_at\": \"<dateTime>\",\n  \"auto_renew\": \"<boolean>\",\n  \"merchant_budget\": \"<object>\",\n  \"scheduled_add_budget_days\": [\n    \"<integer>\",\n    \"<integer>\"\n  ],\n  \"end_at\": \"<dateTime>\",\n  \"max_budget\": \"<object>\",\n  \"state\": \"<string>\",\n  \"products\": [\n    {\n      \"product_id\": \"<object-id>\",\n      \"keywords\": [\n        \"<string>\",\n        \"<string>\"\n      ]\n    },\n    {\n      \"product_id\": \"<object-id>\",\n      \"keywords\": [\n        \"<string>\",\n        \"<string>\"\n      ]\n    }\n  ],\n  \"campaign_name\": \"<string>\",\n  \"intense_boost\": \"<boolean>\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": [
+            {
+              "id": "a13b6a31-9323-466e-9946-6fa4e1c1044a",
+              "name": "successfully updated a campaign",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "api",
+                    "v3",
+                    "product_boost",
+                    "campaigns",
+                    ":id"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<object-id>",
+                      "key": "id",
+                      "description": "(Required) ID of the campaign you want to update"
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: oauth2",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "<token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "PUT",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"scheduled_add_budget_amount\": {\n    \"amount\": 10.4,\n    \"currency_code\": \"USD\"\n  },\n  \"start_at\": \"<dateTime>\",\n  \"auto_renew\": \"<boolean>\",\n  \"merchant_budget\": {\n    \"amount\": 10.4,\n    \"currency_code\": \"USD\"\n  },\n  \"scheduled_add_budget_days\": [\n    \"<integer>\",\n    \"<integer>\"\n  ],\n  \"end_at\": \"<dateTime>\",\n  \"max_budget\": {\n    \"amount\": 10.4,\n    \"currency_code\": \"USD\"\n  },\n  \"state\": \"<string>\",\n  \"products\": [\n    {\n      \"product_id\": \"<object-id>\",\n      \"keywords\": [\n        \"<string>\",\n        \"<string>\"\n      ]\n    },\n    {\n      \"product_id\": \"<object-id>\",\n      \"keywords\": [\n        \"<string>\",\n        \"<string>\"\n      ]\n    }\n  ],\n  \"campaign_name\": \"<string>\",\n  \"intense_boost\": \"<boolean>\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"is_automated_campaign\": true,\n  \"auto_renew\": false,\n  \"total_impressions\": 2288,\n  \"pb_sales\": 5469,\n  \"sales\": 4749,\n  \"campaign_name\": \"string\",\n  \"id\": \"string\",\n  \"discount_ratio\": 0.2689476055959399,\n  \"total_campaign_spend\": {\n    \"amount\": 10.4,\n    \"currency_code\": \"USD\"\n  },\n  \"merchant_budget\": {\n    \"amount\": 10.4,\n    \"currency_code\": \"USD\"\n  },\n  \"bonus_budget_spend\": {\n    \"amount\": 10.4,\n    \"currency_code\": \"USD\"\n  },\n  \"scheduled_add_budget_days\": [\n    1,\n    2\n  ],\n  \"paid_impressions\": 8192,\n  \"end_at\": \"2023-12-10T23:18:12.321Z\",\n  \"state\": \"<string>\",\n  \"type\": \"CLASSIC_BOOST\",\n  \"gmv\": {\n    \"amount\": 10.4,\n    \"currency_code\": \"USD\"\n  },\n  \"intense_boost\": true,\n  \"scheduled_add_budget_amount\": {\n    \"amount\": 10.4,\n    \"currency_code\": \"USD\"\n  },\n  \"start_at\": \"1968-09-17T20:40:13.794Z\",\n  \"pb_impressions\": 8685,\n  \"bonus_budget\": {\n    \"amount\": 10.4,\n    \"currency_code\": \"USD\"\n  },\n  \"updated_at\": \"1968-10-15T23:55:19.933Z\",\n  \"pb_clicks\": 4936,\n  \"merchant_id\": \"string\",\n  \"min_spend\": {\n    \"amount\": 10.4,\n    \"currency_code\": \"USD\"\n  },\n  \"total_impression_fees_charged\": {\n    \"amount\": 10.4,\n    \"currency_code\": \"USD\"\n  },\n  \"impression_fees_breakdowns\": [\n    {\n      \"amount\": {\n        \"amount\": 10.4,\n        \"currency_code\": \"USD\"\n      },\n      \"start_at\": \"2011-10-03T15:09:39.843Z\",\n      \"state\": \"CHARGED\",\n      \"end_at\": \"1952-08-22T14:10:35.473Z\"\n    },\n    {\n      \"amount\": {\n        \"amount\": 10.4,\n        \"currency_code\": \"USD\"\n      },\n      \"start_at\": \"1969-08-02T20:44:38.844Z\",\n      \"state\": \"CHARGED\",\n      \"end_at\": \"2011-03-24T10:23:03.982Z\"\n    }\n  ],\n  \"max_budget\": {\n    \"amount\": 10.4,\n    \"currency_code\": \"USD\"\n  },\n  \"products\": [\n    {\n      \"merchant_bid_rate\": {\n        \"amount\": 10.4,\n        \"currency_code\": \"USD\"\n      },\n      \"product_id\": \"string\",\n      \"is_maxboost\": false,\n      \"paid_impressions\": 3956,\n      \"keywords\": [\n        \"string\",\n        \"string\"\n      ],\n      \"enrollment_fee\": {\n        \"amount\": 10.4,\n        \"currency_code\": \"USD\"\n      },\n      \"actual_charge_rate\": {\n        \"amount\": 10.4,\n        \"currency_code\": \"USD\"\n      }\n    },\n    {\n      \"merchant_bid_rate\": {\n        \"amount\": 10.4,\n        \"currency_code\": \"USD\"\n      },\n      \"product_id\": \"string\",\n      \"is_maxboost\": true,\n      \"paid_impressions\": 102,\n      \"keywords\": [\n        \"string\",\n        \"string\"\n      ],\n      \"enrollment_fee\": {\n        \"amount\": 10.4,\n        \"currency_code\": \"USD\"\n      },\n      \"actual_charge_rate\": {\n        \"amount\": 10.4,\n        \"currency_code\": \"USD\"\n      }\n    }\n  ],\n  \"total_enrollment_fees\": {\n    \"amount\": 10.4,\n    \"currency_code\": \"USD\"\n  },\n  \"pb_gmv\": {\n    \"amount\": 10.4,\n    \"currency_code\": \"USD\"\n  }\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "fd3fb41d-84dd-4b04-b155-a0982ed2429d",
+              "name": "failed to update a campaign",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "api",
+                    "v3",
+                    "product_boost",
+                    "campaigns",
+                    ":id"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<object-id>",
+                      "key": "id",
+                      "description": "(Required) ID of the campaign you want to update"
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: oauth2",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "<token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "PUT",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"scheduled_add_budget_amount\": {\n    \"amount\": 10.4,\n    \"currency_code\": \"USD\"\n  },\n  \"start_at\": \"<dateTime>\",\n  \"auto_renew\": \"<boolean>\",\n  \"merchant_budget\": {\n    \"amount\": 10.4,\n    \"currency_code\": \"USD\"\n  },\n  \"scheduled_add_budget_days\": [\n    \"<integer>\",\n    \"<integer>\"\n  ],\n  \"end_at\": \"<dateTime>\",\n  \"max_budget\": {\n    \"amount\": 10.4,\n    \"currency_code\": \"USD\"\n  },\n  \"state\": \"<string>\",\n  \"products\": [\n    {\n      \"product_id\": \"<object-id>\",\n      \"keywords\": [\n        \"<string>\",\n        \"<string>\"\n      ]\n    },\n    {\n      \"product_id\": \"<object-id>\",\n      \"keywords\": [\n        \"<string>\",\n        \"<string>\"\n      ]\n    }\n  ],\n  \"campaign_name\": \"<string>\",\n  \"intense_boost\": \"<boolean>\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Bad Request",
+              "code": 400,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"message\": \"The proposed update on the running campaign is invalid.\",\n  \"code\": \"20833\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "ee99c18d-ac40-48b6-ae63-1790c56cb3f1",
+          "name": "Get a single ProductBoost campaign",
+          "request": {
+            "name": "Get a single ProductBoost campaign",
+            "description": {
+              "content": "Get a single ProductBoost campaign by its ID",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "api",
+                "v3",
+                "product_boost",
+                "campaigns",
+                ":id"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": [
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<object-id>",
+                  "key": "id",
+                  "description": "(Required) ID of the campaign you want to query"
+                }
+              ]
+            },
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "GET",
+            "auth": {
+              "type": "oauth2",
+              "oauth2": [
+                {
+                  "key": "scope",
+                  "value": "payments:write tickets:write epc:read returns:write returns:read fbw:read products:read payments:read fbw:write merchant:write products:write ratings:read videos:read compliance:write product_boost:read listing_quality:read webhook:write orders:read compliance:read fbs:read penalties:read penalties:write infractions:read orders:write merchant:read notifications:write announcements:read product_boost:write notifications:read webhook:read qoo10:read wps_parcel:write wps_parcel:read tickets:read infractions:write videos:write epc:write"
+                },
+                {
+                  "key": "redirect_uri",
+                  "value": "https://merchant.wish.com/api/v3/oauth/refresh_token"
+                },
+                {
+                  "key": "accessTokenUrl",
+                  "value": "https://merchant.wish.com/api/v3/oauth/access_token"
+                },
+                {
+                  "key": "authUrl",
+                  "value": "https://merchant.wish.com/v3/oauth/authorize"
+                },
+                {
+                  "key": "grant_type",
+                  "value": "authorization_code"
+                }
+              ]
+            }
+          },
+          "response": [
+            {
+              "id": "1c273477-c6d2-4b6f-a4a2-9d72920722b0",
+              "name": "successfully queried for a ProductBoost campaign",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "api",
+                    "v3",
+                    "product_boost",
+                    "campaigns",
+                    ":id"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<object-id>",
+                      "key": "id",
+                      "description": "(Required) ID of the campaign you want to query"
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: oauth2",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "<token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"is_automated_campaign\": true,\n  \"auto_renew\": false,\n  \"total_impressions\": 2288,\n  \"pb_sales\": 5469,\n  \"sales\": 4749,\n  \"campaign_name\": \"string\",\n  \"id\": \"string\",\n  \"discount_ratio\": 0.2689476055959399,\n  \"total_campaign_spend\": {\n    \"amount\": 10.4,\n    \"currency_code\": \"USD\"\n  },\n  \"merchant_budget\": {\n    \"amount\": 10.4,\n    \"currency_code\": \"USD\"\n  },\n  \"bonus_budget_spend\": {\n    \"amount\": 10.4,\n    \"currency_code\": \"USD\"\n  },\n  \"scheduled_add_budget_days\": [\n    1,\n    2\n  ],\n  \"paid_impressions\": 8192,\n  \"end_at\": \"2023-12-10T23:18:12.321Z\",\n  \"state\": \"<string>\",\n  \"type\": \"CLASSIC_BOOST\",\n  \"gmv\": {\n    \"amount\": 10.4,\n    \"currency_code\": \"USD\"\n  },\n  \"intense_boost\": true,\n  \"scheduled_add_budget_amount\": {\n    \"amount\": 10.4,\n    \"currency_code\": \"USD\"\n  },\n  \"start_at\": \"1968-09-17T20:40:13.794Z\",\n  \"pb_impressions\": 8685,\n  \"bonus_budget\": {\n    \"amount\": 10.4,\n    \"currency_code\": \"USD\"\n  },\n  \"updated_at\": \"1968-10-15T23:55:19.933Z\",\n  \"pb_clicks\": 4936,\n  \"merchant_id\": \"string\",\n  \"min_spend\": {\n    \"amount\": 10.4,\n    \"currency_code\": \"USD\"\n  },\n  \"total_impression_fees_charged\": {\n    \"amount\": 10.4,\n    \"currency_code\": \"USD\"\n  },\n  \"impression_fees_breakdowns\": [\n    {\n      \"amount\": {\n        \"amount\": 10.4,\n        \"currency_code\": \"USD\"\n      },\n      \"start_at\": \"2011-10-03T15:09:39.843Z\",\n      \"state\": \"CHARGED\",\n      \"end_at\": \"1952-08-22T14:10:35.473Z\"\n    },\n    {\n      \"amount\": {\n        \"amount\": 10.4,\n        \"currency_code\": \"USD\"\n      },\n      \"start_at\": \"1969-08-02T20:44:38.844Z\",\n      \"state\": \"CHARGED\",\n      \"end_at\": \"2011-03-24T10:23:03.982Z\"\n    }\n  ],\n  \"max_budget\": {\n    \"amount\": 10.4,\n    \"currency_code\": \"USD\"\n  },\n  \"products\": [\n    {\n      \"merchant_bid_rate\": {\n        \"amount\": 10.4,\n        \"currency_code\": \"USD\"\n      },\n      \"product_id\": \"string\",\n      \"is_maxboost\": false,\n      \"paid_impressions\": 3956,\n      \"keywords\": [\n        \"string\",\n        \"string\"\n      ],\n      \"enrollment_fee\": {\n        \"amount\": 10.4,\n        \"currency_code\": \"USD\"\n      },\n      \"actual_charge_rate\": {\n        \"amount\": 10.4,\n        \"currency_code\": \"USD\"\n      }\n    },\n    {\n      \"merchant_bid_rate\": {\n        \"amount\": 10.4,\n        \"currency_code\": \"USD\"\n      },\n      \"product_id\": \"string\",\n      \"is_maxboost\": true,\n      \"paid_impressions\": 102,\n      \"keywords\": [\n        \"string\",\n        \"string\"\n      ],\n      \"enrollment_fee\": {\n        \"amount\": 10.4,\n        \"currency_code\": \"USD\"\n      },\n      \"actual_charge_rate\": {\n        \"amount\": 10.4,\n        \"currency_code\": \"USD\"\n      }\n    }\n  ],\n  \"total_enrollment_fees\": {\n    \"amount\": 10.4,\n    \"currency_code\": \"USD\"\n  },\n  \"pb_gmv\": {\n    \"amount\": 10.4,\n    \"currency_code\": \"USD\"\n  }\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "4517e296-3005-420f-be2a-216306e99f32",
+              "name": "failed to query for a ProductBoost campaign",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "api",
+                    "v3",
+                    "product_boost",
+                    "campaigns",
+                    ":id"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<object-id>",
+                      "key": "id",
+                      "description": "(Required) ID of the campaign you want to query"
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: oauth2",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "<token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "Bad Request",
+              "code": 400,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"message\": \"The campaign ID either does not exist, or does not belong to the merchant.\",\n  \"code\": \"20001\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "cda359c5-7495-4ab6-be50-4d8a035d2202",
+          "name": "Obtain campaign metrics",
+          "request": {
+            "name": "Obtain campaign metrics",
+            "description": {
+              "content": "Obtain a list of daily performances of products in the campaign. By default, the time range is from one week before the campaign starts to one week after the campaign ends.",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "api",
+                "v3",
+                "product_boost",
+                "campaigns",
+                ":id",
+                "metrics"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [
+                {
+                  "disabled": false,
+                  "key": "product_ids",
+                  "value": "<object-id>",
+                  "description": "IDs of the products whose performances should be included in the result. If not provided, performances of all products in the campaign will be returned."
+                },
+                {
+                  "disabled": false,
+                  "key": "time_min",
+                  "value": "<dateTime>",
+                  "description": "Only return performances for dates at or after this time. Currently only time with precision up to 'date' level in Pacific Time (PT) will be accepted. Any time that is more precise than 'date' level and/or not in PT will be processed so that it only keeps its 'date', in PT. That is, a passed in date-time will be first converted in PT and then its fields other than 'year', 'month', 'day' are ignored."
+                },
+                {
+                  "disabled": false,
+                  "key": "time_max",
+                  "value": "<dateTime>",
+                  "description": "Only return performances for dates at or before this time. Currently only time with precision up to 'date' level in Pacific Time (PT) will be accepted. Any time that is more precise than 'date' level and/or not in PT will be processed so that it only keeps its 'date', in PT. That is, a passed in date-time will be first converted in PT and then its fields other than 'year', 'month', 'day' are ignored."
+                }
+              ],
+              "variable": [
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<object-id>",
+                  "key": "id",
+                  "description": "(Required) ID of the campaign you want to query for metrics."
+                }
+              ]
+            },
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "GET",
+            "auth": {
+              "type": "oauth2",
+              "oauth2": [
+                {
+                  "key": "scope",
+                  "value": "payments:write tickets:write epc:read returns:write returns:read fbw:read products:read payments:read fbw:write merchant:write products:write ratings:read videos:read compliance:write product_boost:read listing_quality:read webhook:write orders:read compliance:read fbs:read penalties:read penalties:write infractions:read orders:write merchant:read notifications:write announcements:read product_boost:write notifications:read webhook:read qoo10:read wps_parcel:write wps_parcel:read tickets:read infractions:write videos:write epc:write"
+                },
+                {
+                  "key": "redirect_uri",
+                  "value": "https://merchant.wish.com/api/v3/oauth/refresh_token"
+                },
+                {
+                  "key": "accessTokenUrl",
+                  "value": "https://merchant.wish.com/api/v3/oauth/access_token"
+                },
+                {
+                  "key": "authUrl",
+                  "value": "https://merchant.wish.com/v3/oauth/authorize"
+                },
+                {
+                  "key": "grant_type",
+                  "value": "authorization_code"
+                }
+              ]
+            }
+          },
+          "response": [
+            {
+              "id": "cdc8eb69-d77f-4252-bad8-3746a7375d5a",
+              "name": "successfully queried for ProductBoost campaign metrics",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "api",
+                    "v3",
+                    "product_boost",
+                    "campaigns",
+                    ":id",
+                    "metrics"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "product_ids",
+                      "value": "<object-id>"
+                    },
+                    {
+                      "key": "time_min",
+                      "value": "2020-01-01T07:00:00Z"
+                    },
+                    {
+                      "key": "time_max",
+                      "value": "2020-01-01T07:00:00Z"
+                    }
+                  ],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<object-id>",
+                      "key": "id",
+                      "description": "(Required) ID of the campaign you want to query for metrics."
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: oauth2",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "<token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"daily_performances\": [\n    {\n      \"date\": \"1952-04-04T08:55:31.800Z\",\n      \"stats\": [\n        {\n          \"pb_sales\": 2610,\n          \"product_id\": \"string\",\n          \"spend\": {\n            \"amount\": {\n              \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n            },\n            \"currency_code\": {\n              \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n            }\n          },\n          \"pb_impressions\": 634,\n          \"sales\": 9926,\n          \"total_clicks\": 7786,\n          \"product_name\": \"string\",\n          \"pb_clicks\": 4825,\n          \"impressions\": 1851,\n          \"acos\": \"string\",\n          \"organic_impressions\": 5743,\n          \"gmv\": {\n            \"amount\": {\n              \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n            },\n            \"currency_code\": {\n              \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n            }\n          },\n          \"pb_gmv\": {\n            \"amount\": {\n              \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n            },\n            \"currency_code\": {\n              \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n            }\n          }\n        },\n        {\n          \"pb_sales\": 8045,\n          \"product_id\": \"string\",\n          \"spend\": {\n            \"amount\": {\n              \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n            },\n            \"currency_code\": {\n              \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n            }\n          },\n          \"pb_impressions\": 4887,\n          \"sales\": 1930,\n          \"total_clicks\": 5644,\n          \"product_name\": \"string\",\n          \"pb_clicks\": 6461,\n          \"impressions\": 9275,\n          \"acos\": \"string\",\n          \"organic_impressions\": 3844,\n          \"gmv\": {\n            \"amount\": {\n              \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n            },\n            \"currency_code\": {\n              \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n            }\n          },\n          \"pb_gmv\": {\n            \"amount\": {\n              \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n            },\n            \"currency_code\": {\n              \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n            }\n          }\n        }\n      ]\n    },\n    {\n      \"date\": \"1979-04-03T03:58:59.768Z\",\n      \"stats\": [\n        {\n          \"pb_sales\": 1250,\n          \"product_id\": \"string\",\n          \"spend\": {\n            \"amount\": {\n              \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n            },\n            \"currency_code\": {\n              \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n            }\n          },\n          \"pb_impressions\": 2034,\n          \"sales\": 9207,\n          \"total_clicks\": 5776,\n          \"product_name\": \"string\",\n          \"pb_clicks\": 2363,\n          \"impressions\": 4209,\n          \"acos\": \"string\",\n          \"organic_impressions\": 3890,\n          \"gmv\": {\n            \"amount\": {\n              \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n            },\n            \"currency_code\": {\n              \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n            }\n          },\n          \"pb_gmv\": {\n            \"amount\": {\n              \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n            },\n            \"currency_code\": {\n              \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n            }\n          }\n        },\n        {\n          \"pb_sales\": 4301,\n          \"product_id\": \"string\",\n          \"spend\": {\n            \"amount\": {\n              \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n            },\n            \"currency_code\": {\n              \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n            }\n          },\n          \"pb_impressions\": 618,\n          \"sales\": 5629,\n          \"total_clicks\": 9620,\n          \"product_name\": \"string\",\n          \"pb_clicks\": 5653,\n          \"impressions\": 9881,\n          \"acos\": \"string\",\n          \"organic_impressions\": 8896,\n          \"gmv\": {\n            \"amount\": {\n              \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n            },\n            \"currency_code\": {\n              \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n            }\n          },\n          \"pb_gmv\": {\n            \"amount\": {\n              \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n            },\n            \"currency_code\": {\n              \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n            }\n          }\n        }\n      ]\n    }\n  ]\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "05099ab5-15df-4c38-86c7-614b8bc1f7db",
+              "name": "failed to query for ProductBoost campaign metrics",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "api",
+                    "v3",
+                    "product_boost",
+                    "campaigns",
+                    ":id",
+                    "metrics"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "product_ids",
+                      "value": "<object-id>"
+                    },
+                    {
+                      "key": "time_min",
+                      "value": "2020-01-01T07:00:00Z"
+                    },
+                    {
+                      "key": "time_max",
+                      "value": "2020-01-01T07:00:00Z"
+                    }
+                  ],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<object-id>",
+                      "key": "id",
+                      "description": "(Required) ID of the campaign you want to query for metrics."
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: oauth2",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "<token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "Bad Request",
+              "code": 400,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"message\": \"'time_max' can only be at or before a week after the campaign's end time.\",\n  \"code\": \"20603\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "c56ab1a3-fe9e-4836-af4d-14469d1a31aa",
+          "name": "List ProductBoost account balance updates",
+          "request": {
+            "name": "List ProductBoost account balance updates",
+            "description": {
+              "content": "Obtain a list of deposit and withdraw activities on ProductBoost account balance.",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "api",
+                "v3",
+                "product_boost",
+                "balance_updates"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [
+                {
+                  "disabled": false,
+                  "key": "type",
+                  "value": "<string>",
+                  "description": "Restrict queried update records to be of the provided type."
+                },
+                {
+                  "disabled": false,
+                  "key": "created_at_min",
+                  "value": "<dateTime>",
+                  "description": "Only return balance update records generated at or after this time."
+                },
+                {
+                  "disabled": false,
+                  "key": "created_at_max",
+                  "value": "<dateTime>",
+                  "description": "Only return balance update records generated at or before this time."
+                },
+                {
+                  "disabled": false,
+                  "key": "limit",
+                  "value": "50",
+                  "description": "A limit on the number of records that will be returned."
+                }
+              ],
+              "variable": []
+            },
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "GET",
+            "auth": {
+              "type": "oauth2",
+              "oauth2": [
+                {
+                  "key": "scope",
+                  "value": "payments:write tickets:write epc:read returns:write returns:read fbw:read products:read payments:read fbw:write merchant:write products:write ratings:read videos:read compliance:write product_boost:read listing_quality:read webhook:write orders:read compliance:read fbs:read penalties:read penalties:write infractions:read orders:write merchant:read notifications:write announcements:read product_boost:write notifications:read webhook:read qoo10:read wps_parcel:write wps_parcel:read tickets:read infractions:write videos:write epc:write"
+                },
+                {
+                  "key": "redirect_uri",
+                  "value": "https://merchant.wish.com/api/v3/oauth/refresh_token"
+                },
+                {
+                  "key": "accessTokenUrl",
+                  "value": "https://merchant.wish.com/api/v3/oauth/access_token"
+                },
+                {
+                  "key": "authUrl",
+                  "value": "https://merchant.wish.com/v3/oauth/authorize"
+                },
+                {
+                  "key": "grant_type",
+                  "value": "authorization_code"
+                }
+              ]
+            }
+          },
+          "response": [
+            {
+              "id": "42240763-36b6-49d6-bb3e-645e40fb7fea",
+              "name": "successfully queried for balance updates",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "api",
+                    "v3",
+                    "product_boost",
+                    "balance_updates"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "type",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "created_at_min",
+                      "value": "2020-01-01T07:00:00Z"
+                    },
+                    {
+                      "key": "created_at_max",
+                      "value": "2020-01-01T07:00:00Z"
+                    },
+                    {
+                      "key": "limit",
+                      "value": "50"
+                    }
+                  ],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: oauth2",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "<token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "[\n  {\n    \"created_at\": \"1964-03-09T11:30:39.592Z\",\n    \"amount\": {\n      \"amount\": 10.4,\n      \"currency_code\": \"USD\"\n    },\n    \"type\": \"<string>\",\n    \"charge_reason\": \"IMPRESSION_FEE\",\n    \"campaign_id\": \"string\"\n  },\n  {\n    \"created_at\": \"2010-04-22T14:18:33.468Z\",\n    \"amount\": {\n      \"amount\": 10.4,\n      \"currency_code\": \"USD\"\n    },\n    \"type\": \"<string>\",\n    \"charge_reason\": \"IMPRESSION_FEE\",\n    \"campaign_id\": \"string\"\n  }\n]",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "5288123e-e1f7-42fa-b8cc-5e6bba6e6044",
+              "name": "failed to query for balance updates",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "api",
+                    "v3",
+                    "product_boost",
+                    "balance_updates"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "type",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "created_at_min",
+                      "value": "2020-01-01T07:00:00Z"
+                    },
+                    {
+                      "key": "created_at_max",
+                      "value": "2020-01-01T07:00:00Z"
+                    },
+                    {
+                      "key": "limit",
+                      "value": "50"
+                    }
+                  ],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: oauth2",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "<token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "Bad Request",
+              "code": 400,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"code\": 4958,\n  \"message\": \"string\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        }
+      ],
+      "event": []
+    }
+  ],
+  "event": [],
+  "variable": [
+    {
+      "type": "string",
+      "value": "https://merchant.wish.com",
+      "key": "baseUrl"
+    }
+  ],
+  "auth": {
+    "type": "oauth2",
+    "oauth2": [
+      {
+        "key": "scope",
+        "value": "payments:write tickets:write epc:read returns:write returns:read fbw:read products:read payments:read fbw:write merchant:write products:write ratings:read videos:read compliance:write product_boost:read listing_quality:read webhook:write orders:read compliance:read fbs:read penalties:read penalties:write infractions:read orders:write merchant:read notifications:write announcements:read product_boost:write notifications:read webhook:read qoo10:read wps_parcel:write wps_parcel:read tickets:read infractions:write videos:write epc:write"
+      },
+      {
+        "key": "redirect_uri",
+        "value": "https://merchant.wish.com/api/v3/oauth/refresh_token"
+      },
+      {
+        "key": "accessTokenUrl",
+        "value": "https://merchant.wish.com/api/v3/oauth/access_token"
+      },
+      {
+        "key": "authUrl",
+        "value": "https://merchant.wish.com/v3/oauth/authorize"
+      },
+      {
+        "key": "grant_type",
+        "value": "authorization_code"
+      }
+    ]
+  },
+  "info": {
+    "_postman_id": "7b30646b-f141-4a0c-9456-e760885ebe1c",
+    "name": "Wish Marketplace V3 Brands ProductBoost API",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "description": {
+      "content": "\nWish Marketplace V3 API\n\n# General Information\n\n The Wish Marketplace API will be using oAuth to authenticate in order to offer better security for its users\n\n *   Learn about oAuth [here](oauth).\n *   If you are a merchant and want to create an application for yourself, learn about how to create a private app [here](../../private-app)\n *   If you are a ERP and create applications that'll be used by multiple merchants, learn about how to create a public app [here]( ../../public-app). You will need to apply to be a verified public application\n\n ## How to Test\n\n To avoid testing the API on production data, use our sandbox. The sandbox is completely contained and will not affect Wish users or your merchant account. \n \n To reach the sandbox, visit: https://sandbox.merchant.wish.com.\n\n To use the sandbox in testing, use https://sandbox.merchant.wish.com/api/v3/ as your base URL.\n\n How to Generate test data after you have created a sandbox account:\n 1. Navigate to the [unfulfilled orders page](https://sandbox.merchant.wish.com/transactions/action)\n 2. Hover over the dropdown next to the 'fulfill with csv' button and select Generate Orders\n\n ## Date/Time Format\n\n  All dates and times in our API are returned in the same format. It is in the form `YYYY-MM-DDTHH:mm:ss.sss±XX:ZZ` or `YYYY-MM-DDTHH:mm:ss.sssZ`, where 'Z' represents UTC timezone.\n  When sending timestamps in URL parameters or the request body, millisecond is optional and will defaults to 0 if not provided.\n\n  * `YYYY` is the year\n  * `MM` is the month\n  * `DD` is the day\n  * `HH` is the hour (in 24-hour clock format)\n  * `mm` is the minutes\n  * `ss.sss` is the seconds and milliseconds\n  * `±XX:ZZ` is the UTC offset of the form +XX:ZZ or -XX:ZZ where XX is a 2-digit string giving the number of UTC offset hours, and ZZ is a 2-digit string giving the number of UTC offset minutes.\n\n ## Response Schema\n\n  Every response returned from the Wish API will have the same schema. This schema is intended to give you a predictable manner to check the status of your request and know where to get the data. Each response will have the following top level attributes: message, code and data.\n\n  **Attributes**\n\n  <table>\n  <tbody>\n  <tr>\n  <th>Message</th>\n  <td>A message describing the error that happened, example: \"We could not find a product for id: '5d30f60e0a6fc464f4f376b0'\"</td>\n  </tr>\n  <tr>\n  <th>Code</th>\n  <td>A unique number which represents the error that has occurred, example: 1008 or 0 if success.</td>\n  </tr>\n  <tr>\n  <th>Data</th>\n  <td>For errors this will be empty.</td>\n  </tr>\n  </tbody>\n  </table>\n\n ## General Querying Techniques\n\n ### Partial Resources\n All GET endpoints (except OAuth) support a fields parameter which allows for requesting a partial response. Any fields specified in the response schema of an endpoint can be selected. The top level attribute `data` can be ignored when using the fields parameter.\n\n **Syntax**\n * Comma-separated list to select multiple fields\n * Use forward slash `/` to select nested field: `field1/nested_field`\n * Use parentheses `( )` to select multiple nested fields: `field1(nested_field1,nested_field2)`\n * Use `*` for wildcard selection: `field1/nested_field/*`\n\n\n **Example:**\n ```\n https://merchant.wish.com/api/v3/demo/get?fields=title,items(id,info/name)\n ```\n Which would result in the following partial response:\n ```\n {\n   \"title\": \"demo\",\n   \"items\": [\n     {\n       \"id\": \"1\",\n       \"info\": {\n         \"name\": \"demo_item_1\"\n       }\n     }, {\n       \"id\": \"2\",\n       \"info\": {\n         \"name\": \"demo_item_2\"\n       }\n     },\n     ...\n   ]\n }\n ```\n\n ## Locale\n   You can optionally specify locale in order to translate content and error messages into your language.\n   To do this use the [Accept-Language](https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Accept-Language) header to specify your preferred locales.\n   If none is provided, your default locale will be used.\n\n   For example, to request content in Chinese use: `Accept-Language: zh`\n\n   In the response, you will receive a [Content-Language](https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Content-Language) header that specifies the locale code of the response content.\n\n\n ## Rate-Limiting\n\n  Rate-limiting will be performed on a per-merchant basis for each app. It is your responsibility to ensure you are not making frequent unnecessary calls to the API.\n\n  If the rate limits cannot satisfy your need, we highly recommend integrating webhooks for your app. With webhooks, instead of pulling resources periodically, your app will receive real-time notifications for particular events that occur to a merchant’s store. [Learn more](https://merchant.wish.com/documentation/webhooks)\n\n  **Normal Usage**\n\n  To help you track the rate-limiter status, the following response header(s) will be provided with each response:\n\n   * `Wish-Rate-Limit-Remaining`: The number of calls remaining in the current rate-limiting window.\n\n\n  **Rate-Limit Exceeded**\n\n  After you exceed the number of allowed calls in the current rate-limiting window, you will receive a `429 Too Many Requests` error response and the following additional header(s):\n\n   * `Wish-Rate-Limit-Reset`: The time the rate-limiter will reset.\n\n\n  Once you receive this response there is nothing you can do except wait for the rate-limiter to reset. In order to avoid being rate-limited, you may want to cache your responses.\n\n ## Sorting\n   ### Overview\n   Sorting is available for most endpoints that return a collection (list) of objects. Each collection has a different set of enabled parameters for sorting, so please check specific collection section for detail.\n\n   ### Usage\n   Append `sort_by={parameter_name}.{asc|desc}` in your API request where `parameter_name` is a valid sortable parameter of that endpoint.\n\n   Example:\n   ```\n   /api/v3/penalties?sort_by=created_at.asc\n   ```\n\n ## Pagination\n  All bulk-fetching API methods that return lists of resource support pagination.\n  These methods commonly take at least 3 parameters: `limit`, `{attribute}_min`, `{attribute}_max`. Attribute can be `id`, `create_at`, etc., depending on each specific method.\n  For instance, you make a request to get a list of penalties `/api/v3/penalties?limit=20&created_at_max=2020-04-08T23:59:59Z&sort_by=created_at_max.desc`,\n  which means to fetch 20 penalities sorted by their creation time, with the most recent one being created before `2020-04-08T23:59:59Z`.\n  Assume that the response contains 20 `penalty` objects with the last object being `penalty_foo`,\n  then your subsequent request can be `/api/v3/penalties?limit=20&created_at_max={penalty_foo.create_at}&sort_by=created_at_max.desc` to fetch the next page of list.\n  Note that when fetching next page using `id_min` or `id_max`, you need to perform `+/- 1`(correspondingly) on the last object's ID in the current page, as `id_min` and `id_max` are inclusive. (All V3 API resources' IDs are either integer or BSON object ID - a hex number).\n\n\n ## Request ID\n  Each API request is associated with a unique identifier. You can find this value in response headers, under `Wish-Request-Id`.\n  **When you need to contact us about a specific request, please provide this ID to ensure the fastest possible reply**\n\n# Authentication\nFor all requests that require OAuth2 authentication, the access token must be provided in the `Authorization` request header in the following format: `Authorization: Bearer <token>`\n\nFor example:\n```\nAuthorization: Bearer 3d6e2d71bc464e42bfbdb081afb73c1e\n```\n<!-- ReDoc-Inject: <security-definitions> -->\n\n\nContact Support:\n Email: partner-api@wish.com",
+      "type": "text/plain"
+    }
+  }
+}

@@ -1,0 +1,245 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "Wish Marketplace V3 Brands France EPR Compliance API",
+    "version": "3.0.65"
+  },
+  "request": {
+    "auth": {
+      "type": "oauth2",
+      "flow": "authorization_code",
+      "authorizationUrl": "https://merchant.wish.com/v3/oauth/authorize",
+      "accessTokenUrl": "https://merchant.wish.com/api/v3/oauth/access_token",
+      "credentials": {
+        "clientId": "{{clientId}}",
+        "clientSecret": "{{clientSecret}}"
+      }
+    }
+  },
+  "items": [
+    {
+      "info": {
+        "name": "France EPR Compliance",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Get France EPR Product Compliance Status",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://merchant.wish.com/api/v3/france_epr_compliance/compliance_status",
+            "params": [
+              {
+                "name": "product_ids",
+                "value": "",
+                "type": "query",
+                "description": "The list of the product IDs that will be returned with the compliance status"
+              },
+              {
+                "name": "product_id_min",
+                "value": "",
+                "type": "query",
+                "description": "The beginning product id(inclusive) of the result array. If not provided, will use the smallest product id.</br> Ignored when `product_ids` is provided."
+              },
+              {
+                "name": "product_id_max",
+                "value": "",
+                "type": "query",
+                "description": "The ending product id(inclusive) of the result array. If not provided, will use the largest product id.</br> Ignored when `product_ids` is provided."
+              },
+              {
+                "name": "limit",
+                "value": "",
+                "type": "query",
+                "description": "A limit on the number of records that will be returned.</br> Ignored when `product_ids` is provided."
+              },
+              {
+                "name": "sort_by",
+                "value": "",
+                "type": "query",
+                "description": "Sort results by the given attribute. Enabled attributes are `product_id`. Default order is `asc`, use `desc` to sort in reverse.</br> Ignored when `product_ids` is provided."
+              }
+            ],
+            "auth": {
+              "type": "oauth2",
+              "flow": "authorization_code",
+              "authorizationUrl": "https://merchant.wish.com/v3/oauth/authorize",
+              "accessTokenUrl": "https://merchant.wish.com/api/v3/oauth/access_token",
+              "credentials": {
+                "clientId": "{{clientId}}",
+                "clientSecret": "{{clientSecret}}"
+              }
+            }
+          },
+          "docs": "Get the France Extended Producer Responsibility product compliance status and the unique identifier number ids (if linked) for each input product.</br> If there is no input product id, then get the result of all products from a merchant.</br> The unique identifier number id will be empty for products that are not linked with any unique identifier number."
+        },
+        {
+          "info": {
+            "name": "Bulk update France EPR Product Compliance Status",
+            "type": "http"
+          },
+          "http": {
+            "method": "PUT",
+            "url": "https://merchant.wish.com/api/v3/france_epr_compliance/compliance_status",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            },
+            "auth": {
+              "type": "oauth2",
+              "flow": "authorization_code",
+              "authorizationUrl": "https://merchant.wish.com/v3/oauth/authorize",
+              "accessTokenUrl": "https://merchant.wish.com/api/v3/oauth/access_token",
+              "credentials": {
+                "clientId": "{{clientId}}",
+                "clientSecret": "{{clientSecret}}"
+              }
+            }
+          },
+          "docs": "Update the France Extended Producer Responsibility compliance status for each input product by linking with the associated input uin_id or unlinking the existing UIN if the associated input uin_id is empty or null.</br> The input array size limitation is 500."
+        },
+        {
+          "info": {
+            "name": "List France Product Unique Identification Numbers",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://merchant.wish.com/api/v3/france_epr_compliance/unique_identification_number",
+            "auth": {
+              "type": "oauth2",
+              "flow": "authorization_code",
+              "authorizationUrl": "https://merchant.wish.com/v3/oauth/authorize",
+              "accessTokenUrl": "https://merchant.wish.com/api/v3/oauth/access_token",
+              "credentials": {
+                "clientId": "{{clientId}}",
+                "clientSecret": "{{clientSecret}}"
+              }
+            }
+          },
+          "docs": "List all France Product Identification Numbers and their product categories created by a merchant."
+        },
+        {
+          "info": {
+            "name": "Create a France Product Unique Identification Number",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://merchant.wish.com/api/v3/france_epr_compliance/unique_identification_number",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            },
+            "auth": {
+              "type": "oauth2",
+              "flow": "authorization_code",
+              "authorizationUrl": "https://merchant.wish.com/v3/oauth/authorize",
+              "accessTokenUrl": "https://merchant.wish.com/api/v3/oauth/access_token",
+              "credentials": {
+                "clientId": "{{clientId}}",
+                "clientSecret": "{{clientSecret}}"
+              }
+            }
+          },
+          "docs": "Create a France Product Unique Identification Number"
+        },
+        {
+          "info": {
+            "name": "Get a France Product Unique Identification Number",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://merchant.wish.com/api/v3/france_epr_compliance/unique_identification_number/:id",
+            "params": [
+              {
+                "name": "id",
+                "value": "",
+                "type": "path",
+                "description": "The unique identifier of the france product unique identification number"
+              }
+            ],
+            "auth": {
+              "type": "oauth2",
+              "flow": "authorization_code",
+              "authorizationUrl": "https://merchant.wish.com/v3/oauth/authorize",
+              "accessTokenUrl": "https://merchant.wish.com/api/v3/oauth/access_token",
+              "credentials": {
+                "clientId": "{{clientId}}",
+                "clientSecret": "{{clientSecret}}"
+              }
+            }
+          },
+          "docs": "Get a France Product Identification Number and its product categories given its id."
+        },
+        {
+          "info": {
+            "name": "Update a France Product Unique Identification Number",
+            "type": "http"
+          },
+          "http": {
+            "method": "PUT",
+            "url": "https://merchant.wish.com/api/v3/france_epr_compliance/unique_identification_number/:id",
+            "params": [
+              {
+                "name": "id",
+                "value": "",
+                "type": "path",
+                "description": "The unique identifier of the france product unique identification number"
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            },
+            "auth": {
+              "type": "oauth2",
+              "flow": "authorization_code",
+              "authorizationUrl": "https://merchant.wish.com/v3/oauth/authorize",
+              "accessTokenUrl": "https://merchant.wish.com/api/v3/oauth/access_token",
+              "credentials": {
+                "clientId": "{{clientId}}",
+                "clientSecret": "{{clientSecret}}"
+              }
+            }
+          },
+          "docs": "Update details of a France Product Identification Number."
+        },
+        {
+          "info": {
+            "name": "Delete a France Product Unique Identification Number",
+            "type": "http"
+          },
+          "http": {
+            "method": "DELETE",
+            "url": "https://merchant.wish.com/api/v3/france_epr_compliance/unique_identification_number/:id",
+            "params": [
+              {
+                "name": "id",
+                "value": "",
+                "type": "path",
+                "description": "The unique identifier of the france product unique identification number"
+              }
+            ],
+            "auth": {
+              "type": "oauth2",
+              "flow": "authorization_code",
+              "authorizationUrl": "https://merchant.wish.com/v3/oauth/authorize",
+              "accessTokenUrl": "https://merchant.wish.com/api/v3/oauth/access_token",
+              "credentials": {
+                "clientId": "{{clientId}}",
+                "clientSecret": "{{clientSecret}}"
+              }
+            }
+          },
+          "docs": "Delete a France Product Unique Identification Number."
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}
