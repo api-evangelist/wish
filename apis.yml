@@ -46,6 +46,17 @@ tags:
 - Marketplace
 - Retail
 - Merchants
+- Order
+- Product
+- Fulfillment
+- Shopping
+- Authentication
+tags_raw:
+- Company
+- E-Commerce
+- Marketplace
+- Retail
+- Merchants
 - Orders
 - Products
 - Fulfillment
@@ -118,6 +129,8 @@ apis:
   humanURL: https://merchant.wish.com/documentation/api/v3/reference
   baseURL: https://merchant.wish.com/api/v3
   tags:
+  - Currency
+  tags_raw:
   - Currencies
   properties:
   - type: OpenAPI
@@ -277,6 +290,8 @@ apis:
   humanURL: https://merchant.wish.com/documentation/api/v3/reference
   baseURL: https://merchant.wish.com/api/v3
   tags:
+  - Authentication
+  tags_raw:
   - OAuth
   properties:
   - type: OpenAPI
@@ -307,6 +322,8 @@ apis:
   humanURL: https://merchant.wish.com/documentation/api/v3/reference
   baseURL: https://merchant.wish.com/api/v3
   tags:
+  - Order
+  tags_raw:
   - Orders
   properties:
   - type: OpenAPI
@@ -397,6 +414,8 @@ apis:
   humanURL: https://merchant.wish.com/documentation/api/v3/reference
   baseURL: https://merchant.wish.com/api/v3
   tags:
+  - Product Boost
+  tags_raw:
   - ProductBoost
   properties:
   - type: OpenAPI
@@ -427,6 +446,8 @@ apis:
   humanURL: https://merchant.wish.com/documentation/api/v3/reference
   baseURL: https://merchant.wish.com/api/v3
   tags:
+  - Product
+  tags_raw:
   - Products
   properties:
   - type: OpenAPI
