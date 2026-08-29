@@ -1,0 +1,118 @@
+slug: wish
+provider: Wish
+generated_by: planning/capability-mapping/scripts/classify_capabilities.py
+model: claude-opus-5
+frame:
+- Retail & Consumer Goods
+min_confidence: 0.7
+capability_model:
+  source: https://github.com/vincentmakes/turbo-ea-capabilities
+  license: CC-BY-4.0
+  attribution: Turbo EA Capabilities by Vincent Verdet — Turbo EA, https://github.com/vincentmakes/turbo-ea-capabilities,
+    CC BY 4.0
+  notice: NOTICE
+edge_count: 10
+edges:
+- tag: ProductBoost
+  spec_file: wish-productboost-api-openapi.yml
+  capability_id: BC-400.60
+  capability_id_l1: BC-400
+  capability_name: Digital Marketing Management
+  confidence: 0.8
+  evidence: createCampaign 'Create a ProductBoost campaign'; getKeywords 'Get information for the given
+    keywords'; listCampaignMetrics 'Obtain campaign metrics'; schema ImpressionFeeBreakdown
+  reason: Keyword-targeted paid advertising campaigns with budgets, impression fees and performance metrics
+    — this is paid-media / digital marketing execution on the marketplace.
+- tag: Promotions Platform
+  spec_file: wish-promotions-platform-api-openapi.yml
+  capability_id: BC-440.30
+  capability_id_l1: BC-440
+  capability_name: Discount & Promotion Management
+  confidence: 0.8
+  evidence: createPromotionsCampaign 'Create a promotion campaign'; schemas VariationsDiscountData, PromotionType,
+    PromotionEvent
+  reason: Creation, update and cancellation of discount-based promotional campaigns on eligible products,
+    with discount data per variation — promotional offer and discount management.
+- tag: EU Product Compliance
+  spec_file: wish-eu-product-compliance-api-openapi.yml
+  capability_id: BC-130.10
+  capability_id_l1: BC-130
+  capability_name: Regulatory Compliance Management
+  confidence: 0.75
+  evidence: '"Update EU Product Compliance Status", "Create an EU Responsible Person", schema EUProductComplianceStatus'
+  reason: Manages product compliance status and the EU-mandated Responsible Person record required by
+    EU market-surveillance regulation — sector/regulatory compliance administration for listed products.
+- tag: Taxonomy
+  spec_file: wish-taxonomy-api-openapi.yml
+  capability_id: BC-2370.10
+  capability_id_l1: BC-2370
+  capability_name: Item Master Data Management
+  confidence: 0.75
+  evidence: getCategories 'Get root category'; getCategoryAttributes 'Get attributes'; schemas CategoryNode,
+    CategoryAttributeConstraint
+  reason: Category hierarchy and category-attribute definitions that structure the item record — the taxonomy
+    component of item master data management.
+- tag: Videos
+  spec_file: wish-videos-api-openapi.yml
+  capability_id: BC-2370.20
+  capability_id_l1: BC-2370
+  capability_name: Product Content Authoring Management
+  confidence: 0.75
+  evidence: POST /api/v3/videos/product  upsertProductVideo  Create video for a product asynchronously;
+    schema UpsertProductVideoResult
+  reason: The single operation attaches rich-media video assets to a product listing, which is product
+    content authoring / rich media for a sellable consumer item.
+- tag: Bulk Products
+  spec_file: wish-bulk-products-api-openapi.yml
+  capability_id: BC-2370.10
+  capability_id_l1: BC-2370
+  capability_name: Item Master Data Management
+  confidence: 0.72
+  evidence: '"POST /api/v3/products/bulk_update  updateProducts  Update products"; schemas EditableProductParams,
+    EditableVariationParams, Attribute'
+  reason: Bulk creation/retrieval/update of product and variation records with attributes, prices and
+    warehouse inventory — maintenance of the marketplace item master record. Bulk-job endpoints are mechanism,
+    not a separate capability.
+- tag: France EPR Compliance
+  spec_file: wish-france-epr-compliance-api-openapi.yml
+  capability_id: BC-130.10
+  capability_id_l1: BC-130
+  capability_name: Regulatory Compliance Management
+  confidence: 0.7
+  evidence: '"Bulk update France EPR Product Compliance Status", "Create a France Product Unique Identification
+    Number"'
+  reason: Capture and maintenance of French Extended Producer Responsibility identification numbers and
+    per-product compliance status — regulatory compliance record-keeping. Could arguably touch circular-economy/EPR
+    schemes, so confidence is moderate.
+- tag: Germany EPR Compliance
+  spec_file: wish-germany-epr-compliance-api-openapi.yml
+  capability_id: BC-130.10
+  capability_id_l1: BC-130
+  capability_name: Regulatory Compliance Management
+  confidence: 0.7
+  evidence: '"Create a Germany Product EPR Registration Number", "Bulk update Germany EPR Product Compliance
+    Status"'
+  reason: Registration numbers and compliance status for German EPR obligations on listed products — regulatory
+    compliance administration; overlap with circular-economy take-back schemes keeps confidence moderate.
+- tag: Products
+  spec_file: wish-products-api-openapi.yml
+  capability_id: BC-2370.10
+  capability_id_l1: BC-2370
+  capability_name: Item Master Data Management
+  confidence: 0.7
+  evidence: createProduct 'Create a product'; updateProduct 'Update a product'; schemas ProductVariation,
+    AddProductVariation, Attribute, Image
+  reason: Creation and maintenance of the sellable item record — variations, attributes, images, shipping
+    data — i.e. authoritative product/item data for the marketplace catalogue. Could alternatively be
+    read as channel syndication, hence 0.7.
+- tag: Tickets
+  spec_file: wish-tickets-api-openapi.yml
+  capability_id: BC-430.10
+  capability_id_l1: BC-430
+  capability_name: Customer Inquiry Management
+  confidence: 0.7
+  evidence: replyTicket 'Reply to a ticket'; listTickets 'List all tickets'; schemas Ticket, TicketOrder,
+    TicketProduct, Reply
+  reason: Support ticket lifecycle with threaded replies tied to specific orders and products — inbound
+    contact handling and resolution. Ambiguity is whether these are consumer or merchant-support contacts,
+    but either way it is inquiry management.
