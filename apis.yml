@@ -426,7 +426,7 @@ apis:
   humanURL: https://merchant.wish.com/documentation/api/v3/reference
   baseURL: https://merchant.wish.com/api/v3
   tags:
-  - Product Boost
+  - ProductBoost
   tags_raw:
   - ProductBoost
   properties:
