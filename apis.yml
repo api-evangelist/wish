@@ -743,8 +743,9 @@ common:
   name: Wish Business Capability Map
 - type: AgentSkill
   url: skills/wish-fulfill-orders.md
-- type: MCPServer
+- type: X-MCPServerCandidate
   url: mcp/wish-mcp.yml
+  note: 'Renamed from MCPServer 2026-09-03 (roadmap#247): the manifest self-describes as status: candidate — a tool list derived from the published API contracts, not an existing server. The scorer already read the manifest and reported mcp_server correctly; the MCPServer type was crediting the artifact-type surfaces with a server that does not exist.'
 - type: Overlay
   url: overlays/wish-marketplace-v3-overlay.yaml
 - type: AgenticAccess
