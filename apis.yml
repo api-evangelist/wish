@@ -296,38 +296,6 @@ apis:
     url: lifecycle/wish-lifecycle.yml
   - type: Conformance
     url: conformance/wish-conformance.yml
-- aid: wish:wish-oauth-api
-  name: Wish OAuth API
-  description: The OAuth API from Wish — 3 operation(s) for oauth.
-  humanURL: https://merchant.wish.com/documentation/api/v3/reference
-  baseURL: https://merchant.wish.com/api/v3
-  tags:
-  - Authentication
-  tags_raw:
-  - OAuth
-  properties:
-  - type: OpenAPI
-    url: openapi/wish-oauth-api-openapi.yml
-  - type: Authentication
-    url: authentication/wish-authentication.yml
-  - type: OAuthScopes
-    url: scopes/wish-scopes.yml
-  - type: Conventions
-    url: conventions/wish-conventions.yml
-  - type: ErrorCatalog
-    url: errors/wish-problem-types.yml
-  - type: DataModel
-    url: data-model/wish-data-model.yml
-  - type: Webhooks
-    url: asyncapi/wish-webhooks.yml
-  - type: Sandbox
-    url: sandbox/wish-sandbox.yml
-  - type: RateLimits
-    url: rate-limits/wish-rate-limits.yml
-  - type: Lifecycle
-    url: lifecycle/wish-lifecycle.yml
-  - type: Conformance
-    url: conformance/wish-conformance.yml
 - aid: wish:wish-orders-api
   name: Wish Orders API
   description: The Orders API from Wish — 9 operation(s) for orders.
@@ -712,6 +680,36 @@ apis:
   properties:
   - type: OpenAPI
     url: openapi/wish-webhook-api-openapi.yml
+  - type: Authentication
+    url: authentication/wish-authentication.yml
+  - type: OAuthScopes
+    url: scopes/wish-scopes.yml
+  - type: Conventions
+    url: conventions/wish-conventions.yml
+  - type: ErrorCatalog
+    url: errors/wish-problem-types.yml
+  - type: DataModel
+    url: data-model/wish-data-model.yml
+  - type: Webhooks
+    url: asyncapi/wish-webhooks.yml
+  - type: Sandbox
+    url: sandbox/wish-sandbox.yml
+  - type: RateLimits
+    url: rate-limits/wish-rate-limits.yml
+  - type: Lifecycle
+    url: lifecycle/wish-lifecycle.yml
+  - type: Conformance
+    url: conformance/wish-conformance.yml
+- aid: wish:wish-o-auth-api
+  name: Wish O Auth API
+  description: The O Auth API from Wish — 3 operation(s) for o auth.
+  humanURL: https://merchant.wish.com/documentation/api/v3/reference
+  baseURL: https://merchant.wish.com/api/v3
+  tags:
+  - O Auth
+  properties:
+  - type: OpenAPI
+    url: openapi/wish-o-auth-api-openapi.yml
   - type: Authentication
     url: authentication/wish-authentication.yml
   - type: OAuthScopes
