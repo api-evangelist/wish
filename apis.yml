@@ -700,16 +700,16 @@ apis:
     url: lifecycle/wish-lifecycle.yml
   - type: Conformance
     url: conformance/wish-conformance.yml
-- aid: wish:wish-o-auth-api
+- aid: wish:wish-oauth-api
   name: Wish O Auth API
-  description: The O Auth API from Wish — 3 operation(s) for o auth.
+  description: The OAuth API from Wish — 3 operation(s) for oauth.
   humanURL: https://merchant.wish.com/documentation/api/v3/reference
   baseURL: https://merchant.wish.com/api/v3
   tags:
-  - O Auth
+  - OAuth
   properties:
   - type: OpenAPI
-    url: openapi/wish-o-auth-api-openapi.yml
+    url: openapi/wish-oauth-api-openapi.yml
   - type: Authentication
     url: authentication/wish-authentication.yml
   - type: OAuthScopes
