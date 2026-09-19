@@ -272,6 +272,8 @@ apis:
   humanURL: https://merchant.wish.com/documentation/api/v3/reference
   baseURL: https://merchant.wish.com/api/v3
   tags:
+  - Merchants
+  tags_raw:
   - Merchant
   properties:
   - type: OpenAPI
@@ -641,6 +643,8 @@ apis:
   humanURL: https://merchant.wish.com/documentation/api/v3/reference
   baseURL: https://merchant.wish.com/api/v3
   tags:
+  - Video
+  tags_raw:
   - Videos
   properties:
   - type: OpenAPI
@@ -706,6 +710,8 @@ apis:
   humanURL: https://merchant.wish.com/documentation/api/v3/reference
   baseURL: https://merchant.wish.com/api/v3
   tags:
+  - Authentication
+  tags_raw:
   - OAuth
   properties:
   - type: OpenAPI
