@@ -1,13 +1,22 @@
-openapi: 3.0.0
+openapi: 3.2.0
 info:
   contact:
     email: partner-api@wish.com
   x-wish-dev-contact:
     assignee: kwei
     email: marketplace-external-api@contextlogic.com
-  description: "\nWish Marketplace V3 API\n\n# General Information\n\n The Wish Marketplace API will be using oAuth to authenticate in order to offer better security for its users\n\n *   Learn about oAuth [here](oauth).\n *   If you are a merchant and want to create an application for yourself, learn about how to create a private app [here](../../private-app)\n *   If you are a ERP and create applications that'll be used by multiple merchants, learn about how to create a public app [here]( ../../public-app). You will need to apply to be a verified public application\n\n ## How to Test\n\n To avoid testing the API on production data, use our sandbox. The sandbox is completely contained and will not affect Wish users or your merchant account. \n \n To reach the sandbox, visit: https://sandbox.merchant.wish.com.\n\n To use the sandbox in testing, use https://sandbox.merchant.wish.com/api/v3/ as your base URL.\n\n How to Generate test data after you have created a sandbox account:\n 1. Navigate to the [unfulfilled orders page](https://sandbox.merchant.wish.com/transactions/action)\n 2. Hover over the dropdown next to the 'fulfill with csv' button and select Generate Orders\n\n ## Date/Time Format\n\n  All dates and times in our API are returned in the same format. It is in the form `YYYY-MM-DDTHH:mm:ss.sss±XX:ZZ` or `YYYY-MM-DDTHH:mm:ss.sssZ`, where 'Z' represents UTC timezone.\n  When sending timestamps in URL parameters or the request body, millisecond is optional and will defaults to 0 if not provided.\n\n  * `YYYY` is the year\n  * `MM` is the month\n  * `DD` is the day\n  * `HH` is the hour (in 24-hour clock format)\n  * `mm` is the minutes\n  * `ss.sss` is the seconds and milliseconds\n  * `±XX:ZZ` is the UTC offset of the form +XX:ZZ or -XX:ZZ where XX is a 2-digit string giving the number of UTC offset hours, and ZZ is a 2-digit string giving the number of UTC offset minutes.\n\n ## Response Schema\n\n  Every response returned from the Wish API will have the same schema. This schema is intended to give you a predictable manner to check the status of your request and know where to get the data. Each response will have the following top level attributes: message, code and data.\n\n  **Attributes**\n\n  <table>\n  <tbody>\n  <tr>\n  <th>Message</th>\n  <td>A message describing the error that happened, example: \"We could not find a product for id: '5d30f60e0a6fc464f4f376b0'\"</td>\n  </tr>\n  <tr>\n  <th>Code</th>\n  <td>A unique number which represents the error that has occurred, example: 1008 or 0 if success.</td>\n  </tr>\n  <tr>\n  <th>Data</th>\n  <td>For errors this will be empty.</td>\n  </tr>\n  </tbody>\n  </table>\n\n ## General Querying Techniques\n\n ### Partial Resources\n All GET endpoints (except OAuth) support a fields parameter which allows for requesting a partial response. Any fields specified in the response schema of an endpoint can be selected. The top level attribute `data` can be ignored when using the fields parameter.\n\n **Syntax**\n * Comma-separated list to select multiple fields\n * Use forward slash `/` to select nested field: `field1/nested_field`\n * Use parentheses `( )` to select multiple nested fields: `field1(nested_field1,nested_field2)`\n * Use `*` for wildcard selection: `field1/nested_field/*`\n\n\n **Example:**\n ```\n https://merchant.wish.com/api/v3/demo/get?fields=title,items(id,info/name)\n ```\n Which would result in the following partial response:\n ```\n {\n   \"title\": \"demo\",\n   \"items\": [\n     {\n       \"id\": \"1\",\n       \"info\": {\n         \"name\": \"demo_item_1\"\n       }\n     }, {\n       \"id\": \"2\",\n       \"info\": {\n         \"name\": \"demo_item_2\"\n       }\n     },\n     ...\n   ]\n }\n ```\n\n ## Locale\n   You can optionally specify locale in order to translate content and error messages into your language.\n   To do this use the [Accept-Language](https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Accept-Language) header to specify your preferred locales.\n   If none is provided, your default locale will be used.\n\n   For example, to request content in Chinese use: `Accept-Language: zh`\n\n   In the response, you will receive a [Content-Language](https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Content-Language) header that specifies the locale code of the response content.\n\n\n ## Rate-Limiting\n\n  Rate-limiting will be performed on a per-merchant basis for each app. It is your responsibility to ensure you are not making frequent unnecessary calls to the API.\n\n  If the rate limits cannot satisfy your need, we highly recommend integrating webhooks for your app. With webhooks, instead of pulling resources periodically, your app will receive real-time notifications for particular events that occur to a merchant’s store. [Learn more](https://merchant.wish.com/documentation/webhooks)\n\n  **Normal Usage**\n\n  To help you track the rate-limiter status, the following response header(s) will be provided with each response:\n\n   * `Wish-Rate-Limit-Remaining`: The number of calls remaining in the current rate-limiting window.\n\n\n  **Rate-Limit Exceeded**\n\n  After you exceed the number of allowed calls in the current rate-limiting window, you will receive a `429 Too Many Requests` error response and the following additional header(s):\n\n   * `Wish-Rate-Limit-Reset`: The time the rate-limiter will reset.\n\n\n  Once you receive this response there is nothing you can do except wait for the rate-limiter to reset. In order to avoid being rate-limited, you may want to cache your responses.\n\n ## Sorting\n   ### Overview\n   Sorting is available for most endpoints that return a collection (list) of objects. Each collection has a different set of enabled parameters for sorting, so please check specific collection section for detail.\n\n   ### Usage\n   Append `sort_by={parameter_name}.{asc|desc}` in your API request where `parameter_name` is a valid sortable parameter of that endpoint.\n\n   Example:\n   ```\n   /api/v3/penalties?sort_by=created_at.asc\n   ```\n\n ## Pagination\n  All bulk-fetching API methods that return lists of resource support pagination.\n  These methods commonly take at least 3 parameters: `limit`, `{attribute}_min`, `{attribute}_max`. Attribute can be `id`, `create_at`, etc., depending on each specific method.\n  For instance, you make a request to get a list of penalties `/api/v3/penalties?limit=20&created_at_max=2020-04-08T23:59:59Z&sort_by=created_at_max.desc`,\n  which means to fetch 20 penalities sorted by their creation time, with the most recent one being created before `2020-04-08T23:59:59Z`.\n  Assume that the response contains 20 `penalty` objects with the last object being `penalty_foo`,\n  then your subsequent request can be `/api/v3/penalties?limit=20&created_at_max={penalty_foo.create_at}&sort_by=created_at_max.desc` to fetch the next page of list.\n  Note that when fetching next page using `id_min` or `id_max`, you need to perform `+/- 1`(correspondingly) on the last object's ID in the current page, as `id_min` and `id_max` are inclusive. (All V3 API resources' IDs are either integer or BSON object ID - a hex number).\n\n\n ## Request ID\n  Each API request is associated with a unique identifier. You can find this value in response headers, under `Wish-Request-Id`.\n  **When you need to contact us about a specific request, please provide this ID to ensure the fastest possible reply**\n\n# Authentication\nFor all requests that require OAuth2 authentication, the access token must be provided in the `Authorization` request header in the following format: `Authorization: Bearer <token>`\n\nFor example:\n```\nAuthorization: Bearer 3d6e2d71bc464e42bfbdb081afb73c1e\n```\n<!-- ReDoc-Inject: <security-definitions> -->\n"
+  description: 'Wish Marketplace V3 API
+
+
+    # General Information
+
+
+    The Wish Marketplace API will be using oAuth to authenticate in order to offer better security for its users
+
+
+    * Learn about oAuth here.'
   version: 3.0.65
-  title: Wish Marketplace V3 Brands Products API
+  title: Wish Marketplace V3 Products API
 servers:
 - url: https://merchant.wish.com
   description: V3 API endpoint
@@ -79,7 +88,6 @@ paths:
         source: "var settings = {\n  \"async\": true,\n  \"crossDomain\": true,\n  \"url\": \"https://merchant.wish.com/api/v3/products/requests?min_created_at=SOME_STRING_VALUE&max_created_at=SOME_STRING_VALUE&product_id=SOME_STRING_VALUE&id=SOME_STRING_VALUE&statuses=SOME_ARRAY_VALUE&sort_by=SOME_STRING_VALUE\",\n  \"method\": \"GET\",\n  \"headers\": {\n    \"authorization\": \"Bearer REPLACE_BEARER_TOKEN\"\n  }\n}\n\n$.ajax(settings).done(function (response) {\n  console.log(response);\n});"
       - lang: shell_curl
         source: "curl --request GET \\\n  --url 'https://merchant.wish.com/api/v3/products/requests?min_created_at=SOME_STRING_VALUE&max_created_at=SOME_STRING_VALUE&product_id=SOME_STRING_VALUE&id=SOME_STRING_VALUE&statuses=SOME_ARRAY_VALUE&sort_by=SOME_STRING_VALUE' \\\n  --header 'authorization: Bearer REPLACE_BEARER_TOKEN'"
-      description: List product create or update requests
   /api/v3/products/{id}/calculated_shipping:
     put:
       responses:
@@ -190,7 +198,6 @@ paths:
         source: "var settings = {\n  \"async\": true,\n  \"crossDomain\": true,\n  \"url\": \"https://merchant.wish.com/api/v3/products/requests/{id}\",\n  \"method\": \"GET\",\n  \"headers\": {\n    \"authorization\": \"Bearer REPLACE_BEARER_TOKEN\"\n  }\n}\n\n$.ajax(settings).done(function (response) {\n  console.log(response);\n});"
       - lang: shell_curl
         source: "curl --request GET \\\n  --url 'https://merchant.wish.com/api/v3/products/requests/{id}' \\\n  --header 'authorization: Bearer REPLACE_BEARER_TOKEN'"
-      description: Get a product create or update request
     delete:
       responses:
         '204':
@@ -244,7 +251,6 @@ paths:
         source: "var settings = {\n  \"async\": true,\n  \"crossDomain\": true,\n  \"url\": \"https://merchant.wish.com/api/v3/products/requests/{id}\",\n  \"method\": \"DELETE\",\n  \"headers\": {\n    \"authorization\": \"Bearer REPLACE_BEARER_TOKEN\"\n  }\n}\n\n$.ajax(settings).done(function (response) {\n  console.log(response);\n});"
       - lang: shell_curl
         source: "curl --request DELETE \\\n  --url 'https://merchant.wish.com/api/v3/products/requests/{id}' \\\n  --header 'authorization: Bearer REPLACE_BEARER_TOKEN'"
-      description: Delete a product create or update request
   /api/v3/products:
     post:
       responses:
@@ -504,213 +510,45 @@ paths:
         source: "var settings = {\n  \"async\": true,\n  \"crossDomain\": true,\n  \"url\": \"https://merchant.wish.com/api/v3/products/{id}\",\n  \"method\": \"DELETE\",\n  \"headers\": {\n    \"authorization\": \"Bearer REPLACE_BEARER_TOKEN\"\n  }\n}\n\n$.ajax(settings).done(function (response) {\n  console.log(response);\n});"
       - lang: shell_curl
         source: "curl --request DELETE \\\n  --url 'https://merchant.wish.com/api/v3/products/{id}' \\\n  --header 'authorization: Bearer REPLACE_BEARER_TOKEN'"
-      description: Delete a product
 components:
-  schemas:
-    AddProductVariation:
-      type: object
-      allOf:
-      - $ref: '#/components/schemas/EditableVariationParams'
-      - required:
-        - sku
-        - inventories
-        - price
-        type: object
-    Image:
-      type: object
-      properties:
-        url:
-          type: string
-          description: The URL of the image of the product.
-          format: uri
-        variation_skus:
-          items:
-            minLength: 1
-            type: string
-          type: array
-          description: The list of SKUs of the variations that use this image.</br> `This field will be deprecated soon. To add images to or get images for product variations, use the variations.image field`
-        is_clean_image:
-          type: boolean
-          description: Whether the image is a clean image. Only one clean image URL can be specified for a product. [Learn more](https://merchanthelp.wish.com/s/article/mu360033668153?language=en_US).
-    Unit:
-      enum:
-      - OUNCE
-      - POUND
-      - MILLIGRAM
-      - GRAM
-      - KILOGRAM
-      - FLUID_OUNCE
-      - PINT
-      - QUART
-      - GALLON
-      - MILLILITER
-      - CENTILITER
-      - LITER
-      - CUBICMETER
-      - INCH
-      - FOOT
-      - YARD
-      - CENTIMETER
-      - METER
-      - SQUARE_FOOT
-      - SQUARE_METER
-      - COUNT
-      - LOAD
-      - WASH
-      - ROLL
-      - POD
-      type: string
-      description: The unit of measurement for the total content of a product. This will be used to display the price per unit, and is the unit of measurement that will be used for both the Reference Value and the Quantity Value attributes. [Learn More](https://merchantfaq.wish.com/hc/en-us/articles/4405383750555).
-    Price:
-      required:
-      - amount
-      - currency_code
-      type: object
-      properties:
-        amount:
-          minimum: 0
-          type: number
-          description: Non-negative amount in decimals.
-          format: float
-        currency_code:
-          format: iso-4217
-          type: string
-          description: The 3-letter currency code defined in [ISO 4217](https://www.iso.org/iso-4217-currency-codes.html).
-          example: USD
-    Option:
-      required:
-      - name
-      - value
-      type: object
-      properties:
-        name:
-          type: string
-          description: The name of the option like SIZE and COLOR.
-        value:
-          minLength: 1
-          type: string
-          description: The value of the option.
-    CreateImage:
-      type: object
-      properties:
-        url:
-          type: string
-          description: The URL of the image of the product. Images can be in JPEG, PNG or GIF format. Images should be at least 500 x 500 pixels in size. Maximum size 178 MP and 24MB
-          format: uri
-        variation_skus:
-          items:
-            minLength: 1
-            type: string
-            maxLength: 80
-          type: array
-          description: The list of SKUs of the variations that use this image.</br> `This field will be deprecated soon. To add images to or get images for product variations, use the variations.image field`
-        is_clean_image:
-          type: boolean
-          description: Wish products might appear in external shopping searches. A "clean image" is used to represent the product in such searches. This is a required field when creating a new product listing (Create a Product). Only one clean image URL can be specified for a product. [Learn more](https://merchanthelp.wish.com/s/article/mu360033668153?language=en_US).
-    APIError:
-      required:
-      - code
-      - message
-      type: object
-      properties:
-        message:
-          type: string
-        code:
-          type: integer
-          format: int32
-    EnableDisableCalculatedShipping:
-      type: object
-      allOf:
-      - $ref: '#/components/schemas/CalculatedShipping'
-      - required:
-        - enable
-        type: object
-    RegionShippingDetail:
-      required:
-      - destination
-      type: object
-      properties:
-        is_enabled:
-          default: true
-          type: boolean
-          description: Whether shipping is enabled for the destination.
-        price:
-          $ref: '#/components/schemas/RegionShippingPrice'
-        destination:
-          minLength: 2
-          maxLength: 3
-          type: string
-          description: The state, province or shipping region code. Accepted regions are at [regions](https://merchant.wish.com/documentation/api/v2#regions).
-          example: NY
-        max_delivery_days:
-          type: integer
-          description: The maximum days for a product to be delivered to the customer. Can be set to null to remove the current max_delivery_days.
-          nullable: true
-        additional_price:
-          type: object
-          description: The additional shipping price for the region. Additional shipping price should be always smaller than or equal to shipping price.
-          allOf:
-          - $ref: '#/components/schemas/RegionShippingPrice'
-    Video:
-      type: object
-      properties:
-        url:
-          type: string
-          description: The URL of the demo video of the product.
-          format: uri
-    ShallowProduct:
-      type: object
-      properties:
-        reference_value:
-          readOnly: true
-          minimum: 0
-          type: integer
-          description: The reference value (in the given unit) that is used to calculate the price per unit of a product and to illustrate the unit count for the consumer to see. [Learn More](https://merchantfaq.wish.com/hc/en-us/articles/4405383750555).
-        subcategory_id:
-          type: integer
-          description: The subcategory_id used to categorize the product.</br> `This field will be deprecated soon and replaced with category_id`
-          nullable: true
-        updated_at:
-          readOnly: true
-          type: string
-          description: The time when product was last updated.
-          format: date-time
-        brand_id:
-          type: string
-          description: The requested brand ID of the product.
-          format: object-id
-        num_sold:
-          readOnly: true
-          type: integer
-          description: The number of sales that the product has received.
-        id:
-          readOnly: true
-          type: string
-          description: The ID of the product.
-          format: object-id
-        unit:
-          readOnly: true
-          allOf:
-          - $ref: '#/components/schemas/Unit'
-        is_promoted:
-          readOnly: true
-          type: boolean
-          description: Whether the product is a promoted product.
-        max_quantity:
-          type: integer
-          description: The maximum quantity of products per order.
-        state:
-          readOnly: true
-          enum:
-          - ACTIVE
-          - WISH_INACTIVE
-          - MERCHANT_INACTIVE
-          - REMOVED_BY_WISH
-          - REMOVED_BY_MERCHANT
-          type: string
-          description: The state of the product:</br> __ACTIVE__ - state reflects listings that are live. Note that edits to these listings might still be under review and might not be live.</br> __WISH_INACTIVE__ - state reflects listings that are being processed and not live yet. This could likely be because the listing is under product review.</br> __MERCHANT_INACTIVE__ - are listings disabled by the merchant.</br> __REMOVED_BY_WISH__ - are listings removed by Wish.</br> __REMOVED_BY_MERCHANT__ - are listings that are removed by the merchant.
-        status:
-          readOnly: true
+  parameters:
+    param_created_at_min:
+      schema:
+        type: string
+        format: date-time
+      required: false
+      description: Only return products that were created since the given time. Currently only time with precision up to 'second' will be accepted. Any time that is more precise than 'second' level will be processed so that it only keeps its 'second'.
+      name: created_at_min
+      in: query
+    param_sort_by:
+      schema:
+        default: updated_at.desc
+        pattern: ^(updated_at|created_at)(\.(asc|desc))?$
+        type: string
+      required: false
+      description: The attribute to sort products in the response. The most recently updated products will be returned first if `desc`.
+      name: sort_by
+      in: query
+    param_min_created_at:
+      schema:
+        type: string
+        format: date-time
+      required: false
+      description: Only return product create or update requests that were created since the given time.
+      name: min_created_at
+      in: query
+    param_updated_at_min:
+      schema:
+        type: string
+        format: date-time
+      required: false
+      description: Only return products that were updated since the given time. Currently only time with precision up to 'millisecond' will be accepted. Any time that is more precise than 'millisecond' level will be processed so that it only keeps its 'millisecond'.
+      name: updated_at_min
+      in: query
+    param_statuses:
+      schema:
+        minItems: 1
+        items:
           enum:
           - PENDING_REVIEW
           - APPROVED
@@ -718,188 +556,104 @@ components:
           - REMOVED_BY_WISH
           - REMOVED_BY_MERCHANT
           type: string
-          description: The status of the product. APPROVED products are available for sale. Removed products cannot be updated.</br> `This field will be deprecated soon and replaced with state.`
-        description:
-          type: string
-          description: The description of the product.
-        tags:
-          items:
-            type: string
-          type: array
-          description: The list of tags of the product.
-        california_prop65_warning_type:
-          readOnly: true
-          allOf:
-          - $ref: '#/components/schemas/WarningType'
-        num_saves:
-          readOnly: true
-          type: integer
-          description: The number of times that the product was added to users' Wishlists.
-        category_experience_eligibility:
-          type: boolean
-          description: This field confirms if a product has officially joined the [Wish Fashion experience](https://merchantfaq.wish.com/hc/en-us/articles/6817880684315). Please wait to check this until approximately 24 hours after a product has been uploaded or updated.
-        parent_sku:
-          type: string
-          description: The parent Stock Keeping Unit of the product.
-        condition:
+        type: array
+      required: false
+      description: Only return products with the given statuses. Default to PENDING_REVIEW + APPROVED.</br> `This field will be deprecated soon and replaced with state.`
+      name: statuses
+      in: query
+    param_id:
+      schema:
+        type: string
+      required: false
+      description: Only return the product create or update request with the given ID.
+      name: id
+      in: query
+    param_limit:
+      schema:
+        default: 50
+        minimum: 1
+        type: integer
+        maximum: 1000
+      required: false
+      description: The limit on the number of products that will be returned.
+      name: limit
+      in: query
+    param_state:
+      schema:
+        enum:
+        - ACTIVE
+        - WISH_INACTIVE
+        - MERCHANT_INACTIVE
+        - REMOVED_BY_WISH
+        - REMOVED_BY_MERCHANT
+        type: string
+      required: false
+      description: Only return products with the given states. Default to all states if null.</br> __ACTIVE__ - state reflects listings that are live. Note that edits to these listings might still be under review and might not be live.</br> __WISH_INACTIVE__ - state reflects listings that are being processed and not live yet. This could likely be because the listing is under product review.</br> __MERCHANT_INACTIVE__ - are listings disabled by the merchant.</br> __REMOVED_BY_WISH__ - are listings removed by Wish.</br> __REMOVED_BY_MERCHANT__ - are listings that are removed by the merchant.
+      name: state
+      in: query
+    param_product_id:
+      schema:
+        type: string
+        format: object-id
+      required: false
+      description: Only return the product create or update request for the given product ID.
+      name: product_id
+      in: query
+    param_updated_at_max:
+      schema:
+        type: string
+        format: date-time
+      required: false
+      description: Only return products that were updated before the given time. Currently only time with precision up to 'millisecond' will be accepted. Any time that is more precise than 'millisecond' level will be processed so that it only keeps its 'millisecond'.
+      name: updated_at_max
+      in: query
+    param_product_update_request_statuses:
+      schema:
+        minItems: 1
+        items:
           enum:
-          - NEW
-          - USED
-          - REFURBISHED
+          - APPROVED
+          - BLOCKED
+          - UNDER_REVIEW
           type: string
-          description: The condition of the product.
-        california_prop65_chemical_names:
-          items:
-            type: string
-          type: array
-          description: The specific chemical name(s) applicable to your product, if any, for compliance with [California Proposition 65](https://www.p65warnings.ca.gov/). If you selected the Food, Furniture, or Chemical warning type, you must provide at least one specific chemical name. You can provide up to a maximum of 5 chemical names. To see the full list of chemical names, please click [here](https://oehha.ca.gov/proposition-65/proposition-65-list). For more information on California Proposition 65 compliance, please see the Help Center article, "[California Proposition 65 overview and warning notices](https://merchantfaq.wish.com/hc/en-us/articles/360025359874)."
-        name:
-          type: string
-          description: The name of the product.
-        created_at:
-          readOnly: true
-          type: string
-          description: The time when product was created.
-          format: date-time
-        category_id:
-          type: integer
-          description: 'This is used to categorize the listings. This link has Wish’s category tree with the category IDs: [Link](/md/products/categories)'
-        msrp:
-          type: object
-          description: The Manufacturer’s Suggested Retail Price of the product.</br> `This field will be deprecated soon.`
-          allOf:
-          - $ref: '#/components/schemas/Price'
-    VariationAttribute:
-      required:
-      - name
-      type: object
-      properties:
-        name:
-          type: string
-          description: The name of the attribute. Input the relevant "name". Please browse our [Taxonomy APIs](/documentation/api/v3/reference#operation/getCategoryAttributes) for possible attribute names.
-        value:
-          items:
-            type: string
-          type: array
-          description: The value of the attribute. Can be set to null to remove the attribute. Input the relevant "accepted_values". Please browse our [Taxonomy APIs](/documentation/api/v3/reference#operation/getCategoryAttributes) for possible attribute values.
-          nullable: true
-    EditableVariationParams:
-      type: object
-      properties:
-        sku:
-          minLength: 1
-          type: string
-          description: The Stock Keeping Unit of the variation.
-          maxLength: 80
-        quantity_value:
-          nullable: true
-          minimum: 0
-          type: number
-          description: The total quantity of the product variant (in the given unit) that is used to calculate price per unit. Note that if a product has multiple product variants, you will need to set quantity values for each product variant. [Learn More](https://merchantfaq.wish.com/hc/en-us/articles/4405383750555).
-          format: float
-        image:
-          type: string
-          description: The URL of the image associated with the variation. This is a required field when adding a new product listing with variations (Create a Product) or adding variations to existing product listings (Create a variation). The variation images don’t need to be unique (multiple variations can have the same image), but they have to be specified for each variation. These images must be a part of extra_images.
-          format: uri
-        price:
-          type: object
-          description: The price of the variation. Price is required for rev-share merhcants.
-          allOf:
-          - $ref: '#/components/schemas/Price'
-        merchant_set_cost:
-          nullable: true
-          minimum: 0
-          type: number
-          description: Supply cost maintained by merchants on variation level
-          format: float
-        cost:
-          type: object
-          description: The cost of the variation. Cost is required for cost-based merchants.
-          allOf:
-          - $ref: '#/components/schemas/Price'
-        gtin:
-          pattern: ^[0-9]{8,14}$
-          type: string
-          description: Should be 8 to 14 digits GTIN (UPC, EAN, ISBN) that contains no letters or other characters. This number is barcode symbology used for tracking trade items in stores and scanning them at the point of sale.
-          nullable: true
-        attributes:
-          items:
-            $ref: '#/components/schemas/VariationAttribute'
-          type: array
-          description: The custom attributes of the variation. Merchants may use the "name" and "value" fields here to add specific attributes for the product’s category. Our [Taxonomy APIs](/documentation/api/v3/reference#operation/getCategoryAttributes) contains the list of all attributes for each category, mentions which ones are required, and the corresponding accepted values for each attribute.
-          nullable: true
-        inventories:
-          items:
-            $ref: '#/components/schemas/WarehouseInventory'
-          type: array
-          description: The inventory of the variation in each warehouse.
-        options:
-          items:
-            $ref: '#/components/schemas/Option'
-          type: array
-          description: This field is used to define the parameters for the creation of variations. You can create your variations with traditional Color and Size fields or use category-specific attributes. Each combination of option values may be a variation for that product. See which category-specific attributes can be used by using the [Taxonomy APIs](/documentation/api/v3/reference#operation/getCategoryAttributes) and the field attributes.constraint.is_variation_attribute.
-        logistics_details:
-          type: object
-          description: The logistics details of the variation.
-          allOf:
-          - $ref: '#/components/schemas/LogisticsInfo'
-    AttributeResponse:
-      required:
-      - name
-      type: object
-      properties:
-        name:
-          type: string
-          description: The name of the attribute.
-        value:
-          items:
-            type: string
-          type: array
-          description: The value of the attribute.
-          nullable: true
-    ProductUpdateAdvancedLogisticsShipping:
-      type: object
-      allOf:
-      - $ref: '#/components/schemas/AdvancedLogisticsShipping'
-      - required:
-        - warehouse_id
-        type: object
-        properties:
-          warehouse_id:
-            type: string
-            description: The ID of the warehouse.
-            format: object-id
-    UnitInput:
-      enum:
-      - OUNCE
-      - POUND
-      - MILLIGRAM
-      - GRAM
-      - KILOGRAM
-      - FLUID_OUNCE
-      - PINT
-      - QUART
-      - GALLON
-      - MILLILITER
-      - CENTILITER
-      - LITER
-      - CUBICMETER
-      - INCH
-      - FOOT
-      - YARD
-      - CENTIMETER
-      - METER
-      - SQUARE_FOOT
-      - SQUARE_METER
-      - COUNT
-      - LOAD
-      - WASH
-      - ROLL
-      - POD
-      - null
-      type: string
-      description: The unit of measurement for the total content of a product. This will be used to display the price per unit, and is the unit of measurement that will be used for both the Reference Value and the Quantity Value attributes. [Learn More](https://merchantfaq.wish.com/hc/en-us/articles/4405383750555).
-      nullable: true
+        type: array
+      required: false
+      description: Only return product create or update requests with the given statuses.
+      name: statuses
+      in: query
+    param_product_update_request_sort_by:
+      schema:
+        default: created_at.asc
+        pattern: ^(product_id|created_at)(\.(asc|desc))?$
+        type: string
+      required: false
+      description: The attribute to sort product create or update requests in the response.
+      name: sort_by
+      in: query
+    param_created_at_max:
+      schema:
+        type: string
+        format: date-time
+      required: false
+      description: Only return products that were created before the given time. Currently only time with precision up to 'second' will be accepted. Any time that is more precise than 'second' level will be processed so that it only keeps its 'second'.
+      name: created_at_max
+      in: query
+    param_parent_sku:
+      schema:
+        type: string
+      required: false
+      description: The parent sku of the product that will be returned.
+      name: parent_sku
+      in: query
+    param_max_created_at:
+      schema:
+        type: string
+        format: date-time
+      required: false
+      description: Only return product create or update requests that were created before the given time.
+      name: max_created_at
+      in: query
+  schemas:
     RegionShippingPrice:
       properties:
         amount:
@@ -915,47 +669,225 @@ components:
       required:
       - amount
       - currency_code
-      type: object
+      type:
+      - object
+      - 'null'
       description: The shipping price for the region. Can be set to null to remove the current region shipping price.
-      nullable: true
-    AdvancedLogisticsShipping:
+    EditableProductParams:
       type: object
       properties:
-        calculated_first_mile_shipping:
-          readOnly: true
-          type: object
-          description: The initial Wish-calculated first-mile shipping price based on first groups of orders received.
-          allOf:
-          - $ref: '#/components/schemas/Money'
-        effective_date:
-          readOnly: true
+        california_prop65_chemical_names:
+          items:
+            type: string
+          type:
+          - array
+          - 'null'
+          description: The specific chemical name(s) applicable to your product, if any, for compliance with [California Proposition 65](https://www.p65warnings.ca.gov/). If you selected the Food, Furniture, or Chemical warning type, you must provide at least one specific chemical name. You can provide up to a maximum of 5 chemical names. To see the full list of chemical names, please click [here](https://oehha.ca.gov/proposition-65/proposition-65-list). For more information on California Proposition 65 compliance, please see the Help Center article, "[California Proposition 65 overview and warning notices](https://merchantfaq.wish.com/hc/en-us/articles/360025359874)."
+        default_shipping_prices:
+          minItems: 1
+          items:
+            $ref: '#/components/schemas/UpdateDefaultShipping'
+          type: array
+          description: The list of default shipping prices of the product in each warehouse. The default shipping prices for the standard warehouse is required. The default shipping price will automatically apply as the shipping price for any new or unset countries in this warehouse. [Learn More](https://wishmerchants.zendesk.com/hc/en-us/articles/360008831174/)
+        description:
+          minLength: 1
           type: string
-          description: The starting date when first-mile shipping price will apply to orders bound for destination countries included in Wish’s unification initiative.
-          format: date-time
-        effective_first_mile_shipping:
-          type: object
-          description: The effective first-mile shipping price (including any merchant adjustments) in the given warehouse. Not applicable to merchants enrolled in calculated shipping.
+          description: 'The description of the product. "\n" can be used for a new line. Maximum characters: 4,000. Do not include any HTML code.'
+        tags:
+          items:
+            minLength: 1
+            type: string
+            maxLength: 80
+          type:
+          - array
+          - 'null'
+          description: Tags are descriptive keywords or terms assigned to each product in your feed, allowing them to be categorized and discovered by browsing or searching on Wish.com. The more accurate tags you add, the easier it is for our users to find your products. You may add up to 20 tags per product, comma separated. [Learn More](https://merchanthelp.wish.com/s/article/mu1260805100070?language=en_US).
+          maxItems: 10
+        subcategory_id:
+          type:
+          - integer
+          - 'null'
+          description: The subcategory_id used to categorize the product.</br> `This field will be deprecated soon and replaced with category_id`
+        california_prop65_warning_type:
           allOf:
-          - $ref: '#/components/schemas/Money'
-        enabled:
-          type: boolean
-          description: Whether the product in the warehouse has destination countries supported by Wish’s unification initiative. For merchants enrolled in calculated shipping, this will instead enable or disable calculated shipping on the product.
-        warehouse_id:
+          - $ref: '#/components/schemas/WarningType'
+        max_quantity:
+          minimum: 1
+          type:
+          - integer
+          - 'null'
+          description: The maximum quantity of products per order.
+        reference_value:
+          minimum: 0
+          type:
+          - integer
+          - 'null'
+          description: The reference value (in the given unit) that is used to calculate the price per unit of a product and to illustrate the unit count for the consumer to see. [Learn More](https://merchantfaq.wish.com/hc/en-us/articles/4405383750555).
+        warehouse_to_shippings:
+          items:
+            $ref: '#/components/schemas/WarehouseToShipping'
+          type: array
+          description: The list of shipping details of the product in each warehouse.
+        msrp:
+          type: object
+          description: The Manufacturer’s Suggested Retail Price of the product.</br> `This field will be deprecated soon.`
+          allOf:
+          - $ref: '#/components/schemas/Price'
+        consignment:
+          type: object
+          description: Consignment fields.
+          allOf:
+          - $ref: '#/components/schemas/Consignment'
+        condition:
+          enum:
+          - NEW
+          - USED
+          - REFURBISHED
           type: string
-          description: The ID of the warehouse. The default warehouse will be used if not provided.
+          description: The condition of the product.
+        video:
+          type: object
+          description: The video of the product.
+          allOf:
+          - $ref: '#/components/schemas/Video'
+        brand_id:
+          type: string
+          description: The requested brand ID of the product. The product must be authentic and directly manufactured by the brand owner. For example, Apple is the Brand of iPhone or iPad but Apple is not the Brand of an iPhone case not manufactured by Apple. Visit [Brand Directory](/branded-products/brand-directory) to view a list of brands to select from or request a new brand to be added.
           format: object-id
-    Consignment:
+        attributes:
+          items:
+            $ref: '#/components/schemas/Attribute'
+          type:
+          - array
+          - 'null'
+          description: The custom attributes of the product. Merchants may use the "name" and "value" fields here to add specific attributes for the product’s category. Our [Taxonomy APIs](/documentation/api/v3/reference#operation/getCategoryAttributes) contains the list of all attributes for each category, mentions which ones are required, and the corresponding accepted values for each attribute. The required attributes for each category will be enforced when creating a new product listing (Create a Product).
+        category_id:
+          type: integer
+          description: 'This is used to categorize the listings. This is a required field when creating new product listings (Create a Product). This link has Wish’s category tree with the category IDs: [Link](/md/products/categories)'
+        parent_sku:
+          minLength: 1
+          type: string
+          description: The parent Stock Keeping Unit of the product.
+          maxLength: 80
+        unit:
+          type: string
+          allOf:
+          - $ref: '#/components/schemas/UnitInput'
+        name:
+          minLength: 1
+          type: string
+          description: The name of the product.
+    CalculatedShipping:
       type: object
+      properties:
+        enable:
+          type: boolean
+          description: To enable or disable Calculated Shipping for this product.
+    VariationAttribute:
+      required:
+      - name
+      type: object
+      properties:
+        name:
+          type: string
+          description: The name of the attribute. Input the relevant "name". Please browse our [Taxonomy APIs](/documentation/api/v3/reference#operation/getCategoryAttributes) for possible attribute names.
+        value:
+          items:
+            type: string
+          type:
+          - array
+          - 'null'
+          description: The value of the attribute. Can be set to null to remove the attribute. Input the relevant "accepted_values". Please browse our [Taxonomy APIs](/documentation/api/v3/reference#operation/getCategoryAttributes) for possible attribute values.
+    Option:
+      required:
+      - name
+      - value
+      type: object
+      properties:
+        name:
+          type: string
+          description: The name of the option like SIZE and COLOR.
+        value:
+          minLength: 1
+          type: string
+          description: The value of the option.
+    Consignment:
+      type:
+      - object
+      - 'null'
       properties:
         existing_pid:
-          type: string
+          type:
+          - string
+          - 'null'
           description: Existing PID maintained by merchants
-          nullable: true
         reference_link:
-          type: string
+          type:
+          - string
+          - 'null'
           description: Merchant provide product reference link
-          nullable: true
-      nullable: true
+    GPSRManufacturer:
+      type: object
+      properties:
+        email:
+          type: string
+          description: The Email of the manufacture of the product.
+        name:
+          type: string
+          description: The Name of the manufacture of the product.
+        address:
+          type: string
+          description: The Address of the manufacture of the product.
+    ProductUpdateRequest:
+      type: object
+      properties:
+        status:
+          readOnly: true
+          enum:
+          - APPROVED
+          - BLOCKED
+          - UNDER_REVIEW
+          type: string
+          description: The status of the product create or update request.
+        product_id:
+          readOnly: true
+          type: string
+          description: The ID of the product.
+          format: object-id
+        created_at:
+          readOnly: true
+          type: string
+          description: The timestamp of when the product create or update request was created.
+          format: date-time
+        product_dict:
+          readOnly: true
+          type: object
+          description: The corresponding product.
+          allOf:
+          - $ref: '#/components/schemas/Product'
+        blocking_reason:
+          readOnly: true
+          type: string
+          description: The blocking reason if the request status is BLOCKED
+        id:
+          readOnly: true
+          type: string
+          description: The ID of the product create or update request.
+    Attribute:
+      required:
+      - name
+      type: object
+      properties:
+        name:
+          type: string
+          description: The name of the attribute. Input the relevant "name" here. Please browse our [Taxonomy APIs](/documentation/api/v3/reference#operation/getCategoryAttributes) for possible attribute names.
+        value:
+          items:
+            type: string
+          type:
+          - array
+          - 'null'
+          description: The value of the attribute. Can be set to null to remove the attribute. Input the relevant value here from the "accepted_values" here. Please browse our [Taxonomy APIs](/documentation/api/v3/reference#operation/getCategoryAttributes) for possible attribute values.
     Product:
       type: object
       properties:
@@ -965,9 +897,10 @@ components:
           type: integer
           description: The reference value (in the given unit) that is used to calculate the price per unit of a product and to illustrate the unit count for the consumer to see. [Learn More](https://merchantfaq.wish.com/hc/en-us/articles/4405383750555).
         subcategory_id:
-          type: integer
+          type:
+          - integer
+          - 'null'
           description: The subcategory_id used to categorize the product.</br> `This field will be deprecated soon and replaced with category_id`
-          nullable: true
         updated_at:
           readOnly: true
           type: string
@@ -1116,120 +1049,118 @@ components:
           maxItems: 400
         request_id:
           readOnly: true
-          type: string
+          type:
+          - string
+          - 'null'
           description: Identifier for the product create or update request. Can be used with the [Get Product Create or Update Request endpoint](/documentation/api/v3/reference#operation/getProductUpdateRequest) to track the status of the request during the Automated Listing Review process.
-          nullable: true
         attributes:
           items:
             $ref: '#/components/schemas/AttributeResponse'
-          type: array
+          type:
+          - array
+          - 'null'
           description: The custom attributes of the product.
-          nullable: true
         category_id:
-          type: integer
+          type:
+          - integer
+          - 'null'
           description: 'This is used to categorize the listings. This link has Wish’s category tree with the category IDs: [Link](/md/products/categories)'
-          nullable: true
         msrp:
           type: object
           description: The Manufacturer’s Suggested Retail Price of the product.</br> `This field will be deprecated soon.`
           allOf:
           - $ref: '#/components/schemas/Price'
-    ProductUpdateRequest:
+    EnableDisableCalculatedShipping:
+      type: object
+      allOf:
+      - $ref: '#/components/schemas/CalculatedShipping'
+      - required:
+        - enable
+        type: object
+    ShallowProduct:
       type: object
       properties:
-        status:
+        reference_value:
           readOnly: true
-          enum:
-          - APPROVED
-          - BLOCKED
-          - UNDER_REVIEW
+          minimum: 0
+          type: integer
+          description: The reference value (in the given unit) that is used to calculate the price per unit of a product and to illustrate the unit count for the consumer to see. [Learn More](https://merchantfaq.wish.com/hc/en-us/articles/4405383750555).
+        subcategory_id:
+          type:
+          - integer
+          - 'null'
+          description: The subcategory_id used to categorize the product.</br> `This field will be deprecated soon and replaced with category_id`
+        updated_at:
+          readOnly: true
           type: string
-          description: The status of the product create or update request.
-        product_id:
+          description: The time when product was last updated.
+          format: date-time
+        brand_id:
+          type: string
+          description: The requested brand ID of the product.
+          format: object-id
+        num_sold:
+          readOnly: true
+          type: integer
+          description: The number of sales that the product has received.
+        id:
           readOnly: true
           type: string
           description: The ID of the product.
           format: object-id
-        created_at:
+        unit:
           readOnly: true
-          type: string
-          description: The timestamp of when the product create or update request was created.
-          format: date-time
-        product_dict:
-          readOnly: true
-          type: object
-          description: The corresponding product.
           allOf:
-          - $ref: '#/components/schemas/Product'
-        blocking_reason:
+          - $ref: '#/components/schemas/Unit'
+        is_promoted:
           readOnly: true
-          type: string
-          description: The blocking reason if the request status is BLOCKED
-        id:
-          readOnly: true
-          type: string
-          description: The ID of the product create or update request.
-    EditableProductParams:
-      type: object
-      properties:
-        california_prop65_chemical_names:
-          items:
-            type: string
-          type: array
-          description: The specific chemical name(s) applicable to your product, if any, for compliance with [California Proposition 65](https://www.p65warnings.ca.gov/). If you selected the Food, Furniture, or Chemical warning type, you must provide at least one specific chemical name. You can provide up to a maximum of 5 chemical names. To see the full list of chemical names, please click [here](https://oehha.ca.gov/proposition-65/proposition-65-list). For more information on California Proposition 65 compliance, please see the Help Center article, "[California Proposition 65 overview and warning notices](https://merchantfaq.wish.com/hc/en-us/articles/360025359874)."
-          nullable: true
-        default_shipping_prices:
-          minItems: 1
-          items:
-            $ref: '#/components/schemas/UpdateDefaultShipping'
-          type: array
-          description: The list of default shipping prices of the product in each warehouse. The default shipping prices for the standard warehouse is required. The default shipping price will automatically apply as the shipping price for any new or unset countries in this warehouse. [Learn More](https://wishmerchants.zendesk.com/hc/en-us/articles/360008831174/)
-        description:
-          minLength: 1
-          type: string
-          description: 'The description of the product. "\n" can be used for a new line. Maximum characters: 4,000. Do not include any HTML code.'
-        tags:
-          items:
-            minLength: 1
-            type: string
-            maxLength: 80
-          type: array
-          description: Tags are descriptive keywords or terms assigned to each product in your feed, allowing them to be categorized and discovered by browsing or searching on Wish.com. The more accurate tags you add, the easier it is for our users to find your products. You may add up to 20 tags per product, comma separated. [Learn More](https://merchanthelp.wish.com/s/article/mu1260805100070?language=en_US).
-          maxItems: 10
-          nullable: true
-        subcategory_id:
-          type: integer
-          description: The subcategory_id used to categorize the product.</br> `This field will be deprecated soon and replaced with category_id`
-          nullable: true
-        california_prop65_warning_type:
-          nullable: true
-          allOf:
-          - $ref: '#/components/schemas/WarningType'
+          type: boolean
+          description: Whether the product is a promoted product.
         max_quantity:
-          minimum: 1
           type: integer
           description: The maximum quantity of products per order.
-          nullable: true
-        reference_value:
-          minimum: 0
-          type: integer
-          description: The reference value (in the given unit) that is used to calculate the price per unit of a product and to illustrate the unit count for the consumer to see. [Learn More](https://merchantfaq.wish.com/hc/en-us/articles/4405383750555).
-          nullable: true
-        warehouse_to_shippings:
+        state:
+          readOnly: true
+          enum:
+          - ACTIVE
+          - WISH_INACTIVE
+          - MERCHANT_INACTIVE
+          - REMOVED_BY_WISH
+          - REMOVED_BY_MERCHANT
+          type: string
+          description: The state of the product:</br> __ACTIVE__ - state reflects listings that are live. Note that edits to these listings might still be under review and might not be live.</br> __WISH_INACTIVE__ - state reflects listings that are being processed and not live yet. This could likely be because the listing is under product review.</br> __MERCHANT_INACTIVE__ - are listings disabled by the merchant.</br> __REMOVED_BY_WISH__ - are listings removed by Wish.</br> __REMOVED_BY_MERCHANT__ - are listings that are removed by the merchant.
+        status:
+          readOnly: true
+          enum:
+          - PENDING_REVIEW
+          - APPROVED
+          - REJECTED
+          - REMOVED_BY_WISH
+          - REMOVED_BY_MERCHANT
+          type: string
+          description: The status of the product. APPROVED products are available for sale. Removed products cannot be updated.</br> `This field will be deprecated soon and replaced with state.`
+        description:
+          type: string
+          description: The description of the product.
+        tags:
           items:
-            $ref: '#/components/schemas/WarehouseToShipping'
+            type: string
           type: array
-          description: The list of shipping details of the product in each warehouse.
-        msrp:
-          type: object
-          description: The Manufacturer’s Suggested Retail Price of the product.</br> `This field will be deprecated soon.`
+          description: The list of tags of the product.
+        california_prop65_warning_type:
+          readOnly: true
           allOf:
-          - $ref: '#/components/schemas/Price'
-        consignment:
-          type: object
-          description: Consignment fields.
-          allOf:
-          - $ref: '#/components/schemas/Consignment'
+          - $ref: '#/components/schemas/WarningType'
+        num_saves:
+          readOnly: true
+          type: integer
+          description: The number of times that the product was added to users' Wishlists.
+        category_experience_eligibility:
+          type: boolean
+          description: This field confirms if a product has officially joined the [Wish Fashion experience](https://merchantfaq.wish.com/hc/en-us/articles/6817880684315). Please wait to check this until approximately 24 hours after a product has been uploaded or updated.
+        parent_sku:
+          type: string
+          description: The parent Stock Keeping Unit of the product.
         condition:
           enum:
           - NEW
@@ -1237,53 +1168,208 @@ components:
           - REFURBISHED
           type: string
           description: The condition of the product.
-        video:
-          type: object
-          description: The video of the product.
-          allOf:
-          - $ref: '#/components/schemas/Video'
-        brand_id:
-          type: string
-          description: The requested brand ID of the product. The product must be authentic and directly manufactured by the brand owner. For example, Apple is the Brand of iPhone or iPad but Apple is not the Brand of an iPhone case not manufactured by Apple. Visit [Brand Directory](/branded-products/brand-directory) to view a list of brands to select from or request a new brand to be added.
-          format: object-id
-        attributes:
+        california_prop65_chemical_names:
           items:
-            $ref: '#/components/schemas/Attribute'
+            type: string
           type: array
-          description: The custom attributes of the product. Merchants may use the "name" and "value" fields here to add specific attributes for the product’s category. Our [Taxonomy APIs](/documentation/api/v3/reference#operation/getCategoryAttributes) contains the list of all attributes for each category, mentions which ones are required, and the corresponding accepted values for each attribute. The required attributes for each category will be enforced when creating a new product listing (Create a Product).
-          nullable: true
-        category_id:
-          type: integer
-          description: 'This is used to categorize the listings. This is a required field when creating new product listings (Create a Product). This link has Wish’s category tree with the category IDs: [Link](/md/products/categories)'
-        parent_sku:
-          minLength: 1
-          type: string
-          description: The parent Stock Keeping Unit of the product.
-          maxLength: 80
-        unit:
-          type: string
-          allOf:
-          - $ref: '#/components/schemas/UnitInput'
+          description: The specific chemical name(s) applicable to your product, if any, for compliance with [California Proposition 65](https://www.p65warnings.ca.gov/). If you selected the Food, Furniture, or Chemical warning type, you must provide at least one specific chemical name. You can provide up to a maximum of 5 chemical names. To see the full list of chemical names, please click [here](https://oehha.ca.gov/proposition-65/proposition-65-list). For more information on California Proposition 65 compliance, please see the Help Center article, "[California Proposition 65 overview and warning notices](https://merchantfaq.wish.com/hc/en-us/articles/360025359874)."
         name:
-          minLength: 1
           type: string
           description: The name of the product.
-    Money:
+        created_at:
+          readOnly: true
+          type: string
+          description: The time when product was created.
+          format: date-time
+        category_id:
+          type: integer
+          description: 'This is used to categorize the listings. This link has Wish’s category tree with the category IDs: [Link](/md/products/categories)'
+        msrp:
+          type: object
+          description: The Manufacturer’s Suggested Retail Price of the product.</br> `This field will be deprecated soon.`
+          allOf:
+          - $ref: '#/components/schemas/Price'
+    UpdateDefaultShipping:
+      type: object
+      allOf:
+      - $ref: '#/components/schemas/DefaultShipping'
+      - required:
+        - default_shipping_price
+        - warehouse_id
+        type: object
+    RegionShippingDetail:
+      required:
+      - destination
+      type: object
+      properties:
+        is_enabled:
+          default: true
+          type: boolean
+          description: Whether shipping is enabled for the destination.
+        price:
+          $ref: '#/components/schemas/RegionShippingPrice'
+        destination:
+          minLength: 2
+          maxLength: 3
+          type: string
+          description: The state, province or shipping region code. Accepted regions are at [regions](https://merchant.wish.com/documentation/api/v2#regions).
+          example: NY
+        max_delivery_days:
+          type:
+          - integer
+          - 'null'
+          description: The maximum days for a product to be delivered to the customer. Can be set to null to remove the current max_delivery_days.
+        additional_price:
+          type: object
+          description: The additional shipping price for the region. Additional shipping price should be always smaller than or equal to shipping price.
+          allOf:
+          - $ref: '#/components/schemas/RegionShippingPrice'
+    Price:
       required:
       - amount
       - currency_code
       type: object
       properties:
         amount:
-          format: float
+          minimum: 0
           type: number
-          description: Amount in decimals.
-          example: 10.4
+          description: Non-negative amount in decimals.
+          format: float
         currency_code:
           format: iso-4217
           type: string
           description: The 3-letter currency code defined in [ISO 4217](https://www.iso.org/iso-4217-currency-codes.html).
           example: USD
+    AdvancedLogisticsShipping:
+      type: object
+      properties:
+        calculated_first_mile_shipping:
+          readOnly: true
+          type: object
+          description: The initial Wish-calculated first-mile shipping price based on first groups of orders received.
+          allOf:
+          - $ref: '#/components/schemas/Money'
+        effective_date:
+          readOnly: true
+          type: string
+          description: The starting date when first-mile shipping price will apply to orders bound for destination countries included in Wish’s unification initiative.
+          format: date-time
+        effective_first_mile_shipping:
+          type: object
+          description: The effective first-mile shipping price (including any merchant adjustments) in the given warehouse. Not applicable to merchants enrolled in calculated shipping.
+          allOf:
+          - $ref: '#/components/schemas/Money'
+        enabled:
+          type: boolean
+          description: Whether the product in the warehouse has destination countries supported by Wish’s unification initiative. For merchants enrolled in calculated shipping, this will instead enable or disable calculated shipping on the product.
+        warehouse_id:
+          type: string
+          description: The ID of the warehouse. The default warehouse will be used if not provided.
+          format: object-id
+    UpdateProductVariation:
+      type: object
+      allOf:
+      - $ref: '#/components/schemas/EditableVariationParams'
+      - required:
+        - id
+        type: object
+        properties:
+          status:
+            enum:
+            - ENABLED
+            - DISABLED
+            type: string
+            description: The status of the variation. Removed variations cannot be updated.
+          id:
+            type: string
+            description: The ID of the variation.
+            format: object-id
+    Unit:
+      enum:
+      - OUNCE
+      - POUND
+      - MILLIGRAM
+      - GRAM
+      - KILOGRAM
+      - FLUID_OUNCE
+      - PINT
+      - QUART
+      - GALLON
+      - MILLILITER
+      - CENTILITER
+      - LITER
+      - CUBICMETER
+      - INCH
+      - FOOT
+      - YARD
+      - CENTIMETER
+      - METER
+      - SQUARE_FOOT
+      - SQUARE_METER
+      - COUNT
+      - LOAD
+      - WASH
+      - ROLL
+      - POD
+      type: string
+      description: The unit of measurement for the total content of a product. This will be used to display the price per unit, and is the unit of measurement that will be used for both the Reference Value and the Quantity Value attributes. [Learn More](https://merchantfaq.wish.com/hc/en-us/articles/4405383750555).
+    WarehouseInventory:
+      required:
+      - warehouse_id
+      - inventory
+      type: object
+      properties:
+        inventory:
+          minimum: 0
+          type: integer
+          description: The inventory of a variation in the warehouse.
+          maximum: 500000
+        warehouse_id:
+          type: string
+          description: The ID of the warehouse.
+          format: object-id
+    WarehouseToShipping:
+      required:
+      - warehouse_id
+      - shipping_details
+      type: object
+      properties:
+        shipping_details:
+          items:
+            $ref: '#/components/schemas/CountryShippingDetail'
+          type: array
+          description: The shipping details of a product in a warehouse.
+        warehouse_id:
+          type: string
+          description: The ID of the warehouse.
+          format: object-id
+    AttributeResponse:
+      required:
+      - name
+      type: object
+      properties:
+        name:
+          type: string
+          description: The name of the attribute.
+        value:
+          items:
+            type: string
+          type:
+          - array
+          - 'null'
+          description: The value of the attribute.
+    DefaultShipping:
+      type: object
+      properties:
+        default_shipping_price:
+          type: object
+          description: The default shipping price for a product in a warehouse.
+          allOf:
+          - $ref: '#/components/schemas/Price'
+        warehouse_id:
+          type: string
+          description: The ID of the warehouse.
+          format: object-id
     CreateProduct:
       type: object
       allOf:
@@ -1317,6 +1403,263 @@ components:
             type: array
             description: The extra images of the product in addition to the main image. It takes some time for images to be processed.
             maxItems: 100
+    EditableVariationParams:
+      type: object
+      properties:
+        sku:
+          minLength: 1
+          type: string
+          description: The Stock Keeping Unit of the variation.
+          maxLength: 80
+        quantity_value:
+          minimum: 0
+          type:
+          - number
+          - 'null'
+          description: The total quantity of the product variant (in the given unit) that is used to calculate price per unit. Note that if a product has multiple product variants, you will need to set quantity values for each product variant. [Learn More](https://merchantfaq.wish.com/hc/en-us/articles/4405383750555).
+          format: float
+        image:
+          type: string
+          description: The URL of the image associated with the variation. This is a required field when adding a new product listing with variations (Create a Product) or adding variations to existing product listings (Create a variation). The variation images don’t need to be unique (multiple variations can have the same image), but they have to be specified for each variation. These images must be a part of extra_images.
+          format: uri
+        price:
+          type: object
+          description: The price of the variation. Price is required for rev-share merhcants.
+          allOf:
+          - $ref: '#/components/schemas/Price'
+        merchant_set_cost:
+          minimum: 0
+          type:
+          - number
+          - 'null'
+          description: Supply cost maintained by merchants on variation level
+          format: float
+        cost:
+          type: object
+          description: The cost of the variation. Cost is required for cost-based merchants.
+          allOf:
+          - $ref: '#/components/schemas/Price'
+        gtin:
+          pattern: ^[0-9]{8,14}$
+          type:
+          - string
+          - 'null'
+          description: Should be 8 to 14 digits GTIN (UPC, EAN, ISBN) that contains no letters or other characters. This number is barcode symbology used for tracking trade items in stores and scanning them at the point of sale.
+        attributes:
+          items:
+            $ref: '#/components/schemas/VariationAttribute'
+          type:
+          - array
+          - 'null'
+          description: The custom attributes of the variation. Merchants may use the "name" and "value" fields here to add specific attributes for the product’s category. Our [Taxonomy APIs](/documentation/api/v3/reference#operation/getCategoryAttributes) contains the list of all attributes for each category, mentions which ones are required, and the corresponding accepted values for each attribute.
+        inventories:
+          items:
+            $ref: '#/components/schemas/WarehouseInventory'
+          type: array
+          description: The inventory of the variation in each warehouse.
+        options:
+          items:
+            $ref: '#/components/schemas/Option'
+          type: array
+          description: This field is used to define the parameters for the creation of variations. You can create your variations with traditional Color and Size fields or use category-specific attributes. Each combination of option values may be a variation for that product. See which category-specific attributes can be used by using the [Taxonomy APIs](/documentation/api/v3/reference#operation/getCategoryAttributes) and the field attributes.constraint.is_variation_attribute.
+        logistics_details:
+          type: object
+          description: The logistics details of the variation.
+          allOf:
+          - $ref: '#/components/schemas/LogisticsInfo'
+    ProductUpdateAdvancedLogisticsShipping:
+      type: object
+      allOf:
+      - $ref: '#/components/schemas/AdvancedLogisticsShipping'
+      - required:
+        - warehouse_id
+        type: object
+        properties:
+          warehouse_id:
+            type: string
+            description: The ID of the warehouse.
+            format: object-id
+    ListShallowProductsResponse:
+      items:
+        $ref: '#/components/schemas/ShallowProduct'
+      type: array
+      description: The list of products without nested data.
+    Money:
+      required:
+      - amount
+      - currency_code
+      type: object
+      properties:
+        amount:
+          format: float
+          type: number
+          description: Amount in decimals.
+          example: 10.4
+        currency_code:
+          format: iso-4217
+          type: string
+          description: The 3-letter currency code defined in [ISO 4217](https://www.iso.org/iso-4217-currency-codes.html).
+          example: USD
+    CountryShippingDetail:
+      required:
+      - overrides
+      - destination
+      type: object
+      properties:
+        is_enabled:
+          default: true
+          type: boolean
+          description: Whether shipping is enabled for the country.
+        max_delivery_days:
+          type:
+          - integer
+          - 'null'
+          description: The maximum days for a product to be delivered to the customer. Can be set to null to remove the current max_delivery_days.
+        overrides:
+          items:
+            $ref: '#/components/schemas/RegionShippingDetail'
+          type: array
+          description: The region shipping detail.
+        destination:
+          format: iso-3166
+          type: string
+          description: The 2-letter country code defined in [ISO 3166](https://www.iso.org/iso-3166-country-codes.html).
+          example: US
+        additional_price:
+          type: object
+          description: The additional shipping price for the country. Additional shipping price should be always smaller than or equal to shipping price.
+          allOf:
+          - $ref: '#/components/schemas/Price'
+        price:
+          type: object
+          description: The shipping price for the country.
+          allOf:
+          - $ref: '#/components/schemas/Price'
+    Video:
+      type: object
+      properties:
+        url:
+          type: string
+          description: The URL of the demo video of the product.
+          format: uri
+    AddProductVariation:
+      type: object
+      allOf:
+      - $ref: '#/components/schemas/EditableVariationParams'
+      - required:
+        - sku
+        - inventories
+        - price
+        type: object
+    UpdateProduct:
+      type: object
+      allOf:
+      - $ref: '#/components/schemas/EditableProductParams'
+      - type: object
+        properties:
+          status:
+            enum:
+            - ENABLED
+            - DISABLED
+            type: string
+            description: The status of the product.
+          first_mile_shippings:
+            items:
+              $ref: '#/components/schemas/ProductUpdateAdvancedLogisticsShipping'
+            type: array
+            description: The first-mile shipping price and unification initiative statuses of the product in each warehouse. Provide at least one of `effective_first_mile_shipping` or `enabled` to change the first-mile shipping price or switch the unification initiative status respectively. Only applicable to Mainland China-based merchants whose products have destination countries supported by Wish’s unification initiative. Please refer to /api/v3/unification_initiative/countries for the full list of support countries.
+          main_image:
+            type: object
+            description: The main image of the product. Image can be in JPEG, PNG or GIF format. Images should be at least 500 x 500 pixels in size. Maximum size 178 MP and 24MB
+            allOf:
+            - $ref: '#/components/schemas/CreateImage'
+          variations:
+            minItems: 0
+            items:
+              $ref: '#/components/schemas/UpdateProductVariation'
+            type: array
+            description: The variations of the product.
+            maxItems: 400
+          extra_images:
+            items:
+              $ref: '#/components/schemas/CreateImage'
+            type:
+            - array
+            - 'null'
+            description: The extra images of the product in addition to the main image. It takes some time for images to be processed.
+            maxItems: 100
+    LogisticsInfo:
+      type: object
+      properties:
+        customs_declared_name:
+          type: string
+          description: Declared name of the product used for customs clearance. This is often displayed on the product packaging.
+        origin_country:
+          type: string
+          description: Country where the product is manufactured, produced, or grown. Country code should follow [ISO 3166 Alpha-2 code](https://www.iso.org/obp/ui/#iso:pub:PUB500001:en). This is a required field when creating a new product listing (Create a Product) or creating a new variation (Create a variation).
+          format: iso-3166
+        weight:
+          type: number
+          description: The weight of the package in which your product will ship to the customer (units in grams).</br> This is a required field for mainland China-based merchants when creating a new product listing (Create a Product) or adding variations to existing product listings (Create a variation).
+          format: float
+        restricted_flags:
+          items:
+            enum:
+            - HAS_POWDER
+            - HAS_LIQUID
+            - HAS_BATTERY
+            - HAS_METAL
+            type: string
+          type:
+          - array
+          - 'null'
+          description: Whether the product contains certain items or materials.</br> __Battery__ - Products that contain batteries, either replaceable or built into the product.</br> __Liquid__ - Products that consist of a substance that has a consistency like water or oil, including semi-liquids such as creams, gels, lubes, etc.</br> __Metal__ - Products made of or containing metal as a material component.</br> __Powder__ - Any product that is composed of fine, dry particles.
+        customs_hs_code:
+          type: string
+          description: Harmonization System Code for customs declaration.
+        height:
+          type: number
+          description: The height of the package in which your product will ship to the customer (units in cm).
+          format: float
+        width:
+          type: number
+          description: The width of the package in which your product will ship to the customer (units in cm).
+          format: float
+        length:
+          type: number
+          description: The length of the package in which your product will ship to the customer (units in cm).
+          format: float
+        declared_name:
+          type: string
+          description: The product name for customs declaration.</br> `This field will be deprecated soon and replaced with customs_declared_name.`
+        customs_declared_value:
+          type: object
+          description: The price of the product for customs declaration.
+          allOf:
+          - $ref: '#/components/schemas/Price'
+        pieces:
+          type: integer
+          description: The number of pieces associated with the variation.
+        declared_local_name:
+          type: string
+          description: The product name in local language for customs declaration.
+    CreateImage:
+      type: object
+      properties:
+        url:
+          type: string
+          description: The URL of the image of the product. Images can be in JPEG, PNG or GIF format. Images should be at least 500 x 500 pixels in size. Maximum size 178 MP and 24MB
+          format: uri
+        variation_skus:
+          items:
+            minLength: 1
+            type: string
+            maxLength: 80
+          type: array
+          description: The list of SKUs of the variations that use this image.</br> `This field will be deprecated soon. To add images to or get images for product variations, use the variations.image field`
+        is_clean_image:
+          type: boolean
+          description: Wish products might appear in external shopping searches. A "clean image" is used to represent the product in such searches. This is a required field when creating a new product listing (Create a Product). Only one clean image URL can be specified for a product. [Learn more](https://merchanthelp.wish.com/s/article/mu360033668153?language=en_US).
     ProductVariation:
       type: object
       properties:
@@ -1370,9 +1713,10 @@ components:
         attributes:
           items:
             $ref: '#/components/schemas/AttributeResponse'
-          type: array
+          type:
+          - array
+          - 'null'
           description: The custom attributes of the variation.
-          nullable: true
         inventories:
           items:
             $ref: '#/components/schemas/WarehouseInventory'
@@ -1388,14 +1732,33 @@ components:
           description: The logistics details of the variation.
           allOf:
           - $ref: '#/components/schemas/LogisticsInfo'
-    UpdateDefaultShipping:
+    Image:
       type: object
-      allOf:
-      - $ref: '#/components/schemas/DefaultShipping'
-      - required:
-        - default_shipping_price
-        - warehouse_id
-        type: object
+      properties:
+        url:
+          type: string
+          description: The URL of the image of the product.
+          format: uri
+        variation_skus:
+          items:
+            minLength: 1
+            type: string
+          type: array
+          description: The list of SKUs of the variations that use this image.</br> `This field will be deprecated soon. To add images to or get images for product variations, use the variations.image field`
+        is_clean_image:
+          type: boolean
+          description: Whether the image is a clean image. Only one clean image URL can be specified for a product. [Learn more](https://merchanthelp.wish.com/s/article/mu360033668153?language=en_US).
+    APIError:
+      required:
+      - code
+      - message
+      type: object
+      properties:
+        message:
+          type: string
+        code:
+          type: integer
+          format: int32
     WarningType:
       enum:
       - CHEMICAL
@@ -1408,369 +1771,38 @@ components:
       - DIESEL_ENGINE
       type: string
       description: The warning type applicable to your product, if any, for compliance with [California Proposition 65](https://www.p65warnings.ca.gov/). For more information on California Proposition 65 compliance, please see this Help Center article, "[California Proposition 65 overview and warning notices](https://merchantfaq.wish.com/hc/en-us/articles/360025359874)."
-    CalculatedShipping:
-      type: object
-      properties:
-        enable:
-          type: boolean
-          description: To enable or disable Calculated Shipping for this product.
-    UpdateProductVariation:
-      type: object
-      allOf:
-      - $ref: '#/components/schemas/EditableVariationParams'
-      - required:
-        - id
-        type: object
-        properties:
-          status:
-            enum:
-            - ENABLED
-            - DISABLED
-            type: string
-            description: The status of the variation. Removed variations cannot be updated.
-          id:
-            type: string
-            description: The ID of the variation.
-            format: object-id
-    DefaultShipping:
-      type: object
-      properties:
-        default_shipping_price:
-          type: object
-          description: The default shipping price for a product in a warehouse.
-          allOf:
-          - $ref: '#/components/schemas/Price'
-        warehouse_id:
-          type: string
-          description: The ID of the warehouse.
-          format: object-id
-    UpdateProduct:
-      type: object
-      allOf:
-      - $ref: '#/components/schemas/EditableProductParams'
-      - type: object
-        properties:
-          status:
-            enum:
-            - ENABLED
-            - DISABLED
-            type: string
-            description: The status of the product.
-          first_mile_shippings:
-            items:
-              $ref: '#/components/schemas/ProductUpdateAdvancedLogisticsShipping'
-            type: array
-            description: The first-mile shipping price and unification initiative statuses of the product in each warehouse. Provide at least one of `effective_first_mile_shipping` or `enabled` to change the first-mile shipping price or switch the unification initiative status respectively. Only applicable to Mainland China-based merchants whose products have destination countries supported by Wish’s unification initiative. Please refer to /api/v3/unification_initiative/countries for the full list of support countries.
-          main_image:
-            type: object
-            description: The main image of the product. Image can be in JPEG, PNG or GIF format. Images should be at least 500 x 500 pixels in size. Maximum size 178 MP and 24MB
-            allOf:
-            - $ref: '#/components/schemas/CreateImage'
-          variations:
-            minItems: 0
-            items:
-              $ref: '#/components/schemas/UpdateProductVariation'
-            type: array
-            description: The variations of the product.
-            maxItems: 400
-          extra_images:
-            items:
-              $ref: '#/components/schemas/CreateImage'
-            type: array
-            description: The extra images of the product in addition to the main image. It takes some time for images to be processed.
-            maxItems: 100
-            nullable: true
-    GPSRManufacturer:
-      type: object
-      properties:
-        email:
-          type: string
-          description: The Email of the manufacture of the product.
-        name:
-          type: string
-          description: The Name of the manufacture of the product.
-        address:
-          type: string
-          description: The Address of the manufacture of the product.
-    LogisticsInfo:
-      type: object
-      properties:
-        customs_declared_name:
-          type: string
-          description: Declared name of the product used for customs clearance. This is often displayed on the product packaging.
-        origin_country:
-          type: string
-          description: Country where the product is manufactured, produced, or grown. Country code should follow [ISO 3166 Alpha-2 code](https://www.iso.org/obp/ui/#iso:pub:PUB500001:en). This is a required field when creating a new product listing (Create a Product) or creating a new variation (Create a variation).
-          format: iso-3166
-        weight:
-          type: number
-          description: The weight of the package in which your product will ship to the customer (units in grams).</br> This is a required field for mainland China-based merchants when creating a new product listing (Create a Product) or adding variations to existing product listings (Create a variation).
-          format: float
-        restricted_flags:
-          items:
-            enum:
-            - HAS_POWDER
-            - HAS_LIQUID
-            - HAS_BATTERY
-            - HAS_METAL
-            type: string
-          type: array
-          description: Whether the product contains certain items or materials.</br> __Battery__ - Products that contain batteries, either replaceable or built into the product.</br> __Liquid__ - Products that consist of a substance that has a consistency like water or oil, including semi-liquids such as creams, gels, lubes, etc.</br> __Metal__ - Products made of or containing metal as a material component.</br> __Powder__ - Any product that is composed of fine, dry particles.
-          nullable: true
-        customs_hs_code:
-          type: string
-          description: Harmonization System Code for customs declaration.
-        height:
-          type: number
-          description: The height of the package in which your product will ship to the customer (units in cm).
-          format: float
-        width:
-          type: number
-          description: The width of the package in which your product will ship to the customer (units in cm).
-          format: float
-        length:
-          type: number
-          description: The length of the package in which your product will ship to the customer (units in cm).
-          format: float
-        declared_name:
-          type: string
-          description: The product name for customs declaration.</br> `This field will be deprecated soon and replaced with customs_declared_name.`
-        customs_declared_value:
-          type: object
-          description: The price of the product for customs declaration.
-          allOf:
-          - $ref: '#/components/schemas/Price'
-        pieces:
-          type: integer
-          description: The number of pieces associated with the variation.
-        declared_local_name:
-          type: string
-          description: The product name in local language for customs declaration.
-    CountryShippingDetail:
-      required:
-      - overrides
-      - destination
-      type: object
-      properties:
-        is_enabled:
-          default: true
-          type: boolean
-          description: Whether shipping is enabled for the country.
-        max_delivery_days:
-          type: integer
-          description: The maximum days for a product to be delivered to the customer. Can be set to null to remove the current max_delivery_days.
-          nullable: true
-        overrides:
-          items:
-            $ref: '#/components/schemas/RegionShippingDetail'
-          type: array
-          description: The region shipping detail.
-        destination:
-          format: iso-3166
-          type: string
-          description: The 2-letter country code defined in [ISO 3166](https://www.iso.org/iso-3166-country-codes.html).
-          example: US
-        additional_price:
-          type: object
-          description: The additional shipping price for the country. Additional shipping price should be always smaller than or equal to shipping price.
-          allOf:
-          - $ref: '#/components/schemas/Price'
-        price:
-          type: object
-          description: The shipping price for the country.
-          allOf:
-          - $ref: '#/components/schemas/Price'
-    WarehouseInventory:
-      required:
-      - warehouse_id
-      - inventory
-      type: object
-      properties:
-        inventory:
-          minimum: 0
-          type: integer
-          description: The inventory of a variation in the warehouse.
-          maximum: 500000
-        warehouse_id:
-          type: string
-          description: The ID of the warehouse.
-          format: object-id
-    ListShallowProductsResponse:
-      items:
-        $ref: '#/components/schemas/ShallowProduct'
-      type: array
-      description: The list of products without nested data.
-    Attribute:
-      required:
-      - name
-      type: object
-      properties:
-        name:
-          type: string
-          description: The name of the attribute. Input the relevant "name" here. Please browse our [Taxonomy APIs](/documentation/api/v3/reference#operation/getCategoryAttributes) for possible attribute names.
-        value:
-          items:
-            type: string
-          type: array
-          description: The value of the attribute. Can be set to null to remove the attribute. Input the relevant value here from the "accepted_values" here. Please browse our [Taxonomy APIs](/documentation/api/v3/reference#operation/getCategoryAttributes) for possible attribute values.
-          nullable: true
-    WarehouseToShipping:
-      required:
-      - warehouse_id
-      - shipping_details
-      type: object
-      properties:
-        shipping_details:
-          items:
-            $ref: '#/components/schemas/CountryShippingDetail'
-          type: array
-          description: The shipping details of a product in a warehouse.
-        warehouse_id:
-          type: string
-          description: The ID of the warehouse.
-          format: object-id
-  parameters:
-    param_updated_at_min:
-      schema:
-        type: string
-        format: date-time
-      required: false
-      description: Only return products that were updated since the given time. Currently only time with precision up to 'millisecond' will be accepted. Any time that is more precise than 'millisecond' level will be processed so that it only keeps its 'millisecond'.
-      name: updated_at_min
-      in: query
-    param_state:
-      schema:
-        enum:
-        - ACTIVE
-        - WISH_INACTIVE
-        - MERCHANT_INACTIVE
-        - REMOVED_BY_WISH
-        - REMOVED_BY_MERCHANT
-        type: string
-      required: false
-      description: Only return products with the given states. Default to all states if null.</br> __ACTIVE__ - state reflects listings that are live. Note that edits to these listings might still be under review and might not be live.</br> __WISH_INACTIVE__ - state reflects listings that are being processed and not live yet. This could likely be because the listing is under product review.</br> __MERCHANT_INACTIVE__ - are listings disabled by the merchant.</br> __REMOVED_BY_WISH__ - are listings removed by Wish.</br> __REMOVED_BY_MERCHANT__ - are listings that are removed by the merchant.
-      name: state
-      in: query
-    param_product_update_request_sort_by:
-      schema:
-        default: created_at.asc
-        pattern: ^(product_id|created_at)(\.(asc|desc))?$
-        type: string
-      required: false
-      description: The attribute to sort product create or update requests in the response.
-      name: sort_by
-      in: query
-    param_min_created_at:
-      schema:
-        type: string
-        format: date-time
-      required: false
-      description: Only return product create or update requests that were created since the given time.
-      name: min_created_at
-      in: query
-    param_created_at_min:
-      schema:
-        type: string
-        format: date-time
-      required: false
-      description: Only return products that were created since the given time. Currently only time with precision up to 'second' will be accepted. Any time that is more precise than 'second' level will be processed so that it only keeps its 'second'.
-      name: created_at_min
-      in: query
-    param_sort_by:
-      schema:
-        default: updated_at.desc
-        pattern: ^(updated_at|created_at)(\.(asc|desc))?$
-        type: string
-      required: false
-      description: The attribute to sort products in the response. The most recently updated products will be returned first if `desc`.
-      name: sort_by
-      in: query
-    param_max_created_at:
-      schema:
-        type: string
-        format: date-time
-      required: false
-      description: Only return product create or update requests that were created before the given time.
-      name: max_created_at
-      in: query
-    param_created_at_max:
-      schema:
-        type: string
-        format: date-time
-      required: false
-      description: Only return products that were created before the given time. Currently only time with precision up to 'second' will be accepted. Any time that is more precise than 'second' level will be processed so that it only keeps its 'second'.
-      name: created_at_max
-      in: query
-    param_limit:
-      schema:
-        default: 50
-        minimum: 1
-        type: integer
-        maximum: 1000
-      required: false
-      description: The limit on the number of products that will be returned.
-      name: limit
-      in: query
-    param_updated_at_max:
-      schema:
-        type: string
-        format: date-time
-      required: false
-      description: Only return products that were updated before the given time. Currently only time with precision up to 'millisecond' will be accepted. Any time that is more precise than 'millisecond' level will be processed so that it only keeps its 'millisecond'.
-      name: updated_at_max
-      in: query
-    param_product_update_request_statuses:
-      schema:
-        minItems: 1
-        items:
-          enum:
-          - APPROVED
-          - BLOCKED
-          - UNDER_REVIEW
-          type: string
-        type: array
-      required: false
-      description: Only return product create or update requests with the given statuses.
-      name: statuses
-      in: query
-    param_parent_sku:
-      schema:
-        type: string
-      required: false
-      description: The parent sku of the product that will be returned.
-      name: parent_sku
-      in: query
-    param_statuses:
-      schema:
-        minItems: 1
-        items:
-          enum:
-          - PENDING_REVIEW
-          - APPROVED
-          - REJECTED
-          - REMOVED_BY_WISH
-          - REMOVED_BY_MERCHANT
-          type: string
-        type: array
-      required: false
-      description: Only return products with the given statuses. Default to PENDING_REVIEW + APPROVED.</br> `This field will be deprecated soon and replaced with state.`
-      name: statuses
-      in: query
-    param_id:
-      schema:
-        type: string
-      required: false
-      description: Only return the product create or update request with the given ID.
-      name: id
-      in: query
-    param_product_id:
-      schema:
-        type: string
-        format: object-id
-      required: false
-      description: Only return the product create or update request for the given product ID.
-      name: product_id
-      in: query
+    UnitInput:
+      enum:
+      - OUNCE
+      - POUND
+      - MILLIGRAM
+      - GRAM
+      - KILOGRAM
+      - FLUID_OUNCE
+      - PINT
+      - QUART
+      - GALLON
+      - MILLILITER
+      - CENTILITER
+      - LITER
+      - CUBICMETER
+      - INCH
+      - FOOT
+      - YARD
+      - CENTIMETER
+      - METER
+      - SQUARE_FOOT
+      - SQUARE_METER
+      - COUNT
+      - LOAD
+      - WASH
+      - ROLL
+      - POD
+      - null
+      type:
+      - string
+      - 'null'
+      description: The unit of measurement for the total content of a product. This will be used to display the price per unit, and is the unit of measurement that will be used for both the Reference Value and the Quantity Value attributes. [Learn More](https://merchantfaq.wish.com/hc/en-us/articles/4405383750555).
   securitySchemes:
     OpenID:
       type: openIdConnect
