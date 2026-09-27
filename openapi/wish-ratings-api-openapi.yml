@@ -209,15 +209,6 @@ paths:
       description: Enable merchants to retrieve the overall rating metrics for the product
 components:
   schemas:
-    RatingImage:
-      type: object
-      properties:
-        url:
-          type: string
-          description: The URL of the image of the rating
-        id:
-          type: string
-          description: The ID of the image
     RatingVideo:
       type: object
       properties:
@@ -276,6 +267,19 @@ components:
           type: string
           description: ID of the rating
           format: object-id
+    RatingImage:
+      type: object
+      properties:
+        url:
+          type: string
+          description: The URL of the image of the rating
+        id:
+          type: string
+          description: The ID of the image
+    Locale:
+      type: string
+      description: A language tag (which is sometimes referred to as a 'locale identifier'). This consists of a 2-3 letter base language tag representing the language, optionally followed by additional subtags separated by '-'. The most common extra information is the country or region variant (like 'en-US' or 'fr-CA'). For more information, see specification [BCP 47](https://datatracker.ietf.org/doc/html/bcp47#section-2).
+      format: BCP 47
     ProductOverallRating:
       type: object
       properties:
@@ -298,10 +302,6 @@ components:
         code:
           type: integer
           format: int32
-    Locale:
-      type: string
-      description: A language tag (which is sometimes referred to as a 'locale identifier'). This consists of a 2-3 letter base language tag representing the language, optionally followed by additional subtags separated by '-'. The most common extra information is the country or region variant (like 'en-US' or 'fr-CA'). For more information, see specification [BCP 47](https://datatracker.ietf.org/doc/html/bcp47#section-2).
-      format: BCP 47
   securitySchemes:
     OpenID:
       type: openIdConnect

@@ -190,7 +190,98 @@ paths:
           print(response.text)'
       operationId: getEarlyPayment
 components:
+  parameters:
+    invoices_sort_by:
+      schema:
+        default: payment_released_at
+        type: string
+      required: false
+      description: '(Optional)Choose what field to order the payments, the order is descending by default. Current supported fields are:
+
+        * payment_released_at: The time when the payment was released.
+
+        '
+      name: sort_by
+      in: query
+    invoices_limit_order_download_job:
+      schema:
+        minimum: 1
+        type: integer
+      required: false
+      description: The limit on the number of orders that will be returned.
+      name: limit
+      in: query
+    payment_released_at_min:
+      description: (Optional)Specify the beginning of the time window to view desired payments. Payments released before this time will not show.
+      required: false
+      name: payment_released_at_min
+      in: query
+      example: '2020-01-01T07:00:00.000Z'
+      schema:
+        type: string
+        format: date-time
+    payment_released_at_max:
+      description: (Optional)Specify the end of the time window to view desired payments. Payments released after this time will not show.
+      required: false
+      name: payment_released_at_max
+      in: query
+      example: '2020-01-01T07:00:00.000Z'
+      schema:
+        type: string
+        format: date-time
   schemas:
+    V3GenericReportStatus:
+      type: object
+      description: A generic report status object used when an endpoint wants to return the status of their downloadable file
+      properties:
+        status:
+          enum:
+          - PENDING
+          - CREATING
+          - READY
+          - EXCEPTION
+          type: string
+          description: "1. PENDING - The report generation request has been received and is awaiting processing\n2. CREATING - The report is being created\n3. READY -\tThe report is ready for download from `file_urls`\n4. EXCEPTION - The report generation failed, contact our api support\n"
+        expiry_time:
+          type: string
+          description: The timestamp on when this report expires and `file_urls` become invalid
+          format: date-time
+        total_count:
+          type: number
+          description: Total number of files attached to the report
+        created_at:
+          type: string
+          description: The timestamp on when this report is created
+          format: date-time
+        completed_at:
+          type: string
+          description: The timestamp on when this report is completed
+          format: date-time
+        file_urls:
+          items:
+            type: string
+          type:
+          - array
+          - 'null'
+          description: When the status is READY, the report will be availble at these urls. Otherwise it will be `null`
+        processed_count:
+          type: number
+          description: This number indicates how many files have been processed so far
+        id:
+          type: string
+          description: ID of the report
+          format: object-id
+    APIError:
+      required:
+      - code
+      - message
+      type: object
+      properties:
+        message:
+          type: string
+        code:
+          type: integer
+          format: int32
     PaymentInvoiceOrderDownloadJob:
       type: object
       properties:
@@ -242,102 +333,11 @@ components:
           type: string
           description: The 3-letter currency code defined in [ISO 4217](https://www.iso.org/iso-4217-currency-codes.html).
           example: USD
-    APIError:
-      required:
-      - code
-      - message
-      type: object
-      properties:
-        message:
-          type: string
-        code:
-          type: integer
-          format: int32
     EarlyPayment:
       type: object
       properties:
         available_amount:
           $ref: '#/components/schemas/Price'
-    V3GenericReportStatus:
-      type: object
-      description: A generic report status object used when an endpoint wants to return the status of their downloadable file
-      properties:
-        status:
-          enum:
-          - PENDING
-          - CREATING
-          - READY
-          - EXCEPTION
-          type: string
-          description: "1. PENDING - The report generation request has been received and is awaiting processing\n2. CREATING - The report is being created\n3. READY -\tThe report is ready for download from `file_urls`\n4. EXCEPTION - The report generation failed, contact our api support\n"
-        expiry_time:
-          type: string
-          description: The timestamp on when this report expires and `file_urls` become invalid
-          format: date-time
-        total_count:
-          type: number
-          description: Total number of files attached to the report
-        created_at:
-          type: string
-          description: The timestamp on when this report is created
-          format: date-time
-        completed_at:
-          type: string
-          description: The timestamp on when this report is completed
-          format: date-time
-        file_urls:
-          items:
-            type: string
-          type:
-          - array
-          - 'null'
-          description: When the status is READY, the report will be availble at these urls. Otherwise it will be `null`
-        processed_count:
-          type: number
-          description: This number indicates how many files have been processed so far
-        id:
-          type: string
-          description: ID of the report
-          format: object-id
-  parameters:
-    invoices_limit_order_download_job:
-      schema:
-        minimum: 1
-        type: integer
-      required: false
-      description: The limit on the number of orders that will be returned.
-      name: limit
-      in: query
-    payment_released_at_max:
-      description: (Optional)Specify the end of the time window to view desired payments. Payments released after this time will not show.
-      required: false
-      name: payment_released_at_max
-      in: query
-      example: '2020-01-01T07:00:00.000Z'
-      schema:
-        type: string
-        format: date-time
-    invoices_sort_by:
-      schema:
-        default: payment_released_at
-        type: string
-      required: false
-      description: '(Optional)Choose what field to order the payments, the order is descending by default. Current supported fields are:
-
-        * payment_released_at: The time when the payment was released.
-
-        '
-      name: sort_by
-      in: query
-    payment_released_at_min:
-      description: (Optional)Specify the beginning of the time window to view desired payments. Payments released before this time will not show.
-      required: false
-      name: payment_released_at_min
-      in: query
-      example: '2020-01-01T07:00:00.000Z'
-      schema:
-        type: string
-        format: date-time
   securitySchemes:
     OpenID:
       type: openIdConnect

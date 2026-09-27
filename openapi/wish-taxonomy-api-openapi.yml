@@ -205,6 +205,17 @@ components:
           readOnly: true
           type: string
           description: The name of the category.
+    APIError:
+      required:
+      - code
+      - message
+      type: object
+      properties:
+        message:
+          type: string
+        code:
+          type: integer
+          format: int32
     CategoryAttributes:
       type: object
       properties:
@@ -285,17 +296,6 @@ components:
           - REQUIRED
           type: string
           description: The usage of the attribute.
-    APIError:
-      required:
-      - code
-      - message
-      type: object
-      properties:
-        message:
-          type: string
-        code:
-          type: integer
-          format: int32
   securitySchemes:
     OpenID:
       type: openIdConnect

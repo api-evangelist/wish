@@ -66,10 +66,6 @@ paths:
       operationId: getCurrencies
 components:
   schemas:
-    CurrencyList:
-      items:
-        $ref: '#/components/schemas/CurrencyInfo'
-      type: array
     CurrencyInfo:
       type: object
       properties:
@@ -79,6 +75,10 @@ components:
         name:
           type: string
           description: Name of the currency. E.g. US Dollar
+    CurrencyList:
+      items:
+        $ref: '#/components/schemas/CurrencyInfo'
+      type: array
   securitySchemes:
     OpenID:
       type: openIdConnect

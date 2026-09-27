@@ -149,90 +149,11 @@ paths:
       description: The list of accepted colors.
 components:
   schemas:
-    WarehouseInventory:
-      required:
-      - warehouse_id
-      - inventory
-      type: object
-      properties:
-        inventory:
-          minimum: 0
-          type: integer
-          description: The inventory of a variation in the warehouse.
-          maximum: 500000
-        warehouse_id:
-          type: string
-          description: The ID of the warehouse.
-          format: object-id
-    Price:
-      required:
-      - amount
-      - currency_code
-      type: object
-      properties:
-        amount:
-          minimum: 0
-          type: number
-          description: Non-negative amount in decimals.
-          format: float
-        currency_code:
-          format: iso-4217
-          type: string
-          description: The 3-letter currency code defined in [ISO 4217](https://www.iso.org/iso-4217-currency-codes.html).
-          example: USD
-    ColorList:
-      items:
-        $ref: '#/components/schemas/ColorInfo'
-      type: array
-      description: The list of accepted colors.
     Variation:
       type: object
       allOf:
       - $ref: '#/components/schemas/ProductVariation'
       - type: object
-    VariationAttribute:
-      required:
-      - name
-      type: object
-      properties:
-        name:
-          type: string
-          description: The name of the attribute. Input the relevant "name". Please browse our [Taxonomy APIs](/documentation/api/v3/reference#operation/getCategoryAttributes) for possible attribute names.
-        value:
-          items:
-            type: string
-          type:
-          - array
-          - 'null'
-          description: The value of the attribute. Can be set to null to remove the attribute. Input the relevant "accepted_values". Please browse our [Taxonomy APIs](/documentation/api/v3/reference#operation/getCategoryAttributes) for possible attribute values.
-    AttributeResponse:
-      required:
-      - name
-      type: object
-      properties:
-        name:
-          type: string
-          description: The name of the attribute.
-        value:
-          items:
-            type: string
-          type:
-          - array
-          - 'null'
-          description: The value of the attribute.
-    Option:
-      required:
-      - name
-      - value
-      type: object
-      properties:
-        name:
-          type: string
-          description: The name of the option like SIZE and COLOR.
-        value:
-          minLength: 1
-          type: string
-          description: The value of the option.
     LogisticsInfo:
       type: object
       properties:
@@ -288,70 +209,81 @@ components:
         declared_local_name:
           type: string
           description: The product name in local language for customs declaration.
-    EditableVariationParams:
+    VariationAttribute:
+      required:
+      - name
       type: object
       properties:
-        sku:
-          minLength: 1
+        name:
           type: string
-          description: The Stock Keeping Unit of the variation.
-          maxLength: 80
-        quantity_value:
-          minimum: 0
-          type:
-          - number
-          - 'null'
-          description: The total quantity of the product variant (in the given unit) that is used to calculate price per unit. Note that if a product has multiple product variants, you will need to set quantity values for each product variant. [Learn More](https://merchantfaq.wish.com/hc/en-us/articles/4405383750555).
-          format: float
-        image:
-          type: string
-          description: The URL of the image associated with the variation. This is a required field when adding a new product listing with variations (Create a Product) or adding variations to existing product listings (Create a variation). The variation images don’t need to be unique (multiple variations can have the same image), but they have to be specified for each variation. These images must be a part of extra_images.
-          format: uri
-        price:
-          type: object
-          description: The price of the variation. Price is required for rev-share merhcants.
-          allOf:
-          - $ref: '#/components/schemas/Price'
-        merchant_set_cost:
-          minimum: 0
-          type:
-          - number
-          - 'null'
-          description: Supply cost maintained by merchants on variation level
-          format: float
-        cost:
-          type: object
-          description: The cost of the variation. Cost is required for cost-based merchants.
-          allOf:
-          - $ref: '#/components/schemas/Price'
-        gtin:
-          pattern: ^[0-9]{8,14}$
-          type:
-          - string
-          - 'null'
-          description: Should be 8 to 14 digits GTIN (UPC, EAN, ISBN) that contains no letters or other characters. This number is barcode symbology used for tracking trade items in stores and scanning them at the point of sale.
-        attributes:
+          description: The name of the attribute. Input the relevant "name". Please browse our [Taxonomy APIs](/documentation/api/v3/reference#operation/getCategoryAttributes) for possible attribute names.
+        value:
           items:
-            $ref: '#/components/schemas/VariationAttribute'
+            type: string
           type:
           - array
           - 'null'
-          description: The custom attributes of the variation. Merchants may use the "name" and "value" fields here to add specific attributes for the product’s category. Our [Taxonomy APIs](/documentation/api/v3/reference#operation/getCategoryAttributes) contains the list of all attributes for each category, mentions which ones are required, and the corresponding accepted values for each attribute.
-        inventories:
+          description: The value of the attribute. Can be set to null to remove the attribute. Input the relevant "accepted_values". Please browse our [Taxonomy APIs](/documentation/api/v3/reference#operation/getCategoryAttributes) for possible attribute values.
+    ColorInfo:
+      required:
+      - name
+      - id
+      type: object
+      properties:
+        id:
+          type: string
+          description: 'The ID of the color. E.g. antiquegold. C olor IDs are subject to change. '
+        name:
+          type: string
+          description: The display name of the color. E.g. Antique Gold.
+    Option:
+      required:
+      - name
+      - value
+      type: object
+      properties:
+        name:
+          type: string
+          description: The name of the option like SIZE and COLOR.
+        value:
+          minLength: 1
+          type: string
+          description: The value of the option.
+    ColorList:
+      items:
+        $ref: '#/components/schemas/ColorInfo'
+      type: array
+      description: The list of accepted colors.
+    AttributeResponse:
+      required:
+      - name
+      type: object
+      properties:
+        name:
+          type: string
+          description: The name of the attribute.
+        value:
           items:
-            $ref: '#/components/schemas/WarehouseInventory'
-          type: array
-          description: The inventory of the variation in each warehouse.
-        options:
-          items:
-            $ref: '#/components/schemas/Option'
-          type: array
-          description: This field is used to define the parameters for the creation of variations. You can create your variations with traditional Color and Size fields or use category-specific attributes. Each combination of option values may be a variation for that product. See which category-specific attributes can be used by using the [Taxonomy APIs](/documentation/api/v3/reference#operation/getCategoryAttributes) and the field attributes.constraint.is_variation_attribute.
-        logistics_details:
-          type: object
-          description: The logistics details of the variation.
-          allOf:
-          - $ref: '#/components/schemas/LogisticsInfo'
+            type: string
+          type:
+          - array
+          - 'null'
+          description: The value of the attribute.
+    WarehouseInventory:
+      required:
+      - warehouse_id
+      - inventory
+      type: object
+      properties:
+        inventory:
+          minimum: 0
+          type: integer
+          description: The inventory of a variation in the warehouse.
+          maximum: 500000
+        warehouse_id:
+          type: string
+          description: The ID of the warehouse.
+          format: object-id
     ProductVariation:
       type: object
       properties:
@@ -424,6 +356,70 @@ components:
           description: The logistics details of the variation.
           allOf:
           - $ref: '#/components/schemas/LogisticsInfo'
+    EditableVariationParams:
+      type: object
+      properties:
+        sku:
+          minLength: 1
+          type: string
+          description: The Stock Keeping Unit of the variation.
+          maxLength: 80
+        quantity_value:
+          minimum: 0
+          type:
+          - number
+          - 'null'
+          description: The total quantity of the product variant (in the given unit) that is used to calculate price per unit. Note that if a product has multiple product variants, you will need to set quantity values for each product variant. [Learn More](https://merchantfaq.wish.com/hc/en-us/articles/4405383750555).
+          format: float
+        image:
+          type: string
+          description: The URL of the image associated with the variation. This is a required field when adding a new product listing with variations (Create a Product) or adding variations to existing product listings (Create a variation). The variation images don’t need to be unique (multiple variations can have the same image), but they have to be specified for each variation. These images must be a part of extra_images.
+          format: uri
+        price:
+          type: object
+          description: The price of the variation. Price is required for rev-share merhcants.
+          allOf:
+          - $ref: '#/components/schemas/Price'
+        merchant_set_cost:
+          minimum: 0
+          type:
+          - number
+          - 'null'
+          description: Supply cost maintained by merchants on variation level
+          format: float
+        cost:
+          type: object
+          description: The cost of the variation. Cost is required for cost-based merchants.
+          allOf:
+          - $ref: '#/components/schemas/Price'
+        gtin:
+          pattern: ^[0-9]{8,14}$
+          type:
+          - string
+          - 'null'
+          description: Should be 8 to 14 digits GTIN (UPC, EAN, ISBN) that contains no letters or other characters. This number is barcode symbology used for tracking trade items in stores and scanning them at the point of sale.
+        attributes:
+          items:
+            $ref: '#/components/schemas/VariationAttribute'
+          type:
+          - array
+          - 'null'
+          description: The custom attributes of the variation. Merchants may use the "name" and "value" fields here to add specific attributes for the product’s category. Our [Taxonomy APIs](/documentation/api/v3/reference#operation/getCategoryAttributes) contains the list of all attributes for each category, mentions which ones are required, and the corresponding accepted values for each attribute.
+        inventories:
+          items:
+            $ref: '#/components/schemas/WarehouseInventory'
+          type: array
+          description: The inventory of the variation in each warehouse.
+        options:
+          items:
+            $ref: '#/components/schemas/Option'
+          type: array
+          description: This field is used to define the parameters for the creation of variations. You can create your variations with traditional Color and Size fields or use category-specific attributes. Each combination of option values may be a variation for that product. See which category-specific attributes can be used by using the [Taxonomy APIs](/documentation/api/v3/reference#operation/getCategoryAttributes) and the field attributes.constraint.is_variation_attribute.
+        logistics_details:
+          type: object
+          description: The logistics details of the variation.
+          allOf:
+          - $ref: '#/components/schemas/LogisticsInfo'
     APIError:
       required:
       - code
@@ -435,6 +431,22 @@ components:
         code:
           type: integer
           format: int32
+    Price:
+      required:
+      - amount
+      - currency_code
+      type: object
+      properties:
+        amount:
+          minimum: 0
+          type: number
+          description: Non-negative amount in decimals.
+          format: float
+        currency_code:
+          format: iso-4217
+          type: string
+          description: The 3-letter currency code defined in [ISO 4217](https://www.iso.org/iso-4217-currency-codes.html).
+          example: USD
     AddVariation:
       type: object
       allOf:
@@ -444,18 +456,6 @@ components:
         - inventories
         - price
         type: object
-    ColorInfo:
-      required:
-      - name
-      - id
-      type: object
-      properties:
-        id:
-          type: string
-          description: 'The ID of the color. E.g. antiquegold. C olor IDs are subject to change. '
-        name:
-          type: string
-          description: The display name of the color. E.g. Antique Gold.
   securitySchemes:
     OpenID:
       type: openIdConnect

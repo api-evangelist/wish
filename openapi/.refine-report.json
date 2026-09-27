@@ -26,16 +26,13 @@
     "wish-videos-api-openapi.yml",
     "wish-webhook-api-openapi.yml"
   ],
-  "archived": [
-    "deleted 1 superseded output(s) from the previous generation"
-  ],
+  "archived": [],
   "errors": [],
   "warnings": [],
   "notes": [
     "sourced from openapi/_original/ (1 archived document(s)); previously refined output at the top level was skipped rather than re-split",
     "wish-marketplace-v3-openapi.json: upgraded openapi 3.0.0 -> OpenAPI 3.2.0",
-    "superseded outputs removed: wish-o-auth-api-openapi.yml",
-    "apis.yml register: written (+1 apis, 21 total)"
+    "apis.yml register: already-registered"
   ],
   "skipped": [
     "wish-brands-api-openapi.yml: previously refined output, superseded by openapi/_original/",
@@ -45,7 +42,7 @@
     "wish-france-epr-compliance-api-openapi.yml: previously refined output, superseded by openapi/_original/",
     "wish-germany-epr-compliance-api-openapi.yml: previously refined output, superseded by openapi/_original/",
     "wish-merchant-api-openapi.yml: previously refined output, superseded by openapi/_original/",
-    "wish-o-auth-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "wish-oauth-api-openapi.yml: previously refined output, superseded by openapi/_original/",
     "wish-orders-api-openapi.yml: previously refined output, superseded by openapi/_original/",
     "wish-payments-api-openapi.yml: previously refined output, superseded by openapi/_original/",
     "wish-penalties-api-openapi.yml: previously refined output, superseded by openapi/_original/",

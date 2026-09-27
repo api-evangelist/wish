@@ -204,16 +204,40 @@ paths:
         source: "<?php\n\n$curl = curl_init();\n\ncurl_setopt_array($curl, array(\n  CURLOPT_URL => \"https://merchant.wish.com/api/v3/penalties?created_at_min=SOME_STRING_VALUE&created_at_max=SOME_STRING_VALUE&reversed_at_min=SOME_STRING_VALUE&reversed_at_max=SOME_STRING_VALUE&limit=SOME_INTEGER_VALUE&sort_by=SOME_STRING_VALUE\",\n  CURLOPT_RETURNTRANSFER => true,\n  CURLOPT_ENCODING => \"\",\n  CURLOPT_MAXREDIRS => 10,\n  CURLOPT_TIMEOUT => 30,\n  CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,\n  CURLOPT_CUSTOMREQUEST => \"GET\",\n  CURLOPT_HTTPHEADER => array(\n    \"authorization: Bearer REPLACE_BEARER_TOKEN\"\n  ),\n));\n\n$response = curl_exec($curl);\n$err = curl_error($curl);\n\ncurl_close($curl);\n\nif ($err) {\n  echo \"cURL Error #:\" . $err;\n} else {\n  echo $response;\n}"
       operationId: ListPenalties
 components:
+  parameters:
+    reversed_at_min_param:
+      schema:
+        type: string
+        format: date-time
+      required: false
+      description: Show penalties reversed after the given date time. Default to the date time of the earliest reversed penalty if not provided
+      name: reversed_at_min
+      in: query
+    created_at_max_param:
+      schema:
+        type: string
+        format: date-time
+      required: false
+      description: Show penalties created before the given date time. Default to the date time of the latest created penalty if not provided
+      name: created_at_max
+      in: query
+    created_at_min_param:
+      schema:
+        type: string
+        format: date-time
+      required: false
+      description: Show penalties created after the given date time. Default to the date time of the earliest created penalty if not provided
+      name: created_at_min
+      in: query
+    reversed_at_max_param:
+      schema:
+        type: string
+        format: date-time
+      required: false
+      description: Show penalties reversed before the given date time. Default to the date time of the latest reversed penalty if not provided
+      name: reversed_at_max
+      in: query
   schemas:
-    PenaltyCount:
-      required:
-      - count
-      type: object
-      properties:
-        count:
-          type: integer
-          description: Number of penalties satisfying the query
-          format: int32
     Penalty:
       required:
       - id
@@ -257,16 +281,14 @@ components:
       items:
         $ref: '#/components/schemas/Penalty'
       type: array
-    APIError:
+    PenaltyCount:
       required:
-      - code
-      - message
+      - count
       type: object
       properties:
-        message:
-          type: string
-        code:
+        count:
           type: integer
+          description: Number of penalties satisfying the query
           format: int32
     Money:
       required:
@@ -284,39 +306,17 @@ components:
           type: string
           description: The 3-letter currency code defined in [ISO 4217](https://www.iso.org/iso-4217-currency-codes.html).
           example: USD
-  parameters:
-    created_at_max_param:
-      schema:
-        type: string
-        format: date-time
-      required: false
-      description: Show penalties created before the given date time. Default to the date time of the latest created penalty if not provided
-      name: created_at_max
-      in: query
-    created_at_min_param:
-      schema:
-        type: string
-        format: date-time
-      required: false
-      description: Show penalties created after the given date time. Default to the date time of the earliest created penalty if not provided
-      name: created_at_min
-      in: query
-    reversed_at_max_param:
-      schema:
-        type: string
-        format: date-time
-      required: false
-      description: Show penalties reversed before the given date time. Default to the date time of the latest reversed penalty if not provided
-      name: reversed_at_max
-      in: query
-    reversed_at_min_param:
-      schema:
-        type: string
-        format: date-time
-      required: false
-      description: Show penalties reversed after the given date time. Default to the date time of the earliest reversed penalty if not provided
-      name: reversed_at_min
-      in: query
+    APIError:
+      required:
+      - code
+      - message
+      type: object
+      properties:
+        message:
+          type: string
+        code:
+          type: integer
+          format: int32
   securitySchemes:
     OpenID:
       type: openIdConnect

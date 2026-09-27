@@ -433,17 +433,38 @@ paths:
         source: "HttpResponse<String> response = Unirest.delete(\"https://merchant.wish.com/api/v3/germany_epr_compliance/epr_registration_number/{id}\")\n  .header(\"authorization\", \"Bearer REPLACE_BEARER_TOKEN\")\n  .asString();"
       description: Delete a Germany Product EPR Registration Number. [This will remove all linked products]
 components:
+  parameters:
+    de_epr_id:
+      schema:
+        type: string
+        format: object-id
+      required: true
+      description: The unique identifier of the Germany product EPR registration number
+      name: id
+      in: path
   schemas:
-    GermanyProductEprRegistrationNumberResponse:
-      description: A Germany product EPR registration number response
-      allOf:
-      - $ref: '#/components/schemas/GermanyProductEprRegistrationNumber'
-      - type: object
-        properties:
-          id:
+    GermanyProductComplianceStatus:
+      type: object
+      properties:
+        compliance_status:
+          $ref: '#/components/schemas/GermanyEPRComplianceStatus'
+        product_id:
+          type: string
+          description: The unique identifier of a product
+          format: object-id
+        epr_registration_number_ids:
+          items:
             type: string
-            description: The unique identifier of a Germany product EPR registration number
+            description: The unique identifiers of Germany product EPR registration number
             format: object-id
+          type: array
+          description: List of unique identifier of EPR registration numbers that are submitted by the merchant for compliance reasons
+          maxItems: 500
+    GermanyProductComplianceStatusResponse:
+      items:
+        $ref: '#/components/schemas/GermanyProductComplianceStatus'
+      type: array
+      description: List of objects including a product id, compliance status and EPR number id.
     GermanyEPRComplianceStatus:
       enum:
       - EPR_REGISTRATION_NUMBER_LINKED
@@ -462,23 +483,11 @@ components:
         organization_or_representative_name:
           type: string
           description: The name of the product responsibility organization (PRO) [required for category PACKAGING] or the Authorized Representative (AR) [optional for category ELECTRIC_AND_ELECTRONIC_EQUIPMENTS and BATTERIES]
-    GermanyProductComplianceStatus:
-      type: object
-      properties:
-        compliance_status:
-          $ref: '#/components/schemas/GermanyEPRComplianceStatus'
-        product_id:
-          type: string
-          description: The unique identifier of a product
-          format: object-id
-        epr_registration_number_ids:
-          items:
-            type: string
-            description: The unique identifiers of Germany product EPR registration number
-            format: object-id
-          type: array
-          description: List of unique identifier of EPR registration numbers that are submitted by the merchant for compliance reasons
-          maxItems: 500
+    ListGermanyProductEprRegistrationNumbersResponse:
+      items:
+        $ref: '#/components/schemas/GermanyProductEprRegistrationNumberResponse'
+      type: array
+      description: List of Germany Product EPR Registration Numbers returned
     GermanyProductEprRegistrationNumber:
       type: object
       description: Details of a Germany product EPR registration number
@@ -497,22 +506,16 @@ components:
         organization_or_representative_name:
           type: string
           description: The name of the product responsibility organization (PRO) [required for category PACKAGING] or the Authorized Representative (AR) [optional for category ELECTRIC_AND_ELECTRONIC_EQUIPMENTS and BATTERIES]
-    ListGermanyProductEprRegistrationNumbersResponse:
-      items:
-        $ref: '#/components/schemas/GermanyProductEprRegistrationNumberResponse'
-      type: array
-      description: List of Germany Product EPR Registration Numbers returned
-    APIError:
-      required:
-      - code
-      - message
-      type: object
-      properties:
-        message:
-          type: string
-        code:
-          type: integer
-          format: int32
+    GermanyProductEprRegistrationNumberResponse:
+      description: A Germany product EPR registration number response
+      allOf:
+      - $ref: '#/components/schemas/GermanyProductEprRegistrationNumber'
+      - type: object
+        properties:
+          id:
+            type: string
+            description: The unique identifier of a Germany product EPR registration number
+            format: object-id
     CreateGermanyProductEprRegistrationNumber:
       type: object
       description: Details of creating a Germany product EPR registration number
@@ -522,11 +525,6 @@ components:
         - category
         - epr_number
         type: object
-    GermanyProductComplianceStatusResponse:
-      items:
-        $ref: '#/components/schemas/GermanyProductComplianceStatus'
-      type: array
-      description: List of objects including a product id, compliance status and EPR number id.
     GermanyProductComplianceStatusRequest:
       required:
       - product_id
@@ -540,15 +538,17 @@ components:
           type: string
           description: The unique identifier of an EPR registration number that is submitted by the merchant for compliance reasons
           format: object-id
-  parameters:
-    de_epr_id:
-      schema:
-        type: string
-        format: object-id
-      required: true
-      description: The unique identifier of the Germany product EPR registration number
-      name: id
-      in: path
+    APIError:
+      required:
+      - code
+      - message
+      type: object
+      properties:
+        message:
+          type: string
+        code:
+          type: integer
+          format: int32
   securitySchemes:
     OpenID:
       type: openIdConnect

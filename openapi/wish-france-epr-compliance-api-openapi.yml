@@ -430,19 +430,17 @@ paths:
       description: Delete a France Product Unique Identification Number.
 components:
   schemas:
-    FranceProductComplianceStatusRequest:
-      required:
-      - product_id
+    UpdateFranceProductUniqueIdentificationNumber:
       type: object
+      description: details of updating a france product unique identification number
       properties:
-        unique_identification_number_id:
+        uin:
+          minLength: 1
           type: string
-          description: The unique identifier of a unique identification number that is submitted by the merchant for compliance reasons
-          format: object-id
-        product_id:
+          description: The unique identification number(UIN) provided by the merchant
+        product_responsibility_organization:
           type: string
-          description: The unique identifier of a product
-          format: object-id
+          description: The name of the UIN provided by the merchant
     FranceProductComplianceStatusResponse:
       items:
         $ref: '#/components/schemas/FranceProductComplianceStatus'
@@ -472,27 +470,11 @@ components:
           type: string
           description: The unique identifier of a product
           format: object-id
-    FranceProductUniqueIdentificationNumberResponse:
-      description: a france product unique identification number response
-      allOf:
-      - $ref: '#/components/schemas/FranceProductUniqueIdentificationNumber'
-      - type: object
-        properties:
-          id:
-            type: string
-            description: The unique identifier of a france product unique identification number
-            format: object-id
-    APIError:
-      required:
-      - code
-      - message
-      type: object
-      properties:
-        message:
-          type: string
-        code:
-          type: integer
-          format: int32
+    ListFranceProductUniqueIdentificationNumbersResponse:
+      items:
+        $ref: '#/components/schemas/FranceProductUniqueIdentificationNumberResponse'
+      type: array
+      description: List of France Product Unique Identification Numbers returned
     CreateFranceProductUniqueIdentificationNumber:
       type: object
       description: details of creating a france product unique identification number
@@ -503,17 +485,6 @@ components:
         - uin
         - product_responsibility_organization
         type: object
-    UpdateFranceProductUniqueIdentificationNumber:
-      type: object
-      description: details of updating a france product unique identification number
-      properties:
-        uin:
-          minLength: 1
-          type: string
-          description: The unique identification number(UIN) provided by the merchant
-        product_responsibility_organization:
-          type: string
-          description: The name of the UIN provided by the merchant
     FranceProductUniqueIdentificationNumber:
       type: object
       description: details of a france product unique identification number
@@ -541,11 +512,40 @@ components:
           minLength: 1
           type: string
           description: The name of the UIN provided by the merchant
-    ListFranceProductUniqueIdentificationNumbersResponse:
-      items:
-        $ref: '#/components/schemas/FranceProductUniqueIdentificationNumberResponse'
-      type: array
-      description: List of France Product Unique Identification Numbers returned
+    FranceProductUniqueIdentificationNumberResponse:
+      description: a france product unique identification number response
+      allOf:
+      - $ref: '#/components/schemas/FranceProductUniqueIdentificationNumber'
+      - type: object
+        properties:
+          id:
+            type: string
+            description: The unique identifier of a france product unique identification number
+            format: object-id
+    APIError:
+      required:
+      - code
+      - message
+      type: object
+      properties:
+        message:
+          type: string
+        code:
+          type: integer
+          format: int32
+    FranceProductComplianceStatusRequest:
+      required:
+      - product_id
+      type: object
+      properties:
+        unique_identification_number_id:
+          type: string
+          description: The unique identifier of a unique identification number that is submitted by the merchant for compliance reasons
+          format: object-id
+        product_id:
+          type: string
+          description: The unique identifier of a product
+          format: object-id
   parameters:
     uin_id:
       schema:

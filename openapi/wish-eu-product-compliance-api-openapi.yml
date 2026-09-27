@@ -597,6 +597,13 @@ components:
       description: The list of the product IDs that will be returned with the compliance status
       name: product_ids
       in: query
+    new_person_id:
+      schema:
+        type: string
+        format: object-id
+      description: id of the responsible person to update for all associated products of old_person_id.</br> No input (null or empty) means to unlink old_person_id from all its associated products.
+      name: new_person_id
+      in: query
     old_person_id:
       schema:
         type: string
@@ -605,13 +612,14 @@ components:
       description: id of the responsible person to unlink for all associated products.
       name: old_person_id
       in: query
-    new_person_id:
+    id:
       schema:
         type: string
         format: object-id
-      description: id of the responsible person to update for all associated products of old_person_id.</br> No input (null or empty) means to unlink old_person_id from all its associated products.
-      name: new_person_id
-      in: query
+      required: true
+      description: id of the responsible person
+      name: id
+      in: path
     compliance_statuses:
       schema:
         minItems: 1
@@ -634,113 +642,7 @@ components:
         '
       name: compliance_statuses
       in: query
-    id:
-      schema:
-        type: string
-        format: object-id
-      required: true
-      description: id of the responsible person
-      name: id
-      in: path
   schemas:
-    EUProductComplianceStatusRequest:
-      required:
-      - product_id
-      type: object
-      properties:
-        product_id:
-          type: string
-          description: The unique identifier of a product
-          format: object-id
-        responsible_person_id:
-          type: string
-          description: The unique identifier of a responsible person
-          format: object-id
-    BulkUpdateEUProductComplianceStatusJob:
-      type: object
-      properties:
-        status:
-          enum:
-          - PENDING
-          - RUNNING
-          - COMPLETE
-          - EXCEPTION
-          type: string
-          description: "1. PENDING - The bulk update job has been received and is awaiting processing\n2. RUNNING - The bulk update job is running\n3. COMPLETE -\tThe bulk update job completes successfully\n4. EXCEPTION - The bulk update job aborts with exceptions and please retrigger a new job\n"
-        new_person_id:
-          type: string
-          description: id of the responsible person to update for all associated products of old_person_id.</br> No input (null or empty) means to unlink old_person_id from all its associated products.
-          format: object-id
-        total_count:
-          type: number
-          description: Total number of products to update linked responsible person
-        created_at:
-          type: string
-          description: The timestamp on when this job is created
-          format: date-time
-        updated_at:
-          type: string
-          description: The timestamp on the latest update of this job
-          format: date-time
-        processed_count:
-          type: number
-          description: This number indicates how many products have been processed to update linked responsible person so far
-        id:
-          type: string
-          description: ID of the bulk update job
-          format: object-id
-        old_person_id:
-          type: string
-          description: id of the responsible person to unlink for all associated products.
-          format: object-id
-    ResponsiblePersonResponse:
-      description: a responsible person response
-      allOf:
-      - $ref: '#/components/schemas/ResponsiblePerson'
-      - type: object
-        properties:
-          id:
-            type: string
-            description: The unique identifier of a responsible person
-            format: object-id
-    CreateResponsiblePerson:
-      type: object
-      description: details of creating a responsible person
-      allOf:
-      - $ref: '#/components/schemas/ResponsiblePerson'
-      - required:
-        - name
-        - address_line1
-        - city
-        - state
-        - zipcode
-        - country
-        - phone_number
-        - email
-        type: object
-    EUProductComplianceStatusResponse:
-      items:
-        $ref: '#/components/schemas/EUProductComplianceStatus'
-      type: array
-      description: List of objects including a product id, compliance status and responsible person id.
-    EUProductComplianceStatus:
-      type: object
-      properties:
-        compliance_status:
-          $ref: '#/components/schemas/ComplianceStatus'
-        product_id:
-          type: string
-          description: The unique identifier of a product
-          format: object-id
-        responsible_person_id:
-          type: string
-          description: The unique identifier of a responsible person
-          format: object-id
-    ListResponsiblePersonsResponse:
-      items:
-        $ref: '#/components/schemas/ResponsiblePersonResponse'
-      type: array
-      description: List of Responsible Persons returned
     ResponsiblePerson:
       type: object
       description: details of a responsible person
@@ -780,6 +682,99 @@ components:
           minLength: 1
           type: string
           description: the email of the responsible person
+    ResponsiblePersonResponse:
+      description: a responsible person response
+      allOf:
+      - $ref: '#/components/schemas/ResponsiblePerson'
+      - type: object
+        properties:
+          id:
+            type: string
+            description: The unique identifier of a responsible person
+            format: object-id
+    EUProductComplianceStatusResponse:
+      items:
+        $ref: '#/components/schemas/EUProductComplianceStatus'
+      type: array
+      description: List of objects including a product id, compliance status and responsible person id.
+    EUProductComplianceStatus:
+      type: object
+      properties:
+        compliance_status:
+          $ref: '#/components/schemas/ComplianceStatus'
+        product_id:
+          type: string
+          description: The unique identifier of a product
+          format: object-id
+        responsible_person_id:
+          type: string
+          description: The unique identifier of a responsible person
+          format: object-id
+    CreateResponsiblePerson:
+      type: object
+      description: details of creating a responsible person
+      allOf:
+      - $ref: '#/components/schemas/ResponsiblePerson'
+      - required:
+        - name
+        - address_line1
+        - city
+        - state
+        - zipcode
+        - country
+        - phone_number
+        - email
+        type: object
+    BulkUpdateEUProductComplianceStatusJob:
+      type: object
+      properties:
+        status:
+          enum:
+          - PENDING
+          - RUNNING
+          - COMPLETE
+          - EXCEPTION
+          type: string
+          description: "1. PENDING - The bulk update job has been received and is awaiting processing\n2. RUNNING - The bulk update job is running\n3. COMPLETE -\tThe bulk update job completes successfully\n4. EXCEPTION - The bulk update job aborts with exceptions and please retrigger a new job\n"
+        new_person_id:
+          type: string
+          description: id of the responsible person to update for all associated products of old_person_id.</br> No input (null or empty) means to unlink old_person_id from all its associated products.
+          format: object-id
+        total_count:
+          type: number
+          description: Total number of products to update linked responsible person
+        created_at:
+          type: string
+          description: The timestamp on when this job is created
+          format: date-time
+        updated_at:
+          type: string
+          description: The timestamp on the latest update of this job
+          format: date-time
+        processed_count:
+          type: number
+          description: This number indicates how many products have been processed to update linked responsible person so far
+        id:
+          type: string
+          description: ID of the bulk update job
+          format: object-id
+        old_person_id:
+          type: string
+          description: id of the responsible person to unlink for all associated products.
+          format: object-id
+    EUProductComplianceStatusRequest:
+      required:
+      - product_id
+      type: object
+      properties:
+        product_id:
+          type: string
+          description: The unique identifier of a product
+          format: object-id
+        responsible_person_id:
+          type: string
+          description: The unique identifier of a responsible person
+          format: object-id
     ComplianceStatus:
       enum:
       - RESPONSIBLE_PERSON_LINKED
@@ -787,6 +782,11 @@ components:
       - NOT_RECOMMENDED_TO_LINK_RESPONSIBLE_PERSON
       type: string
       description: ' 3 status: (1) a responsible person linked, (2) no responsible person, (3) not recommended to link a responsible person.'
+    ListResponsiblePersonsResponse:
+      items:
+        $ref: '#/components/schemas/ResponsiblePersonResponse'
+      type: array
+      description: List of Responsible Persons returned
     APIError:
       required:
       - code
