@@ -241,43 +241,91 @@ paths:
         source: "curl --request GET \\\n  --url 'https://merchant.wish.com/api/v3/products/bulk_get/{id}' \\\n  --header 'authorization: Bearer REPLACE_BEARER_TOKEN'"
 components:
   schemas:
-    UpdateProduct:
+    UnitInput:
+      enum:
+      - OUNCE
+      - POUND
+      - MILLIGRAM
+      - GRAM
+      - KILOGRAM
+      - FLUID_OUNCE
+      - PINT
+      - QUART
+      - GALLON
+      - MILLILITER
+      - CENTILITER
+      - LITER
+      - CUBICMETER
+      - INCH
+      - FOOT
+      - YARD
+      - CENTIMETER
+      - METER
+      - SQUARE_FOOT
+      - SQUARE_METER
+      - COUNT
+      - LOAD
+      - WASH
+      - ROLL
+      - POD
+      - null
+      type:
+      - string
+      - 'null'
+      description: The unit of measurement for the total content of a product. This will be used to display the price per unit, and is the unit of measurement that will be used for both the Reference Value and the Quantity Value attributes. [Learn More](https://merchantfaq.wish.com/hc/en-us/articles/4405383750555).
+    WarningType:
+      enum:
+      - CHEMICAL
+      - FOOD
+      - FURNITURE
+      - ON_PRODUCT_CANCER
+      - ON_PRODUCT_COMBINED_CANCER_REPRODUCTIVE
+      - ON_PRODUCT_REPRODUCTIVE
+      - RAW_WOOD
+      - DIESEL_ENGINE
+      type: string
+      description: The warning type applicable to your product, if any, for compliance with [California Proposition 65](https://www.p65warnings.ca.gov/). For more information on California Proposition 65 compliance, please see this Help Center article, "[California Proposition 65 overview and warning notices](https://merchantfaq.wish.com/hc/en-us/articles/360025359874)."
+    Consignment:
+      type:
+      - object
+      - 'null'
+      properties:
+        existing_pid:
+          type:
+          - string
+          - 'null'
+          description: Existing PID maintained by merchants
+        reference_link:
+          type:
+          - string
+          - 'null'
+          description: Merchant provide product reference link
+    WarehouseToShipping:
+      required:
+      - warehouse_id
+      - shipping_details
       type: object
-      allOf:
-      - $ref: '#/components/schemas/EditableProductParams'
-      - type: object
-        properties:
-          status:
-            enum:
-            - ENABLED
-            - DISABLED
-            type: string
-            description: The status of the product.
-          first_mile_shippings:
-            items:
-              $ref: '#/components/schemas/ProductUpdateAdvancedLogisticsShipping'
-            type: array
-            description: The first-mile shipping price and unification initiative statuses of the product in each warehouse. Provide at least one of `effective_first_mile_shipping` or `enabled` to change the first-mile shipping price or switch the unification initiative status respectively. Only applicable to Mainland China-based merchants whose products have destination countries supported by Wish’s unification initiative. Please refer to /api/v3/unification_initiative/countries for the full list of support countries.
-          main_image:
-            type: object
-            description: The main image of the product. Image can be in JPEG, PNG or GIF format. Images should be at least 500 x 500 pixels in size. Maximum size 178 MP and 24MB
-            allOf:
-            - $ref: '#/components/schemas/CreateImage'
-          variations:
-            minItems: 0
-            items:
-              $ref: '#/components/schemas/UpdateProductVariation'
-            type: array
-            description: The variations of the product.
-            maxItems: 400
-          extra_images:
-            items:
-              $ref: '#/components/schemas/CreateImage'
-            type:
-            - array
-            - 'null'
-            description: The extra images of the product in addition to the main image. It takes some time for images to be processed.
-            maxItems: 100
+      properties:
+        shipping_details:
+          items:
+            $ref: '#/components/schemas/CountryShippingDetail'
+          type: array
+          description: The shipping details of a product in a warehouse.
+        warehouse_id:
+          type: string
+          description: The ID of the warehouse.
+          format: object-id
+    APIError:
+      required:
+      - code
+      - message
+      type: object
+      properties:
+        message:
+          type: string
+        code:
+          type: integer
+          format: int32
     UpdateProductVariation:
       type: object
       allOf:
@@ -296,270 +344,6 @@ components:
             type: string
             description: The ID of the variation.
             format: object-id
-    RegionShippingDetail:
-      required:
-      - destination
-      type: object
-      properties:
-        is_enabled:
-          default: true
-          type: boolean
-          description: Whether shipping is enabled for the destination.
-        price:
-          $ref: '#/components/schemas/RegionShippingPrice'
-        destination:
-          minLength: 2
-          maxLength: 3
-          type: string
-          description: The state, province or shipping region code. Accepted regions are at [regions](https://merchant.wish.com/documentation/api/v2#regions).
-          example: NY
-        max_delivery_days:
-          type:
-          - integer
-          - 'null'
-          description: The maximum days for a product to be delivered to the customer. Can be set to null to remove the current max_delivery_days.
-        additional_price:
-          type: object
-          description: The additional shipping price for the region. Additional shipping price should be always smaller than or equal to shipping price.
-          allOf:
-          - $ref: '#/components/schemas/RegionShippingPrice'
-    ProductUpdateAdvancedLogisticsShipping:
-      type: object
-      allOf:
-      - $ref: '#/components/schemas/AdvancedLogisticsShipping'
-      - required:
-        - warehouse_id
-        type: object
-        properties:
-          warehouse_id:
-            type: string
-            description: The ID of the warehouse.
-            format: object-id
-    Money:
-      required:
-      - amount
-      - currency_code
-      type: object
-      properties:
-        amount:
-          format: float
-          type: number
-          description: Amount in decimals.
-          example: 10.4
-        currency_code:
-          format: iso-4217
-          type: string
-          description: The 3-letter currency code defined in [ISO 4217](https://www.iso.org/iso-4217-currency-codes.html).
-          example: USD
-    LogisticsInfo:
-      type: object
-      properties:
-        customs_declared_name:
-          type: string
-          description: Declared name of the product used for customs clearance. This is often displayed on the product packaging.
-        origin_country:
-          type: string
-          description: Country where the product is manufactured, produced, or grown. Country code should follow [ISO 3166 Alpha-2 code](https://www.iso.org/obp/ui/#iso:pub:PUB500001:en). This is a required field when creating a new product listing (Create a Product) or creating a new variation (Create a variation).
-          format: iso-3166
-        weight:
-          type: number
-          description: The weight of the package in which your product will ship to the customer (units in grams).</br> This is a required field for mainland China-based merchants when creating a new product listing (Create a Product) or adding variations to existing product listings (Create a variation).
-          format: float
-        restricted_flags:
-          items:
-            enum:
-            - HAS_POWDER
-            - HAS_LIQUID
-            - HAS_BATTERY
-            - HAS_METAL
-            type: string
-          type:
-          - array
-          - 'null'
-          description: Whether the product contains certain items or materials.</br> __Battery__ - Products that contain batteries, either replaceable or built into the product.</br> __Liquid__ - Products that consist of a substance that has a consistency like water or oil, including semi-liquids such as creams, gels, lubes, etc.</br> __Metal__ - Products made of or containing metal as a material component.</br> __Powder__ - Any product that is composed of fine, dry particles.
-        customs_hs_code:
-          type: string
-          description: Harmonization System Code for customs declaration.
-        height:
-          type: number
-          description: The height of the package in which your product will ship to the customer (units in cm).
-          format: float
-        width:
-          type: number
-          description: The width of the package in which your product will ship to the customer (units in cm).
-          format: float
-        length:
-          type: number
-          description: The length of the package in which your product will ship to the customer (units in cm).
-          format: float
-        declared_name:
-          type: string
-          description: The product name for customs declaration.</br> `This field will be deprecated soon and replaced with customs_declared_name.`
-        customs_declared_value:
-          type: object
-          description: The price of the product for customs declaration.
-          allOf:
-          - $ref: '#/components/schemas/Price'
-        pieces:
-          type: integer
-          description: The number of pieces associated with the variation.
-        declared_local_name:
-          type: string
-          description: The product name in local language for customs declaration.
-    Option:
-      required:
-      - name
-      - value
-      type: object
-      properties:
-        name:
-          type: string
-          description: The name of the option like SIZE and COLOR.
-        value:
-          minLength: 1
-          type: string
-          description: The value of the option.
-    UpdateDefaultShipping:
-      type: object
-      allOf:
-      - $ref: '#/components/schemas/DefaultShipping'
-      - required:
-        - default_shipping_price
-        - warehouse_id
-        type: object
-    DefaultShipping:
-      type: object
-      properties:
-        default_shipping_price:
-          type: object
-          description: The default shipping price for a product in a warehouse.
-          allOf:
-          - $ref: '#/components/schemas/Price'
-        warehouse_id:
-          type: string
-          description: The ID of the warehouse.
-          format: object-id
-    WarningType:
-      enum:
-      - CHEMICAL
-      - FOOD
-      - FURNITURE
-      - ON_PRODUCT_CANCER
-      - ON_PRODUCT_COMBINED_CANCER_REPRODUCTIVE
-      - ON_PRODUCT_REPRODUCTIVE
-      - RAW_WOOD
-      - DIESEL_ENGINE
-      type: string
-      description: The warning type applicable to your product, if any, for compliance with [California Proposition 65](https://www.p65warnings.ca.gov/). For more information on California Proposition 65 compliance, please see this Help Center article, "[California Proposition 65 overview and warning notices](https://merchantfaq.wish.com/hc/en-us/articles/360025359874)."
-    WarehouseInventory:
-      required:
-      - warehouse_id
-      - inventory
-      type: object
-      properties:
-        inventory:
-          minimum: 0
-          type: integer
-          description: The inventory of a variation in the warehouse.
-          maximum: 500000
-        warehouse_id:
-          type: string
-          description: The ID of the warehouse.
-          format: object-id
-    Video:
-      type: object
-      properties:
-        url:
-          type: string
-          description: The URL of the demo video of the product.
-          format: uri
-    BulkUpdateProduct:
-      type: object
-      allOf:
-      - $ref: '#/components/schemas/UpdateProduct'
-      - required:
-        - id
-        type: object
-        properties:
-          id:
-            type: string
-            description: The ID of the product.
-            format: object-id
-    EditableVariationParams:
-      type: object
-      properties:
-        sku:
-          minLength: 1
-          type: string
-          description: The Stock Keeping Unit of the variation.
-          maxLength: 80
-        quantity_value:
-          minimum: 0
-          type:
-          - number
-          - 'null'
-          description: The total quantity of the product variant (in the given unit) that is used to calculate price per unit. Note that if a product has multiple product variants, you will need to set quantity values for each product variant. [Learn More](https://merchantfaq.wish.com/hc/en-us/articles/4405383750555).
-          format: float
-        image:
-          type: string
-          description: The URL of the image associated with the variation. This is a required field when adding a new product listing with variations (Create a Product) or adding variations to existing product listings (Create a variation). The variation images don’t need to be unique (multiple variations can have the same image), but they have to be specified for each variation. These images must be a part of extra_images.
-          format: uri
-        price:
-          type: object
-          description: The price of the variation. Price is required for rev-share merhcants.
-          allOf:
-          - $ref: '#/components/schemas/Price'
-        merchant_set_cost:
-          minimum: 0
-          type:
-          - number
-          - 'null'
-          description: Supply cost maintained by merchants on variation level
-          format: float
-        cost:
-          type: object
-          description: The cost of the variation. Cost is required for cost-based merchants.
-          allOf:
-          - $ref: '#/components/schemas/Price'
-        gtin:
-          pattern: ^[0-9]{8,14}$
-          type:
-          - string
-          - 'null'
-          description: Should be 8 to 14 digits GTIN (UPC, EAN, ISBN) that contains no letters or other characters. This number is barcode symbology used for tracking trade items in stores and scanning them at the point of sale.
-        attributes:
-          items:
-            $ref: '#/components/schemas/VariationAttribute'
-          type:
-          - array
-          - 'null'
-          description: The custom attributes of the variation. Merchants may use the "name" and "value" fields here to add specific attributes for the product’s category. Our [Taxonomy APIs](/documentation/api/v3/reference#operation/getCategoryAttributes) contains the list of all attributes for each category, mentions which ones are required, and the corresponding accepted values for each attribute.
-        inventories:
-          items:
-            $ref: '#/components/schemas/WarehouseInventory'
-          type: array
-          description: The inventory of the variation in each warehouse.
-        options:
-          items:
-            $ref: '#/components/schemas/Option'
-          type: array
-          description: This field is used to define the parameters for the creation of variations. You can create your variations with traditional Color and Size fields or use category-specific attributes. Each combination of option values may be a variation for that product. See which category-specific attributes can be used by using the [Taxonomy APIs](/documentation/api/v3/reference#operation/getCategoryAttributes) and the field attributes.constraint.is_variation_attribute.
-        logistics_details:
-          type: object
-          description: The logistics details of the variation.
-          allOf:
-          - $ref: '#/components/schemas/LogisticsInfo'
-    APIError:
-      required:
-      - code
-      - message
-      type: object
-      properties:
-        message:
-          type: string
-        code:
-          type: integer
-          format: int32
     AdvancedLogisticsShipping:
       type: object
       properties:
@@ -586,6 +370,69 @@ components:
           type: string
           description: The ID of the warehouse. The default warehouse will be used if not provided.
           format: object-id
+    DefaultShipping:
+      type: object
+      properties:
+        default_shipping_price:
+          type: object
+          description: The default shipping price for a product in a warehouse.
+          allOf:
+          - $ref: '#/components/schemas/Price'
+        warehouse_id:
+          type: string
+          description: The ID of the warehouse.
+          format: object-id
+    BulkJob:
+      type: object
+      description: A generic report status object used when a bulk endpoint wants to return the status of their downloadable file
+      properties:
+        status:
+          enum:
+          - PENDING
+          - READY
+          - EXCEPTION
+          type: string
+          description: "1. PENDING - The report generation request has been received and is awaiting processing\n2. READY -\tThe report is ready for download from `file_urls`\n3. EXCEPTION - The report generation failed, contact our api support\n"
+        total_count:
+          type: number
+          description: Total number of files attached to the report
+        created_at:
+          type: string
+          description: The timestamp on when this report is created
+          format: date-time
+        completed_at:
+          type: string
+          description: The timestamp on when this report is completed
+          format: date-time
+        file_urls:
+          items:
+            type: string
+          type:
+          - array
+          - 'null'
+          description: When the status is READY, the report will be availble at these urls. Otherwise it will be `null`. The files will expire in a month.
+        processed_count:
+          type: number
+          description: This number indicates how many products have been processed so far
+        id:
+          type: string
+          description: ID of the report
+          format: object-id
+    Attribute:
+      required:
+      - name
+      type: object
+      properties:
+        name:
+          type: string
+          description: The name of the attribute. Input the relevant "name" here. Please browse our [Taxonomy APIs](/documentation/api/v3/reference#operation/getCategoryAttributes) for possible attribute names.
+        value:
+          items:
+            type: string
+          type:
+          - array
+          - 'null'
+          description: The value of the attribute. Can be set to null to remove the attribute. Input the relevant value here from the "accepted_values" here. Please browse our [Taxonomy APIs](/documentation/api/v3/reference#operation/getCategoryAttributes) for possible attribute values.
     EditableProductParams:
       type: object
       properties:
@@ -690,38 +537,180 @@ components:
           minLength: 1
           type: string
           description: The name of the product.
-    UnitInput:
-      enum:
-      - OUNCE
-      - POUND
-      - MILLIGRAM
-      - GRAM
-      - KILOGRAM
-      - FLUID_OUNCE
-      - PINT
-      - QUART
-      - GALLON
-      - MILLILITER
-      - CENTILITER
-      - LITER
-      - CUBICMETER
-      - INCH
-      - FOOT
-      - YARD
-      - CENTIMETER
-      - METER
-      - SQUARE_FOOT
-      - SQUARE_METER
-      - COUNT
-      - LOAD
-      - WASH
-      - ROLL
-      - POD
-      - null
+    EditableVariationParams:
+      type: object
+      properties:
+        sku:
+          minLength: 1
+          type: string
+          description: The Stock Keeping Unit of the variation.
+          maxLength: 80
+        quantity_value:
+          minimum: 0
+          type:
+          - number
+          - 'null'
+          description: The total quantity of the product variant (in the given unit) that is used to calculate price per unit. Note that if a product has multiple product variants, you will need to set quantity values for each product variant. [Learn More](https://merchantfaq.wish.com/hc/en-us/articles/4405383750555).
+          format: float
+        image:
+          type: string
+          description: The URL of the image associated with the variation. This is a required field when adding a new product listing with variations (Create a Product) or adding variations to existing product listings (Create a variation). The variation images don’t need to be unique (multiple variations can have the same image), but they have to be specified for each variation. These images must be a part of extra_images.
+          format: uri
+        price:
+          type: object
+          description: The price of the variation. Price is required for rev-share merhcants.
+          allOf:
+          - $ref: '#/components/schemas/Price'
+        merchant_set_cost:
+          minimum: 0
+          type:
+          - number
+          - 'null'
+          description: Supply cost maintained by merchants on variation level
+          format: float
+        cost:
+          type: object
+          description: The cost of the variation. Cost is required for cost-based merchants.
+          allOf:
+          - $ref: '#/components/schemas/Price'
+        gtin:
+          pattern: ^[0-9]{8,14}$
+          type:
+          - string
+          - 'null'
+          description: Should be 8 to 14 digits GTIN (UPC, EAN, ISBN) that contains no letters or other characters. This number is barcode symbology used for tracking trade items in stores and scanning them at the point of sale.
+        attributes:
+          items:
+            $ref: '#/components/schemas/VariationAttribute'
+          type:
+          - array
+          - 'null'
+          description: The custom attributes of the variation. Merchants may use the "name" and "value" fields here to add specific attributes for the product’s category. Our [Taxonomy APIs](/documentation/api/v3/reference#operation/getCategoryAttributes) contains the list of all attributes for each category, mentions which ones are required, and the corresponding accepted values for each attribute.
+        inventories:
+          items:
+            $ref: '#/components/schemas/WarehouseInventory'
+          type: array
+          description: The inventory of the variation in each warehouse.
+        options:
+          items:
+            $ref: '#/components/schemas/Option'
+          type: array
+          description: This field is used to define the parameters for the creation of variations. You can create your variations with traditional Color and Size fields or use category-specific attributes. Each combination of option values may be a variation for that product. See which category-specific attributes can be used by using the [Taxonomy APIs](/documentation/api/v3/reference#operation/getCategoryAttributes) and the field attributes.constraint.is_variation_attribute.
+        logistics_details:
+          type: object
+          description: The logistics details of the variation.
+          allOf:
+          - $ref: '#/components/schemas/LogisticsInfo'
+    BulkUpdateProduct:
+      type: object
+      allOf:
+      - $ref: '#/components/schemas/UpdateProduct'
+      - required:
+        - id
+        type: object
+        properties:
+          id:
+            type: string
+            description: The ID of the product.
+            format: object-id
+    LogisticsInfo:
+      type: object
+      properties:
+        customs_declared_name:
+          type: string
+          description: Declared name of the product used for customs clearance. This is often displayed on the product packaging.
+        origin_country:
+          type: string
+          description: Country where the product is manufactured, produced, or grown. Country code should follow [ISO 3166 Alpha-2 code](https://www.iso.org/obp/ui/#iso:pub:PUB500001:en). This is a required field when creating a new product listing (Create a Product) or creating a new variation (Create a variation).
+          format: iso-3166
+        weight:
+          type: number
+          description: The weight of the package in which your product will ship to the customer (units in grams).</br> This is a required field for mainland China-based merchants when creating a new product listing (Create a Product) or adding variations to existing product listings (Create a variation).
+          format: float
+        restricted_flags:
+          items:
+            enum:
+            - HAS_POWDER
+            - HAS_LIQUID
+            - HAS_BATTERY
+            - HAS_METAL
+            type: string
+          type:
+          - array
+          - 'null'
+          description: Whether the product contains certain items or materials.</br> __Battery__ - Products that contain batteries, either replaceable or built into the product.</br> __Liquid__ - Products that consist of a substance that has a consistency like water or oil, including semi-liquids such as creams, gels, lubes, etc.</br> __Metal__ - Products made of or containing metal as a material component.</br> __Powder__ - Any product that is composed of fine, dry particles.
+        customs_hs_code:
+          type: string
+          description: Harmonization System Code for customs declaration.
+        height:
+          type: number
+          description: The height of the package in which your product will ship to the customer (units in cm).
+          format: float
+        width:
+          type: number
+          description: The width of the package in which your product will ship to the customer (units in cm).
+          format: float
+        length:
+          type: number
+          description: The length of the package in which your product will ship to the customer (units in cm).
+          format: float
+        declared_name:
+          type: string
+          description: The product name for customs declaration.</br> `This field will be deprecated soon and replaced with customs_declared_name.`
+        customs_declared_value:
+          type: object
+          description: The price of the product for customs declaration.
+          allOf:
+          - $ref: '#/components/schemas/Price'
+        pieces:
+          type: integer
+          description: The number of pieces associated with the variation.
+        declared_local_name:
+          type: string
+          description: The product name in local language for customs declaration.
+    UpdateDefaultShipping:
+      type: object
+      allOf:
+      - $ref: '#/components/schemas/DefaultShipping'
+      - required:
+        - default_shipping_price
+        - warehouse_id
+        type: object
+    Money:
+      required:
+      - amount
+      - currency_code
+      type: object
+      properties:
+        amount:
+          format: float
+          type: number
+          description: Amount in decimals.
+          example: 10.4
+        currency_code:
+          format: iso-4217
+          type: string
+          description: The 3-letter currency code defined in [ISO 4217](https://www.iso.org/iso-4217-currency-codes.html).
+          example: USD
+    RegionShippingPrice:
+      properties:
+        amount:
+          minimum: 0
+          type: number
+          description: Non-negative amount in decimals.
+          format: float
+        currency_code:
+          format: iso-4217
+          type: string
+          description: The 3-letter currency code defined in [ISO 4217](https://www.iso.org/iso-4217-currency-codes.html).
+          example: USD
+      required:
+      - amount
+      - currency_code
       type:
-      - string
+      - object
       - 'null'
-      description: The unit of measurement for the total content of a product. This will be used to display the price per unit, and is the unit of measurement that will be used for both the Reference Value and the Quantity Value attributes. [Learn More](https://merchantfaq.wish.com/hc/en-us/articles/4405383750555).
+      description: The shipping price for the region. Can be set to null to remove the current region shipping price.
     VariationAttribute:
       required:
       - name
@@ -737,53 +726,93 @@ components:
           - array
           - 'null'
           description: The value of the attribute. Can be set to null to remove the attribute. Input the relevant "accepted_values". Please browse our [Taxonomy APIs](/documentation/api/v3/reference#operation/getCategoryAttributes) for possible attribute values.
-    BulkJob:
+    UpdateProduct:
       type: object
-      description: A generic report status object used when a bulk endpoint wants to return the status of their downloadable file
-      properties:
-        status:
-          enum:
-          - PENDING
-          - READY
-          - EXCEPTION
-          type: string
-          description: "1. PENDING - The report generation request has been received and is awaiting processing\n2. READY -\tThe report is ready for download from `file_urls`\n3. EXCEPTION - The report generation failed, contact our api support\n"
-        total_count:
-          type: number
-          description: Total number of files attached to the report
-        created_at:
-          type: string
-          description: The timestamp on when this report is created
-          format: date-time
-        completed_at:
-          type: string
-          description: The timestamp on when this report is completed
-          format: date-time
-        file_urls:
-          items:
+      allOf:
+      - $ref: '#/components/schemas/EditableProductParams'
+      - type: object
+        properties:
+          status:
+            enum:
+            - ENABLED
+            - DISABLED
             type: string
-          type:
-          - array
-          - 'null'
-          description: When the status is READY, the report will be availble at these urls. Otherwise it will be `null`. The files will expire in a month.
-        processed_count:
-          type: number
-          description: This number indicates how many products have been processed so far
-        id:
+            description: The status of the product.
+          first_mile_shippings:
+            items:
+              $ref: '#/components/schemas/ProductUpdateAdvancedLogisticsShipping'
+            type: array
+            description: The first-mile shipping price and unification initiative statuses of the product in each warehouse. Provide at least one of `effective_first_mile_shipping` or `enabled` to change the first-mile shipping price or switch the unification initiative status respectively. Only applicable to Mainland China-based merchants whose products have destination countries supported by Wish’s unification initiative. Please refer to /api/v3/unification_initiative/countries for the full list of support countries.
+          main_image:
+            type: object
+            description: The main image of the product. Image can be in JPEG, PNG or GIF format. Images should be at least 500 x 500 pixels in size. Maximum size 178 MP and 24MB
+            allOf:
+            - $ref: '#/components/schemas/CreateImage'
+          variations:
+            minItems: 0
+            items:
+              $ref: '#/components/schemas/UpdateProductVariation'
+            type: array
+            description: The variations of the product.
+            maxItems: 400
+          extra_images:
+            items:
+              $ref: '#/components/schemas/CreateImage'
+            type:
+            - array
+            - 'null'
+            description: The extra images of the product in addition to the main image. It takes some time for images to be processed.
+            maxItems: 100
+    RegionShippingDetail:
+      required:
+      - destination
+      type: object
+      properties:
+        is_enabled:
+          default: true
+          type: boolean
+          description: Whether shipping is enabled for the destination.
+        price:
+          $ref: '#/components/schemas/RegionShippingPrice'
+        destination:
+          minLength: 2
+          maxLength: 3
           type: string
-          description: ID of the report
-          format: object-id
-    WarehouseToShipping:
+          description: The state, province or shipping region code. Accepted regions are at [regions](https://merchant.wish.com/documentation/api/v2#regions).
+          example: NY
+        max_delivery_days:
+          type:
+          - integer
+          - 'null'
+          description: The maximum days for a product to be delivered to the customer. Can be set to null to remove the current max_delivery_days.
+        additional_price:
+          type: object
+          description: The additional shipping price for the region. Additional shipping price should be always smaller than or equal to shipping price.
+          allOf:
+          - $ref: '#/components/schemas/RegionShippingPrice'
+    ProductUpdateAdvancedLogisticsShipping:
+      type: object
+      allOf:
+      - $ref: '#/components/schemas/AdvancedLogisticsShipping'
+      - required:
+        - warehouse_id
+        type: object
+        properties:
+          warehouse_id:
+            type: string
+            description: The ID of the warehouse.
+            format: object-id
+    WarehouseInventory:
       required:
       - warehouse_id
-      - shipping_details
+      - inventory
       type: object
       properties:
-        shipping_details:
-          items:
-            $ref: '#/components/schemas/CountryShippingDetail'
-          type: array
-          description: The shipping details of a product in a warehouse.
+        inventory:
+          minimum: 0
+          type: integer
+          description: The inventory of a variation in the warehouse.
+          maximum: 500000
         warehouse_id:
           type: string
           description: The ID of the warehouse.
@@ -805,6 +834,13 @@ components:
         is_clean_image:
           type: boolean
           description: Wish products might appear in external shopping searches. A "clean image" is used to represent the product in such searches. This is a required field when creating a new product listing (Create a Product). Only one clean image URL can be specified for a product. [Learn more](https://merchanthelp.wish.com/s/article/mu360033668153?language=en_US).
+    Video:
+      type: object
+      properties:
+        url:
+          type: string
+          description: The URL of the demo video of the product.
+          format: uri
     Price:
       required:
       - amount
@@ -856,55 +892,19 @@ components:
           description: The shipping price for the country.
           allOf:
           - $ref: '#/components/schemas/Price'
-    Consignment:
-      type:
-      - object
-      - 'null'
-      properties:
-        existing_pid:
-          type:
-          - string
-          - 'null'
-          description: Existing PID maintained by merchants
-        reference_link:
-          type:
-          - string
-          - 'null'
-          description: Merchant provide product reference link
-    Attribute:
+    Option:
       required:
       - name
+      - value
       type: object
       properties:
         name:
           type: string
-          description: The name of the attribute. Input the relevant "name" here. Please browse our [Taxonomy APIs](/documentation/api/v3/reference#operation/getCategoryAttributes) for possible attribute names.
+          description: The name of the option like SIZE and COLOR.
         value:
-          items:
-            type: string
-          type:
-          - array
-          - 'null'
-          description: The value of the attribute. Can be set to null to remove the attribute. Input the relevant value here from the "accepted_values" here. Please browse our [Taxonomy APIs](/documentation/api/v3/reference#operation/getCategoryAttributes) for possible attribute values.
-    RegionShippingPrice:
-      properties:
-        amount:
-          minimum: 0
-          type: number
-          description: Non-negative amount in decimals.
-          format: float
-        currency_code:
-          format: iso-4217
+          minLength: 1
           type: string
-          description: The 3-letter currency code defined in [ISO 4217](https://www.iso.org/iso-4217-currency-codes.html).
-          example: USD
-      required:
-      - amount
-      - currency_code
-      type:
-      - object
-      - 'null'
-      description: The shipping price for the region. Can be set to null to remove the current region shipping price.
+          description: The value of the option.
   securitySchemes:
     OpenID:
       type: openIdConnect

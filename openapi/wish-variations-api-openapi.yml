@@ -154,121 +154,6 @@ components:
       allOf:
       - $ref: '#/components/schemas/ProductVariation'
       - type: object
-    LogisticsInfo:
-      type: object
-      properties:
-        customs_declared_name:
-          type: string
-          description: Declared name of the product used for customs clearance. This is often displayed on the product packaging.
-        origin_country:
-          type: string
-          description: Country where the product is manufactured, produced, or grown. Country code should follow [ISO 3166 Alpha-2 code](https://www.iso.org/obp/ui/#iso:pub:PUB500001:en). This is a required field when creating a new product listing (Create a Product) or creating a new variation (Create a variation).
-          format: iso-3166
-        weight:
-          type: number
-          description: The weight of the package in which your product will ship to the customer (units in grams).</br> This is a required field for mainland China-based merchants when creating a new product listing (Create a Product) or adding variations to existing product listings (Create a variation).
-          format: float
-        restricted_flags:
-          items:
-            enum:
-            - HAS_POWDER
-            - HAS_LIQUID
-            - HAS_BATTERY
-            - HAS_METAL
-            type: string
-          type:
-          - array
-          - 'null'
-          description: Whether the product contains certain items or materials.</br> __Battery__ - Products that contain batteries, either replaceable or built into the product.</br> __Liquid__ - Products that consist of a substance that has a consistency like water or oil, including semi-liquids such as creams, gels, lubes, etc.</br> __Metal__ - Products made of or containing metal as a material component.</br> __Powder__ - Any product that is composed of fine, dry particles.
-        customs_hs_code:
-          type: string
-          description: Harmonization System Code for customs declaration.
-        height:
-          type: number
-          description: The height of the package in which your product will ship to the customer (units in cm).
-          format: float
-        width:
-          type: number
-          description: The width of the package in which your product will ship to the customer (units in cm).
-          format: float
-        length:
-          type: number
-          description: The length of the package in which your product will ship to the customer (units in cm).
-          format: float
-        declared_name:
-          type: string
-          description: The product name for customs declaration.</br> `This field will be deprecated soon and replaced with customs_declared_name.`
-        customs_declared_value:
-          type: object
-          description: The price of the product for customs declaration.
-          allOf:
-          - $ref: '#/components/schemas/Price'
-        pieces:
-          type: integer
-          description: The number of pieces associated with the variation.
-        declared_local_name:
-          type: string
-          description: The product name in local language for customs declaration.
-    VariationAttribute:
-      required:
-      - name
-      type: object
-      properties:
-        name:
-          type: string
-          description: The name of the attribute. Input the relevant "name". Please browse our [Taxonomy APIs](/documentation/api/v3/reference#operation/getCategoryAttributes) for possible attribute names.
-        value:
-          items:
-            type: string
-          type:
-          - array
-          - 'null'
-          description: The value of the attribute. Can be set to null to remove the attribute. Input the relevant "accepted_values". Please browse our [Taxonomy APIs](/documentation/api/v3/reference#operation/getCategoryAttributes) for possible attribute values.
-    ColorInfo:
-      required:
-      - name
-      - id
-      type: object
-      properties:
-        id:
-          type: string
-          description: 'The ID of the color. E.g. antiquegold. C olor IDs are subject to change. '
-        name:
-          type: string
-          description: The display name of the color. E.g. Antique Gold.
-    Option:
-      required:
-      - name
-      - value
-      type: object
-      properties:
-        name:
-          type: string
-          description: The name of the option like SIZE and COLOR.
-        value:
-          minLength: 1
-          type: string
-          description: The value of the option.
-    ColorList:
-      items:
-        $ref: '#/components/schemas/ColorInfo'
-      type: array
-      description: The list of accepted colors.
-    AttributeResponse:
-      required:
-      - name
-      type: object
-      properties:
-        name:
-          type: string
-          description: The name of the attribute.
-        value:
-          items:
-            type: string
-          type:
-          - array
-          - 'null'
-          description: The value of the attribute.
     WarehouseInventory:
       required:
       - warehouse_id
@@ -284,6 +169,42 @@ components:
           type: string
           description: The ID of the warehouse.
           format: object-id
+    ColorInfo:
+      required:
+      - name
+      - id
+      type: object
+      properties:
+        id:
+          type: string
+          description: 'The ID of the color. E.g. antiquegold. C olor IDs are subject to change. '
+        name:
+          type: string
+          description: The display name of the color. E.g. Antique Gold.
+    AddVariation:
+      type: object
+      allOf:
+      - $ref: '#/components/schemas/EditableVariationParams'
+      - required:
+        - sku
+        - inventories
+        - price
+        type: object
+    VariationAttribute:
+      required:
+      - name
+      type: object
+      properties:
+        name:
+          type: string
+          description: The name of the attribute. Input the relevant "name". Please browse our [Taxonomy APIs](/documentation/api/v3/reference#operation/getCategoryAttributes) for possible attribute names.
+        value:
+          items:
+            type: string
+          type:
+          - array
+          - 'null'
+          description: The value of the attribute. Can be set to null to remove the attribute. Input the relevant "accepted_values". Please browse our [Taxonomy APIs](/documentation/api/v3/reference#operation/getCategoryAttributes) for possible attribute values.
     ProductVariation:
       type: object
       properties:
@@ -420,17 +341,6 @@ components:
           description: The logistics details of the variation.
           allOf:
           - $ref: '#/components/schemas/LogisticsInfo'
-    APIError:
-      required:
-      - code
-      - message
-      type: object
-      properties:
-        message:
-          type: string
-        code:
-          type: integer
-          format: int32
     Price:
       required:
       - amount
@@ -447,15 +357,105 @@ components:
           type: string
           description: The 3-letter currency code defined in [ISO 4217](https://www.iso.org/iso-4217-currency-codes.html).
           example: USD
-    AddVariation:
+    APIError:
+      required:
+      - code
+      - message
       type: object
-      allOf:
-      - $ref: '#/components/schemas/EditableVariationParams'
-      - required:
-        - sku
-        - inventories
-        - price
-        type: object
+      properties:
+        message:
+          type: string
+        code:
+          type: integer
+          format: int32
+    AttributeResponse:
+      required:
+      - name
+      type: object
+      properties:
+        name:
+          type: string
+          description: The name of the attribute.
+        value:
+          items:
+            type: string
+          type:
+          - array
+          - 'null'
+          description: The value of the attribute.
+    LogisticsInfo:
+      type: object
+      properties:
+        customs_declared_name:
+          type: string
+          description: Declared name of the product used for customs clearance. This is often displayed on the product packaging.
+        origin_country:
+          type: string
+          description: Country where the product is manufactured, produced, or grown. Country code should follow [ISO 3166 Alpha-2 code](https://www.iso.org/obp/ui/#iso:pub:PUB500001:en). This is a required field when creating a new product listing (Create a Product) or creating a new variation (Create a variation).
+          format: iso-3166
+        weight:
+          type: number
+          description: The weight of the package in which your product will ship to the customer (units in grams).</br> This is a required field for mainland China-based merchants when creating a new product listing (Create a Product) or adding variations to existing product listings (Create a variation).
+          format: float
+        restricted_flags:
+          items:
+            enum:
+            - HAS_POWDER
+            - HAS_LIQUID
+            - HAS_BATTERY
+            - HAS_METAL
+            type: string
+          type:
+          - array
+          - 'null'
+          description: Whether the product contains certain items or materials.</br> __Battery__ - Products that contain batteries, either replaceable or built into the product.</br> __Liquid__ - Products that consist of a substance that has a consistency like water or oil, including semi-liquids such as creams, gels, lubes, etc.</br> __Metal__ - Products made of or containing metal as a material component.</br> __Powder__ - Any product that is composed of fine, dry particles.
+        customs_hs_code:
+          type: string
+          description: Harmonization System Code for customs declaration.
+        height:
+          type: number
+          description: The height of the package in which your product will ship to the customer (units in cm).
+          format: float
+        width:
+          type: number
+          description: The width of the package in which your product will ship to the customer (units in cm).
+          format: float
+        length:
+          type: number
+          description: The length of the package in which your product will ship to the customer (units in cm).
+          format: float
+        declared_name:
+          type: string
+          description: The product name for customs declaration.</br> `This field will be deprecated soon and replaced with customs_declared_name.`
+        customs_declared_value:
+          type: object
+          description: The price of the product for customs declaration.
+          allOf:
+          - $ref: '#/components/schemas/Price'
+        pieces:
+          type: integer
+          description: The number of pieces associated with the variation.
+        declared_local_name:
+          type: string
+          description: The product name in local language for customs declaration.
+    ColorList:
+      items:
+        $ref: '#/components/schemas/ColorInfo'
+      type: array
+      description: The list of accepted colors.
+    Option:
+      required:
+      - name
+      - value
+      type: object
+      properties:
+        name:
+          type: string
+          description: The name of the option like SIZE and COLOR.
+        value:
+          minLength: 1
+          type: string
+          description: The value of the option.
   securitySchemes:
     OpenID:
       type: openIdConnect

@@ -184,38 +184,6 @@ paths:
       operationId: getCategories
 components:
   schemas:
-    CategoryNode:
-      type: object
-      properties:
-        is_leaf:
-          readOnly: true
-          type: boolean
-          description: Whether the category is a leaf category. Only leaf categories can be used in self-classification.
-        subcategories:
-          items:
-            $ref: '#/components/schemas/CategoryNode'
-          readOnly: true
-          type: array
-          description: The subcategories of the category.
-        id:
-          readOnly: true
-          type: integer
-          description: The ID of the category.
-        name:
-          readOnly: true
-          type: string
-          description: The name of the category.
-    APIError:
-      required:
-      - code
-      - message
-      type: object
-      properties:
-        message:
-          type: string
-        code:
-          type: integer
-          format: int32
     CategoryAttributes:
       type: object
       properties:
@@ -226,29 +194,6 @@ components:
           type: array
           description: List of category attributes
           maxItems: 50
-    CategoryAttribute:
-      type: object
-      properties:
-        constraint:
-          type: object
-          description: The constraint of the attribute.
-          allOf:
-          - $ref: '#/components/schemas/CategoryAttributeConstraint'
-        description:
-          readOnly: true
-          type: string
-          description: The description of the attribute.
-        name:
-          readOnly: true
-          type: string
-          description: The name of the attribute.
-        accepted_values:
-          items:
-            type: string
-          readOnly: true
-          type: array
-          description: The accepted values for the attribute. The value of the attribute must be selected from these accepted values.
-          maxItems: 1000
     CategoryAttributeConstraint:
       type: object
       properties:
@@ -296,6 +241,61 @@ components:
           - REQUIRED
           type: string
           description: The usage of the attribute.
+    APIError:
+      required:
+      - code
+      - message
+      type: object
+      properties:
+        message:
+          type: string
+        code:
+          type: integer
+          format: int32
+    CategoryNode:
+      type: object
+      properties:
+        is_leaf:
+          readOnly: true
+          type: boolean
+          description: Whether the category is a leaf category. Only leaf categories can be used in self-classification.
+        subcategories:
+          items:
+            $ref: '#/components/schemas/CategoryNode'
+          readOnly: true
+          type: array
+          description: The subcategories of the category.
+        id:
+          readOnly: true
+          type: integer
+          description: The ID of the category.
+        name:
+          readOnly: true
+          type: string
+          description: The name of the category.
+    CategoryAttribute:
+      type: object
+      properties:
+        constraint:
+          type: object
+          description: The constraint of the attribute.
+          allOf:
+          - $ref: '#/components/schemas/CategoryAttributeConstraint'
+        description:
+          readOnly: true
+          type: string
+          description: The description of the attribute.
+        name:
+          readOnly: true
+          type: string
+          description: The name of the attribute.
+        accepted_values:
+          items:
+            type: string
+          readOnly: true
+          type: array
+          description: The accepted values for the attribute. The value of the attribute must be selected from these accepted values.
+          maxItems: 1000
   securitySchemes:
     OpenID:
       type: openIdConnect

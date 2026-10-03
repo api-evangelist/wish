@@ -586,6 +586,14 @@ paths:
       description: List all EU Responsible Persons created by a merchant.
 components:
   parameters:
+    id:
+      schema:
+        type: string
+        format: object-id
+      required: true
+      description: id of the responsible person
+      name: id
+      in: path
     product_ids:
       schema:
         items:
@@ -597,13 +605,6 @@ components:
       description: The list of the product IDs that will be returned with the compliance status
       name: product_ids
       in: query
-    new_person_id:
-      schema:
-        type: string
-        format: object-id
-      description: id of the responsible person to update for all associated products of old_person_id.</br> No input (null or empty) means to unlink old_person_id from all its associated products.
-      name: new_person_id
-      in: query
     old_person_id:
       schema:
         type: string
@@ -612,14 +613,13 @@ components:
       description: id of the responsible person to unlink for all associated products.
       name: old_person_id
       in: query
-    id:
+    new_person_id:
       schema:
         type: string
         format: object-id
-      required: true
-      description: id of the responsible person
-      name: id
-      in: path
+      description: id of the responsible person to update for all associated products of old_person_id.</br> No input (null or empty) means to unlink old_person_id from all its associated products.
+      name: new_person_id
+      in: query
     compliance_statuses:
       schema:
         minItems: 1
@@ -643,6 +643,26 @@ components:
       name: compliance_statuses
       in: query
   schemas:
+    ComplianceStatus:
+      enum:
+      - RESPONSIBLE_PERSON_LINKED
+      - NO_RESPONSIBLE_PERSON
+      - NOT_RECOMMENDED_TO_LINK_RESPONSIBLE_PERSON
+      type: string
+      description: ' 3 status: (1) a responsible person linked, (2) no responsible person, (3) not recommended to link a responsible person.'
+    EUProductComplianceStatusRequest:
+      required:
+      - product_id
+      type: object
+      properties:
+        product_id:
+          type: string
+          description: The unique identifier of a product
+          format: object-id
+        responsible_person_id:
+          type: string
+          description: The unique identifier of a responsible person
+          format: object-id
     ResponsiblePerson:
       type: object
       description: details of a responsible person
@@ -682,34 +702,22 @@ components:
           minLength: 1
           type: string
           description: the email of the responsible person
-    ResponsiblePersonResponse:
-      description: a responsible person response
-      allOf:
-      - $ref: '#/components/schemas/ResponsiblePerson'
-      - type: object
-        properties:
-          id:
-            type: string
-            description: The unique identifier of a responsible person
-            format: object-id
-    EUProductComplianceStatusResponse:
+    ListResponsiblePersonsResponse:
       items:
-        $ref: '#/components/schemas/EUProductComplianceStatus'
+        $ref: '#/components/schemas/ResponsiblePersonResponse'
       type: array
-      description: List of objects including a product id, compliance status and responsible person id.
-    EUProductComplianceStatus:
+      description: List of Responsible Persons returned
+    APIError:
+      required:
+      - code
+      - message
       type: object
       properties:
-        compliance_status:
-          $ref: '#/components/schemas/ComplianceStatus'
-        product_id:
+        message:
           type: string
-          description: The unique identifier of a product
-          format: object-id
-        responsible_person_id:
-          type: string
-          description: The unique identifier of a responsible person
-          format: object-id
+        code:
+          type: integer
+          format: int32
     CreateResponsiblePerson:
       type: object
       description: details of creating a responsible person
@@ -725,6 +733,34 @@ components:
         - phone_number
         - email
         type: object
+    EUProductComplianceStatusResponse:
+      items:
+        $ref: '#/components/schemas/EUProductComplianceStatus'
+      type: array
+      description: List of objects including a product id, compliance status and responsible person id.
+    ResponsiblePersonResponse:
+      description: a responsible person response
+      allOf:
+      - $ref: '#/components/schemas/ResponsiblePerson'
+      - type: object
+        properties:
+          id:
+            type: string
+            description: The unique identifier of a responsible person
+            format: object-id
+    EUProductComplianceStatus:
+      type: object
+      properties:
+        compliance_status:
+          $ref: '#/components/schemas/ComplianceStatus'
+        product_id:
+          type: string
+          description: The unique identifier of a product
+          format: object-id
+        responsible_person_id:
+          type: string
+          description: The unique identifier of a responsible person
+          format: object-id
     BulkUpdateEUProductComplianceStatusJob:
       type: object
       properties:
@@ -762,42 +798,6 @@ components:
           type: string
           description: id of the responsible person to unlink for all associated products.
           format: object-id
-    EUProductComplianceStatusRequest:
-      required:
-      - product_id
-      type: object
-      properties:
-        product_id:
-          type: string
-          description: The unique identifier of a product
-          format: object-id
-        responsible_person_id:
-          type: string
-          description: The unique identifier of a responsible person
-          format: object-id
-    ComplianceStatus:
-      enum:
-      - RESPONSIBLE_PERSON_LINKED
-      - NO_RESPONSIBLE_PERSON
-      - NOT_RECOMMENDED_TO_LINK_RESPONSIBLE_PERSON
-      type: string
-      description: ' 3 status: (1) a responsible person linked, (2) no responsible person, (3) not recommended to link a responsible person.'
-    ListResponsiblePersonsResponse:
-      items:
-        $ref: '#/components/schemas/ResponsiblePersonResponse'
-      type: array
-      description: List of Responsible Persons returned
-    APIError:
-      required:
-      - code
-      - message
-      type: object
-      properties:
-        message:
-          type: string
-        code:
-          type: integer
-          format: int32
   securitySchemes:
     OpenID:
       type: openIdConnect

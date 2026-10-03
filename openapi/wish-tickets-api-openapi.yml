@@ -233,6 +233,72 @@ components:
           type: string
           description: ID of the product
           format: object-id
+    ListTicketsResponse:
+      items:
+        $ref: '#/components/schemas/Ticket'
+      type: array
+      description: List of tickets returned.
+    ReplyTicket:
+      type: object
+      properties:
+        message:
+          type: string
+          description: The message you wish to send, with a max of 2000 characters
+          format: markdown
+    UpdateTicket:
+      type: object
+      properties:
+        state:
+          enum:
+          - CLOSED
+          - AWAITING_MERCHANT
+          - AWAITING_WISH
+          type: string
+          description: 'State transition rules: (1) To appeal to wish for a ticket, update the state to be AWAITING_WISH. (2) To re-open a CLOSED ticket (if you have permission), update the ticket to AWAITING_MERCHANT state. (3) To close a ticket, update the ticket to CLOSED state.'
+    Locale:
+      type: string
+      description: A language tag (which is sometimes referred to as a 'locale identifier'). This consists of a 2-3 letter base language tag representing the language, optionally followed by additional subtags separated by '-'. The most common extra information is the country or region variant (like 'en-US' or 'fr-CA'). For more information, see specification [BCP 47](https://datatracker.ietf.org/doc/html/bcp47#section-2).
+      format: BCP 47
+    APIError:
+      required:
+      - code
+      - message
+      type: object
+      properties:
+        message:
+          type: string
+        code:
+          type: integer
+          format: int32
+    Reply:
+      type: object
+      properties:
+        message:
+          readOnly: true
+          type: string
+          description: Contents of the reply
+          format: markdown
+        replied_at:
+          readOnly: true
+          type: string
+          description: Time when the reply was sent
+          format: date-time
+        sender:
+          readOnly: true
+          enum:
+          - USER
+          - MERCHANT
+          - WISH_SUPPORT
+          - WISH_AUTOMATED_SUPPORT
+          - LIVE_CHAT
+          type: string
+          description: 'Who sent the reply, can be: user, merchant, wish support, wish automated support, live chat'
+        supporting_files:
+          items:
+            $ref: '#/components/schemas/ReplySupportingFile'
+          readOnly: true
+          type: array
+          description: Supporting files provided in the reply. Image links expire after 60 minutes, users can get a new link everytime they request from the API this reply came from.
     Ticket:
       type: object
       properties:
@@ -345,46 +411,6 @@ components:
           readOnly: true
           type: string
           description: The subject for the ticket
-    ReplyTicket:
-      type: object
-      properties:
-        message:
-          type: string
-          description: The message you wish to send, with a max of 2000 characters
-          format: markdown
-    Locale:
-      type: string
-      description: A language tag (which is sometimes referred to as a 'locale identifier'). This consists of a 2-3 letter base language tag representing the language, optionally followed by additional subtags separated by '-'. The most common extra information is the country or region variant (like 'en-US' or 'fr-CA'). For more information, see specification [BCP 47](https://datatracker.ietf.org/doc/html/bcp47#section-2).
-      format: BCP 47
-    Reply:
-      type: object
-      properties:
-        message:
-          readOnly: true
-          type: string
-          description: Contents of the reply
-          format: markdown
-        replied_at:
-          readOnly: true
-          type: string
-          description: Time when the reply was sent
-          format: date-time
-        sender:
-          readOnly: true
-          enum:
-          - USER
-          - MERCHANT
-          - WISH_SUPPORT
-          - WISH_AUTOMATED_SUPPORT
-          - LIVE_CHAT
-          type: string
-          description: 'Who sent the reply, can be: user, merchant, wish support, wish automated support, live chat'
-        supporting_files:
-          items:
-            $ref: '#/components/schemas/ReplySupportingFile'
-          readOnly: true
-          type: array
-          description: Supporting files provided in the reply. Image links expire after 60 minutes, users can get a new link everytime they request from the API this reply came from.
     TicketOrder:
       type: object
       properties:
@@ -393,63 +419,14 @@ components:
           type: string
           description: ID of the order
           format: object-id
-    ListTicketsResponse:
-      items:
-        $ref: '#/components/schemas/Ticket'
-      type: array
-      description: List of tickets returned.
-    APIError:
-      required:
-      - code
-      - message
-      type: object
-      properties:
-        message:
-          type: string
-        code:
-          type: integer
-          format: int32
-    UpdateTicket:
-      type: object
-      properties:
-        state:
-          enum:
-          - CLOSED
-          - AWAITING_MERCHANT
-          - AWAITING_WISH
-          type: string
-          description: 'State transition rules: (1) To appeal to wish for a ticket, update the state to be AWAITING_WISH. (2) To re-open a CLOSED ticket (if you have permission), update the ticket to AWAITING_MERCHANT state. (3) To close a ticket, update the ticket to CLOSED state.'
   parameters:
-    updated_at_max_param:
+    updated_at_min_param:
       schema:
         type: string
         format: date-time
       required: false
-      description: Show tickets updated before the given date time. Default to the date time of the latest updated ticket if not provided
-      name: updated_at_max
-      in: query
-    ticket_sort_by:
-      schema:
-        default: updated_at.desc
-        pattern: ^updated_at(\.(asc|desc))?$
-        type: string
-      required: false
-      description: Sort results by the given attribute. Enabled attributes are `updated_at`. Default order is `desc`, use `asc` to sort in reverse.
-      name: sort_by
-      in: query
-    ticket_types:
-      schema:
-        minItems: 1
-        items:
-          enum:
-          - ORDER
-          - PRE_PURCHASE
-          - POST_CUSTOMER_SUPPORT
-          type: string
-        type: array
-      required: false
-      description: Parameter used to choose which type of tickets to retrieve. Default to list all three types if not supplied.
-      name: types
+      description: Show tickets updated after the given date time. Default to the date time of the earliest updated ticket if not provided
+      name: updated_at_min
       in: query
     ticket_limit:
       schema:
@@ -477,13 +454,19 @@ components:
       description: Parameter used to choose the state of tickets to retrieve. Default to list tickets in all states if not supplied. Tickets in PERMANENTLY_CLOSED state can never be re-opened. Tickets in CLOSED state can be re-opened by merchants who have corresponding permissions
       name: states
       in: query
-    updated_at_min_param:
+    ticket_types:
       schema:
-        type: string
-        format: date-time
+        minItems: 1
+        items:
+          enum:
+          - ORDER
+          - PRE_PURCHASE
+          - POST_CUSTOMER_SUPPORT
+          type: string
+        type: array
       required: false
-      description: Show tickets updated after the given date time. Default to the date time of the earliest updated ticket if not provided
-      name: updated_at_min
+      description: Parameter used to choose which type of tickets to retrieve. Default to list all three types if not supplied.
+      name: types
       in: query
     ticket_id:
       schema:
@@ -493,6 +476,23 @@ components:
       description: Wish's unique identifier for the ticket
       name: id
       in: path
+    ticket_sort_by:
+      schema:
+        default: updated_at.desc
+        pattern: ^updated_at(\.(asc|desc))?$
+        type: string
+      required: false
+      description: Sort results by the given attribute. Enabled attributes are `updated_at`. Default order is `desc`, use `asc` to sort in reverse.
+      name: sort_by
+      in: query
+    updated_at_max_param:
+      schema:
+        type: string
+        format: date-time
+      required: false
+      description: Show tickets updated before the given date time. Default to the date time of the latest updated ticket if not provided
+      name: updated_at_max
+      in: query
   securitySchemes:
     OpenID:
       type: openIdConnect

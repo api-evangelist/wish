@@ -878,106 +878,45 @@ paths:
       description: Obtain a list of deposit and withdraw activities on ProductBoost account balance.
 components:
   schemas:
-    UpdateCampaignProduct:
+    BalanceUpdates:
+      items:
+        $ref: '#/components/schemas/BalanceUpdate'
+      type: array
+    BalanceUpdateType:
+      enum:
+      - DEPOSIT
+      - WITHDRAW
+      type: string
+      description: The type of the transaction. 'DEPOSIT' means credits are added to user's balance, and 'WITHDRAW' means Wish deducts from user's balance.
+    APIError:
       required:
-      - product_id
+      - code
+      - message
       type: object
       properties:
-        keywords:
+        message:
+          type: string
+        code:
+          type: integer
+          format: int32
+    ImpressionFeeState:
+      enum:
+      - CHARGED
+      - NOT_CHARGED
+      type: string
+      description: State of impression fees
+    CampaignMetrics:
+      type: object
+      properties:
+        daily_performances:
           items:
-            type: string
+            $ref: '#/components/schemas/CampaignDailyPerformance'
           type: array
-          description: An array of keywords to help customers find your products. Number of keywords can not exceed 200.
-          maxItems: 30
-        product_id:
-          type: string
-          description: Id of the product. It must not be included in any other ProductBoost campaign in the date range.
-          format: object-id
-    UpdateCampaign:
-      type: object
-      properties:
-        scheduled_add_budget_amount:
-          type: object
-          description: The amount that the campaign's budget is automatically increased by on the scheduled days.
-          allOf:
-          - $ref: '#/components/schemas/Money'
-        start_at:
-          type: string
-          description: The time you intend to change the campaign's start time to. Currently only time with precision up to 'date' level in Pacific Time (PT) will be accepted. Any time that is more precise than 'date' level and/or not in PT will be processed so that it only keeps its 'date', in PT. That is, a passed in date-time will be first converted in PT and then its fields other than 'year', 'month', 'day' are ignored. Start time can only be updated for campaigns of state 'NEW' or 'PENDING'.
-          format: date-time
-        auto_renew:
-          type: boolean
-          description: A boolean value indicating whether you want the campaign to auto-renew upon completion.
-        merchant_budget:
-          type: object
-          description: Budget set by merchant for this campaign. This budget comes from merchants and doesn't include any reward budget or bonus budget.
-          allOf:
-          - $ref: '#/components/schemas/Money'
-        scheduled_add_budget_days:
-          items:
-            minimum: 0
-            type: integer
-            description: Days of the week when budget will be increased automatically
-            maximum: 6
-          type: array
-          description: An array of integers ranging from 0 to 6 representing the days of the week the campaign's budget is automatically increased. 0 represents Monday, 1 represents Tuesday, and so on. To disable a previous add budget schedule, supply [] here.
-          maxItems: 7
-        end_at:
-          type: string
-          description: The time you intend to change the campaign's end time to. Currently only time with precision up to 'date' level in Pacific Time (PT) will be accepted. Any time that is more precise than 'date' level and/or not in PT will be processed so that it only keeps its 'date', in PT. That is, a passed in date-time will be first converted in PT and then its fields other than 'year', 'month', 'day' are ignored. A campaign's end time must be greater than its start time and no more than 4 weeks later than its start time.
-          format: date-time
-        max_budget:
-          deprecated: true
-          type: object
-          description: The maximum amount you are willing to spend on the campaign. This field is being deprecated. Please use 'merchant_budget' field instead.
-          allOf:
-          - $ref: '#/components/schemas/Money'
-        state:
-          $ref: '#/components/schemas/CampaignState'
-        products:
-          items:
-            $ref: '#/components/schemas/UpdateCampaignProduct'
-          type: array
-          maxItems: 200
-        campaign_name:
-          minLength: 1
-          type: string
-          description: The name you intend to change the campaign's name to. Campaign name can only be updated for campaigns of state 'NEW' or 'PENDING'.
-          maxLength: 300
-        intense_boost:
-          type: boolean
-          description: Whether you want to enable Intenseboost for campaign. IntenseBoost allows campaigns to receive premium impressions faster.
-    Keyword:
-      type: object
-      properties:
-        hotness:
-          enum:
-          - VERY_LOW
-          - LOW
-          - MEDIUM
-          - HIGH
-          - VERY_HIGH
-          type: string
-          description: The amount of traffic for the keyword
-        keyword:
-          type: string
-          description: The text value of the keyword
-    Money:
-      required:
-      - amount
-      - currency_code
-      type: object
-      properties:
-        amount:
-          format: float
-          type: number
-          description: Amount in decimals.
-          example: 10.4
-        currency_code:
-          format: iso-4217
-          type: string
-          description: The 3-letter currency code defined in [ISO 4217](https://www.iso.org/iso-4217-currency-codes.html).
-          example: USD
+          description: An array containing daily performances of products in the campaign.
+    CampaignProductFeedbacks:
+      items:
+        $ref: '#/components/schemas/CampaignProductFeedback'
+      type: array
     BalanceUpdate:
       required:
       - created_at
@@ -1007,84 +946,6 @@ components:
           type: string
           description: (Optional) If 'update_type' is 'withdraw', ID of the campaign the transaction is associated to will be provided.
           format: object-id
-    CampaignDailyPerformance:
-      type: object
-      properties:
-        date:
-          type: string
-          description: The date that the campaign performance is associated to.
-          format: date-time
-        stats:
-          items:
-            $ref: '#/components/schemas/ProductDailyPerformance'
-          type: array
-          description: An array containing product performances on this date.
-    ProductDailyPerformance:
-      type: object
-      properties:
-        pb_sales:
-          type: integer
-          description: Number of sales attributed to the product boost campaign of this product on this date.
-          format: int32
-        product_id:
-          type: string
-          description: ID of the product.
-          format: object-id
-        spend:
-          type: object
-          description: Total cost of paid impressions of this product on this date.
-          allOf:
-          - $ref: '#/components/schemas/Money'
-        pb_impressions:
-          type:
-          - integer
-          - 'null'
-          description: Total number of pb impressions of this product on this date.
-          format: int32
-        sales:
-          type: integer
-          description: Number of sales of this product on this date.
-          format: int32
-        total_clicks:
-          type: integer
-          description: Total number of clicks of this product on this date.
-          format: int32
-        product_name:
-          type: string
-          description: Name of the product.
-        pb_clicks:
-          type: integer
-          description: Total number of product boost clicks of this product on this date.
-          format: int32
-        impressions:
-          type: integer
-          description: Total impressions -- the sum of paid and non-paid impressions of this product on this date.
-          format: int32
-        acos:
-          type: string
-          description: ACoS = (spend / pb_gmv) * 100 expressed as a percentage.
-        organic_impressions:
-          type:
-          - integer
-          - 'null'
-          description: Total number of organic impressions of this product on this date.
-          format: int32
-        gmv:
-          type: object
-          description: Total GMV of this product on this date.
-          allOf:
-          - $ref: '#/components/schemas/Money'
-        pb_gmv:
-          type: object
-          description: Total PB GMV of this product on this date.
-          allOf:
-          - $ref: '#/components/schemas/Money'
-    BalanceUpdateType:
-      enum:
-      - DEPOSIT
-      - WITHDRAW
-      type: string
-      description: The type of the transaction. 'DEPOSIT' means credits are added to user's balance, and 'WITHDRAW' means Wish deducts from user's balance.
     Campaign:
       type: object
       properties:
@@ -1247,180 +1108,6 @@ components:
           description: Total PB attributed GMVs of all products in this campaign. (new field, maybe 0 for old campaigns)
           allOf:
           - $ref: '#/components/schemas/Money'
-    ImpressionFeeState:
-      enum:
-      - CHARGED
-      - NOT_CHARGED
-      type: string
-      description: State of impression fees
-    APIError:
-      required:
-      - code
-      - message
-      type: object
-      properties:
-        message:
-          type: string
-        code:
-          type: integer
-          format: int32
-    ImpressionFeeBreakdown:
-      type: object
-      properties:
-        amount:
-          type: object
-          description: Fees charged on this day
-          allOf:
-          - $ref: '#/components/schemas/Money'
-        start_at:
-          type: string
-          format: date-time
-        state:
-          $ref: '#/components/schemas/ImpressionFeeState'
-        end_at:
-          type: string
-          format: date-time
-    CampaignProductFeedbacks:
-      items:
-        $ref: '#/components/schemas/CampaignProductFeedback'
-      type: array
-    CampaignProductFeedback:
-      type: object
-      properties:
-        feedback_message:
-          type: string
-          description: A detailed message along with 'feedback_type' to elaborate the reason why the product receives lower than expected number of paid impressions in the campaign.
-        product_id:
-          type: string
-          description: ID of the product.
-          format: object-id
-        feedback_type:
-          enum:
-          - PRODUCT_REJECTED
-          - PRODUCT_OUT_OF_STOCK
-          - PRODUCT_DISABLED
-          - PRODUCT_LOW_RATING
-          - PRODUCT_LOW_BID
-          - PRODUCT_LOW_CONVERSION
-          type: string
-          description: The reason why the product receives lower than expected number of paid impressions in the campaign.
-        campaign_id:
-          type: string
-          description: ID of the campaign the product belongs to.
-          format: object-id
-    CampaignProduct:
-      type: object
-      properties:
-        merchant_bid_rate:
-          type: object
-          description: The desired bid set by merchants
-          allOf:
-          - $ref: '#/components/schemas/Money'
-        product_id:
-          readOnly: true
-          type: string
-          description: Id of the product
-          format: object-id
-        is_maxboost:
-          type: boolean
-          description: Indicate if this product is being promoted via MaxBoost program
-        paid_impressions:
-          readOnly: true
-          type: integer
-          description: Total paid impressions of this product so far.
-          format: int32
-        keywords:
-          items:
-            type: string
-          type: array
-          description: The list of keywords that are actually used by the advertising platform
-        enrollment_fee:
-          readOnly: true
-          type: object
-          description: An optional fee to enroll a product. This started as an experiment and may be empty for most products.
-          allOf:
-          - $ref: '#/components/schemas/Money'
-        actual_charge_rate:
-          readOnly: true
-          type: object
-          description: The actual charging rate
-          allOf:
-          - $ref: '#/components/schemas/Money'
-    Campaigns:
-      items:
-        $ref: '#/components/schemas/Campaign'
-      type: array
-    CampaignState:
-      enum:
-      - NEW
-      - SAVED
-      - STARTED
-      - ENDED
-      - CANCELLED
-      - PENDING
-      type: string
-      description: The state you want to change your campaign to. 'PENDING' campaigns can be changed to the state 'NEW' or 'CANCELLED'. 'NEW' or 'SAVED' campaigns can be changed to the state 'CANCELLED'. 'STARTED' campaigns can be changed to the state 'ENDED'. You cannot change the state for 'CANCELLED' or 'ENDED' campaigns.
-    BudgetBreakdown:
-      type: object
-      properties:
-        product_boost_bonus:
-          type: object
-          description: A sign-on bonus for new ProductBoost merchants.
-          allOf:
-          - $ref: '#/components/schemas/Money'
-        product_boost_credit:
-          type: object
-          description: Total issued ProductBoost free credits to the merchant.
-          allOf:
-          - $ref: '#/components/schemas/Money'
-        total_available_budget:
-          type: object
-          description: The total available amount that can be spent on campaign's budget. This is calculated by adding up 'merchant_account_balance', 'product_boost_balance', 'product_boost_credit', 'product_boost_bonus', 'product_boost_loan', and then subtracting 'product_boost_unpaid_balance'.
-          allOf:
-          - $ref: '#/components/schemas/Money'
-        merchant_account_balance:
-          type: object
-          description: Current amount on the merchant's account balance at Wish.
-          allOf:
-          - $ref: '#/components/schemas/Money'
-        product_boost_balance:
-          type: object
-          description: Current amount on the merchant's ProductBoost account balance.
-          allOf:
-          - $ref: '#/components/schemas/Money'
-        product_boost_loan:
-          type: object
-          description: ProductBoost might lend merchants a small amount to assist merchants with creating campaigns. This amount is not guaranteed and will be deducted from merchant's account later.
-          allOf:
-          - $ref: '#/components/schemas/Money'
-        product_boost_unpaid_balance:
-          type: object
-          description: Total amount of unpaid ProductBoost campaign charges.
-          allOf:
-          - $ref: '#/components/schemas/Money'
-    CampaignMetrics:
-      type: object
-      properties:
-        daily_performances:
-          items:
-            $ref: '#/components/schemas/CampaignDailyPerformance'
-          type: array
-          description: An array containing daily performances of products in the campaign.
-    CampaignType:
-      readOnly: true
-      enum:
-      - SIMPLE_BOOST
-      - CLASSIC_BOOST
-      type: string
-      description: CLASSIC_BOOST campaigns allow users to provide bidding for a list of keywords. SIMPLE_BOOST campaigns do not need keywords and bidding provided
-    BalanceUpdates:
-      items:
-        $ref: '#/components/schemas/BalanceUpdate'
-      type: array
-    Keywords:
-      items:
-        $ref: '#/components/schemas/Keyword'
-      type: array
     CreateCampaign:
       required:
       - campaign_name
@@ -1480,6 +1167,319 @@ components:
         intense_boost:
           type: boolean
           description: Whether you want to enable Intenseboost for campaign. IntenseBoost allows campaigns to receive premium impressions faster.
+    Money:
+      required:
+      - amount
+      - currency_code
+      type: object
+      properties:
+        amount:
+          format: float
+          type: number
+          description: Amount in decimals.
+          example: 10.4
+        currency_code:
+          format: iso-4217
+          type: string
+          description: The 3-letter currency code defined in [ISO 4217](https://www.iso.org/iso-4217-currency-codes.html).
+          example: USD
+    UpdateCampaignProduct:
+      required:
+      - product_id
+      type: object
+      properties:
+        keywords:
+          items:
+            type: string
+          type: array
+          description: An array of keywords to help customers find your products. Number of keywords can not exceed 200.
+          maxItems: 30
+        product_id:
+          type: string
+          description: Id of the product. It must not be included in any other ProductBoost campaign in the date range.
+          format: object-id
+    CampaignDailyPerformance:
+      type: object
+      properties:
+        date:
+          type: string
+          description: The date that the campaign performance is associated to.
+          format: date-time
+        stats:
+          items:
+            $ref: '#/components/schemas/ProductDailyPerformance'
+          type: array
+          description: An array containing product performances on this date.
+    Campaigns:
+      items:
+        $ref: '#/components/schemas/Campaign'
+      type: array
+    UpdateCampaign:
+      type: object
+      properties:
+        scheduled_add_budget_amount:
+          type: object
+          description: The amount that the campaign's budget is automatically increased by on the scheduled days.
+          allOf:
+          - $ref: '#/components/schemas/Money'
+        start_at:
+          type: string
+          description: The time you intend to change the campaign's start time to. Currently only time with precision up to 'date' level in Pacific Time (PT) will be accepted. Any time that is more precise than 'date' level and/or not in PT will be processed so that it only keeps its 'date', in PT. That is, a passed in date-time will be first converted in PT and then its fields other than 'year', 'month', 'day' are ignored. Start time can only be updated for campaigns of state 'NEW' or 'PENDING'.
+          format: date-time
+        auto_renew:
+          type: boolean
+          description: A boolean value indicating whether you want the campaign to auto-renew upon completion.
+        merchant_budget:
+          type: object
+          description: Budget set by merchant for this campaign. This budget comes from merchants and doesn't include any reward budget or bonus budget.
+          allOf:
+          - $ref: '#/components/schemas/Money'
+        scheduled_add_budget_days:
+          items:
+            minimum: 0
+            type: integer
+            description: Days of the week when budget will be increased automatically
+            maximum: 6
+          type: array
+          description: An array of integers ranging from 0 to 6 representing the days of the week the campaign's budget is automatically increased. 0 represents Monday, 1 represents Tuesday, and so on. To disable a previous add budget schedule, supply [] here.
+          maxItems: 7
+        end_at:
+          type: string
+          description: The time you intend to change the campaign's end time to. Currently only time with precision up to 'date' level in Pacific Time (PT) will be accepted. Any time that is more precise than 'date' level and/or not in PT will be processed so that it only keeps its 'date', in PT. That is, a passed in date-time will be first converted in PT and then its fields other than 'year', 'month', 'day' are ignored. A campaign's end time must be greater than its start time and no more than 4 weeks later than its start time.
+          format: date-time
+        max_budget:
+          deprecated: true
+          type: object
+          description: The maximum amount you are willing to spend on the campaign. This field is being deprecated. Please use 'merchant_budget' field instead.
+          allOf:
+          - $ref: '#/components/schemas/Money'
+        state:
+          $ref: '#/components/schemas/CampaignState'
+        products:
+          items:
+            $ref: '#/components/schemas/UpdateCampaignProduct'
+          type: array
+          maxItems: 200
+        campaign_name:
+          minLength: 1
+          type: string
+          description: The name you intend to change the campaign's name to. Campaign name can only be updated for campaigns of state 'NEW' or 'PENDING'.
+          maxLength: 300
+        intense_boost:
+          type: boolean
+          description: Whether you want to enable Intenseboost for campaign. IntenseBoost allows campaigns to receive premium impressions faster.
+    CampaignProductFeedback:
+      type: object
+      properties:
+        feedback_message:
+          type: string
+          description: A detailed message along with 'feedback_type' to elaborate the reason why the product receives lower than expected number of paid impressions in the campaign.
+        product_id:
+          type: string
+          description: ID of the product.
+          format: object-id
+        feedback_type:
+          enum:
+          - PRODUCT_REJECTED
+          - PRODUCT_OUT_OF_STOCK
+          - PRODUCT_DISABLED
+          - PRODUCT_LOW_RATING
+          - PRODUCT_LOW_BID
+          - PRODUCT_LOW_CONVERSION
+          type: string
+          description: The reason why the product receives lower than expected number of paid impressions in the campaign.
+        campaign_id:
+          type: string
+          description: ID of the campaign the product belongs to.
+          format: object-id
+    ImpressionFeeBreakdown:
+      type: object
+      properties:
+        amount:
+          type: object
+          description: Fees charged on this day
+          allOf:
+          - $ref: '#/components/schemas/Money'
+        start_at:
+          type: string
+          format: date-time
+        state:
+          $ref: '#/components/schemas/ImpressionFeeState'
+        end_at:
+          type: string
+          format: date-time
+    CampaignProduct:
+      type: object
+      properties:
+        merchant_bid_rate:
+          type: object
+          description: The desired bid set by merchants
+          allOf:
+          - $ref: '#/components/schemas/Money'
+        product_id:
+          readOnly: true
+          type: string
+          description: Id of the product
+          format: object-id
+        is_maxboost:
+          type: boolean
+          description: Indicate if this product is being promoted via MaxBoost program
+        paid_impressions:
+          readOnly: true
+          type: integer
+          description: Total paid impressions of this product so far.
+          format: int32
+        keywords:
+          items:
+            type: string
+          type: array
+          description: The list of keywords that are actually used by the advertising platform
+        enrollment_fee:
+          readOnly: true
+          type: object
+          description: An optional fee to enroll a product. This started as an experiment and may be empty for most products.
+          allOf:
+          - $ref: '#/components/schemas/Money'
+        actual_charge_rate:
+          readOnly: true
+          type: object
+          description: The actual charging rate
+          allOf:
+          - $ref: '#/components/schemas/Money'
+    BudgetBreakdown:
+      type: object
+      properties:
+        product_boost_bonus:
+          type: object
+          description: A sign-on bonus for new ProductBoost merchants.
+          allOf:
+          - $ref: '#/components/schemas/Money'
+        product_boost_credit:
+          type: object
+          description: Total issued ProductBoost free credits to the merchant.
+          allOf:
+          - $ref: '#/components/schemas/Money'
+        total_available_budget:
+          type: object
+          description: The total available amount that can be spent on campaign's budget. This is calculated by adding up 'merchant_account_balance', 'product_boost_balance', 'product_boost_credit', 'product_boost_bonus', 'product_boost_loan', and then subtracting 'product_boost_unpaid_balance'.
+          allOf:
+          - $ref: '#/components/schemas/Money'
+        merchant_account_balance:
+          type: object
+          description: Current amount on the merchant's account balance at Wish.
+          allOf:
+          - $ref: '#/components/schemas/Money'
+        product_boost_balance:
+          type: object
+          description: Current amount on the merchant's ProductBoost account balance.
+          allOf:
+          - $ref: '#/components/schemas/Money'
+        product_boost_loan:
+          type: object
+          description: ProductBoost might lend merchants a small amount to assist merchants with creating campaigns. This amount is not guaranteed and will be deducted from merchant's account later.
+          allOf:
+          - $ref: '#/components/schemas/Money'
+        product_boost_unpaid_balance:
+          type: object
+          description: Total amount of unpaid ProductBoost campaign charges.
+          allOf:
+          - $ref: '#/components/schemas/Money'
+    Keywords:
+      items:
+        $ref: '#/components/schemas/Keyword'
+      type: array
+    ProductDailyPerformance:
+      type: object
+      properties:
+        pb_sales:
+          type: integer
+          description: Number of sales attributed to the product boost campaign of this product on this date.
+          format: int32
+        product_id:
+          type: string
+          description: ID of the product.
+          format: object-id
+        spend:
+          type: object
+          description: Total cost of paid impressions of this product on this date.
+          allOf:
+          - $ref: '#/components/schemas/Money'
+        pb_impressions:
+          type:
+          - integer
+          - 'null'
+          description: Total number of pb impressions of this product on this date.
+          format: int32
+        sales:
+          type: integer
+          description: Number of sales of this product on this date.
+          format: int32
+        total_clicks:
+          type: integer
+          description: Total number of clicks of this product on this date.
+          format: int32
+        product_name:
+          type: string
+          description: Name of the product.
+        pb_clicks:
+          type: integer
+          description: Total number of product boost clicks of this product on this date.
+          format: int32
+        impressions:
+          type: integer
+          description: Total impressions -- the sum of paid and non-paid impressions of this product on this date.
+          format: int32
+        acos:
+          type: string
+          description: ACoS = (spend / pb_gmv) * 100 expressed as a percentage.
+        organic_impressions:
+          type:
+          - integer
+          - 'null'
+          description: Total number of organic impressions of this product on this date.
+          format: int32
+        gmv:
+          type: object
+          description: Total GMV of this product on this date.
+          allOf:
+          - $ref: '#/components/schemas/Money'
+        pb_gmv:
+          type: object
+          description: Total PB GMV of this product on this date.
+          allOf:
+          - $ref: '#/components/schemas/Money'
+    Keyword:
+      type: object
+      properties:
+        hotness:
+          enum:
+          - VERY_LOW
+          - LOW
+          - MEDIUM
+          - HIGH
+          - VERY_HIGH
+          type: string
+          description: The amount of traffic for the keyword
+        keyword:
+          type: string
+          description: The text value of the keyword
+    CampaignState:
+      enum:
+      - NEW
+      - SAVED
+      - STARTED
+      - ENDED
+      - CANCELLED
+      - PENDING
+      type: string
+      description: The state you want to change your campaign to. 'PENDING' campaigns can be changed to the state 'NEW' or 'CANCELLED'. 'NEW' or 'SAVED' campaigns can be changed to the state 'CANCELLED'. 'STARTED' campaigns can be changed to the state 'ENDED'. You cannot change the state for 'CANCELLED' or 'ENDED' campaigns.
+    CampaignType:
+      readOnly: true
+      enum:
+      - SIMPLE_BOOST
+      - CLASSIC_BOOST
+      type: string
+      description: CLASSIC_BOOST campaigns allow users to provide bidding for a list of keywords. SIMPLE_BOOST campaigns do not need keywords and bidding provided
   securitySchemes:
     OpenID:
       type: openIdConnect

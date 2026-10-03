@@ -203,6 +203,15 @@ components:
         '
       name: sort_by
       in: query
+    payment_released_at_max:
+      description: (Optional)Specify the end of the time window to view desired payments. Payments released after this time will not show.
+      required: false
+      name: payment_released_at_max
+      in: query
+      example: '2020-01-01T07:00:00.000Z'
+      schema:
+        type: string
+        format: date-time
     invoices_limit_order_download_job:
       schema:
         minimum: 1
@@ -220,16 +229,28 @@ components:
       schema:
         type: string
         format: date-time
-    payment_released_at_max:
-      description: (Optional)Specify the end of the time window to view desired payments. Payments released after this time will not show.
-      required: false
-      name: payment_released_at_max
-      in: query
-      example: '2020-01-01T07:00:00.000Z'
-      schema:
-        type: string
-        format: date-time
   schemas:
+    EarlyPayment:
+      type: object
+      properties:
+        available_amount:
+          $ref: '#/components/schemas/Price'
+    Price:
+      required:
+      - amount
+      - currency_code
+      type: object
+      properties:
+        amount:
+          minimum: 0
+          type: number
+          description: Non-negative amount in decimals.
+          format: float
+        currency_code:
+          format: iso-4217
+          type: string
+          description: The 3-letter currency code defined in [ISO 4217](https://www.iso.org/iso-4217-currency-codes.html).
+          example: USD
     V3GenericReportStatus:
       type: object
       description: A generic report status object used when an endpoint wants to return the status of their downloadable file
@@ -271,17 +292,6 @@ components:
           type: string
           description: ID of the report
           format: object-id
-    APIError:
-      required:
-      - code
-      - message
-      type: object
-      properties:
-        message:
-          type: string
-        code:
-          type: integer
-          format: int32
     PaymentInvoiceOrderDownloadJob:
       type: object
       properties:
@@ -317,27 +327,17 @@ components:
           format: object-id
       allOf:
       - $ref: '#/components/schemas/V3GenericReportStatus'
-    Price:
+    APIError:
       required:
-      - amount
-      - currency_code
+      - code
+      - message
       type: object
       properties:
-        amount:
-          minimum: 0
-          type: number
-          description: Non-negative amount in decimals.
-          format: float
-        currency_code:
-          format: iso-4217
+        message:
           type: string
-          description: The 3-letter currency code defined in [ISO 4217](https://www.iso.org/iso-4217-currency-codes.html).
-          example: USD
-    EarlyPayment:
-      type: object
-      properties:
-        available_amount:
-          $ref: '#/components/schemas/Price'
+        code:
+          type: integer
+          format: int32
   securitySchemes:
     OpenID:
       type: openIdConnect

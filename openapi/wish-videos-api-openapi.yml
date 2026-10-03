@@ -72,17 +72,14 @@ paths:
       description: Create or replace a video for a product
 components:
   schemas:
-    ProductVideoCreation:
+    UpsertProductVideo:
       type: object
-      properties:
-        url:
-          type: string
-          description: The downloadable URL of the demo video of the product.
-          format: uri
-        product_id:
-          type: string
-          description: The ID of the product.
-          format: object-id
+      allOf:
+      - $ref: '#/components/schemas/ProductVideoCreation'
+      - required:
+        - product_id
+        - url
+        type: object
     APIError:
       required:
       - code
@@ -94,14 +91,6 @@ components:
         code:
           type: integer
           format: int32
-    UpsertProductVideo:
-      type: object
-      allOf:
-      - $ref: '#/components/schemas/ProductVideoCreation'
-      - required:
-        - product_id
-        - url
-        type: object
     UpsertProductVideoResult:
       type: object
       properties:
@@ -109,6 +98,17 @@ components:
           readOnly: true
           type: string
           description: The ID of the video.
+          format: object-id
+    ProductVideoCreation:
+      type: object
+      properties:
+        url:
+          type: string
+          description: The downloadable URL of the demo video of the product.
+          format: uri
+        product_id:
+          type: string
+          description: The ID of the product.
           format: object-id
   securitySchemes:
     OpenID:

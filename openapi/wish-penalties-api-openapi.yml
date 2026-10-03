@@ -205,6 +205,14 @@ paths:
       operationId: ListPenalties
 components:
   parameters:
+    reversed_at_max_param:
+      schema:
+        type: string
+        format: date-time
+      required: false
+      description: Show penalties reversed before the given date time. Default to the date time of the latest reversed penalty if not provided
+      name: reversed_at_max
+      in: query
     reversed_at_min_param:
       schema:
         type: string
@@ -229,15 +237,11 @@ components:
       description: Show penalties created after the given date time. Default to the date time of the earliest created penalty if not provided
       name: created_at_min
       in: query
-    reversed_at_max_param:
-      schema:
-        type: string
-        format: date-time
-      required: false
-      description: Show penalties reversed before the given date time. Default to the date time of the latest reversed penalty if not provided
-      name: reversed_at_max
-      in: query
   schemas:
+    Penalties:
+      items:
+        $ref: '#/components/schemas/Penalty'
+      type: array
     Penalty:
       required:
       - id
@@ -277,10 +281,6 @@ components:
           type: string
           description: ID of the penalty
           format: object-id
-    Penalties:
-      items:
-        $ref: '#/components/schemas/Penalty'
-      type: array
     PenaltyCount:
       required:
       - count
@@ -289,6 +289,17 @@ components:
         count:
           type: integer
           description: Number of penalties satisfying the query
+          format: int32
+    APIError:
+      required:
+      - code
+      - message
+      type: object
+      properties:
+        message:
+          type: string
+        code:
+          type: integer
           format: int32
     Money:
       required:
@@ -306,17 +317,6 @@ components:
           type: string
           description: The 3-letter currency code defined in [ISO 4217](https://www.iso.org/iso-4217-currency-codes.html).
           example: USD
-    APIError:
-      required:
-      - code
-      - message
-      type: object
-      properties:
-        message:
-          type: string
-        code:
-          type: integer
-          format: int32
   securitySchemes:
     OpenID:
       type: openIdConnect

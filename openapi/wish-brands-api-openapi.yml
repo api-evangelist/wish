@@ -100,6 +100,10 @@ paths:
       description: A list of available brands on Wish that can be used to tag products.
 components:
   schemas:
+    BrandList:
+      items:
+        $ref: '#/components/schemas/BrandInfo'
+      type: array
     BrandInfo:
       required:
       - id
@@ -118,10 +122,6 @@ components:
         name:
           type: string
           description: Name of the brand.
-    BrandList:
-      items:
-        $ref: '#/components/schemas/BrandInfo'
-      type: array
   securitySchemes:
     OpenID:
       type: openIdConnect
