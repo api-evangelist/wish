@@ -430,21 +430,6 @@ paths:
       description: Delete a France Product Unique Identification Number.
 components:
   schemas:
-    FranceProductComplianceStatusResponse:
-      items:
-        $ref: '#/components/schemas/FranceProductComplianceStatus'
-      type: array
-      description: List of objects including a product id, compliance status and UIN id.
-    CreateFranceProductUniqueIdentificationNumber:
-      type: object
-      description: details of creating a france product unique identification number
-      allOf:
-      - $ref: '#/components/schemas/FranceProductUniqueIdentificationNumber'
-      - required:
-        - category
-        - uin
-        - product_responsibility_organization
-        type: object
     UpdateFranceProductUniqueIdentificationNumber:
       type: object
       description: details of updating a france product unique identification number
@@ -456,6 +441,37 @@ components:
         product_responsibility_organization:
           type: string
           description: The name of the UIN provided by the merchant
+    FranceProductUniqueIdentificationNumberResponse:
+      description: a france product unique identification number response
+      allOf:
+      - $ref: '#/components/schemas/FranceProductUniqueIdentificationNumber'
+      - type: object
+        properties:
+          id:
+            type: string
+            description: The unique identifier of a france product unique identification number
+            format: object-id
+    FranceProductComplianceStatusResponse:
+      items:
+        $ref: '#/components/schemas/FranceProductComplianceStatus'
+      type: array
+      description: List of objects including a product id, compliance status and UIN id.
+    APIError:
+      required:
+      - code
+      - message
+      type: object
+      properties:
+        message:
+          type: string
+        code:
+          type: integer
+          format: int32
+    ListFranceProductUniqueIdentificationNumbersResponse:
+      items:
+        $ref: '#/components/schemas/FranceProductUniqueIdentificationNumberResponse'
+      type: array
+      description: List of France Product Unique Identification Numbers returned
     FranceProductComplianceStatusRequest:
       required:
       - product_id
@@ -469,27 +485,40 @@ components:
           type: string
           description: The unique identifier of a product
           format: object-id
-    FranceProductUniqueIdentificationNumberResponse:
-      description: a france product unique identification number response
-      allOf:
-      - $ref: '#/components/schemas/FranceProductUniqueIdentificationNumber'
-      - type: object
-        properties:
-          id:
-            type: string
-            description: The unique identifier of a france product unique identification number
-            format: object-id
-    APIError:
-      required:
-      - code
-      - message
+    FranceProductComplianceStatus:
       type: object
       properties:
-        message:
+        unique_identification_number_ids:
+          items:
+            type: string
+            description: The unique identifiers of a product
+            format: object-id
+          type: array
+          description: List of unique identifier of unique identification numbers that are submitted by the merchant for compliance reasons
+          maxItems: 500
+        compliance_status:
+          $ref: '#/components/schemas/EPRComplianceStatus'
+        product_id:
           type: string
-        code:
-          type: integer
-          format: int32
+          description: The unique identifier of a product
+          format: object-id
+    EPRComplianceStatus:
+      enum:
+      - UNIQUE_IDENTIFICATION_NUMBER_LINKED
+      - NO_UNIQUE_IDENTIFICATION_NUMBER
+      - NOT_RECOMMENDED_TO_LINK_UNIQUE_IDENTIFICATION_NUMBER
+      type: string
+      description: ' 3 status: (1) a unique identification number linked, (2) no unique identification number, (3) not recommended to link a unique identification number.'
+    CreateFranceProductUniqueIdentificationNumber:
+      type: object
+      description: details of creating a france product unique identification number
+      allOf:
+      - $ref: '#/components/schemas/FranceProductUniqueIdentificationNumber'
+      - required:
+        - category
+        - uin
+        - product_responsibility_organization
+        type: object
     FranceProductUniqueIdentificationNumber:
       type: object
       description: details of a france product unique identification number
@@ -517,35 +546,6 @@ components:
           minLength: 1
           type: string
           description: The name of the UIN provided by the merchant
-    ListFranceProductUniqueIdentificationNumbersResponse:
-      items:
-        $ref: '#/components/schemas/FranceProductUniqueIdentificationNumberResponse'
-      type: array
-      description: List of France Product Unique Identification Numbers returned
-    FranceProductComplianceStatus:
-      type: object
-      properties:
-        unique_identification_number_ids:
-          items:
-            type: string
-            description: The unique identifiers of a product
-            format: object-id
-          type: array
-          description: List of unique identifier of unique identification numbers that are submitted by the merchant for compliance reasons
-          maxItems: 500
-        compliance_status:
-          $ref: '#/components/schemas/EPRComplianceStatus'
-        product_id:
-          type: string
-          description: The unique identifier of a product
-          format: object-id
-    EPRComplianceStatus:
-      enum:
-      - UNIQUE_IDENTIFICATION_NUMBER_LINKED
-      - NO_UNIQUE_IDENTIFICATION_NUMBER
-      - NOT_RECOMMENDED_TO_LINK_UNIQUE_IDENTIFICATION_NUMBER
-      type: string
-      description: ' 3 status: (1) a unique identification number linked, (2) no unique identification number, (3) not recommended to link a unique identification number.'
   parameters:
     uin_id:
       schema:

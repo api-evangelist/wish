@@ -205,13 +205,13 @@ paths:
       operationId: ListPenalties
 components:
   parameters:
-    reversed_at_max_param:
+    created_at_min_param:
       schema:
         type: string
         format: date-time
       required: false
-      description: Show penalties reversed before the given date time. Default to the date time of the latest reversed penalty if not provided
-      name: reversed_at_max
+      description: Show penalties created after the given date time. Default to the date time of the earliest created penalty if not provided
+      name: created_at_min
       in: query
     reversed_at_min_param:
       schema:
@@ -229,19 +229,15 @@ components:
       description: Show penalties created before the given date time. Default to the date time of the latest created penalty if not provided
       name: created_at_max
       in: query
-    created_at_min_param:
+    reversed_at_max_param:
       schema:
         type: string
         format: date-time
       required: false
-      description: Show penalties created after the given date time. Default to the date time of the earliest created penalty if not provided
-      name: created_at_min
+      description: Show penalties reversed before the given date time. Default to the date time of the latest reversed penalty if not provided
+      name: reversed_at_max
       in: query
   schemas:
-    Penalties:
-      items:
-        $ref: '#/components/schemas/Penalty'
-      type: array
     Penalty:
       required:
       - id
@@ -301,6 +297,10 @@ components:
         code:
           type: integer
           format: int32
+    Penalties:
+      items:
+        $ref: '#/components/schemas/Penalty'
+      type: array
     Money:
       required:
       - amount

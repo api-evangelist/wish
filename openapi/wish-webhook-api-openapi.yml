@@ -313,40 +313,29 @@ paths:
           print(response.text)'
       operationId: getTopics
 components:
-  parameters:
-    topic_id:
-      schema:
-        type: string
-        format: object-id
-      required: false
-      description: ID of the topic, obtained from the [getTopics API](/documentation/api/v3/reference#operation/getTopics)
-      name: topic_id
-      in: query
-    endpoint:
-      schema:
-        type: string
-      required: false
-      description: Endpoint URL that Wish should send POST request to when the subscribed event happens
-      name: endpoint
-      in: query
-    status:
-      schema:
-        enum:
-        - ACTIVE
-        type: string
-      required: false
-      description: Whether the subscription is active
-      name: status
-      in: query
-    subscription_id:
-      schema:
-        type: string
-        format: object-id
-      required: true
-      description: ID of the subscription
-      name: id
-      in: path
   schemas:
+    Subscription:
+      type: object
+      properties:
+        status:
+          enum:
+          - ACTIVE
+          - INACTIVE
+          type: string
+          description: Whether the subscription is active
+        endpoint:
+          type: string
+          description: Endpoint URL that Wish should send POST request to when the subscribed event happens
+        id:
+          readOnly: true
+          type: string
+          description: Subscription ID
+          format: object-id
+        topic_id:
+          readOnly: true
+          type: string
+          description: The ID of the topic you subscribed to
+          format: object-id
     Topic:
       type: object
       properties:
@@ -392,33 +381,6 @@ components:
           - V3
           type: string
           description: The Wish API version used to serialize webhook events. This will be set in the header `Wish-API-Version` of the webhook message we send to you.
-    Subscription:
-      type: object
-      properties:
-        status:
-          enum:
-          - ACTIVE
-          - INACTIVE
-          type: string
-          description: Whether the subscription is active
-        endpoint:
-          type: string
-          description: Endpoint URL that Wish should send POST request to when the subscribed event happens
-        id:
-          readOnly: true
-          type: string
-          description: Subscription ID
-          format: object-id
-        topic_id:
-          readOnly: true
-          type: string
-          description: The ID of the topic you subscribed to
-          format: object-id
-    GetAllTopicsResponse:
-      items:
-        $ref: '#/components/schemas/Topic'
-      type: array
-      description: List of available topics that you can subscribe.
     APIError:
       required:
       - code
@@ -435,6 +397,44 @@ components:
         $ref: '#/components/schemas/Subscription'
       type: array
       description: List of subscriptions returned.
+    GetAllTopicsResponse:
+      items:
+        $ref: '#/components/schemas/Topic'
+      type: array
+      description: List of available topics that you can subscribe.
+  parameters:
+    topic_id:
+      schema:
+        type: string
+        format: object-id
+      required: false
+      description: ID of the topic, obtained from the [getTopics API](/documentation/api/v3/reference#operation/getTopics)
+      name: topic_id
+      in: query
+    status:
+      schema:
+        enum:
+        - ACTIVE
+        type: string
+      required: false
+      description: Whether the subscription is active
+      name: status
+      in: query
+    subscription_id:
+      schema:
+        type: string
+        format: object-id
+      required: true
+      description: ID of the subscription
+      name: id
+      in: path
+    endpoint:
+      schema:
+        type: string
+      required: false
+      description: Endpoint URL that Wish should send POST request to when the subscribed event happens
+      name: endpoint
+      in: query
   securitySchemes:
     OpenID:
       type: openIdConnect

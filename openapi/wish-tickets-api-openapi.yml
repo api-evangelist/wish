@@ -213,18 +213,6 @@ paths:
       description: Get all tickets
 components:
   schemas:
-    ReplySupportingFile:
-      readOnly: true
-      type: object
-      description: The file to support reply, can be image url at present
-      properties:
-        url:
-          type: string
-          description: Url of the file
-          format: uri
-        file_name:
-          type: string
-          description: The name of the supporting file
     TicketProduct:
       type: object
       properties:
@@ -233,28 +221,6 @@ components:
           type: string
           description: ID of the product
           format: object-id
-    ListTicketsResponse:
-      items:
-        $ref: '#/components/schemas/Ticket'
-      type: array
-      description: List of tickets returned.
-    ReplyTicket:
-      type: object
-      properties:
-        message:
-          type: string
-          description: The message you wish to send, with a max of 2000 characters
-          format: markdown
-    UpdateTicket:
-      type: object
-      properties:
-        state:
-          enum:
-          - CLOSED
-          - AWAITING_MERCHANT
-          - AWAITING_WISH
-          type: string
-          description: 'State transition rules: (1) To appeal to wish for a ticket, update the state to be AWAITING_WISH. (2) To re-open a CLOSED ticket (if you have permission), update the ticket to AWAITING_MERCHANT state. (3) To close a ticket, update the ticket to CLOSED state.'
     Locale:
       type: string
       description: A language tag (which is sometimes referred to as a 'locale identifier'). This consists of a 2-3 letter base language tag representing the language, optionally followed by additional subtags separated by '-'. The most common extra information is the country or region variant (like 'en-US' or 'fr-CA'). For more information, see specification [BCP 47](https://datatracker.ietf.org/doc/html/bcp47#section-2).
@@ -270,35 +236,29 @@ components:
         code:
           type: integer
           format: int32
-    Reply:
+    UpdateTicket:
       type: object
       properties:
-        message:
-          readOnly: true
-          type: string
-          description: Contents of the reply
-          format: markdown
-        replied_at:
-          readOnly: true
-          type: string
-          description: Time when the reply was sent
-          format: date-time
-        sender:
-          readOnly: true
+        state:
           enum:
-          - USER
-          - MERCHANT
-          - WISH_SUPPORT
-          - WISH_AUTOMATED_SUPPORT
-          - LIVE_CHAT
+          - CLOSED
+          - AWAITING_MERCHANT
+          - AWAITING_WISH
           type: string
-          description: 'Who sent the reply, can be: user, merchant, wish support, wish automated support, live chat'
-        supporting_files:
-          items:
-            $ref: '#/components/schemas/ReplySupportingFile'
+          description: 'State transition rules: (1) To appeal to wish for a ticket, update the state to be AWAITING_WISH. (2) To re-open a CLOSED ticket (if you have permission), update the ticket to AWAITING_MERCHANT state. (3) To close a ticket, update the ticket to CLOSED state.'
+    TicketOrder:
+      type: object
+      properties:
+        id:
           readOnly: true
-          type: array
-          description: Supporting files provided in the reply. Image links expire after 60 minutes, users can get a new link everytime they request from the API this reply came from.
+          type: string
+          description: ID of the order
+          format: object-id
+    ListTicketsResponse:
+      items:
+        $ref: '#/components/schemas/Ticket'
+      type: array
+      description: List of tickets returned.
     Ticket:
       type: object
       properties:
@@ -411,14 +371,54 @@ components:
           readOnly: true
           type: string
           description: The subject for the ticket
-    TicketOrder:
+    Reply:
       type: object
       properties:
-        id:
+        message:
           readOnly: true
           type: string
-          description: ID of the order
-          format: object-id
+          description: Contents of the reply
+          format: markdown
+        replied_at:
+          readOnly: true
+          type: string
+          description: Time when the reply was sent
+          format: date-time
+        sender:
+          readOnly: true
+          enum:
+          - USER
+          - MERCHANT
+          - WISH_SUPPORT
+          - WISH_AUTOMATED_SUPPORT
+          - LIVE_CHAT
+          type: string
+          description: 'Who sent the reply, can be: user, merchant, wish support, wish automated support, live chat'
+        supporting_files:
+          items:
+            $ref: '#/components/schemas/ReplySupportingFile'
+          readOnly: true
+          type: array
+          description: Supporting files provided in the reply. Image links expire after 60 minutes, users can get a new link everytime they request from the API this reply came from.
+    ReplyTicket:
+      type: object
+      properties:
+        message:
+          type: string
+          description: The message you wish to send, with a max of 2000 characters
+          format: markdown
+    ReplySupportingFile:
+      readOnly: true
+      type: object
+      description: The file to support reply, can be image url at present
+      properties:
+        url:
+          type: string
+          description: Url of the file
+          format: uri
+        file_name:
+          type: string
+          description: The name of the supporting file
   parameters:
     updated_at_min_param:
       schema:
@@ -427,16 +427,6 @@ components:
       required: false
       description: Show tickets updated after the given date time. Default to the date time of the earliest updated ticket if not provided
       name: updated_at_min
-      in: query
-    ticket_limit:
-      schema:
-        default: 50
-        minimum: 1
-        type: integer
-        maximum: 500
-      required: false
-      description: A limit on the number of tickets that can be returned. Limit can range from 1 to 500 items and the default is 50
-      name: limit
       in: query
     ticket_states:
       schema:
@@ -468,6 +458,14 @@ components:
       description: Parameter used to choose which type of tickets to retrieve. Default to list all three types if not supplied.
       name: types
       in: query
+    updated_at_max_param:
+      schema:
+        type: string
+        format: date-time
+      required: false
+      description: Show tickets updated before the given date time. Default to the date time of the latest updated ticket if not provided
+      name: updated_at_max
+      in: query
     ticket_id:
       schema:
         type: string
@@ -476,6 +474,16 @@ components:
       description: Wish's unique identifier for the ticket
       name: id
       in: path
+    ticket_limit:
+      schema:
+        default: 50
+        minimum: 1
+        type: integer
+        maximum: 500
+      required: false
+      description: A limit on the number of tickets that can be returned. Limit can range from 1 to 500 items and the default is 50
+      name: limit
+      in: query
     ticket_sort_by:
       schema:
         default: updated_at.desc
@@ -484,14 +492,6 @@ components:
       required: false
       description: Sort results by the given attribute. Enabled attributes are `updated_at`. Default order is `desc`, use `asc` to sort in reverse.
       name: sort_by
-      in: query
-    updated_at_max_param:
-      schema:
-        type: string
-        format: date-time
-      required: false
-      description: Show tickets updated before the given date time. Default to the date time of the latest updated ticket if not provided
-      name: updated_at_max
       in: query
   securitySchemes:
     OpenID:

@@ -72,14 +72,6 @@ paths:
       description: Create or replace a video for a product
 components:
   schemas:
-    UpsertProductVideo:
-      type: object
-      allOf:
-      - $ref: '#/components/schemas/ProductVideoCreation'
-      - required:
-        - product_id
-        - url
-        type: object
     APIError:
       required:
       - code
@@ -91,14 +83,6 @@ components:
         code:
           type: integer
           format: int32
-    UpsertProductVideoResult:
-      type: object
-      properties:
-        video_id:
-          readOnly: true
-          type: string
-          description: The ID of the video.
-          format: object-id
     ProductVideoCreation:
       type: object
       properties:
@@ -110,6 +94,22 @@ components:
           type: string
           description: The ID of the product.
           format: object-id
+    UpsertProductVideoResult:
+      type: object
+      properties:
+        video_id:
+          readOnly: true
+          type: string
+          description: The ID of the video.
+          format: object-id
+    UpsertProductVideo:
+      type: object
+      allOf:
+      - $ref: '#/components/schemas/ProductVideoCreation'
+      - required:
+        - product_id
+        - url
+        type: object
   securitySchemes:
     OpenID:
       type: openIdConnect

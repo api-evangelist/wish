@@ -606,42 +606,92 @@ paths:
 
           print(response.text)'
 components:
-  parameters:
-    promotions_updated_at_max:
-      schema:
-        type: string
-        format: date-time
-      required: false
-      description: Only return products that were updated before the given time. Currently only time with precision up to 'millisecond' will be accepted. Any time that is more precise than 'millisecond' level will be processed so that it only keeps its 'millisecond'.
-      name: updated_at_max
-      in: query
-    promotions_updated_at_min:
-      schema:
-        type: string
-        format: date-time
-      required: false
-      description: Only return products that were updated since the given time. Currently only time with precision up to 'millisecond' will be accepted. Any time that is more precise than 'millisecond' level will be processed so that it only keeps its 'millisecond'.
-      name: updated_at_min
-      in: query
   schemas:
-    UpdatePromotionsCampaign:
+    VariationDiscountData:
+      required:
+      - product_id
+      - variation_id
       type: object
       properties:
-        variations_discount_data:
-          $ref: '#/components/schemas/VariationsDiscountData'
-    PromotionEligibleProduct:
-      type: object
-      description: Eligible product for Promotions Platform
-      properties:
-        variations:
-          items:
-            $ref: '#/components/schemas/PromotionsEligibleVariation'
-          type: array
-          description: The eligible variations of the product.
-        id:
+        scheduled_start_time:
+          readOnly: true
+          format: date-time
+          type: string
+          description: The variation's promotion start time. Used for 'FLASH_SALE' type campaigns only.</br> For 'FLASH_SALE' type campaigns, Wish scheduled a promotion period for each variation within the campaign active period.
+          example: '2022-04-15T07:00:00Z'
+        product_id:
           type: string
           description: Id of the product.
           format: object-id
+        discount_percentage:
+          minimum: 5
+          type: number
+          description: Variation level discount percentage.
+          maximum: 80
+          format: float
+        max_quantity:
+          type: integer
+          description: The inventory of variations with this discount. If not set, a default max_quantity will be used. If neither max_quantity nor default_max_quantity is set, the variation's inventory will be used.
+        scheduled_end_time:
+          readOnly: true
+          format: date-time
+          type: string
+          description: The variation's promotion end time. Used for 'FLASH_SALE' type campaigns only.</br> For 'FLASH_SALE' type campaigns, Wish scheduled a promotion period for each variation within the campaign active period.
+          example: '2022-04-15T19:00:00Z'
+        variation_id:
+          type: string
+          description: Id of the variation.
+          format: object-id
+    CancelReason:
+      enum:
+      - WISH_CANCELLED_FAILED_DEPENDENCY_CHECK
+      - WISH_CANCELLED_UNQUALIFIED_MERCHANT
+      - USER_CANCELLED_WRONG_PRODUCTS
+      - USER_CANCELLED_WRONG_CAMPAIGN_INFO
+      - USER_CANCELLED_OTHER
+      type: string
+      description: Reason of cancelling campaign.
+    CreatePromotionsCampaign:
+      required:
+      - name
+      type: object
+      properties:
+        start_at:
+          format: date-time
+          type: string
+          description: The campaign's start time you want to set. If an event ID is specified, this field will be ignored; otherwise, this field is required for non-Wish event promotion enrollment. For 'DISCOUNT' type campaigns, only time with precision up to 'hour' level will be accepted, and any time that is more precise than 'hour' level will be processed so that it only keeps its 'hour'.</br> For 'FLASH_SALE' type campaigns, only time with precision up to 'date' level in Pacific Time (PT) will be accepted, and any time that is more precise than 'date' level and/or not in PT will be processed so that it only keeps its 'date' in PT. Also, for 'FLASH_SALE' type campaigns, please specify a week (7-day window) as its campaign duration, and Wish will schedule a promotion period for each product within that window.
+          example: '2022-04-13T07:00:00Z'
+        name:
+          minLength: 1
+          type: string
+          description: The name of the campaign you want to set.
+          maxLength: 300
+        countries:
+          items:
+            format: iso-3166
+            type: string
+            description: The 2-letter country code defined in [ISO 3166](https://www.iso.org/iso-3166-country-codes.html).
+            example: US
+          type: array
+          description: List of countries that are eligible for the campaign. If an event ID is specified, the countries must be a subset of the allowed countries in the event. The default value (not provided or empty list) are all countries that the products can be shipped to.
+          maxItems: 200
+        event_id:
+          type: string
+          description: ID of the promotion event. If an event ID is specified, the fields of `start_at`, `end_at`, and `promotion_type` will be ignored.
+          format: object-id
+        end_at:
+          format: date-time
+          type: string
+          description: The campaign's end time you want to set. If an event ID is specified, this field will be ignored; otherwise, this field is required for non-Wish event promotion enrollment. For 'DISCOUNT' type campaigns, only time with precision up to 'hour' level will be accepted, and any time that is more precise than 'hour' level will be processed so that it only keeps its 'hour'.</br> For 'FLASH_SALE' type campaigns, only time with precision up to 'date' level in Pacific Time (PT) will be accepted, and any time that is more precise than 'date' level and/or not in PT will be processed so that it only keeps its 'date' in PT. Also, for 'FLASH_SALE' type campaigns, please specify a week (7-day window) as its campaign duration, and Wish will schedule a promotion period for each product within that window.
+          example: '2022-04-20T07:00:00Z'
+        variations_discount_data:
+          $ref: '#/components/schemas/VariationsDiscountData'
+        promotion_type:
+          enum:
+          - DISCOUNT
+          - FLASH_SALE
+          type: string
+          description: Promotion type of the campaign. If an event ID is specified, this field will be ignored; otherwise, this field is required for non-Wish event promotion enrollment.</br> 'DISCOUNT' campaigns support basic discount on variations.</br> 'FLASH_SALE' campaigns support significant discount on products for a short period of time with limited inventories.
     PromotionEvent:
       type: object
       properties:
@@ -689,24 +739,15 @@ components:
         name:
           type: string
           description: Name of the promotion event
-    PromotionsCampaignState:
-      enum:
-      - PENDING
-      - APPROVED
-      - CANCELLED
-      type: string
-      description: Campaign State.</br> 'PENDING' campaigns are created but pending for approval.</br> 'APPROVED' campaigns are approved.</br> 'CANCELLED' campaigns are cancelled.</br>
-    APIError:
+    CancelPromotionsCampaign:
       required:
-      - code
-      - message
+      - reason
       type: object
       properties:
-        message:
-          type: string
-        code:
-          type: integer
-          format: int32
+        comment:
+          $ref: '#/components/schemas/PromotionsCampaignCancelComment'
+        reason:
+          $ref: '#/components/schemas/MerchantCancelReason'
     UnqualifiedReason:
       enum:
       - LOW_RATING
@@ -735,13 +776,6 @@ components:
       - PRODUCT_NOT_ACTIVE
       type: string
       description: 'Reason of unqualified product variations.</br> ''NOT_IN_STOCK'': product out of stock.</br> ''LOW_RATING'': product rating is too low (Minimum of 3 for Discount promotions, or 4 for Flash Sale promotions).</br> ''SALE_HISTORY'': no product sales in the last 90 calendar days.</br> ''DISCOUNT_PRICE_HISTORY'': discounted product price must be lower than or equal to the lowest price in the product''s history for the past 30 calendar days.</br> ''PRODUCT_SHIPPING_PRICE'': product shipping price cannot be increased before promotion starts.</br> ''PRODUCT_CATEGORY'': some product categories are not eligible for the promotion type.</br> ''CAMPAIGN_LIMIT'': replaced by COMPETING_PROMOTION and PROMOTION_HISTORY, products cannot be on conflicting campaigns at the same time. Products can only enroll in campaign of the same type 30 calendar days after the previous one ends.</br> ''MINIMUM_VARIATION_PERCENTAGE'': all of a product''s variations should be included for this promotion type.</br> ''FLASH_SALE_MINIMUM_VARIATION_INVENTORY'': A certain percent of variation inventory should be included in the promotion.</br> ''VARIATIONS_PRICING_GAMING'': variations'' discounts have a steep difference, with most discounts at the lower end of the range.</br> ''PRODUCT_LISTED_DAYS'': product must be listed on the platform more than 30 calendar days, and variation must be listed on the platform more than 15 calendar days.</br> ''MERCHANT_ELIGIBILITY'': merchant is not eligible to participate in the promotions platform.</br> ''NOT_OWNED_BY_MERCHANT'': each variation must be owned by the merchant.</br> ''UNITY_PRODUCT'': products in the shipping unification initiative are not currently eligible for promotions.</br> ''INVALID_ID'': invalid or nonexistent product or variation ID.</br> ''FRS_LOW_DISCOUNT'': after flat rate shipping is applied, the customer''s discount is lower than 5%; to fix, the merchant must increase the discount.</br> ''FRS_HIGH_DISCOUNT'': after flat rate shipping is applied, the customer''s discount is higher than 90%; to fix, the merchant must decrease the discount.</br> ''FRS_DISCOUNT_PRICE'': the flat rate shipping rate is greater than the customer''s total price for this item after discount; to fix, the merchant must decrease the discount.</br> ''FRS_NEGATIVE_PRICE'': after flat rate shipping is applied, the promotion discount results in a negative return on the product price; to fix, the merchant must decrease the discount percentage.</br> ''COMPETING_PROMOTION'': products cannot be in two or more promotions running at the same time.</br> ''PROMOTION_HISTORY'': products cannot enroll in a promotion of the same type (e.g., Discount, Flash Sale) within 5 calendar days after a previous promotion ends.</br> ''NEGATIVE_PRODUCT_PRICE'': The promotion discount results in a negative product price; to fix, the merchant must decrease the discount percentage.</br> ''LOW_RATING_COUNT'': product rating count is too low (Minimum of 1).</br> ''PRODUCT_NOT_ACTIVE'': product is either removed or pending/rejected on review.'
-    MerchantCancelReason:
-      enum:
-      - WRONG_PRODUCTS
-      - WRONG_CAMPAIGN_INFO
-      - OTHER
-      type: string
-      description: Reason of merchant cancelling campaign.
     PromotionsEligibleCountries:
       items:
         format: iso-3166
@@ -751,15 +785,97 @@ components:
       type: array
       description: List of countries that are eligible for the campaign. The default value (not provided or empty list) are all countries that the products can be shipped to.
       maxItems: 200
-    CancelPromotionsCampaign:
+    PromotionType:
+      enum:
+      - DISCOUNT
+      - FLASH_SALE
+      type: string
+      description: Promotion type of the campaign.</br> 'DISCOUNT' campaigns support basic discount on variations.</br> 'FLASH_SALE' campaigns support significant discount on products for a short period of time with limited inventories.
+    PromotionsEligibleVariation:
+      type: object
+      description: Eligible variation for Promotions Platform.
+      properties:
+        id:
+          readOnly: true
+          type: string
+          description: The ID of the variation.
+          format: object-id
+    PromotionsCampaignCancelComment:
+      minLength: 1
+      type: string
+      description: A detailed reason for the campaign cancellation. Used by Wish to collect feedbacks.
+      maxLength: 500
+    APIError:
       required:
-      - reason
+      - code
+      - message
       type: object
       properties:
-        comment:
-          $ref: '#/components/schemas/PromotionsCampaignCancelComment'
+        message:
+          type: string
+        code:
+          type: integer
+          format: int32
+    PromotionsCampaignState:
+      enum:
+      - PENDING
+      - APPROVED
+      - CANCELLED
+      type: string
+      description: Campaign State.</br> 'PENDING' campaigns are created but pending for approval.</br> 'APPROVED' campaigns are approved.</br> 'CANCELLED' campaigns are cancelled.</br>
+    UpdatePromotionsCampaign:
+      type: object
+      properties:
+        variations_discount_data:
+          $ref: '#/components/schemas/VariationsDiscountData'
+    UnqualifiedVariation:
+      type: object
+      description: Unqualified product variation.
+      properties:
         reason:
-          $ref: '#/components/schemas/MerchantCancelReason'
+          $ref: '#/components/schemas/UnqualifiedReason'
+        product_id:
+          type: string
+          description: Id of the product.
+          format: object-id
+        variation_id:
+          type: string
+          description: Id of the variation.
+          format: object-id
+    VariationsDiscountData:
+      required:
+      - discount_data
+      type: object
+      description: Campaign discount data. Only used when promotion_type is 'DISCOUNT' or 'FLASH_SALE'.
+      properties:
+        discount_data:
+          items:
+            $ref: '#/components/schemas/VariationDiscountData'
+          type: array
+          description: List of variation level discount data.
+          maxItems: 4000
+        default_max_quantity:
+          type: integer
+          description: The default inventory of variations with this discount. This is only used when variation level max_quantity is not set.
+        default_discount_percentage:
+          minimum: 5.0
+          type: number
+          description: The campaign's default discount percentage. This is only used when variation level discount_percentage is not set.
+          maximum: 80.0
+          format: float
+    PromotionEligibleProduct:
+      type: object
+      description: Eligible product for Promotions Platform
+      properties:
+        variations:
+          items:
+            $ref: '#/components/schemas/PromotionsEligibleVariation'
+          type: array
+          description: The eligible variations of the product.
+        id:
+          type: string
+          description: Id of the product.
+          format: object-id
     PromotionsCampaign:
       type: object
       properties:
@@ -817,146 +933,30 @@ components:
           type: string
           description: Campaign ID
           format: object-id
-    PromotionsCampaignCancelComment:
-      minLength: 1
-      type: string
-      description: A detailed reason for the campaign cancellation. Used by Wish to collect feedbacks.
-      maxLength: 500
-    VariationsDiscountData:
-      required:
-      - discount_data
-      type: object
-      description: Campaign discount data. Only used when promotion_type is 'DISCOUNT' or 'FLASH_SALE'.
-      properties:
-        discount_data:
-          items:
-            $ref: '#/components/schemas/VariationDiscountData'
-          type: array
-          description: List of variation level discount data.
-          maxItems: 4000
-        default_max_quantity:
-          type: integer
-          description: The default inventory of variations with this discount. This is only used when variation level max_quantity is not set.
-        default_discount_percentage:
-          minimum: 5.0
-          type: number
-          description: The campaign's default discount percentage. This is only used when variation level discount_percentage is not set.
-          maximum: 80.0
-          format: float
-    UnqualifiedVariation:
-      type: object
-      description: Unqualified product variation.
-      properties:
-        reason:
-          $ref: '#/components/schemas/UnqualifiedReason'
-        product_id:
-          type: string
-          description: Id of the product.
-          format: object-id
-        variation_id:
-          type: string
-          description: Id of the variation.
-          format: object-id
-    PromotionsEligibleVariation:
-      type: object
-      description: Eligible variation for Promotions Platform.
-      properties:
-        id:
-          readOnly: true
-          type: string
-          description: The ID of the variation.
-          format: object-id
-    CreatePromotionsCampaign:
-      required:
-      - name
-      type: object
-      properties:
-        start_at:
-          format: date-time
-          type: string
-          description: The campaign's start time you want to set. If an event ID is specified, this field will be ignored; otherwise, this field is required for non-Wish event promotion enrollment. For 'DISCOUNT' type campaigns, only time with precision up to 'hour' level will be accepted, and any time that is more precise than 'hour' level will be processed so that it only keeps its 'hour'.</br> For 'FLASH_SALE' type campaigns, only time with precision up to 'date' level in Pacific Time (PT) will be accepted, and any time that is more precise than 'date' level and/or not in PT will be processed so that it only keeps its 'date' in PT. Also, for 'FLASH_SALE' type campaigns, please specify a week (7-day window) as its campaign duration, and Wish will schedule a promotion period for each product within that window.
-          example: '2022-04-13T07:00:00Z'
-        name:
-          minLength: 1
-          type: string
-          description: The name of the campaign you want to set.
-          maxLength: 300
-        countries:
-          items:
-            format: iso-3166
-            type: string
-            description: The 2-letter country code defined in [ISO 3166](https://www.iso.org/iso-3166-country-codes.html).
-            example: US
-          type: array
-          description: List of countries that are eligible for the campaign. If an event ID is specified, the countries must be a subset of the allowed countries in the event. The default value (not provided or empty list) are all countries that the products can be shipped to.
-          maxItems: 200
-        event_id:
-          type: string
-          description: ID of the promotion event. If an event ID is specified, the fields of `start_at`, `end_at`, and `promotion_type` will be ignored.
-          format: object-id
-        end_at:
-          format: date-time
-          type: string
-          description: The campaign's end time you want to set. If an event ID is specified, this field will be ignored; otherwise, this field is required for non-Wish event promotion enrollment. For 'DISCOUNT' type campaigns, only time with precision up to 'hour' level will be accepted, and any time that is more precise than 'hour' level will be processed so that it only keeps its 'hour'.</br> For 'FLASH_SALE' type campaigns, only time with precision up to 'date' level in Pacific Time (PT) will be accepted, and any time that is more precise than 'date' level and/or not in PT will be processed so that it only keeps its 'date' in PT. Also, for 'FLASH_SALE' type campaigns, please specify a week (7-day window) as its campaign duration, and Wish will schedule a promotion period for each product within that window.
-          example: '2022-04-20T07:00:00Z'
-        variations_discount_data:
-          $ref: '#/components/schemas/VariationsDiscountData'
-        promotion_type:
-          enum:
-          - DISCOUNT
-          - FLASH_SALE
-          type: string
-          description: Promotion type of the campaign. If an event ID is specified, this field will be ignored; otherwise, this field is required for non-Wish event promotion enrollment.</br> 'DISCOUNT' campaigns support basic discount on variations.</br> 'FLASH_SALE' campaigns support significant discount on products for a short period of time with limited inventories.
-    CancelReason:
+    MerchantCancelReason:
       enum:
-      - WISH_CANCELLED_FAILED_DEPENDENCY_CHECK
-      - WISH_CANCELLED_UNQUALIFIED_MERCHANT
-      - USER_CANCELLED_WRONG_PRODUCTS
-      - USER_CANCELLED_WRONG_CAMPAIGN_INFO
-      - USER_CANCELLED_OTHER
+      - WRONG_PRODUCTS
+      - WRONG_CAMPAIGN_INFO
+      - OTHER
       type: string
-      description: Reason of cancelling campaign.
-    VariationDiscountData:
-      required:
-      - product_id
-      - variation_id
-      type: object
-      properties:
-        scheduled_start_time:
-          readOnly: true
-          format: date-time
-          type: string
-          description: The variation's promotion start time. Used for 'FLASH_SALE' type campaigns only.</br> For 'FLASH_SALE' type campaigns, Wish scheduled a promotion period for each variation within the campaign active period.
-          example: '2022-04-15T07:00:00Z'
-        product_id:
-          type: string
-          description: Id of the product.
-          format: object-id
-        discount_percentage:
-          minimum: 5
-          type: number
-          description: Variation level discount percentage.
-          maximum: 80
-          format: float
-        max_quantity:
-          type: integer
-          description: The inventory of variations with this discount. If not set, a default max_quantity will be used. If neither max_quantity nor default_max_quantity is set, the variation's inventory will be used.
-        scheduled_end_time:
-          readOnly: true
-          format: date-time
-          type: string
-          description: The variation's promotion end time. Used for 'FLASH_SALE' type campaigns only.</br> For 'FLASH_SALE' type campaigns, Wish scheduled a promotion period for each variation within the campaign active period.
-          example: '2022-04-15T19:00:00Z'
-        variation_id:
-          type: string
-          description: Id of the variation.
-          format: object-id
-    PromotionType:
-      enum:
-      - DISCOUNT
-      - FLASH_SALE
-      type: string
-      description: Promotion type of the campaign.</br> 'DISCOUNT' campaigns support basic discount on variations.</br> 'FLASH_SALE' campaigns support significant discount on products for a short period of time with limited inventories.
+      description: Reason of merchant cancelling campaign.
+  parameters:
+    promotions_updated_at_min:
+      schema:
+        type: string
+        format: date-time
+      required: false
+      description: Only return products that were updated since the given time. Currently only time with precision up to 'millisecond' will be accepted. Any time that is more precise than 'millisecond' level will be processed so that it only keeps its 'millisecond'.
+      name: updated_at_min
+      in: query
+    promotions_updated_at_max:
+      schema:
+        type: string
+        format: date-time
+      required: false
+      description: Only return products that were updated before the given time. Currently only time with precision up to 'millisecond' will be accepted. Any time that is more precise than 'millisecond' level will be processed so that it only keeps its 'millisecond'.
+      name: updated_at_max
+      in: query
   securitySchemes:
     OpenID:
       type: openIdConnect

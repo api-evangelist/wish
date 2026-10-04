@@ -191,6 +191,14 @@ paths:
       operationId: getEarlyPayment
 components:
   parameters:
+    invoices_limit_order_download_job:
+      schema:
+        minimum: 1
+        type: integer
+      required: false
+      description: The limit on the number of orders that will be returned.
+      name: limit
+      in: query
     invoices_sort_by:
       schema:
         default: payment_released_at
@@ -212,14 +220,6 @@ components:
       schema:
         type: string
         format: date-time
-    invoices_limit_order_download_job:
-      schema:
-        minimum: 1
-        type: integer
-      required: false
-      description: The limit on the number of orders that will be returned.
-      name: limit
-      in: query
     payment_released_at_min:
       description: (Optional)Specify the beginning of the time window to view desired payments. Payments released before this time will not show.
       required: false
@@ -235,6 +235,52 @@ components:
       properties:
         available_amount:
           $ref: '#/components/schemas/Price'
+    APIError:
+      required:
+      - code
+      - message
+      type: object
+      properties:
+        message:
+          type: string
+        code:
+          type: integer
+          format: int32
+    PaymentInvoiceOrderDownloadJob:
+      type: object
+      properties:
+        status:
+          type: string
+          description: The status of the download job
+        job_id:
+          type: string
+          description: ID of the download job
+          format: object-id
+        total_count:
+          type: number
+          description: Total number of invoices attached to the download job
+        created_at:
+          type: string
+          description: Created time of the download job
+          format: date-time
+        completed_at:
+          type: string
+          description: Complete time of the download job
+          format: date-time
+        file_urls:
+          items:
+            type: string
+          type: array
+          description: List of download S3 download urls
+        processed_count:
+          type: number
+          description: This number indicates how many invoices have been processed so far
+        merchant_id:
+          type: string
+          description: ID of the merchant that the invoices are for
+          format: object-id
+      allOf:
+      - $ref: '#/components/schemas/V3GenericReportStatus'
     Price:
       required:
       - amount
@@ -292,52 +338,6 @@ components:
           type: string
           description: ID of the report
           format: object-id
-    PaymentInvoiceOrderDownloadJob:
-      type: object
-      properties:
-        status:
-          type: string
-          description: The status of the download job
-        job_id:
-          type: string
-          description: ID of the download job
-          format: object-id
-        total_count:
-          type: number
-          description: Total number of invoices attached to the download job
-        created_at:
-          type: string
-          description: Created time of the download job
-          format: date-time
-        completed_at:
-          type: string
-          description: Complete time of the download job
-          format: date-time
-        file_urls:
-          items:
-            type: string
-          type: array
-          description: List of download S3 download urls
-        processed_count:
-          type: number
-          description: This number indicates how many invoices have been processed so far
-        merchant_id:
-          type: string
-          description: ID of the merchant that the invoices are for
-          format: object-id
-      allOf:
-      - $ref: '#/components/schemas/V3GenericReportStatus'
-    APIError:
-      required:
-      - code
-      - message
-      type: object
-      properties:
-        message:
-          type: string
-        code:
-          type: integer
-          format: int32
   securitySchemes:
     OpenID:
       type: openIdConnect

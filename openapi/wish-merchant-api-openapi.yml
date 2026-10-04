@@ -452,20 +452,6 @@ paths:
       operationId: getMerchantAccountDetail
 components:
   schemas:
-    ShippingSetting:
-      required:
-      - country_code
-      - enabled
-      type: object
-      properties:
-        enabled:
-          type: boolean
-          description: Indicate whether shipping to this country is enabled.
-        country_code:
-          format: iso-3166
-          type: string
-          description: The country code of the destination country. The 2-letter country codes are defined in [ISO 3166](https://www.iso.org/iso-3166-country-codes.html).
-          example: US
     WarehouseResponse:
       type: object
       allOf:
@@ -481,7 +467,7 @@ components:
             readOnly: true
             type: array
             description: List of country codes representing the destination countries that this warehouse ships to. All countries listed here must be countries that you enabled shipping to at merchant level. The 2-letter country code list is defined in [ISO 3166](https://www.iso.org/iso-3166-country-codes.html).
-    AutomatedListingReviewExperience:
+    UnificationInitiative:
       type: object
       properties:
         status:
@@ -489,7 +475,74 @@ components:
           - ENABLED
           - DISABLED
           type: string
-          description: Auotmated Listing Review experience status
+          description: Merchant's unification initiative status. Only applicable to Mainland China-based merchants whose products have destination countries included in Wish’s unification initiative enabled.
+    MerchantCurrencySettings:
+      type: object
+      properties:
+        product_boost_currency:
+          type: string
+          description: The currency code for all your ProductBoost campaigns. The currency codes are defined in [ISO 4217](https://www.iso.org/iso-4217-currency-codes.html).
+          example: USD
+        localized_currency:
+          type: string
+          description: The currency code for all your variations, products, and payments. The currency codes are defined in [ISO 4217](https://www.iso.org/iso-4217-currency-codes.html).
+          example: USD
+    APIError:
+      required:
+      - code
+      - message
+      type: object
+      properties:
+        message:
+          type: string
+        code:
+          type: integer
+          format: int32
+    FashionExperience:
+      type: object
+      properties:
+        status:
+          enum:
+          - ENABLED
+          - DISABLED
+          type: string
+          description: Wish Fashion experience status
+    CreateWarehouse:
+      type: object
+      allOf:
+      - $ref: '#/components/schemas/WarehouseRequest'
+      - required:
+        - destination_countries
+        - name
+        - address
+        type: object
+    ShippingSetting:
+      required:
+      - country_code
+      - enabled
+      type: object
+      properties:
+        enabled:
+          type: boolean
+          description: Indicate whether shipping to this country is enabled.
+        country_code:
+          format: iso-3166
+          type: string
+          description: The country code of the destination country. The 2-letter country codes are defined in [ISO 3166](https://www.iso.org/iso-3166-country-codes.html).
+          example: US
+    Warehouses:
+      items:
+        type: object
+        allOf:
+        - $ref: '#/components/schemas/WarehouseResponse'
+      type: array
+    UpdateShippingSettings:
+      minItems: 1
+      items:
+        $ref: '#/components/schemas/ShippingSetting'
+      type:
+      - array
+      - 'null'
     UpdateWarehouse:
       type: object
       properties:
@@ -498,6 +551,21 @@ components:
           description: Physical address of the warehouse.
           allOf:
           - $ref: '#/components/schemas/WarehouseAddress'
+    WarehouseRequest:
+      type: object
+      allOf:
+      - $ref: '#/components/schemas/WarehouseBase'
+      - type: object
+        properties:
+          destination_countries:
+            minItems: 1
+            items:
+              description: The 2-letter country code defined in [ISO 3166](https://www.iso.org/iso-3166-country-codes.html).
+              type: string
+              example: US
+              format: iso-3166
+            type: array
+            description: List of country codes representing the destination countries that this warehouse ships to. All countries listed here must be countries that you enabled shipping to at merchant level. The 2-letter country code list is defined in [ISO 3166](https://www.iso.org/iso-3166-country-codes.html).
     WarehouseBase:
       type: object
       properties:
@@ -523,6 +591,10 @@ components:
           description: Physical address of the warehouse.
           allOf:
           - $ref: '#/components/schemas/WarehouseAddress'
+    ShippingSettings:
+      items:
+        $ref: '#/components/schemas/ShippingSetting'
+      type: array
     WarehouseAddress:
       required:
       - ship_to_name
@@ -555,36 +627,6 @@ components:
           type: string
           description: The 2-letter country code defined in [ISO 3166](https://www.iso.org/iso-3166-country-codes.html).
           example: US
-    Warehouses:
-      items:
-        type: object
-        allOf:
-        - $ref: '#/components/schemas/WarehouseResponse'
-      type: array
-    FashionExperience:
-      type: object
-      properties:
-        status:
-          enum:
-          - ENABLED
-          - DISABLED
-          type: string
-          description: Wish Fashion experience status
-    ShippingSettings:
-      items:
-        $ref: '#/components/schemas/ShippingSetting'
-      type: array
-    APIError:
-      required:
-      - code
-      - message
-      type: object
-      properties:
-        message:
-          type: string
-        code:
-          type: integer
-          format: int32
     MerchantSettings:
       type: object
       properties:
@@ -603,22 +645,15 @@ components:
           description: Merchant's automated listing review experience status. Merchants with this flag enabled are participating in the Automated Listing Review experience. Learn [More](https://merchantfaq.wish.com/hc/en-us/articles/6987354064155).
           allOf:
           - $ref: '#/components/schemas/AutomatedListingReviewExperience'
-    CreateWarehouse:
+    AutomatedListingReviewExperience:
       type: object
-      allOf:
-      - $ref: '#/components/schemas/WarehouseRequest'
-      - required:
-        - destination_countries
-        - name
-        - address
-        type: object
-    UpdateShippingSettings:
-      minItems: 1
-      items:
-        $ref: '#/components/schemas/ShippingSetting'
-      type:
-      - array
-      - 'null'
+      properties:
+        status:
+          enum:
+          - ENABLED
+          - DISABLED
+          type: string
+          description: Auotmated Listing Review experience status
     AccountDetail:
       type: object
       properties:
@@ -643,41 +678,6 @@ components:
           - NOT_ENROLLED
           type: string
           description: Indicates the product boost state of a merchant.
-    WarehouseRequest:
-      type: object
-      allOf:
-      - $ref: '#/components/schemas/WarehouseBase'
-      - type: object
-        properties:
-          destination_countries:
-            minItems: 1
-            items:
-              description: The 2-letter country code defined in [ISO 3166](https://www.iso.org/iso-3166-country-codes.html).
-              type: string
-              example: US
-              format: iso-3166
-            type: array
-            description: List of country codes representing the destination countries that this warehouse ships to. All countries listed here must be countries that you enabled shipping to at merchant level. The 2-letter country code list is defined in [ISO 3166](https://www.iso.org/iso-3166-country-codes.html).
-    UnificationInitiative:
-      type: object
-      properties:
-        status:
-          enum:
-          - ENABLED
-          - DISABLED
-          type: string
-          description: Merchant's unification initiative status. Only applicable to Mainland China-based merchants whose products have destination countries included in Wish’s unification initiative enabled.
-    MerchantCurrencySettings:
-      type: object
-      properties:
-        product_boost_currency:
-          type: string
-          description: The currency code for all your ProductBoost campaigns. The currency codes are defined in [ISO 4217](https://www.iso.org/iso-4217-currency-codes.html).
-          example: USD
-        localized_currency:
-          type: string
-          description: The currency code for all your variations, products, and payments. The currency codes are defined in [ISO 4217](https://www.iso.org/iso-4217-currency-codes.html).
-          example: USD
   securitySchemes:
     OpenID:
       type: openIdConnect
