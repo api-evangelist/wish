@@ -1,74 +1,41 @@
-generated: '2026-07-21'
+generated: '2026-09-23'
 method: generated
-source: openapi/wish-marketplace-v3-openapi.json
+source: openapi/wish-brands-api-openapi.yml, openapi/wish-bulk-products-api-openapi.yml, openapi/wish-currencies-api-openapi.yml,
+  openapi/wish-eu-product-compliance-api-openapi.yml, openapi/wish-france-epr-compliance-api-openapi.yml,
+  openapi/wish-germany-epr-compliance-api-openapi.yml, openapi/wish-merchant-api-openapi.yml,
+  openapi/wish-oauth-api-openapi.yml, openapi/wish-orders-api-openapi.yml, openapi/wish-payments-api-openapi.yml,
+  openapi/wish-penalties-api-openapi.yml, openapi/wish-productboost-api-openapi.yml, openapi/wish-products-api-openapi.yml,
+  openapi/wish-promotions-platform-api-openapi.yml, openapi/wish-ratings-api-openapi.yml, openapi/wish-taxonomy-api-openapi.yml,
+  openapi/wish-tickets-api-openapi.yml, openapi/wish-unification-initiative-api-openapi.yml,
+  openapi/wish-variations-api-openapi.yml, openapi/wish-videos-api-openapi.yml, openapi/wish-webhook-api-openapi.yml
 description: Recommended x-agentic-access execution contracts, classified heuristically from
   the OpenAPI. A governance starting point for exposing this API to AI agents — review and bind
   audience per deployment. See research/curity/agentic-governance/.
 summary:
   operations: 102
   by_action_class:
-    connected: 60
-    acting: 42
+    connected: 61
+    acting: 41
   by_consequence:
-    read: 60
-    write: 34
+    read: 61
+    write: 33
     physical: 7
     safety-critical: 1
   human_in_the_loop_required: 1
 operations:
-- path: /api/v3/orders/shipping_carriers
+- path: /api/v3/brands
   method: get
-  operationId: GetShippingCarriers
+  operationId: listBrands
   x-agentic-access:
     action-class: connected
     consequence: read
     subject: optional
-    scope:
-    - orders:read
     token:
       max-ttl: 3600
     audit: none
-- path: /api/v3/promotions/eligible_products
-  method: get
-  operationId: getPromotionsEligibleProducts
-  x-agentic-access:
-    action-class: connected
-    consequence: read
-    subject: optional
-    scope:
-    - promotions:read
-    token:
-      max-ttl: 3600
-    audit: none
-- path: /api/v3/oauth/access_token
+- path: /api/v3/products/bulk_get
   method: post
-  operationId: oauthAccessTokenPost
-  x-agentic-access:
-    action-class: acting
-    consequence: write
-    subject: required
-    audience: null
-    token:
-      max-ttl: 900
-    escalation:
-      human-in-the-loop: conditional
-      triggers:
-      - abnormal
-      - high-value
-    audit: required
-- path: /api/v3/oauth/access_token
-  method: get
-  operationId: oauthAccessToken
-  x-agentic-access:
-    action-class: connected
-    consequence: read
-    subject: optional
-    token:
-      max-ttl: 3600
-    audit: none
-- path: /api/v3/products/categories/{id}
-  method: get
-  operationId: getCategoryByID
+  operationId: getProducts
   x-agentic-access:
     action-class: connected
     consequence: read
@@ -78,26 +45,58 @@ operations:
     token:
       max-ttl: 3600
     audit: none
-- path: /api/v3/orders/bulk_get
+- path: /api/v3/products/bulk_update/{id}
+  method: get
+  operationId: getUpdateProductsStatus
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    scope:
+    - products:read
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /api/v3/products/bulk_update
   method: post
-  operationId: downloadOrders
+  operationId: updateProducts
   x-agentic-access:
     action-class: acting
-    consequence: physical
+    consequence: write
     subject: required
     scope:
-    - orders:read
+    - products:write
     audience: null
     token:
-      max-ttl: 300
-      exchange: true
-      purpose-required: true
+      max-ttl: 900
     escalation:
       human-in-the-loop: conditional
       triggers:
       - abnormal
       - high-value
     audit: required
+- path: /api/v3/products/bulk_get/{id}
+  method: get
+  operationId: getGetProductsStatus
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    scope:
+    - products:read
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /api/v3/currencies
+  method: get
+  operationId: getCurrencies
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
 - path: /api/v3/eu_product_compliance/responsible_person/{id}
   method: put
   operationId: updateEUResponsiblePerson
@@ -146,112 +145,6 @@ operations:
       - abnormal
       - high-value
     audit: required
-- path: /api/v3/orders/bulk_get/{id}
-  method: get
-  operationId: getOrderDownloadJob
-  x-agentic-access:
-    action-class: connected
-    consequence: read
-    subject: optional
-    scope:
-    - orders:read
-    token:
-      max-ttl: 3600
-    audit: none
-- path: /api/v3/products/requests
-  method: get
-  operationId: listProductUpdateRequests
-  x-agentic-access:
-    action-class: connected
-    consequence: read
-    subject: optional
-    scope:
-    - products:read
-    token:
-      max-ttl: 3600
-    audit: none
-- path: /api/v3/oauth/test
-  method: get
-  operationId: oauthTest
-  x-agentic-access:
-    action-class: connected
-    consequence: read
-    subject: optional
-    token:
-      max-ttl: 3600
-    audit: none
-- path: /api/v3/products/bulk_get
-  method: post
-  operationId: getProducts
-  x-agentic-access:
-    action-class: acting
-    consequence: write
-    subject: required
-    scope:
-    - products:read
-    audience: null
-    token:
-      max-ttl: 900
-    escalation:
-      human-in-the-loop: conditional
-      triggers:
-      - abnormal
-      - high-value
-    audit: required
-- path: /api/v3/penalties/{id}
-  method: get
-  operationId: GetPenalty
-  x-agentic-access:
-    action-class: connected
-    consequence: read
-    subject: optional
-    scope:
-    - penalties:read
-    token:
-      max-ttl: 3600
-    audit: none
-- path: /api/v3/webhook/subscriptions
-  method: post
-  operationId: createSubscription
-  x-agentic-access:
-    action-class: acting
-    consequence: write
-    subject: required
-    scope:
-    - webhook:write
-    audience: null
-    token:
-      max-ttl: 900
-    escalation:
-      human-in-the-loop: conditional
-      triggers:
-      - abnormal
-      - high-value
-    audit: required
-- path: /api/v3/webhook/subscriptions
-  method: get
-  operationId: listSubscriptions
-  x-agentic-access:
-    action-class: connected
-    consequence: read
-    subject: optional
-    scope:
-    - webhook:read
-    token:
-      max-ttl: 3600
-    audit: none
-- path: /api/v3/product_boost/keywords
-  method: get
-  operationId: getKeywords
-  x-agentic-access:
-    action-class: connected
-    consequence: read
-    subject: optional
-    scope:
-    - product_boost:read
-    token:
-      max-ttl: 3600
-    audit: none
 - path: /api/v3/eu_product_compliance/products/bulk_update
   method: post
   operationId: BulkUpdateProducts
@@ -270,294 +163,6 @@ operations:
       - abnormal
       - high-value
     audit: required
-- path: /api/v3/oauth/refresh_token
-  method: get
-  operationId: oauthRefreshToken
-  x-agentic-access:
-    action-class: connected
-    consequence: read
-    subject: optional
-    token:
-      max-ttl: 3600
-    audit: none
-- path: /api/v3/tickets/{id}
-  method: put
-  operationId: updateTicket
-  x-agentic-access:
-    action-class: acting
-    consequence: write
-    subject: required
-    scope:
-    - tickets:write
-    audience: null
-    token:
-      max-ttl: 900
-    escalation:
-      human-in-the-loop: conditional
-      triggers:
-      - abnormal
-      - high-value
-    audit: required
-- path: /api/v3/tickets/{id}
-  method: get
-  operationId: getTicket
-  x-agentic-access:
-    action-class: connected
-    consequence: read
-    subject: optional
-    scope:
-    - tickets:read
-    token:
-      max-ttl: 3600
-    audit: none
-- path: /api/v3/orders/{id}/tracking
-  method: put
-  operationId: ShipOrder
-  x-agentic-access:
-    action-class: acting
-    consequence: physical
-    subject: required
-    scope:
-    - orders:write
-    audience: null
-    token:
-      max-ttl: 300
-      exchange: true
-      purpose-required: true
-    escalation:
-      human-in-the-loop: conditional
-      triggers:
-      - abnormal
-      - high-value
-    audit: required
-- path: /api/v3/product_boost/campaigns
-  method: post
-  operationId: createCampaign
-  x-agentic-access:
-    action-class: acting
-    consequence: write
-    subject: required
-    scope:
-    - product_boost:write
-    audience: null
-    token:
-      max-ttl: 900
-    escalation:
-      human-in-the-loop: conditional
-      triggers:
-      - abnormal
-      - high-value
-    audit: required
-- path: /api/v3/product_boost/campaigns
-  method: get
-  operationId: listCampaigns
-  x-agentic-access:
-    action-class: connected
-    consequence: read
-    subject: optional
-    scope:
-    - product_boost:read
-    token:
-      max-ttl: 3600
-    audit: none
-- path: /api/v3/france_epr_compliance/compliance_status
-  method: put
-  operationId: updateFranceEPRProductComplianceStatus
-  x-agentic-access:
-    action-class: acting
-    consequence: write
-    subject: required
-    scope:
-    - compliance:write
-    audience: null
-    token:
-      max-ttl: 900
-    escalation:
-      human-in-the-loop: conditional
-      triggers:
-      - abnormal
-      - high-value
-    audit: required
-- path: /api/v3/france_epr_compliance/compliance_status
-  method: get
-  operationId: getFranceEPRProductComplianceStatus
-  x-agentic-access:
-    action-class: connected
-    consequence: read
-    subject: optional
-    scope:
-    - compliance:read
-    token:
-      max-ttl: 3600
-    audit: none
-- path: /api/v3/promotions/campaigns/{id}/cancel
-  method: put
-  operationId: cancelPromotionsCampaign
-  x-agentic-access:
-    action-class: acting
-    consequence: write
-    subject: required
-    scope:
-    - promotions:write
-    audience: null
-    token:
-      max-ttl: 900
-    escalation:
-      human-in-the-loop: conditional
-      triggers:
-      - abnormal
-      - high-value
-    audit: required
-- path: /api/v3/promotions/campaigns
-  method: post
-  operationId: createPromotionsCampaign
-  x-agentic-access:
-    action-class: acting
-    consequence: write
-    subject: required
-    scope:
-    - promotions:write
-    audience: null
-    token:
-      max-ttl: 900
-    escalation:
-      human-in-the-loop: conditional
-      triggers:
-      - abnormal
-      - high-value
-    audit: required
-- path: /api/v3/promotions/campaigns
-  method: get
-  operationId: listPromotionsCampaigns
-  x-agentic-access:
-    action-class: connected
-    consequence: read
-    subject: optional
-    scope:
-    - promotions:read
-    token:
-      max-ttl: 3600
-    audit: none
-- path: /api/v3/products/{id}/calculated_shipping
-  method: put
-  operationId: enableDisableCalculatedShipping
-  x-agentic-access:
-    action-class: acting
-    consequence: safety-critical
-    subject: required
-    scope:
-    - products:write
-    audience: null
-    token:
-      max-ttl: 120
-      exchange: true
-      purpose-required: true
-      proof-of-possession: true
-    escalation:
-      human-in-the-loop: required
-    audit: required
-- path: /api/v3/webhook/subscriptions/{id}
-  method: put
-  operationId: updateSubscription
-  x-agentic-access:
-    action-class: acting
-    consequence: write
-    subject: required
-    scope:
-    - webhook:write
-    audience: null
-    token:
-      max-ttl: 900
-    escalation:
-      human-in-the-loop: conditional
-      triggers:
-      - abnormal
-      - high-value
-    audit: required
-- path: /api/v3/webhook/subscriptions/{id}
-  method: get
-  operationId: getSubscription
-  x-agentic-access:
-    action-class: connected
-    consequence: read
-    subject: optional
-    scope:
-    - webhook:read
-    token:
-      max-ttl: 3600
-    audit: none
-- path: /api/v3/webhook/subscriptions/{id}
-  method: delete
-  operationId: deleteSubscription
-  x-agentic-access:
-    action-class: acting
-    consequence: write
-    subject: required
-    scope:
-    - webhook:write
-    audience: null
-    token:
-      max-ttl: 900
-    escalation:
-      human-in-the-loop: conditional
-      triggers:
-      - abnormal
-      - high-value
-    audit: required
-- path: /api/v3/promotions/campaigns/{id}
-  method: put
-  operationId: updatePromotionsCampaign
-  x-agentic-access:
-    action-class: acting
-    consequence: write
-    subject: required
-    scope:
-    - promotions:write
-    audience: null
-    token:
-      max-ttl: 900
-    escalation:
-      human-in-the-loop: conditional
-      triggers:
-      - abnormal
-      - high-value
-    audit: required
-- path: /api/v3/promotions/campaigns/{id}
-  method: get
-  operationId: getPromotionsCampaign
-  x-agentic-access:
-    action-class: connected
-    consequence: read
-    subject: optional
-    scope:
-    - promotions:read
-    token:
-      max-ttl: 3600
-    audit: none
-- path: /api/v3/merchant/currency_settings
-  method: get
-  operationId: getCurrencySettings
-  x-agentic-access:
-    action-class: connected
-    consequence: read
-    subject: optional
-    scope:
-    - merchant:read
-    token:
-      max-ttl: 3600
-    audit: none
-- path: /api/v3/penalties/count
-  method: get
-  operationId: CountPenalties
-  x-agentic-access:
-    action-class: connected
-    consequence: read
-    subject: optional
-    scope:
-    - penalties:read
-    token:
-      max-ttl: 3600
-    audit: none
 - path: /api/v3/eu_product_compliance/products/bulk_update/{id}
   method: get
   operationId: GetBulkUpdateStatus
@@ -567,234 +172,6 @@ operations:
     subject: optional
     scope:
     - compliance:read
-    token:
-      max-ttl: 3600
-    audit: none
-- path: /api/v3/payments/invoices/bulk_get
-  method: post
-  operationId: downloadPaymentInvoices
-  x-agentic-access:
-    action-class: acting
-    consequence: physical
-    subject: required
-    scope:
-    - payments:read
-    audience: null
-    token:
-      max-ttl: 300
-      exchange: true
-      purpose-required: true
-    escalation:
-      human-in-the-loop: conditional
-      triggers:
-      - abnormal
-      - high-value
-    audit: required
-- path: /api/v3/ratings/products
-  method: get
-  operationId: FetchProductRatings
-  x-agentic-access:
-    action-class: connected
-    consequence: read
-    subject: optional
-    scope:
-    - ratings:read
-    token:
-      max-ttl: 3600
-    audit: none
-- path: /api/v3/unification_initiative/countries
-  method: get
-  operationId: getUnificationInitiativeCountries
-  x-agentic-access:
-    action-class: connected
-    consequence: read
-    subject: optional
-    token:
-      max-ttl: 3600
-    audit: none
-- path: /api/v3/orders/{id}/refund_reasons
-  method: get
-  operationId: GetValidRefundReasons
-  x-agentic-access:
-    action-class: connected
-    consequence: read
-    subject: optional
-    scope:
-    - orders:read
-    token:
-      max-ttl: 3600
-    audit: none
-- path: /api/v3/penalties
-  method: get
-  operationId: ListPenalties
-  x-agentic-access:
-    action-class: connected
-    consequence: read
-    subject: optional
-    scope:
-    - penalties:read
-    token:
-      max-ttl: 3600
-    audit: none
-- path: /api/v3/payments/invoices/bulk_get/{id}
-  method: get
-  operationId: getPaymentInvoicesDownloadJob
-  x-agentic-access:
-    action-class: connected
-    consequence: read
-    subject: optional
-    scope:
-    - payments:read
-    token:
-      max-ttl: 3600
-    audit: none
-- path: /api/v3/products/requests/{id}
-  method: get
-  operationId: getProductUpdateRequest
-  x-agentic-access:
-    action-class: connected
-    consequence: read
-    subject: optional
-    scope:
-    - products:read
-    token:
-      max-ttl: 3600
-    audit: none
-- path: /api/v3/products/requests/{id}
-  method: delete
-  operationId: deleteProductUpdateRequest
-  x-agentic-access:
-    action-class: acting
-    consequence: write
-    subject: required
-    scope:
-    - products:write
-    audience: null
-    token:
-      max-ttl: 900
-    escalation:
-      human-in-the-loop: conditional
-      triggers:
-      - abnormal
-      - high-value
-    audit: required
-- path: /api/v3/tickets/{id}/replies
-  method: post
-  operationId: replyTicket
-  x-agentic-access:
-    action-class: acting
-    consequence: write
-    subject: required
-    scope:
-    - tickets:write
-    audience: null
-    token:
-      max-ttl: 900
-    escalation:
-      human-in-the-loop: conditional
-      triggers:
-      - abnormal
-      - high-value
-    audit: required
-- path: /api/v3/france_epr_compliance/unique_identification_number
-  method: post
-  operationId: createFranceProductUniqueIdentificationNumber
-  x-agentic-access:
-    action-class: acting
-    consequence: write
-    subject: required
-    scope:
-    - compliance:write
-    audience: null
-    token:
-      max-ttl: 900
-    escalation:
-      human-in-the-loop: conditional
-      triggers:
-      - abnormal
-      - high-value
-    audit: required
-- path: /api/v3/france_epr_compliance/unique_identification_number
-  method: get
-  operationId: listFranceProductUniqueIdentificationNumber
-  x-agentic-access:
-    action-class: connected
-    consequence: read
-    subject: optional
-    scope:
-    - compliance:read
-    token:
-      max-ttl: 3600
-    audit: none
-- path: /api/v3/merchant/warehouses/{id}
-  method: put
-  operationId: updateWarehouse
-  x-agentic-access:
-    action-class: acting
-    consequence: write
-    subject: required
-    scope:
-    - merchant:write
-    audience: null
-    token:
-      max-ttl: 900
-    escalation:
-      human-in-the-loop: conditional
-      triggers:
-      - abnormal
-      - high-value
-    audit: required
-- path: /api/v3/orders/{id}
-  method: put
-  operationId: UpdateOrder
-  x-agentic-access:
-    action-class: acting
-    consequence: physical
-    subject: required
-    scope:
-    - orders:write
-    audience: null
-    token:
-      max-ttl: 300
-      exchange: true
-      purpose-required: true
-    escalation:
-      human-in-the-loop: conditional
-      triggers:
-      - abnormal
-      - high-value
-    audit: required
-- path: /api/v3/orders/{id}
-  method: get
-  operationId: GetOrder
-  x-agentic-access:
-    action-class: connected
-    consequence: read
-    subject: optional
-    scope:
-    - orders:read
-    token:
-      max-ttl: 3600
-    audit: none
-- path: /api/v3/currencies
-  method: get
-  operationId: getCurrencies
-  x-agentic-access:
-    action-class: connected
-    consequence: read
-    subject: optional
-    token:
-      max-ttl: 3600
-    audit: none
-- path: /api/v3/products/bulk_update/{id}
-  method: get
-  operationId: getUpdateProductsStatus
-  x-agentic-access:
-    action-class: connected
-    consequence: read
-    subject: optional
-    scope:
-    - products:read
     token:
       max-ttl: 3600
     audit: none
@@ -828,21 +205,9 @@ operations:
     token:
       max-ttl: 3600
     audit: none
-- path: /api/v3/products/attributes
-  method: get
-  operationId: getCategoryAttributes
-  x-agentic-access:
-    action-class: connected
-    consequence: read
-    subject: optional
-    scope:
-    - products:read
-    token:
-      max-ttl: 3600
-    audit: none
-- path: /api/v3/germany_epr_compliance/epr_registration_number
-  method: post
-  operationId: createGermanyProductEprRegistrationNumber
+- path: /api/v3/eu_product_compliance/responsible_person
+  method: put
+  operationId: createEUResponsiblePerson
   x-agentic-access:
     action-class: acting
     consequence: write
@@ -858,9 +223,9 @@ operations:
       - abnormal
       - high-value
     audit: required
-- path: /api/v3/germany_epr_compliance/epr_registration_number
+- path: /api/v3/eu_product_compliance/responsible_person
   method: get
-  operationId: listGermanyProductEprRegistrationNumbers
+  operationId: listEUResponsiblePerson
   x-agentic-access:
     action-class: connected
     consequence: read
@@ -870,137 +235,9 @@ operations:
     token:
       max-ttl: 3600
     audit: none
-- path: /api/v3/product_boost/campaigns/{id}/product_feedback
-  method: get
-  operationId: ListProductFeedback
-  x-agentic-access:
-    action-class: connected
-    consequence: read
-    subject: optional
-    scope:
-    - product_boost:read
-    token:
-      max-ttl: 3600
-    audit: none
-- path: /api/v3/product_boost/budget
-  method: get
-  operationId: getBudget
-  x-agentic-access:
-    action-class: connected
-    consequence: read
-    subject: optional
-    scope:
-    - product_boost:read
-    token:
-      max-ttl: 3600
-    audit: none
-- path: /api/v3/payments/early_payment
-  method: get
-  operationId: getEarlyPayment
-  x-agentic-access:
-    action-class: connected
-    consequence: read
-    subject: optional
-    scope:
-    - payments:read
-    token:
-      max-ttl: 3600
-    audit: none
-- path: /api/v3/product_boost/campaigns/{id}
+- path: /api/v3/france_epr_compliance/compliance_status
   method: put
-  operationId: updateCampaign
-  x-agentic-access:
-    action-class: acting
-    consequence: write
-    subject: required
-    scope:
-    - product_boost:write
-    audience: null
-    token:
-      max-ttl: 900
-    escalation:
-      human-in-the-loop: conditional
-      triggers:
-      - abnormal
-      - high-value
-    audit: required
-- path: /api/v3/product_boost/campaigns/{id}
-  method: get
-  operationId: getCampaign
-  x-agentic-access:
-    action-class: connected
-    consequence: read
-    subject: optional
-    scope:
-    - product_boost:read
-    token:
-      max-ttl: 3600
-    audit: none
-- path: /api/v3/ratings/products/{id}
-  method: get
-  operationId: FetchOverallProductRatings
-  x-agentic-access:
-    action-class: connected
-    consequence: read
-    subject: optional
-    scope:
-    - ratings:read
-    token:
-      max-ttl: 3600
-    audit: none
-- path: /api/v3/orders/{id}/address
-  method: put
-  operationId: ModifyAddress
-  x-agentic-access:
-    action-class: acting
-    consequence: physical
-    subject: required
-    scope:
-    - orders:write
-    audience: null
-    token:
-      max-ttl: 300
-      exchange: true
-      purpose-required: true
-    escalation:
-      human-in-the-loop: conditional
-      triggers:
-      - abnormal
-      - high-value
-    audit: required
-- path: /api/v3/products
-  method: post
-  operationId: createProduct
-  x-agentic-access:
-    action-class: acting
-    consequence: write
-    subject: required
-    scope:
-    - products:write
-    audience: null
-    token:
-      max-ttl: 900
-    escalation:
-      human-in-the-loop: conditional
-      triggers:
-      - abnormal
-      - high-value
-    audit: required
-- path: /api/v3/products
-  method: get
-  operationId: listProductsSync
-  x-agentic-access:
-    action-class: connected
-    consequence: read
-    subject: optional
-    scope:
-    - products:read
-    token:
-      max-ttl: 3600
-    audit: none
-- path: /api/v3/germany_epr_compliance/compliance_status
-  method: put
-  operationId: updateGermanyEPRProductComplianceStatus
+  operationId: updateFranceEPRProductComplianceStatus
   x-agentic-access:
     action-class: acting
     consequence: write
@@ -1016,9 +253,9 @@ operations:
       - abnormal
       - high-value
     audit: required
-- path: /api/v3/germany_epr_compliance/compliance_status
+- path: /api/v3/france_epr_compliance/compliance_status
   method: get
-  operationId: getGermanyEPRProductComplianceStatus
+  operationId: getFranceEPRProductComplianceStatus
   x-agentic-access:
     action-class: connected
     consequence: read
@@ -1028,15 +265,15 @@ operations:
     token:
       max-ttl: 3600
     audit: none
-- path: /api/v3/products/{id}/variations
+- path: /api/v3/france_epr_compliance/unique_identification_number
   method: post
-  operationId: createVariation
+  operationId: createFranceProductUniqueIdentificationNumber
   x-agentic-access:
     action-class: acting
     consequence: write
     subject: required
     scope:
-    - products:write
+    - compliance:write
     audience: null
     token:
       max-ttl: 900
@@ -1046,13 +283,15 @@ operations:
       - abnormal
       - high-value
     audit: required
-- path: /api/v3/products/variations/colors
+- path: /api/v3/france_epr_compliance/unique_identification_number
   method: get
-  operationId: getColors
+  operationId: listFranceProductUniqueIdentificationNumber
   x-agentic-access:
     action-class: connected
     consequence: read
     subject: optional
+    scope:
+    - compliance:read
     token:
       max-ttl: 3600
     audit: none
@@ -1104,39 +343,15 @@ operations:
       - abnormal
       - high-value
     audit: required
-- path: /api/v3/products/categories
-  method: get
-  operationId: getCategories
-  x-agentic-access:
-    action-class: connected
-    consequence: read
-    subject: optional
-    scope:
-    - products:read
-    token:
-      max-ttl: 3600
-    audit: none
-- path: /api/v3/merchant/settings
-  method: get
-  operationId: getSettings
-  x-agentic-access:
-    action-class: connected
-    consequence: read
-    subject: optional
-    scope:
-    - merchant:read
-    token:
-      max-ttl: 3600
-    audit: none
-- path: /api/v3/videos/product
+- path: /api/v3/germany_epr_compliance/epr_registration_number
   method: post
-  operationId: upsertProductVideo
+  operationId: createGermanyProductEprRegistrationNumber
   x-agentic-access:
     action-class: acting
     consequence: write
     subject: required
     scope:
-    - videos:write
+    - compliance:write
     audience: null
     token:
       max-ttl: 900
@@ -1146,26 +361,48 @@ operations:
       - abnormal
       - high-value
     audit: required
-- path: /api/v3/orders/{id}/refund
+- path: /api/v3/germany_epr_compliance/epr_registration_number
+  method: get
+  operationId: listGermanyProductEprRegistrationNumbers
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    scope:
+    - compliance:read
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /api/v3/germany_epr_compliance/compliance_status
   method: put
-  operationId: RefundOrder
+  operationId: updateGermanyEPRProductComplianceStatus
   x-agentic-access:
     action-class: acting
-    consequence: physical
+    consequence: write
     subject: required
     scope:
-    - orders:write
+    - compliance:write
     audience: null
     token:
-      max-ttl: 300
-      exchange: true
-      purpose-required: true
+      max-ttl: 900
     escalation:
       human-in-the-loop: conditional
       triggers:
       - abnormal
       - high-value
     audit: required
+- path: /api/v3/germany_epr_compliance/compliance_status
+  method: get
+  operationId: getGermanyEPRProductComplianceStatus
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    scope:
+    - compliance:read
+    token:
+      max-ttl: 3600
+    audit: none
 - path: /api/v3/germany_epr_compliance/epr_registration_number/{id}
   method: put
   operationId: updateGermanyProductEprRegistrationNumber
@@ -1214,9 +451,573 @@ operations:
       - abnormal
       - high-value
     audit: required
-- path: /api/v3/products/bulk_update
+- path: /api/v3/merchant/currency_settings
+  method: get
+  operationId: getCurrencySettings
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    scope:
+    - merchant:read
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /api/v3/merchant/warehouses/{id}
+  method: put
+  operationId: updateWarehouse
+  x-agentic-access:
+    action-class: acting
+    consequence: write
+    subject: required
+    scope:
+    - merchant:write
+    audience: null
+    token:
+      max-ttl: 900
+    escalation:
+      human-in-the-loop: conditional
+      triggers:
+      - abnormal
+      - high-value
+    audit: required
+- path: /api/v3/merchant/settings
+  method: get
+  operationId: getSettings
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    scope:
+    - merchant:read
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /api/v3/merchant/warehouses
   method: post
-  operationId: updateProducts
+  operationId: createWarehouse
+  x-agentic-access:
+    action-class: acting
+    consequence: write
+    subject: required
+    scope:
+    - merchant:write
+    audience: null
+    token:
+      max-ttl: 900
+    escalation:
+      human-in-the-loop: conditional
+      triggers:
+      - abnormal
+      - high-value
+    audit: required
+- path: /api/v3/merchant/warehouses
+  method: get
+  operationId: listWarehouses
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    scope:
+    - merchant:read
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /api/v3/merchant/shipping_settings
+  method: put
+  operationId: updateShippingSettings
+  x-agentic-access:
+    action-class: acting
+    consequence: physical
+    subject: required
+    scope:
+    - merchant:write
+    audience: null
+    token:
+      max-ttl: 300
+      exchange: true
+      purpose-required: true
+    escalation:
+      human-in-the-loop: conditional
+      triggers:
+      - abnormal
+      - high-value
+    audit: required
+- path: /api/v3/merchant/shipping_settings
+  method: get
+  operationId: listShippingSettings
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    scope:
+    - merchant:read
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /api/v3/merchant/account_details
+  method: get
+  operationId: getMerchantAccountDetail
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    scope:
+    - merchant:read
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /api/v3/oauth/access_token
+  method: post
+  operationId: oauthAccessTokenPost
+  x-agentic-access:
+    action-class: acting
+    consequence: write
+    subject: required
+    audience: null
+    token:
+      max-ttl: 900
+    escalation:
+      human-in-the-loop: conditional
+      triggers:
+      - abnormal
+      - high-value
+    audit: required
+- path: /api/v3/oauth/access_token
+  method: get
+  operationId: oauthAccessToken
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /api/v3/oauth/test
+  method: get
+  operationId: oauthTest
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /api/v3/oauth/refresh_token
+  method: get
+  operationId: oauthRefreshToken
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /api/v3/orders/shipping_carriers
+  method: get
+  operationId: GetShippingCarriers
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    scope:
+    - orders:read
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /api/v3/orders/bulk_get
+  method: post
+  operationId: downloadOrders
+  x-agentic-access:
+    action-class: acting
+    consequence: physical
+    subject: required
+    scope:
+    - orders:read
+    audience: null
+    token:
+      max-ttl: 300
+      exchange: true
+      purpose-required: true
+    escalation:
+      human-in-the-loop: conditional
+      triggers:
+      - abnormal
+      - high-value
+    audit: required
+- path: /api/v3/orders/bulk_get/{id}
+  method: get
+  operationId: getOrderDownloadJob
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    scope:
+    - orders:read
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /api/v3/orders/{id}/tracking
+  method: put
+  operationId: ShipOrder
+  x-agentic-access:
+    action-class: acting
+    consequence: physical
+    subject: required
+    scope:
+    - orders:write
+    audience: null
+    token:
+      max-ttl: 300
+      exchange: true
+      purpose-required: true
+    escalation:
+      human-in-the-loop: conditional
+      triggers:
+      - abnormal
+      - high-value
+    audit: required
+- path: /api/v3/orders/{id}/refund_reasons
+  method: get
+  operationId: GetValidRefundReasons
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    scope:
+    - orders:read
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /api/v3/orders/{id}
+  method: put
+  operationId: UpdateOrder
+  x-agentic-access:
+    action-class: acting
+    consequence: physical
+    subject: required
+    scope:
+    - orders:write
+    audience: null
+    token:
+      max-ttl: 300
+      exchange: true
+      purpose-required: true
+    escalation:
+      human-in-the-loop: conditional
+      triggers:
+      - abnormal
+      - high-value
+    audit: required
+- path: /api/v3/orders/{id}
+  method: get
+  operationId: GetOrder
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    scope:
+    - orders:read
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /api/v3/orders/{id}/address
+  method: put
+  operationId: ModifyAddress
+  x-agentic-access:
+    action-class: acting
+    consequence: physical
+    subject: required
+    scope:
+    - orders:write
+    audience: null
+    token:
+      max-ttl: 300
+      exchange: true
+      purpose-required: true
+    escalation:
+      human-in-the-loop: conditional
+      triggers:
+      - abnormal
+      - high-value
+    audit: required
+- path: /api/v3/orders/{id}/refund
+  method: put
+  operationId: RefundOrder
+  x-agentic-access:
+    action-class: acting
+    consequence: physical
+    subject: required
+    scope:
+    - orders:write
+    audience: null
+    token:
+      max-ttl: 300
+      exchange: true
+      purpose-required: true
+    escalation:
+      human-in-the-loop: conditional
+      triggers:
+      - abnormal
+      - high-value
+    audit: required
+- path: /api/v3/orders
+  method: get
+  operationId: GetMultipleOrders
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    scope:
+    - orders:read
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /api/v3/payments/invoices/bulk_get
+  method: post
+  operationId: downloadPaymentInvoices
+  x-agentic-access:
+    action-class: acting
+    consequence: physical
+    subject: required
+    scope:
+    - payments:read
+    audience: null
+    token:
+      max-ttl: 300
+      exchange: true
+      purpose-required: true
+    escalation:
+      human-in-the-loop: conditional
+      triggers:
+      - abnormal
+      - high-value
+    audit: required
+- path: /api/v3/payments/invoices/bulk_get/{id}
+  method: get
+  operationId: getPaymentInvoicesDownloadJob
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    scope:
+    - payments:read
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /api/v3/payments/early_payment
+  method: get
+  operationId: getEarlyPayment
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    scope:
+    - payments:read
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /api/v3/penalties/{id}
+  method: get
+  operationId: GetPenalty
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    scope:
+    - penalties:read
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /api/v3/penalties/count
+  method: get
+  operationId: CountPenalties
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    scope:
+    - penalties:read
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /api/v3/penalties
+  method: get
+  operationId: ListPenalties
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    scope:
+    - penalties:read
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /api/v3/product_boost/keywords
+  method: get
+  operationId: getKeywords
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    scope:
+    - product_boost:read
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /api/v3/product_boost/campaigns
+  method: post
+  operationId: createCampaign
+  x-agentic-access:
+    action-class: acting
+    consequence: write
+    subject: required
+    scope:
+    - product_boost:write
+    audience: null
+    token:
+      max-ttl: 900
+    escalation:
+      human-in-the-loop: conditional
+      triggers:
+      - abnormal
+      - high-value
+    audit: required
+- path: /api/v3/product_boost/campaigns
+  method: get
+  operationId: listCampaigns
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    scope:
+    - product_boost:read
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /api/v3/product_boost/campaigns/{id}/product_feedback
+  method: get
+  operationId: ListProductFeedback
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    scope:
+    - product_boost:read
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /api/v3/product_boost/budget
+  method: get
+  operationId: getBudget
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    scope:
+    - product_boost:read
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /api/v3/product_boost/campaigns/{id}
+  method: put
+  operationId: updateCampaign
+  x-agentic-access:
+    action-class: acting
+    consequence: write
+    subject: required
+    scope:
+    - product_boost:write
+    audience: null
+    token:
+      max-ttl: 900
+    escalation:
+      human-in-the-loop: conditional
+      triggers:
+      - abnormal
+      - high-value
+    audit: required
+- path: /api/v3/product_boost/campaigns/{id}
+  method: get
+  operationId: getCampaign
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    scope:
+    - product_boost:read
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /api/v3/product_boost/campaigns/{id}/metrics
+  method: get
+  operationId: listCampaignMetrics
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    scope:
+    - product_boost:read
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /api/v3/product_boost/balance_updates
+  method: get
+  operationId: listBalanceUpdates
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    scope:
+    - product_boost:read
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /api/v3/products/requests
+  method: get
+  operationId: listProductUpdateRequests
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    scope:
+    - products:read
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /api/v3/products/{id}/calculated_shipping
+  method: put
+  operationId: enableDisableCalculatedShipping
+  x-agentic-access:
+    action-class: acting
+    consequence: safety-critical
+    subject: required
+    scope:
+    - products:write
+    audience: null
+    token:
+      max-ttl: 120
+      exchange: true
+      purpose-required: true
+      proof-of-possession: true
+    escalation:
+      human-in-the-loop: required
+    audit: required
+- path: /api/v3/products/requests/{id}
+  method: get
+  operationId: getProductUpdateRequest
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    scope:
+    - products:read
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /api/v3/products/requests/{id}
+  method: delete
+  operationId: deleteProductUpdateRequest
   x-agentic-access:
     action-class: acting
     consequence: write
@@ -1232,15 +1033,33 @@ operations:
       - abnormal
       - high-value
     audit: required
-- path: /api/v3/product_boost/campaigns/{id}/metrics
+- path: /api/v3/products
+  method: post
+  operationId: createProduct
+  x-agentic-access:
+    action-class: acting
+    consequence: write
+    subject: required
+    scope:
+    - products:write
+    audience: null
+    token:
+      max-ttl: 900
+    escalation:
+      human-in-the-loop: conditional
+      triggers:
+      - abnormal
+      - high-value
+    audit: required
+- path: /api/v3/products
   method: get
-  operationId: listCampaignMetrics
+  operationId: listProductsSync
   x-agentic-access:
     action-class: connected
     consequence: read
     subject: optional
     scope:
-    - product_boost:read
+    - products:read
     token:
       max-ttl: 3600
     audit: none
@@ -1292,9 +1111,9 @@ operations:
       - abnormal
       - high-value
     audit: required
-- path: /api/v3/promotions/events
+- path: /api/v3/promotions/eligible_products
   method: get
-  operationId: listPromotionEvents
+  operationId: getPromotionsEligibleProducts
   x-agentic-access:
     action-class: connected
     consequence: read
@@ -1304,15 +1123,15 @@ operations:
     token:
       max-ttl: 3600
     audit: none
-- path: /api/v3/merchant/warehouses
-  method: post
-  operationId: createWarehouse
+- path: /api/v3/promotions/campaigns/{id}/cancel
+  method: put
+  operationId: cancelPromotionsCampaign
   x-agentic-access:
     action-class: acting
     consequence: write
     subject: required
     scope:
-    - merchant:write
+    - promotions:write
     audience: null
     token:
       max-ttl: 900
@@ -1322,27 +1141,75 @@ operations:
       - abnormal
       - high-value
     audit: required
-- path: /api/v3/merchant/warehouses
+- path: /api/v3/promotions/campaigns
+  method: post
+  operationId: createPromotionsCampaign
+  x-agentic-access:
+    action-class: acting
+    consequence: write
+    subject: required
+    scope:
+    - promotions:write
+    audience: null
+    token:
+      max-ttl: 900
+    escalation:
+      human-in-the-loop: conditional
+      triggers:
+      - abnormal
+      - high-value
+    audit: required
+- path: /api/v3/promotions/campaigns
   method: get
-  operationId: listWarehouses
+  operationId: listPromotionsCampaigns
   x-agentic-access:
     action-class: connected
     consequence: read
     subject: optional
     scope:
-    - merchant:read
+    - promotions:read
     token:
       max-ttl: 3600
     audit: none
-- path: /api/v3/orders
+- path: /api/v3/promotions/campaigns/{id}
+  method: put
+  operationId: updatePromotionsCampaign
+  x-agentic-access:
+    action-class: acting
+    consequence: write
+    subject: required
+    scope:
+    - promotions:write
+    audience: null
+    token:
+      max-ttl: 900
+    escalation:
+      human-in-the-loop: conditional
+      triggers:
+      - abnormal
+      - high-value
+    audit: required
+- path: /api/v3/promotions/campaigns/{id}
   method: get
-  operationId: GetMultipleOrders
+  operationId: getPromotionsCampaign
   x-agentic-access:
     action-class: connected
     consequence: read
     subject: optional
     scope:
-    - orders:read
+    - promotions:read
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /api/v3/promotions/events
+  method: get
+  operationId: listPromotionEvents
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    scope:
+    - promotions:read
     token:
       max-ttl: 3600
     audit: none
@@ -1358,75 +1225,33 @@ operations:
     token:
       max-ttl: 3600
     audit: none
-- path: /api/v3/brands
+- path: /api/v3/ratings/products
   method: get
-  operationId: listBrands
-  x-agentic-access:
-    action-class: connected
-    consequence: read
-    subject: optional
-    token:
-      max-ttl: 3600
-    audit: none
-- path: /api/v3/merchant/shipping_settings
-  method: put
-  operationId: updateShippingSettings
-  x-agentic-access:
-    action-class: acting
-    consequence: physical
-    subject: required
-    scope:
-    - merchant:write
-    audience: null
-    token:
-      max-ttl: 300
-      exchange: true
-      purpose-required: true
-    escalation:
-      human-in-the-loop: conditional
-      triggers:
-      - abnormal
-      - high-value
-    audit: required
-- path: /api/v3/merchant/shipping_settings
-  method: get
-  operationId: listShippingSettings
+  operationId: FetchProductRatings
   x-agentic-access:
     action-class: connected
     consequence: read
     subject: optional
     scope:
-    - merchant:read
+    - ratings:read
     token:
       max-ttl: 3600
     audit: none
-- path: /api/v3/merchant/account_details
+- path: /api/v3/ratings/products/{id}
   method: get
-  operationId: getMerchantAccountDetail
+  operationId: FetchOverallProductRatings
   x-agentic-access:
     action-class: connected
     consequence: read
     subject: optional
     scope:
-    - merchant:read
+    - ratings:read
     token:
       max-ttl: 3600
     audit: none
-- path: /api/v3/webhook/topics
+- path: /api/v3/products/categories/{id}
   method: get
-  operationId: getTopics
-  x-agentic-access:
-    action-class: connected
-    consequence: read
-    subject: optional
-    scope:
-    - webhook:read
-    token:
-      max-ttl: 3600
-    audit: none
-- path: /api/v3/products/bulk_get/{id}
-  method: get
-  operationId: getGetProductsStatus
+  operationId: getCategoryByID
   x-agentic-access:
     action-class: connected
     consequence: read
@@ -1436,15 +1261,39 @@ operations:
     token:
       max-ttl: 3600
     audit: none
-- path: /api/v3/eu_product_compliance/responsible_person
+- path: /api/v3/products/attributes
+  method: get
+  operationId: getCategoryAttributes
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    scope:
+    - products:read
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /api/v3/products/categories
+  method: get
+  operationId: getCategories
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    scope:
+    - products:read
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /api/v3/tickets/{id}
   method: put
-  operationId: createEUResponsiblePerson
+  operationId: updateTicket
   x-agentic-access:
     action-class: acting
     consequence: write
     subject: required
     scope:
-    - compliance:write
+    - tickets:write
     audience: null
     token:
       max-ttl: 900
@@ -1454,18 +1303,36 @@ operations:
       - abnormal
       - high-value
     audit: required
-- path: /api/v3/eu_product_compliance/responsible_person
+- path: /api/v3/tickets/{id}
   method: get
-  operationId: listEUResponsiblePerson
+  operationId: getTicket
   x-agentic-access:
     action-class: connected
     consequence: read
     subject: optional
     scope:
-    - compliance:read
+    - tickets:read
     token:
       max-ttl: 3600
     audit: none
+- path: /api/v3/tickets/{id}/replies
+  method: post
+  operationId: replyTicket
+  x-agentic-access:
+    action-class: acting
+    consequence: write
+    subject: required
+    scope:
+    - tickets:write
+    audience: null
+    token:
+      max-ttl: 900
+    escalation:
+      human-in-the-loop: conditional
+      triggers:
+      - abnormal
+      - high-value
+    audit: required
 - path: /api/v3/tickets
   method: get
   operationId: listTickets
@@ -1478,15 +1345,149 @@ operations:
     token:
       max-ttl: 3600
     audit: none
-- path: /api/v3/product_boost/balance_updates
+- path: /api/v3/unification_initiative/countries
   method: get
-  operationId: listBalanceUpdates
+  operationId: getUnificationInitiativeCountries
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /api/v3/products/{id}/variations
+  method: post
+  operationId: createVariation
+  x-agentic-access:
+    action-class: acting
+    consequence: write
+    subject: required
+    scope:
+    - products:write
+    audience: null
+    token:
+      max-ttl: 900
+    escalation:
+      human-in-the-loop: conditional
+      triggers:
+      - abnormal
+      - high-value
+    audit: required
+- path: /api/v3/products/variations/colors
+  method: get
+  operationId: getColors
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /api/v3/videos/product
+  method: post
+  operationId: upsertProductVideo
+  x-agentic-access:
+    action-class: acting
+    consequence: write
+    subject: required
+    scope:
+    - videos:write
+    audience: null
+    token:
+      max-ttl: 900
+    escalation:
+      human-in-the-loop: conditional
+      triggers:
+      - abnormal
+      - high-value
+    audit: required
+- path: /api/v3/webhook/subscriptions
+  method: post
+  operationId: createSubscription
+  x-agentic-access:
+    action-class: acting
+    consequence: write
+    subject: required
+    scope:
+    - webhook:write
+    audience: null
+    token:
+      max-ttl: 900
+    escalation:
+      human-in-the-loop: conditional
+      triggers:
+      - abnormal
+      - high-value
+    audit: required
+- path: /api/v3/webhook/subscriptions
+  method: get
+  operationId: listSubscriptions
   x-agentic-access:
     action-class: connected
     consequence: read
     subject: optional
     scope:
-    - product_boost:read
+    - webhook:read
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /api/v3/webhook/subscriptions/{id}
+  method: put
+  operationId: updateSubscription
+  x-agentic-access:
+    action-class: acting
+    consequence: write
+    subject: required
+    scope:
+    - webhook:write
+    audience: null
+    token:
+      max-ttl: 900
+    escalation:
+      human-in-the-loop: conditional
+      triggers:
+      - abnormal
+      - high-value
+    audit: required
+- path: /api/v3/webhook/subscriptions/{id}
+  method: get
+  operationId: getSubscription
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    scope:
+    - webhook:read
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /api/v3/webhook/subscriptions/{id}
+  method: delete
+  operationId: deleteSubscription
+  x-agentic-access:
+    action-class: acting
+    consequence: write
+    subject: required
+    scope:
+    - webhook:write
+    audience: null
+    token:
+      max-ttl: 900
+    escalation:
+      human-in-the-loop: conditional
+      triggers:
+      - abnormal
+      - high-value
+    audit: required
+- path: /api/v3/webhook/topics
+  method: get
+  operationId: getTopics
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    scope:
+    - webhook:read
     token:
       max-ttl: 3600
     audit: none
