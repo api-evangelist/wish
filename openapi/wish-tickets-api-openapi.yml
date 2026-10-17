@@ -221,21 +221,6 @@ components:
           type: string
           description: ID of the product
           format: object-id
-    Locale:
-      type: string
-      description: A language tag (which is sometimes referred to as a 'locale identifier'). This consists of a 2-3 letter base language tag representing the language, optionally followed by additional subtags separated by '-'. The most common extra information is the country or region variant (like 'en-US' or 'fr-CA'). For more information, see specification [BCP 47](https://datatracker.ietf.org/doc/html/bcp47#section-2).
-      format: BCP 47
-    APIError:
-      required:
-      - code
-      - message
-      type: object
-      properties:
-        message:
-          type: string
-        code:
-          type: integer
-          format: int32
     UpdateTicket:
       type: object
       properties:
@@ -246,19 +231,6 @@ components:
           - AWAITING_WISH
           type: string
           description: 'State transition rules: (1) To appeal to wish for a ticket, update the state to be AWAITING_WISH. (2) To re-open a CLOSED ticket (if you have permission), update the ticket to AWAITING_MERCHANT state. (3) To close a ticket, update the ticket to CLOSED state.'
-    TicketOrder:
-      type: object
-      properties:
-        id:
-          readOnly: true
-          type: string
-          description: ID of the order
-          format: object-id
-    ListTicketsResponse:
-      items:
-        $ref: '#/components/schemas/Ticket'
-      type: array
-      description: List of tickets returned.
     Ticket:
       type: object
       properties:
@@ -371,6 +343,40 @@ components:
           readOnly: true
           type: string
           description: The subject for the ticket
+    ReplySupportingFile:
+      readOnly: true
+      type: object
+      description: The file to support reply, can be image url at present
+      properties:
+        url:
+          type: string
+          description: Url of the file
+          format: uri
+        file_name:
+          type: string
+          description: The name of the supporting file
+    ReplyTicket:
+      type: object
+      properties:
+        message:
+          type: string
+          description: The message you wish to send, with a max of 2000 characters
+          format: markdown
+    APIError:
+      required:
+      - code
+      - message
+      type: object
+      properties:
+        message:
+          type: string
+        code:
+          type: integer
+          format: int32
+    Locale:
+      type: string
+      description: A language tag (which is sometimes referred to as a 'locale identifier'). This consists of a 2-3 letter base language tag representing the language, optionally followed by additional subtags separated by '-'. The most common extra information is the country or region variant (like 'en-US' or 'fr-CA'). For more information, see specification [BCP 47](https://datatracker.ietf.org/doc/html/bcp47#section-2).
+      format: BCP 47
     Reply:
       type: object
       properties:
@@ -400,63 +406,29 @@ components:
           readOnly: true
           type: array
           description: Supporting files provided in the reply. Image links expire after 60 minutes, users can get a new link everytime they request from the API this reply came from.
-    ReplyTicket:
+    ListTicketsResponse:
+      items:
+        $ref: '#/components/schemas/Ticket'
+      type: array
+      description: List of tickets returned.
+    TicketOrder:
       type: object
       properties:
-        message:
+        id:
+          readOnly: true
           type: string
-          description: The message you wish to send, with a max of 2000 characters
-          format: markdown
-    ReplySupportingFile:
-      readOnly: true
-      type: object
-      description: The file to support reply, can be image url at present
-      properties:
-        url:
-          type: string
-          description: Url of the file
-          format: uri
-        file_name:
-          type: string
-          description: The name of the supporting file
+          description: ID of the order
+          format: object-id
   parameters:
-    updated_at_min_param:
+    ticket_limit:
       schema:
-        type: string
-        format: date-time
+        default: 50
+        minimum: 1
+        type: integer
+        maximum: 500
       required: false
-      description: Show tickets updated after the given date time. Default to the date time of the earliest updated ticket if not provided
-      name: updated_at_min
-      in: query
-    ticket_states:
-      schema:
-        minItems: 1
-        items:
-          enum:
-          - AWAITING_WISH
-          - AWAITING_USER
-          - AWAITING_MERCHANT
-          - CLOSED
-          - PERMANENTLY_CLOSED
-          type: string
-        type: array
-      required: false
-      description: Parameter used to choose the state of tickets to retrieve. Default to list tickets in all states if not supplied. Tickets in PERMANENTLY_CLOSED state can never be re-opened. Tickets in CLOSED state can be re-opened by merchants who have corresponding permissions
-      name: states
-      in: query
-    ticket_types:
-      schema:
-        minItems: 1
-        items:
-          enum:
-          - ORDER
-          - PRE_PURCHASE
-          - POST_CUSTOMER_SUPPORT
-          type: string
-        type: array
-      required: false
-      description: Parameter used to choose which type of tickets to retrieve. Default to list all three types if not supplied.
-      name: types
+      description: A limit on the number of tickets that can be returned. Limit can range from 1 to 500 items and the default is 50
+      name: limit
       in: query
     updated_at_max_param:
       schema:
@@ -474,15 +446,43 @@ components:
       description: Wish's unique identifier for the ticket
       name: id
       in: path
-    ticket_limit:
+    ticket_states:
       schema:
-        default: 50
-        minimum: 1
-        type: integer
-        maximum: 500
+        minItems: 1
+        items:
+          enum:
+          - AWAITING_WISH
+          - AWAITING_USER
+          - AWAITING_MERCHANT
+          - CLOSED
+          - PERMANENTLY_CLOSED
+          type: string
+        type: array
       required: false
-      description: A limit on the number of tickets that can be returned. Limit can range from 1 to 500 items and the default is 50
-      name: limit
+      description: Parameter used to choose the state of tickets to retrieve. Default to list tickets in all states if not supplied. Tickets in PERMANENTLY_CLOSED state can never be re-opened. Tickets in CLOSED state can be re-opened by merchants who have corresponding permissions
+      name: states
+      in: query
+    updated_at_min_param:
+      schema:
+        type: string
+        format: date-time
+      required: false
+      description: Show tickets updated after the given date time. Default to the date time of the earliest updated ticket if not provided
+      name: updated_at_min
+      in: query
+    ticket_types:
+      schema:
+        minItems: 1
+        items:
+          enum:
+          - ORDER
+          - PRE_PURCHASE
+          - POST_CUSTOMER_SUPPORT
+          type: string
+        type: array
+      required: false
+      description: Parameter used to choose which type of tickets to retrieve. Default to list all three types if not supplied.
+      name: types
       in: query
     ticket_sort_by:
       schema:

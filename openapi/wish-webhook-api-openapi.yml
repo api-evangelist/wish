@@ -336,6 +336,22 @@ components:
           type: string
           description: The ID of the topic you subscribed to
           format: object-id
+    ListSubscriptionsResponse:
+      items:
+        $ref: '#/components/schemas/Subscription'
+      type: array
+      description: List of subscriptions returned.
+    APIError:
+      required:
+      - code
+      - message
+      type: object
+      properties:
+        message:
+          type: string
+        code:
+          type: integer
+          format: int32
     Topic:
       type: object
       properties:
@@ -381,28 +397,27 @@ components:
           - V3
           type: string
           description: The Wish API version used to serialize webhook events. This will be set in the header `Wish-API-Version` of the webhook message we send to you.
-    APIError:
-      required:
-      - code
-      - message
-      type: object
-      properties:
-        message:
-          type: string
-        code:
-          type: integer
-          format: int32
-    ListSubscriptionsResponse:
-      items:
-        $ref: '#/components/schemas/Subscription'
-      type: array
-      description: List of subscriptions returned.
     GetAllTopicsResponse:
       items:
         $ref: '#/components/schemas/Topic'
       type: array
       description: List of available topics that you can subscribe.
   parameters:
+    endpoint:
+      schema:
+        type: string
+      required: false
+      description: Endpoint URL that Wish should send POST request to when the subscribed event happens
+      name: endpoint
+      in: query
+    subscription_id:
+      schema:
+        type: string
+        format: object-id
+      required: true
+      description: ID of the subscription
+      name: id
+      in: path
     topic_id:
       schema:
         type: string
@@ -419,21 +434,6 @@ components:
       required: false
       description: Whether the subscription is active
       name: status
-      in: query
-    subscription_id:
-      schema:
-        type: string
-        format: object-id
-      required: true
-      description: ID of the subscription
-      name: id
-      in: path
-    endpoint:
-      schema:
-        type: string
-      required: false
-      description: Endpoint URL that Wish should send POST request to when the subscribed event happens
-      name: endpoint
       in: query
   securitySchemes:
     OpenID:

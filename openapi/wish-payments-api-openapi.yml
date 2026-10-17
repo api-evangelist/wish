@@ -191,26 +191,6 @@ paths:
       operationId: getEarlyPayment
 components:
   parameters:
-    invoices_limit_order_download_job:
-      schema:
-        minimum: 1
-        type: integer
-      required: false
-      description: The limit on the number of orders that will be returned.
-      name: limit
-      in: query
-    invoices_sort_by:
-      schema:
-        default: payment_released_at
-        type: string
-      required: false
-      description: '(Optional)Choose what field to order the payments, the order is descending by default. Current supported fields are:
-
-        * payment_released_at: The time when the payment was released.
-
-        '
-      name: sort_by
-      in: query
     payment_released_at_max:
       description: (Optional)Specify the end of the time window to view desired payments. Payments released after this time will not show.
       required: false
@@ -229,23 +209,27 @@ components:
       schema:
         type: string
         format: date-time
+    invoices_sort_by:
+      schema:
+        default: payment_released_at
+        type: string
+      required: false
+      description: '(Optional)Choose what field to order the payments, the order is descending by default. Current supported fields are:
+
+        * payment_released_at: The time when the payment was released.
+
+        '
+      name: sort_by
+      in: query
+    invoices_limit_order_download_job:
+      schema:
+        minimum: 1
+        type: integer
+      required: false
+      description: The limit on the number of orders that will be returned.
+      name: limit
+      in: query
   schemas:
-    EarlyPayment:
-      type: object
-      properties:
-        available_amount:
-          $ref: '#/components/schemas/Price'
-    APIError:
-      required:
-      - code
-      - message
-      type: object
-      properties:
-        message:
-          type: string
-        code:
-          type: integer
-          format: int32
     PaymentInvoiceOrderDownloadJob:
       type: object
       properties:
@@ -297,6 +281,17 @@ components:
           type: string
           description: The 3-letter currency code defined in [ISO 4217](https://www.iso.org/iso-4217-currency-codes.html).
           example: USD
+    APIError:
+      required:
+      - code
+      - message
+      type: object
+      properties:
+        message:
+          type: string
+        code:
+          type: integer
+          format: int32
     V3GenericReportStatus:
       type: object
       description: A generic report status object used when an endpoint wants to return the status of their downloadable file
@@ -338,6 +333,11 @@ components:
           type: string
           description: ID of the report
           format: object-id
+    EarlyPayment:
+      type: object
+      properties:
+        available_amount:
+          $ref: '#/components/schemas/Price'
   securitySchemes:
     OpenID:
       type: openIdConnect

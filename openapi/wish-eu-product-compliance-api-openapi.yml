@@ -585,7 +585,167 @@ paths:
         source: "<?php\n\n$curl = curl_init();\n\ncurl_setopt_array($curl, array(\n  CURLOPT_URL => \"https://merchant.wish.com/api/v3/eu_product_compliance/responsible_person?id_min=SOME_STRING_VALUE&id_max=SOME_STRING_VALUE&limit=SOME_INTEGER_VALUE&sort_by=SOME_STRING_VALUE\",\n  CURLOPT_RETURNTRANSFER => true,\n  CURLOPT_ENCODING => \"\",\n  CURLOPT_MAXREDIRS => 10,\n  CURLOPT_TIMEOUT => 30,\n  CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,\n  CURLOPT_CUSTOMREQUEST => \"GET\",\n  CURLOPT_HTTPHEADER => array(\n    \"authorization: Bearer REPLACE_BEARER_TOKEN\"\n  ),\n));\n\n$response = curl_exec($curl);\n$err = curl_error($curl);\n\ncurl_close($curl);\n\nif ($err) {\n  echo \"cURL Error #:\" . $err;\n} else {\n  echo $response;\n}"
       description: List all EU Responsible Persons created by a merchant.
 components:
+  parameters:
+    product_ids:
+      schema:
+        items:
+          type: string
+          description: The unique identifiers of a product
+          format: object-id
+        type: array
+        maxItems: 500
+      description: The list of the product IDs that will be returned with the compliance status
+      name: product_ids
+      in: query
+    id:
+      schema:
+        type: string
+        format: object-id
+      required: true
+      description: id of the responsible person
+      name: id
+      in: path
+    compliance_statuses:
+      schema:
+        minItems: 1
+        items:
+          $ref: '#/components/schemas/ComplianceStatus'
+        type: array
+        maxItems: 3
+      required: false
+      description: '
+
+        Choose the specific compliance status to filter output. Current input values are:
+
+
+        1. RESPONSIBLE_PERSON_LINKED: a responsible person linked.
+
+        2. NO_RESPONSIBLE_PERSON: no responsible person.
+
+        3. NOT_RECOMMENDED_TO_LINK_RESPONSIBLE_PERSON: not recommended to link a responsible person.
+
+        '
+      name: compliance_statuses
+      in: query
+    old_person_id:
+      schema:
+        type: string
+        format: object-id
+      required: true
+      description: id of the responsible person to unlink for all associated products.
+      name: old_person_id
+      in: query
+    new_person_id:
+      schema:
+        type: string
+        format: object-id
+      description: id of the responsible person to update for all associated products of old_person_id.</br> No input (null or empty) means to unlink old_person_id from all its associated products.
+      name: new_person_id
+      in: query
   schemas:
+    ResponsiblePerson:
+      type: object
+      description: details of a responsible person
+      properties:
+        address_line2:
+          type: string
+          description: the address line 2 of the responsible person
+        city:
+          minLength: 1
+          type: string
+          description: the city or town of the responsible person
+        address_line1:
+          minLength: 1
+          type: string
+          description: the address line 1 of the responsible person
+        name:
+          minLength: 1
+          type: string
+          description: name of the responsible person
+        country:
+          minLength: 1
+          type: string
+          description: Country code where the responsible person is located
+        zipcode:
+          minLength: 1
+          type: string
+          description: the zip code or postal code of the responsible person
+        state:
+          minLength: 1
+          type: string
+          description: the state or region of the responsible person
+        phone_number:
+          minLength: 1
+          type: string
+          description: the phone number of the responsible person
+        email:
+          minLength: 1
+          type: string
+          description: the email of the responsible person
+    EUProductComplianceStatus:
+      type: object
+      properties:
+        compliance_status:
+          $ref: '#/components/schemas/ComplianceStatus'
+        product_id:
+          type: string
+          description: The unique identifier of a product
+          format: object-id
+        responsible_person_id:
+          type: string
+          description: The unique identifier of a responsible person
+          format: object-id
+    APIError:
+      required:
+      - code
+      - message
+      type: object
+      properties:
+        message:
+          type: string
+        code:
+          type: integer
+          format: int32
+    ListResponsiblePersonsResponse:
+      items:
+        $ref: '#/components/schemas/ResponsiblePersonResponse'
+      type: array
+      description: List of Responsible Persons returned
+    EUProductComplianceStatusResponse:
+      items:
+        $ref: '#/components/schemas/EUProductComplianceStatus'
+      type: array
+      description: List of objects including a product id, compliance status and responsible person id.
+    ResponsiblePersonResponse:
+      description: a responsible person response
+      allOf:
+      - $ref: '#/components/schemas/ResponsiblePerson'
+      - type: object
+        properties:
+          id:
+            type: string
+            description: The unique identifier of a responsible person
+            format: object-id
+    EUProductComplianceStatusRequest:
+      required:
+      - product_id
+      type: object
+      properties:
+        product_id:
+          type: string
+          description: The unique identifier of a product
+          format: object-id
+        responsible_person_id:
+          type: string
+          description: The unique identifier of a responsible person
+          format: object-id
+    ComplianceStatus:
+      enum:
+      - RESPONSIBLE_PERSON_LINKED
+      - NO_RESPONSIBLE_PERSON
+      - NOT_RECOMMENDED_TO_LINK_RESPONSIBLE_PERSON
+      type: string
+      description: ' 3 status: (1) a responsible person linked, (2) no responsible person, (3) not recommended to link a responsible person.'
     CreateResponsiblePerson:
       type: object
       description: details of creating a responsible person
@@ -638,166 +798,6 @@ components:
           type: string
           description: id of the responsible person to unlink for all associated products.
           format: object-id
-    ResponsiblePerson:
-      type: object
-      description: details of a responsible person
-      properties:
-        address_line2:
-          type: string
-          description: the address line 2 of the responsible person
-        city:
-          minLength: 1
-          type: string
-          description: the city or town of the responsible person
-        address_line1:
-          minLength: 1
-          type: string
-          description: the address line 1 of the responsible person
-        name:
-          minLength: 1
-          type: string
-          description: name of the responsible person
-        country:
-          minLength: 1
-          type: string
-          description: Country code where the responsible person is located
-        zipcode:
-          minLength: 1
-          type: string
-          description: the zip code or postal code of the responsible person
-        state:
-          minLength: 1
-          type: string
-          description: the state or region of the responsible person
-        phone_number:
-          minLength: 1
-          type: string
-          description: the phone number of the responsible person
-        email:
-          minLength: 1
-          type: string
-          description: the email of the responsible person
-    ResponsiblePersonResponse:
-      description: a responsible person response
-      allOf:
-      - $ref: '#/components/schemas/ResponsiblePerson'
-      - type: object
-        properties:
-          id:
-            type: string
-            description: The unique identifier of a responsible person
-            format: object-id
-    APIError:
-      required:
-      - code
-      - message
-      type: object
-      properties:
-        message:
-          type: string
-        code:
-          type: integer
-          format: int32
-    ListResponsiblePersonsResponse:
-      items:
-        $ref: '#/components/schemas/ResponsiblePersonResponse'
-      type: array
-      description: List of Responsible Persons returned
-    EUProductComplianceStatusResponse:
-      items:
-        $ref: '#/components/schemas/EUProductComplianceStatus'
-      type: array
-      description: List of objects including a product id, compliance status and responsible person id.
-    ComplianceStatus:
-      enum:
-      - RESPONSIBLE_PERSON_LINKED
-      - NO_RESPONSIBLE_PERSON
-      - NOT_RECOMMENDED_TO_LINK_RESPONSIBLE_PERSON
-      type: string
-      description: ' 3 status: (1) a responsible person linked, (2) no responsible person, (3) not recommended to link a responsible person.'
-    EUProductComplianceStatusRequest:
-      required:
-      - product_id
-      type: object
-      properties:
-        product_id:
-          type: string
-          description: The unique identifier of a product
-          format: object-id
-        responsible_person_id:
-          type: string
-          description: The unique identifier of a responsible person
-          format: object-id
-    EUProductComplianceStatus:
-      type: object
-      properties:
-        compliance_status:
-          $ref: '#/components/schemas/ComplianceStatus'
-        product_id:
-          type: string
-          description: The unique identifier of a product
-          format: object-id
-        responsible_person_id:
-          type: string
-          description: The unique identifier of a responsible person
-          format: object-id
-  parameters:
-    old_person_id:
-      schema:
-        type: string
-        format: object-id
-      required: true
-      description: id of the responsible person to unlink for all associated products.
-      name: old_person_id
-      in: query
-    new_person_id:
-      schema:
-        type: string
-        format: object-id
-      description: id of the responsible person to update for all associated products of old_person_id.</br> No input (null or empty) means to unlink old_person_id from all its associated products.
-      name: new_person_id
-      in: query
-    compliance_statuses:
-      schema:
-        minItems: 1
-        items:
-          $ref: '#/components/schemas/ComplianceStatus'
-        type: array
-        maxItems: 3
-      required: false
-      description: '
-
-        Choose the specific compliance status to filter output. Current input values are:
-
-
-        1. RESPONSIBLE_PERSON_LINKED: a responsible person linked.
-
-        2. NO_RESPONSIBLE_PERSON: no responsible person.
-
-        3. NOT_RECOMMENDED_TO_LINK_RESPONSIBLE_PERSON: not recommended to link a responsible person.
-
-        '
-      name: compliance_statuses
-      in: query
-    id:
-      schema:
-        type: string
-        format: object-id
-      required: true
-      description: id of the responsible person
-      name: id
-      in: path
-    product_ids:
-      schema:
-        items:
-          type: string
-          description: The unique identifiers of a product
-          format: object-id
-        type: array
-        maxItems: 500
-      description: The list of the product IDs that will be returned with the compliance status
-      name: product_ids
-      in: query
   securitySchemes:
     OpenID:
       type: openIdConnect

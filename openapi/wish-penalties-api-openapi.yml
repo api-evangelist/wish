@@ -205,14 +205,6 @@ paths:
       operationId: ListPenalties
 components:
   parameters:
-    created_at_min_param:
-      schema:
-        type: string
-        format: date-time
-      required: false
-      description: Show penalties created after the given date time. Default to the date time of the earliest created penalty if not provided
-      name: created_at_min
-      in: query
     reversed_at_min_param:
       schema:
         type: string
@@ -220,14 +212,6 @@ components:
       required: false
       description: Show penalties reversed after the given date time. Default to the date time of the earliest reversed penalty if not provided
       name: reversed_at_min
-      in: query
-    created_at_max_param:
-      schema:
-        type: string
-        format: date-time
-      required: false
-      description: Show penalties created before the given date time. Default to the date time of the latest created penalty if not provided
-      name: created_at_max
       in: query
     reversed_at_max_param:
       schema:
@@ -237,7 +221,59 @@ components:
       description: Show penalties reversed before the given date time. Default to the date time of the latest reversed penalty if not provided
       name: reversed_at_max
       in: query
+    created_at_min_param:
+      schema:
+        type: string
+        format: date-time
+      required: false
+      description: Show penalties created after the given date time. Default to the date time of the earliest created penalty if not provided
+      name: created_at_min
+      in: query
+    created_at_max_param:
+      schema:
+        type: string
+        format: date-time
+      required: false
+      description: Show penalties created before the given date time. Default to the date time of the latest created penalty if not provided
+      name: created_at_max
+      in: query
   schemas:
+    Money:
+      required:
+      - amount
+      - currency_code
+      type: object
+      properties:
+        amount:
+          format: float
+          type: number
+          description: Amount in decimals.
+          example: 10.4
+        currency_code:
+          format: iso-4217
+          type: string
+          description: The 3-letter currency code defined in [ISO 4217](https://www.iso.org/iso-4217-currency-codes.html).
+          example: USD
+    APIError:
+      required:
+      - code
+      - message
+      type: object
+      properties:
+        message:
+          type: string
+        code:
+          type: integer
+          format: int32
+    PenaltyCount:
+      required:
+      - count
+      type: object
+      properties:
+        count:
+          type: integer
+          description: Number of penalties satisfying the query
+          format: int32
     Penalty:
       required:
       - id
@@ -277,46 +313,10 @@ components:
           type: string
           description: ID of the penalty
           format: object-id
-    PenaltyCount:
-      required:
-      - count
-      type: object
-      properties:
-        count:
-          type: integer
-          description: Number of penalties satisfying the query
-          format: int32
-    APIError:
-      required:
-      - code
-      - message
-      type: object
-      properties:
-        message:
-          type: string
-        code:
-          type: integer
-          format: int32
     Penalties:
       items:
         $ref: '#/components/schemas/Penalty'
       type: array
-    Money:
-      required:
-      - amount
-      - currency_code
-      type: object
-      properties:
-        amount:
-          format: float
-          type: number
-          description: Amount in decimals.
-          example: 10.4
-        currency_code:
-          format: iso-4217
-          type: string
-          description: The 3-letter currency code defined in [ISO 4217](https://www.iso.org/iso-4217-currency-codes.html).
-          example: USD
   securitySchemes:
     OpenID:
       type: openIdConnect

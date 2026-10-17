@@ -184,17 +184,6 @@ paths:
       operationId: getCategories
 components:
   schemas:
-    APIError:
-      required:
-      - code
-      - message
-      type: object
-      properties:
-        message:
-          type: string
-        code:
-          type: integer
-          format: int32
     CategoryAttribute:
       type: object
       properties:
@@ -218,27 +207,17 @@ components:
           type: array
           description: The accepted values for the attribute. The value of the attribute must be selected from these accepted values.
           maxItems: 1000
-    CategoryNode:
+    APIError:
+      required:
+      - code
+      - message
       type: object
       properties:
-        is_leaf:
-          readOnly: true
-          type: boolean
-          description: Whether the category is a leaf category. Only leaf categories can be used in self-classification.
-        subcategories:
-          items:
-            $ref: '#/components/schemas/CategoryNode'
-          readOnly: true
-          type: array
-          description: The subcategories of the category.
-        id:
-          readOnly: true
-          type: integer
-          description: The ID of the category.
-        name:
-          readOnly: true
+        message:
           type: string
-          description: The name of the category.
+        code:
+          type: integer
+          format: int32
     CategoryAttributeConstraint:
       type: object
       properties:
@@ -296,6 +275,27 @@ components:
           type: array
           description: List of category attributes
           maxItems: 50
+    CategoryNode:
+      type: object
+      properties:
+        is_leaf:
+          readOnly: true
+          type: boolean
+          description: Whether the category is a leaf category. Only leaf categories can be used in self-classification.
+        subcategories:
+          items:
+            $ref: '#/components/schemas/CategoryNode'
+          readOnly: true
+          type: array
+          description: The subcategories of the category.
+        id:
+          readOnly: true
+          type: integer
+          description: The ID of the category.
+        name:
+          readOnly: true
+          type: string
+          description: The name of the category.
   securitySchemes:
     OpenID:
       type: openIdConnect
