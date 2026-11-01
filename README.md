@@ -64,6 +64,175 @@
 > Full detail: **[Where this data comes from](https://apievangelist.com/about/where-our-data-comes-from)**
 <!-- API-EVANGELIST-PROVENANCE:END -->
 
-Wish is a company surfaced as a portfolio company of 8vc, crv, felicis, founders-fund and added to the API Evangelist network as a stub for enrichment. This profile is a lead awaiting the enrichment pipeline.
+Wish, operated by ContextLogic Inc., is a global mobile-first e-commerce marketplace that connects value-conscious consumers with merchants and manufacturers around the world, with a large share of inventory shipped direct from suppliers. The Wish Marketplace V3 API lets sellers and ERP partners programmatically manage their storefront and operations: create and update products and variations, synchronize inventory and pricing, retrieve and fulfill orders, modify tracking and shipping-carrier assignments, run bulk create/download jobs, manage support tickets, penalties and infractions, run ProductBoost and promotion campaigns, meet EU/EPR product compliance obligations, and subscribe to webhooks for real-time order and product events. Authentication is OAuth 2.0 (authorization code flow with 37 scopes) plus OpenID Connect, using bearer access tokens over HTTPS, with production and sandbox environments.
 
-Backed by: 8vc, crv, felicis, founders-fund — https://wish.com
+**Areas:** Company · E-Commerce · Marketplace · Retail · Merchants · Order · Product · Fulfillment · Shopping · Authentication
+
+## Wish on APIs.io
+
+Everything profiled for Wish is published on APIs.io rather than in this repository. Start at the provider page — **[apis.io/providers/wish/](https://apis.io/providers/wish/)** — or go straight to one of the APIs or properties below.
+
+### APIs (21)
+
+- [Wish Brands API](https://apis.io/apis/wish/wish-brands-api/) — The Brands API from Wish — 1 operation(s) for brands.
+- [Wish Bulk Products API](https://apis.io/apis/wish/wish-bulk-products-api/) — Products endpoints which process requests asynchronously and triggers a running job
+- [Wish Currencies API](https://apis.io/apis/wish/wish-currencies-api/) — The Currencies API from Wish — 1 operation(s) for currencies.
+- [Wish EU Product Compliance API](https://apis.io/apis/wish/wish-eu-product-compliance-api/) — APIs that support EU Product Compliance -- EU Regulation 2019/1020 on Market Surveillance and Compliance of Products (MSR).</br> For a product to be…
+- [Wish France EPR Compliance API](https://apis.io/apis/wish/wish-france-epr-compliance-api/) — APIs that support France Extended Producer Responsibility (EPR) Compliance.</br> For a merchant to be compliant with the EPR regulation, a product category…
+- [Wish Germany EPR Compliance API](https://apis.io/apis/wish/wish-germany-epr-compliance-api/) — APIs that support Germany Extended Producer Responsibility (EPR) Compliance.</br> For a merchant to be compliant with the EPR regulation, their applicable…
+- [Wish Merchant API](https://apis.io/apis/wish/wish-merchant-api/) — Merchant APIs
+- [Wish Orders API](https://apis.io/apis/wish/wish-orders-api/) — The Orders API from Wish — 9 operation(s) for orders.
+- [Wish Payments API](https://apis.io/apis/wish/wish-payments-api/) — Payments APIs
+- [Wish Penalties API](https://apis.io/apis/wish/wish-penalties-api/) — The Penalties API from Wish — 3 operation(s) for penalties.
+- [Wish ProductBoost API](https://apis.io/apis/wish/wish-productboost-api/) — The ProductBoost API from Wish — 7 operation(s) for productboost.
+- [Wish Products API](https://apis.io/apis/wish/wish-products-api/) — Products APIs
+- [Wish Promotions Platform API](https://apis.io/apis/wish/wish-promotions-platform-api/) — The Promotions Platform API from Wish — 6 operation(s) for promotions platform.
+- [Wish Ratings API](https://apis.io/apis/wish/wish-ratings-api/) — The Ratings API from Wish — 2 operation(s) for ratings.
+- [Wish Taxonomy API](https://apis.io/apis/wish/wish-taxonomy-api/) — Taxonomy APIs
+- [Wish Tickets API](https://apis.io/apis/wish/wish-tickets-api/) — For each consumer question or complaint, a ticket is created to manage the dialogue between you, Wish, and the consumer. With this API, you can fetch…
+- [Wish Unification Initiative API](https://apis.io/apis/wish/wish-unification-initiative-api/) — Unification Initiative APIs
+- [Wish Variations API](https://apis.io/apis/wish/wish-variations-api/) — Variations APIs
+- [Wish Videos API](https://apis.io/apis/wish/wish-videos-api/) — Merchant Videos APIs
+- [Wish Webhook API](https://apis.io/apis/wish/wish-webhook-api/) — APIs for managing webhook subscriptions. Merchants can use webhook subscriptions to receive notifications about particular events, instead of having to make…
+- [Wish O Auth API](https://apis.io/apis/wish/wish-oauth-api/) — The OAuth API from Wish — 3 operation(s) for oauth.
+
+### Published properties
+
+Each property below is a page on APIs.io carrying the machine-readable artifact and what it says.
+
+#### AsyncAPI (1)
+
+Event-driven and webhook contracts.
+
+- [Wish Webhooks](https://apis.io/asyncapis/wish/wish-webhooks/)
+
+#### MCP servers (1)
+
+Model Context Protocol servers that expose the API to agents.
+
+- [wish-merchant](https://apis.io/servers/wish/wish-merchant/)
+
+#### Agentic access (1)
+
+Which operations an agent can call, which act, and which need a human in the loop.
+
+- [Wish Agentic Access](https://apis.io/agentic-access/wish/wish-agentic-access/)
+
+#### Collections (21)
+
+Postman and Open Collection request collections.
+
+- [Wish Marketplace V3 Brands API](https://apis.io/collections/wish/open-wish-brands-api/)
+- [Wish Marketplace V3 Brands Bulk Products API](https://apis.io/collections/wish/open-wish-bulk-products-api/)
+- [Wish Marketplace V3 Brands Currencies API](https://apis.io/collections/wish/open-wish-currencies-api/)
+- [Wish Marketplace V3 Brands EU Product Compliance API](https://apis.io/collections/wish/open-wish-eu-product-compliance-api/)
+- [Wish Marketplace V3 Brands France EPR Compliance API](https://apis.io/collections/wish/open-wish-france-epr-compliance-api/)
+- [Wish Marketplace V3 Brands Germany EPR Compliance API](https://apis.io/collections/wish/open-wish-germany-epr-compliance-api/)
+- [Wish Marketplace V3 Brands Merchant API](https://apis.io/collections/wish/open-wish-merchant-api/)
+- [Wish Marketplace V3 Brands OAuth API](https://apis.io/collections/wish/open-wish-oauth-api/)
+- [Wish Marketplace V3 Brands Orders API](https://apis.io/collections/wish/open-wish-orders-api/)
+- [Wish Marketplace V3 Brands Payments API](https://apis.io/collections/wish/open-wish-payments-api/)
+- [Wish Marketplace V3 Brands Penalties API](https://apis.io/collections/wish/open-wish-penalties-api/)
+- [Wish Marketplace V3 Brands ProductBoost API](https://apis.io/collections/wish/open-wish-productboost-api/)
+- [Wish Marketplace V3 Brands Products API](https://apis.io/collections/wish/open-wish-products-api/)
+- [Wish Marketplace V3 Brands Promotions Platform API](https://apis.io/collections/wish/open-wish-promotions-platform-api/)
+- [Wish Marketplace V3 Brands Ratings API](https://apis.io/collections/wish/open-wish-ratings-api/)
+- [Wish Marketplace V3 Brands Taxonomy API](https://apis.io/collections/wish/open-wish-taxonomy-api/)
+- [Wish Marketplace V3 Brands Tickets API](https://apis.io/collections/wish/open-wish-tickets-api/)
+- [Wish Marketplace V3 Brands Unification Initiative API](https://apis.io/collections/wish/open-wish-unification-initiative-api/)
+- [Wish Marketplace V3 Brands Variations API](https://apis.io/collections/wish/open-wish-variations-api/)
+- [Wish Marketplace V3 Brands Videos API](https://apis.io/collections/wish/open-wish-videos-api/)
+- [Wish Marketplace V3 Brands Webhook API](https://apis.io/collections/wish/open-wish-webhook-api/)
+
+#### Overlays (1)
+
+OpenAPI overlays, including conversational phrasing for each operation.
+
+- [Wish Marketplace V3 Overlay](https://apis.io/overlays/wish/wish-marketplace-v3-overlay/)
+
+#### Security (2)
+
+Authentication, trust centre, and vulnerability disclosure.
+
+- [Wish Authentication](https://apis.io/security/wish/wish-authentication/)
+- [Wish Domain Security](https://apis.io/security/wish/wish-domain-security/)
+
+#### OAuth scopes (1)
+
+The permissions the API asks for.
+
+- [Wish Scopes](https://apis.io/scopes/wish/wish-scopes/)
+
+#### Rate limits (1)
+
+Published request limits.
+
+- [Wish Rate Limits](https://apis.io/rate-limits/wish/wish-rate-limits/)
+
+## Where to find this API
+
+Links to the company's own pages. This repository publishes no copy of their specifications — the canonical document is theirs and lives at the URLs below.
+
+- [Website](https://wish.com)
+- [Documentation](https://merchant.wish.com/documentation/api/v3/reference)
+- [Getting started](https://merchant.wish.com/documentation/api/v3/oauth)
+- [API reference](https://merchant.wish.com/documentation/api/v3/reference)
+- [Sign up](https://merchant.wish.com/)
+- [Terms of service](https://www.wish.com/terms)
+- [Privacy policy](https://www.wish.com/privacy_policy)
+- [GitHub](https://github.com/ContextLogic)
+
+## API Evangelist rating
+
+**Kin Score 43.8** — developing · rubric 0.25.0 · scored 2026-10-23
+
+| Facet | Score |
+|---|---|
+| Discoverability | 66.1 |
+| Contract quality | 62.4 |
+| Contract governance | 4.5 |
+| Operational transparency | 10.5 |
+| Developer ergonomics | 58.9 |
+| Access clarity | 34.2 |
+
+**Agent readiness 46.4** — agent-ready (gated down from agent-native)
+
+| Agent-readiness dimension | Result |
+|---|---|
+| Spec Presence | yes |
+| Agentic Access | derived (partial credit) |
+| Reversibility Documented | verified |
+| MCP Server | — |
+| Auth Clarity | served (partial credit) |
+| Idempotency | — |
+| Error Semantics | verified |
+| OpenAPI Examples | verified |
+| Rate Limit Signal | documented (partial credit) |
+| Event Surface Described | yes |
+| Agent Skills | derived (partial credit) |
+| Well Known Catalog | — |
+| Consent Identity | — |
+| Agent Card | — |
+| Dry Run Mode | — |
+| Delegated Identity | documented (partial credit) |
+| Protected Resource Metadata | — |
+| Dynamic Client Registration | — |
+| Agentic Commerce | — |
+| Pagination Ratio | partial |
+| Operation Distinctiveness | mostly (partial credit) |
+
+**Regulatory alignment 31.3** — Payments
+
+The rubric is published at [github.com/api-evangelist/kin-score](https://github.com/api-evangelist/kin-score). The per-check breakdown behind these numbers — which checks were earned, partial or missed — along with score history and how this provider compares to its peers, is available at [apis.io/providers/wish/](https://apis.io/providers/wish/).
+
+## How this profile is made
+
+API Evangelist profiles a company's public API surface the way a developer would find it: the website, developer portal and documentation, the specifications it publishes, its public repositories, and its pricing, status and changelog pages. From that it derives the properties above — contracts split per API, workflows, schemas, collections, governance rules, plans and rate limits — and scores them against the published [Kin Score rubric](https://github.com/api-evangelist/kin-score).
+
+The artifacts are published on [APIs.io](https://apis.io), not in this repository. This repository is the public record for Wish: the place to say something is wrong, missing or out of date, and to ask for a re-score or a removal.
+
+## Open an issue
+
+- **Something about this listing** — a wrong description, a missing API, a stale artifact or a question about the rating: [open an issue on this repository](https://github.com/api-evangelist/wish/issues/new).
+- **A new API, or one that is not in the catalog yet** — [submit it on APIs.io](https://apis.io/add/).
+- **Anything else** — [the APIs.io inbox](https://github.com/api-search/inbox/issues/new) or [info@apievangelist.com](mailto:info@apievangelist.com).
